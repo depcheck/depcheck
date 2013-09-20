@@ -24,7 +24,7 @@
     "should": "~1.2.2",
     "simplesets": "~1.2.0"
   },
-  "devDependecies": {
+  "devDependencies": {
     "mocha": "~1.8.1"
   }
 }
