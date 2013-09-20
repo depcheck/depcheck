@@ -1,0 +1,30 @@
+{
+  "name": "depcheck",
+  "version": "0.1.0",
+  "description": "Check dependencies in your node module",
+  "main": "bin/depcheck",
+  "bin": {
+    "depcheck": "bin/depcheck"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rumpl/depcheck.git"
+  },
+  "scripts": {
+    "test": "mocha test/*.js"
+  },
+  "author": "Djordje Lukic",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "optimist": "~0.6.0",
+    "findit": "~0.1.2",
+    "walkdir": "0.0.7",
+    "esprima": "~1.0.4",
+    "should": "~1.2.2",
+    "simplesets": "~1.2.0"
+  },
+  "devDependecies": {
+    "mocha": "~1.8.1"
+  }
+}

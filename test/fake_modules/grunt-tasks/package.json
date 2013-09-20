@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "grunt-contrib-jshint": "~0.6.0"
+  }
+}

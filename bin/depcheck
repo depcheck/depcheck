@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+
+var argv = require('optimist')
+  .usage('Usage: $0 [DIRECTORY]')
+  .demand(['_'])
+  .argv;
+var checkDirectory = require('../index');
+var fs = require('fs');
+var path = require('path');
+var absolutePath = path.resolve(argv._[0]);
+
+fs.exists(absolutePath, function (exists) {
+  if (!exists) {
+    console.error('Path ' + argv._[0] + ' does not exist');
+    process.exit(-1);
+  }
+
+  checkDirectory(absolutePath, function (unused) {
+    if(unused.length === 0) {
+      console.log('No unused dependencies');
+      process.exit(0);
+    } else {
+      unused.forEach(function (u) {
+        console.log('Unused dependency:', u);
+      });
+      process.exit(-1);
+    }
+  });
+});
