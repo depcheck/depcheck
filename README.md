@@ -14,6 +14,18 @@ As easy as `depcheck [DIRECTORY]`.
 
 Where DIRECTORY is the root directory of your application (where the package.json is).
 
+This will list all the unused dependencies in your code if any.
+
+## Future
+
+Well, it's more of a "What do you think guys?".
+
+There are a couple of things I would like to do if anyone is interested:
+
+ - `depcheck` looks at both "dependencies" and "devDependencies in your package.json, maybe we could make the "devDependencies" optional
+ - There could be false positives, we could have a white list of modules that you know you are using and that `depcheck` can't find in your code
+ - A `grunt-contrib-depcheck` would be nice
+
 ## License
 
 [MIT](http://mit-license.org/rumpl)
