@@ -1,5 +1,7 @@
 # depcheck
 
+[![build status](https://secure.travis-ci.org/rumpl/depcheck.png)](http://travis-ci.org/rumpl/depcheck)
+
 Easily check your npm dependencies in order to get rid of unused ones. Bonus: it checks for `grunt.loadNpmTasks` and `grunt.tasks.loadNpmTasks` too, so there shouldn't be any false positives.
 
 ## Installation
