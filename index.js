@@ -80,8 +80,8 @@ function checkFile(filename) {
 }
 
 function hasBin(root, dependency) {
-  try { 
-    var depPkg = require(path.join(root, 'node_modules', dependency, 'package.json'));
+  try {
+    var depPkg = require(path.join(root, "node_modules", dependency, "package.json"));
     return depPkg.bin !== undefined;
   } catch (e) {
     return false;
@@ -94,7 +94,7 @@ function check(options, root, files, cb) {
   var usedDependencies = new sets.Set();
   var unused;
 
-  if(options.withDev) {
+  if (options.withDev) {
     deps = deps.concat(Object.keys(pkg.devDependencies || {}));
   }
   
@@ -162,7 +162,7 @@ module.exports = function checkDirectory(dir, options, cb) {
   });
 
   finder.on("end", function () {
-    if(directories.length == 0) {
+    if (directories.length === 0) {
       check(options, dir, files, cb);
     } else {
       collectSubdirectories(directories, function (subFiles) {
