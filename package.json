@@ -1,6 +1,6 @@
 {
   "name": "depcheck",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Check dependencies in your node module",
   "main": "bin/depcheck",
   "bin": {
