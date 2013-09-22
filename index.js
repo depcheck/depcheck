@@ -88,12 +88,16 @@ function hasBin(root, dependency) {
   }
 }
 
-function check(root, directories, files, cb) {
+function check(options, root, files, cb) {
   var pkg = require(path.join(root, "/package.json"));
-  var deps = Object.keys(pkg.dependencies).concat(Object.keys(pkg.devDependencies || {}));
+  var deps = Object.keys(pkg.dependencies);
   var usedDependencies = new sets.Set();
   var unused;
 
+  if(options.withDev) {
+    deps = deps.concat(Object.keys(pkg.devDependencies || {}));
+  }
+  
   files.forEach(function (file) {
     usedDependencies = usedDependencies.union(checkFile(file));
   });
@@ -115,8 +119,10 @@ function check(root, directories, files, cb) {
   cb(unused);
 }
 
-function collectSubdirectories(root, directories, files, cb) {
+function collectSubdirectories(directories, cb) {
   var n = 0;
+  var files = [];
+  
   directories.forEach(function (dir) {
     var finder = walkdir(dir);
 
@@ -128,14 +134,14 @@ function collectSubdirectories(root, directories, files, cb) {
 
     finder.on("end", function () {
       n--;
-      if (n <= 0) {
-        check(root, directories, files, cb);
+      if (n === 0) {
+        cb(files);
       }
     });
   });
 }
 
-module.exports = function checkDirectory(dir, cb) {
+module.exports = function checkDirectory(dir, options, cb) {
   var usedDeps = [];
   var files = [];
   var directories = [];
@@ -157,9 +163,11 @@ module.exports = function checkDirectory(dir, cb) {
 
   finder.on("end", function () {
     if(directories.length == 0) {
-      check(dir, directories, files, cb);
+      check(options, dir, files, cb);
     } else {
-      collectSubdirectories(dir, directories, files, cb);
+      collectSubdirectories(directories, function (subFiles) {
+        check(options, dir, files.concat(subFiles), cb);
+      });
     }
   });
 };
