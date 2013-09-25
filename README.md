@@ -7,7 +7,7 @@ look at all your files and check which modules you are using, but that's too tim
 
 And that is why `depcheck` exists.
 
-It's a nifty little took that looks at your `package.json` file and scans your code in order to find any unused
+It's a nifty little tool that looks at your `package.json` file and scans your code in order to find any unused
 dependencies.
 
 Works with grunt dependencies too!
