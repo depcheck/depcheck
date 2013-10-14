@@ -20,10 +20,10 @@
     "optimist": "~0.6.0",
     "walkdir": "0.0.7",
     "esprima": "~1.0.4",
-    "should": "~1.2.2",
     "simplesets": "~1.2.0"
   },
   "devDependencies": {
+    "should": "~1.2.2",
     "mocha": "~1.8.1"
   }
 }

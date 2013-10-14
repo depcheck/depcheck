@@ -2,7 +2,7 @@
 
 Keeping track of your dependencies is not an easy task, especially if you have a big application.
 Are you sure you are using all of the dependencies you define in your `package.json` file? One way to find out is to
-look at all your files and check which modules you are using, but that's too time consuming. Or maybe you can do a 
+look at all your files and check which modules you are using, but that's too time consuming. Or maybe you can do a
 `grep` on all the files of your project, and then some `grep -v` to remove the junk. But that's a hassle too.
 
 And that is why `depcheck` exists.
@@ -20,14 +20,14 @@ Works with grunt dependencies too!
 
 As easy as **depcheck [DIRECTORY]**.
 
-Where DIRECTORY is the root directory of your application (where the package.json is). 
+Where DIRECTORY is the root directory of your application (where the package.json is).
 This will list all the unused dependencies in your code if any.
 
 ### Options
 
 `-dev` : by default `depcheck` looks only at "dependencies", this flag will tell it to look at "devDependencies" too.
 
-Or, as a lib: 
+Or, as a lib:
 ```javascript
 var path = require("path");
 var depcheck = require("depcheck");
@@ -47,7 +47,7 @@ Well, it's more of a "What do you think guys?".
 
 There are a couple of things I would like to do if anyone is interested:
 
- - There could be false positives, we could have a white list of modules that 
+ - There could be false positives, we could have a white list of modules that
 you know you are using and that `depcheck` can't find in your code
  - A `grunt-contrib-depcheck` would be nice
 
