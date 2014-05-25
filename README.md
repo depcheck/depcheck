@@ -53,4 +53,4 @@ you know you are using and that `depcheck` can't find in your code
 
 ## License
 
-[MIT](http://mit-license.org/rumpl)
+[MIT](http://rumpl.mit-license.org)
