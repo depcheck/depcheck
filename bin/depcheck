@@ -29,7 +29,7 @@ fs.exists(absolutePath, function (pathExists) {
     console.error('Path ' + dir + ' does not exist');
     process.exit(-1);
   }
-})
+});
 
 function run() {
   checkDirectory(absolutePath, { "withoutDev": argv.dev }, function (unused) {
