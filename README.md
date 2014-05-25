@@ -32,7 +32,7 @@ Or, as a lib:
 var path = require("path");
 var depcheck = require("depcheck");
 var options = {
-  "withDev": true // Check against devDependencies too
+  "withoutDev": false // Check against devDependencies too
 };
 var root = path.resolve("some path");
 
