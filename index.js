@@ -87,35 +87,39 @@ function hasBin(root, dependency) {
   }
 }
 
+function collectUnused(root, usedDependencies, definedDependencies) {
+  var found = new sets.Set();
+
+  definedDependencies.array().forEach(function (definedDependency) {
+    usedDependencies.array().forEach(function (usedDependency) {
+      if (usedDependency === definedDependency || usedDependency.startsWith(definedDependency + "/") || hasBin(root, definedDependency)) {
+        found.add(definedDependency);
+      }
+    });
+  });
+
+  return definedDependencies.difference(found).array();
+}
+
 function check(options, root, files, cb) {
   var pkg = require(path.join(root, "/package.json"));
-  var deps = Object.keys(pkg.dependencies);
+  var deps = new sets.Set(Object.keys(pkg.dependencies));
   var usedDependencies = new sets.Set();
-  var unused;
-
-  if (!options.withoutDev) {
-    deps = deps.concat(Object.keys(pkg.devDependencies || {}));
-  }
+  var ret = {};
 
   files.forEach(function (file) {
     usedDependencies = usedDependencies.union(checkFile(file));
   });
 
-  deps = new sets.Set(deps);
+  ret.dependencies = collectUnused(root, usedDependencies, deps);
 
-  var found = new sets.Set();
+  if (!options.withoutDev) {
+    ret.devDependencies = collectUnused(root, usedDependencies, new sets.Set(Object.keys(pkg.devDependencies || {})));
+  } else {
+    ret.devDependencies = [];
+  }
 
-  usedDependencies.array().forEach(function (ud) {
-    deps.array().forEach(function (dep) {
-      if (ud === dep || ud.startsWith(dep + "/") || hasBin(root, dep)) {
-        found.add(dep);
-      }
-    });
-  });
-
-  unused = deps.difference(found).array();
-
-  cb(unused);
+  cb(ret);
 }
 
 function collectSubdirectories(directories, cb) {

@@ -32,14 +32,24 @@ fs.exists(absolutePath, function (pathExists) {
 });
 
 function run() {
-  checkDirectory(absolutePath, { "withoutDev": argv.dev }, function (unused) {
-    if (unused.length === 0) {
+  checkDirectory(absolutePath, { "withoutDev": !argv.dev }, function (unused) {
+    if (unused.dependencies.length === 0 && unused.devDependencies.length === 0) {
       console.log('No unused dependencies');
       process.exit(0);
     } else {
-      unused.forEach(function (u) {
-        console.log('Unused dependency:', u);
-      });
+      if (unused.dependencies.length !== 0) {
+        console.log('Unused Dependencies');
+        unused.dependencies.forEach(function (u) {
+          console.log('* ' + u);
+        });
+      }
+      if (unused.devDependencies.length !== 0) {
+        console.log();
+        console.log('Unused devDependencies');
+        unused.devDependencies.forEach(function (u) {
+          console.log('* ' + u);
+        });
+      }
       process.exit(-1);
     }
   });
