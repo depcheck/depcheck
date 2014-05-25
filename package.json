@@ -11,7 +11,7 @@
     "url": "git://github.com/rumpl/depcheck.git"
   },
   "scripts": {
-    "test": "mocha test/*.js"
+    "test": "mocha test/index.js"
   },
   "author": "Djordje Lukic",
   "license": "MIT",

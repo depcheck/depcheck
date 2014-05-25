@@ -93,7 +93,7 @@ function check(options, root, files, cb) {
   var usedDependencies = new sets.Set();
   var unused;
 
-  if (options.withDev) {
+  if (!options.withoutDev) {
     deps = deps.concat(Object.keys(pkg.devDependencies || {}));
   }
 

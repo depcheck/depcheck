@@ -3,7 +3,8 @@
 var optimist = require('optimist')
   .usage('Usage: $0 [DIRECTORY]')
   .boolean('dev')
-  .describe('dev', 'Look at devDependecies too')
+  .default('dev', true)
+  .describe('no-dev', 'Don\'t look at devDependecies');
 
 var argv = optimist.argv;
 
@@ -28,10 +29,10 @@ fs.exists(absolutePath, function (pathExists) {
     console.error('Path ' + dir + ' does not exist');
     process.exit(-1);
   }
-});
+})
 
 function run() {
-  checkDirectory(absolutePath, { "withDev": argv.dev }, function (unused) {
+  checkDirectory(absolutePath, { "withoutDev": argv.dev }, function (unused) {
     if (unused.length === 0) {
       console.log('No unused dependencies');
       process.exit(0);
