@@ -28,8 +28,7 @@ function traverse(object, visitor) {
 }
 
 function isRequire(node) {
-  return node.callee.name === "require" ||
-  (node.callee.property && node.callee.property.name === "loadNpmTasks");
+  return node.callee.name === "require" || (node.callee.property && node.callee.property.name === "loadNpmTasks");
 }
 
 function parse(filename) {
@@ -51,7 +50,7 @@ function parse(filename) {
 function checkFile(filename) {
   var used = new sets.Set();
   var syntax = parse(filename);
-  
+
   if (!syntax) {
     return new sets.Set();
   }
@@ -97,7 +96,7 @@ function check(options, root, files, cb) {
   if (options.withDev) {
     deps = deps.concat(Object.keys(pkg.devDependencies || {}));
   }
-  
+
   files.forEach(function (file) {
     usedDependencies = usedDependencies.union(checkFile(file));
   });
@@ -122,13 +121,13 @@ function check(options, root, files, cb) {
 function collectSubdirectories(directories, cb) {
   var n = 0;
   var files = [];
-  
+
   directories.forEach(function (dir) {
     var finder = walkdir(dir);
 
     n++;
 
-    finder.on("file", function (file, stat) {
+    finder.on("file", function (file) {
       files.push(file);
     });
 
@@ -142,19 +141,18 @@ function collectSubdirectories(directories, cb) {
 }
 
 module.exports = function checkDirectory(dir, options, cb) {
-  var usedDeps = [];
   var files = [];
   var directories = [];
   var finder = walkdir(dir, { "no_recurse": true });
 
-  finder.on("directory", function (dir, stat) {
+  finder.on("directory", function (dir) {
     if (path.basename(dir) === "node_modules") {
       return;
     }
     directories.push(dir);
   });
 
-  finder.on("file", function (file, stat) {
+  finder.on("file", function (file) {
     if (path.extname(file) !== ".js") {
       return;
     }

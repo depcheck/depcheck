@@ -1,24 +1,38 @@
 #!/usr/bin/env node
 
-var argv = require('optimist')
+var optimist = require('optimist')
   .usage('Usage: $0 [DIRECTORY]')
   .boolean('dev')
   .describe('dev', 'Look at devDependecies too')
-  .demand(['_'])
-  .argv;
+
+var argv = optimist.argv;
+
 var checkDirectory = require('../index');
 var fs = require('fs');
 var path = require('path');
-var absolutePath = path.resolve(argv._[0]);
+var dir = argv._[0] || '.';
+var absolutePath = path.resolve(dir);
 
-fs.exists(absolutePath, function (exists) {
-  if (!exists) {
-    console.error('Path ' + argv._[0] + ' does not exist');
+fs.exists(absolutePath, function (pathExists) {
+  if (pathExists) {
+    fs.exists(absolutePath + path.sep + 'package.json', function (exists) {
+      if (exists) {
+        run();
+      } else {
+        console.error('Path ' + dir + ' does not contain a package.json file');
+        optimist.showHelp();
+        process.exit(-1);
+      }
+    });
+  } else {
+    console.error('Path ' + dir + ' does not exist');
     process.exit(-1);
   }
+});
 
-  checkDirectory(absolutePath, { "withDev" : argv.dev }, function (unused) {
-    if(unused.length === 0) {
+function run() {
+  checkDirectory(absolutePath, { "withDev": argv.dev }, function (unused) {
+    if (unused.length === 0) {
       console.log('No unused dependencies');
       process.exit(0);
     } else {
@@ -28,4 +42,4 @@ fs.exists(absolutePath, function (exists) {
       process.exit(-1);
     }
   });
-});
+}
