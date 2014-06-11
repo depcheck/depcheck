@@ -32,7 +32,15 @@ Or, as a lib:
 var path = require("path");
 var depcheck = require("depcheck");
 var options = {
-  "withoutDev": false // Check against devDependencies too
+  "withoutDev": false, // Check against devDependencies too
+  "ignoreDirs": [      // Pathnames to ignore
+    "sandbox",
+    "dist",
+    "bower_components"
+  ],
+  "ignoreMatches": [  // Ignore dependencies that match these minimatch patterns
+    "grunt-*"
+  ]
 };
 var root = path.resolve("some path");
 
