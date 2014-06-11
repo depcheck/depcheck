@@ -17,13 +17,17 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "optimist": "~0.6.0",
-    "walkdir": "0.0.7",
     "esprima": "~1.0.4",
-    "simplesets": "~1.2.0"
+    "lodash": "^2.4.1",
+    "q": "^1.0.1",
+    "simplesets": "~1.2.0",
+    "traverse": "^0.6.6",
+    "walkdir": "0.0.7"
   },
   "devDependencies": {
     "should": "~1.2.2",
-    "mocha": "~1.8.1"
+    "mocha": "~1.8.1",
+    "optimist": "~0.6.0"
+
   }
 }
