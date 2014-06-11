@@ -19,8 +19,8 @@
   "dependencies": {
     "esprima": "~1.0.4",
     "lodash": "^2.4.1",
+    "minimatch": "^0.3.0",
     "q": "^1.0.1",
-    "simplesets": "~1.2.0",
     "traverse": "^0.6.6",
     "walkdir": "0.0.7"
   },
@@ -28,6 +28,5 @@
     "should": "~1.2.2",
     "mocha": "~1.8.1",
     "optimist": "~0.6.0"
-
   }
 }
