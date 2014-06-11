@@ -47,4 +47,23 @@ describe("depcheck", function () {
       done();
     });
   });
+
+  it("should should ignore ignoreDirs", function testUnused(done) {
+    var absolutePath = path.resolve("test/fake_modules/bad");
+
+    depcheck(absolutePath, { "ignoreDirs": ['sandbox'] }, function checked(unused) {
+      assert.equal(unused.dependencies.length, 1);
+      done();
+    });
+  });
+
+  it("should should ignore ignoreMatches", function testUnused(done) {
+    var absolutePath = path.resolve("test/fake_modules/bad");
+
+    depcheck(absolutePath, { "ignoreMatches": ['o*'] }, function checked(unused) {
+      assert.equal(unused.dependencies.length, 0);
+      done();
+    });
+  });
+
 });

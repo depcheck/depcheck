@@ -123,7 +123,7 @@ function depCheck(rootDir, options, cb) {
     .unique();
 
   function isIgnored(dependency) {
-    return _.any(options.ignoredMatches, function(match) {
+    return _.any(options.ignoreMatches, function(match) {
       return minimatch(dependency, match);
     });
   }
