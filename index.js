@@ -1,175 +1,109 @@
 var fs = require("fs");
 var path = require("path");
-var esprima = require("esprima");
-var sets = require("simplesets");
+var detective = require('detective');
+var q = require('q');
 var walkdir = require("walkdir");
+var _ = require('lodash');
+var minimatch = require('minimatch');
 
-if (typeof String.prototype.startsWith !== "function") {
-  String.prototype.startsWith = function (str) {
-    return this.slice(0, str.length) === str;
-  };
-}
-
-function traverse(object, visitor) {
-  var key, child;
-
-  if (visitor.call(null, object) === false) {
-    return;
-  }
-
-  for (key in object) {
-    if (object.hasOwnProperty(key)) {
-      child = object[key];
-      if (typeof child === "object" && child !== null) {
-        traverse(child, visitor);
-      }
-    }
-  }
-}
-
-function isRequire(node) {
-  return node.callee.name === "require" || (node.callee.property && node.callee.property.name === "loadNpmTasks");
-}
-
-function parse(filename) {
+function getModulesRequiredFromFilename(filename) {
   var content = fs.readFileSync(filename, "utf-8");
-  var lines;
-  try {
-    lines = content.split("\n");
-    if (lines[0][0] === "#") {
-      lines.shift();
-      content = lines.join("\n");
-    }
-
-    return esprima.parse(content, {tolerant: true});
-  } catch (e) {
-    return null;
-  }
-}
-
-function checkFile(filename) {
-  var used = new sets.Set();
-  var syntax = parse(filename);
-
-  if (!syntax) {
-    return new sets.Set();
-  }
-
-  traverse(syntax, function (node) {
-    var arg;
-
-    if (node.type !== "CallExpression") {
-      return;
-    }
-    if (node.arguments.length !== 1) {
-      return;
-    }
-    if (!isRequire(node)) {
-      return;
-    }
-
-    arg = node.arguments[0];
-
-    if (arg.type === "Literal" && arg.value[0] !== ".") {
-      used.add(arg.value);
+  return detective(content, {
+    word: '',
+    isRequire: function(node) {
+      var callee = node.callee;
+      return callee &&
+        (
+          (node.type === 'CallExpression' && callee.type === 'Identifier'
+          && callee.name === 'require')
+          ||
+          (callee.property && callee.property.name === 'loadNpmTasks')
+        );
     }
   });
-
-  return used;
 }
 
-function hasBin(root, dependency) {
-  try {
-    var depPkg = require(path.join(root, "node_modules", dependency, "package.json"));
-    return depPkg.bin !== undefined;
-  } catch (e) {
-    return false;
-  }
-}
+function checkDirectory(dir, ignoreDirs, deps, devDeps) {
 
-function collectUnused(root, usedDependencies, definedDependencies) {
-  var found = new sets.Set();
-
-  definedDependencies.array().forEach(function (definedDependency) {
-    usedDependencies.array().forEach(function (usedDependency) {
-      if (usedDependency === definedDependency || usedDependency.startsWith(definedDependency + "/") || hasBin(root, definedDependency)) {
-        found.add(definedDependency);
-      }
-    });
-  });
-
-  return definedDependencies.difference(found).array();
-}
-
-function check(options, root, files, cb) {
-  var pkg = require(path.join(root, "/package.json"));
-  var deps = new sets.Set(Object.keys(pkg.dependencies));
-  var usedDependencies = new sets.Set();
-  var ret = {};
-
-  files.forEach(function (file) {
-    usedDependencies = usedDependencies.union(checkFile(file));
-  });
-
-  ret.dependencies = collectUnused(root, usedDependencies, deps);
-
-  if (!options.withoutDev) {
-    ret.devDependencies = collectUnused(root, usedDependencies, new sets.Set(Object.keys(pkg.devDependencies || {})));
-  } else {
-    ret.devDependencies = [];
-  }
-
-  cb(ret);
-}
-
-function collectSubdirectories(directories, cb) {
-  var n = 0;
-  var files = [];
-
-  directories.forEach(function (dir) {
-    var finder = walkdir(dir);
-
-    n++;
-
-    finder.on("file", function (file) {
-      files.push(file);
-    });
-
-    finder.on("end", function () {
-      n--;
-      if (n === 0) {
-        cb(files);
-      }
-    });
-  });
-}
-
-module.exports = function checkDirectory(dir, options, cb) {
-  var files = [];
-  var directories = [];
+  var deferred = q.defer();
+  var directoryPromises = [];
   var finder = walkdir(dir, { "no_recurse": true });
 
-  finder.on("directory", function (dir) {
-    if (path.basename(dir) === "node_modules") {
-      return;
+  finder.on("directory", function (subdir) {
+    if (ignoreDirs.contains(path.basename(subdir))
+      || (deps.isEmpty() && devDeps.isEmpty()))  {
+        return;
     }
-    directories.push(dir);
+
+    directoryPromises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps));
   });
 
-  finder.on("file", function (file) {
-    if (path.extname(file) !== ".js") {
-      return;
+  finder.on("file", function (filename) {
+    if (path.extname(filename) === ".js") {
+      var modulesRequired = getModulesRequiredFromFilename(filename);
+      deps = deps.difference(modulesRequired);
+      devDeps = devDeps.difference(modulesRequired);
     }
-    files.push(file);
   });
 
   finder.on("end", function () {
-    if (directories.length === 0) {
-      check(options, dir, files, cb);
-    } else {
-      collectSubdirectories(directories, function (subFiles) {
-        check(options, dir, files.concat(subFiles), cb);
+    deferred.resolve(q.allSettled(directoryPromises).then(function(directoryResults) {
+
+      _(directoryResults).each(function(result) {
+        if (result.state === 'fulfilled') {
+          deps = deps.intersection(result.value.dependencies);
+          devDeps = devDeps.intersection(result.value.devDependencies);
+        }
       });
-    }
+
+      return {
+        dependencies: deps.valueOf(),
+        devDependencies: devDeps.valueOf()};
+    }));
   });
-};
+
+  return deferred.promise;
+}
+
+function depCheck(rootDir, options, cb) {
+
+  var pkg = require(path.join(rootDir, 'package.json'));
+  var deps = filterDependencies(pkg.dependencies);
+  var devDeps = filterDependencies(options.withoutDev ? [] : pkg.devDependencies);
+  var ignoreDirs = _([
+      '.git',
+      '.svn',
+      '.hg',
+      '.idea',
+      'node_modules'
+    ])
+    .concat(options.ignoreDirs)
+    .flatten()
+    .unique();
+
+  function isIgnored(dependency) {
+    return _.any(options.ignoreMatches, function(match) {
+      return minimatch(dependency, match);
+    });
+  }
+
+  function hasBin(dependency) {
+    try {
+      var depPkg = require(path.join(rootDir, "node_modules", dependency, "package.json"));
+      return _.has(depPkg, 'bin');
+    } catch (e) {}
+  }
+
+  function filterDependencies(dependencies) {
+    return _(dependencies)
+      .keys()
+      .reject(hasBin)
+      .reject(isIgnored)
+  }
+
+  return checkDirectory(rootDir, ignoreDirs, deps, devDeps)
+    .then(cb)
+    .done();
+}
+
+module.exports = depCheck;
