@@ -1,73 +1,32 @@
 var fs = require("fs");
 var path = require("path");
-var esprima = require("esprima");
+var detective = require('detective');
 var q = require('q');
 var walkdir = require("walkdir");
 var _ = require('lodash');
-var traverse = require('traverse');
 var minimatch = require('minimatch');
 
-function isRequire(node) {
-  return node.callee.name === "require" || (node.callee.property && node.callee.property.name === "loadNpmTasks");
-}
-
-function readAndParseFile(filename) {
-  var content = fs.readFileSync(filename, "utf-8");
-  var lines;
-  try {
-    if (content[0] === '#') {
-      lines = content.split("\n");
-      lines.shift();
-      content = lines.join("\n");
-    }
-
-    return esprima.parse(content, {tolerant: true});
-  } catch (e) {}
-}
-
 function getModulesRequiredFromFilename(filename) {
-  var syntax = readAndParseFile(filename);
-  var modulesRequired = [];
-
-  if (!syntax) {
-    return;
-  }
-
-  // There might be a cleaner way to do this
-  // https://github.com/substack/js-traverse
-  traverse(syntax).forEach(function (node) {
-    var arg;
-
-    if (!node) {
-      return;
-    }
-
-    if (node.type !== "CallExpression") {
-      return;
-    }
-    if (node.arguments.length !== 1) {
-      return;
-    }
-    if (!isRequire(node)) {
-      return;
-    }
-
-    arg = node.arguments[0];
-
-    if (arg.type === "Literal" && arg.value[0] !== '.') {
-      modulesRequired.push(arg.value);
+  var content = fs.readFileSync(filename, "utf-8");
+  return detective(content, {
+    word: '',
+    isRequire: function(node) {
+      var callee = node.callee;
+      return callee &&
+        (
+          (node.type === 'CallExpression' && callee.type === 'Identifier'
+          && callee.name === 'require')
+          ||
+          (callee.property && callee.property.name === 'loadNpmTasks')
+        );
     }
   });
-
-  return modulesRequired;
 }
 
 function checkDirectory(dir, ignoreDirs, deps, devDeps) {
 
   var deferred = q.defer();
-
   var directoryPromises = [];
-
   var finder = walkdir(dir, { "no_recurse": true });
 
   finder.on("directory", function (subdir) {
