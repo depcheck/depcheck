@@ -47,6 +47,7 @@ var root = path.resolve("some path");
 depcheck(root, options, function(unused) {
   console.log(unused.dependencies);
   console.log(unused.devDependencies);
+  console.log(unused.invalidFiles); // JS files that couldn't be parsed
 });
 ```
 
