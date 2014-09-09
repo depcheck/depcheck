@@ -88,7 +88,8 @@ function depCheck(rootDir, options, cb) {
       '.svn',
       '.hg',
       '.idea',
-      'node_modules'
+      'node_modules',
+      'bower_components'
     ])
     .concat(options.ignoreDirs)
     .flatten()
