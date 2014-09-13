@@ -76,4 +76,13 @@ describe("depcheck", function () {
     });
   });
 
+  it("should recognize nested requires", function testNested(done) {
+    var absolutePath = path.resolve("test/fake_modules/nested");
+
+    depcheck(absolutePath, {  }, function checked(unused) {
+      assert.equal(unused.dependencies.length, 0);
+      done();
+    });
+  });
+
 });
