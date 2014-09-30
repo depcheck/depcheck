@@ -85,4 +85,20 @@ describe("depcheck", function () {
     });
   });
 
+  it("should allow dynamic package metadata", function testDynamic(done) {
+    var absolutePath = path.resolve("test/fake_modules/bad");
+
+    depcheck(absolutePath, {
+      "package": {
+        "dependencies": {
+          "optimist": "~0.6.0",
+          "express": "^4.0.0"
+        }
+      }
+    }, function checked(unused) {
+      assert.equal(unused.dependencies.length, 2);
+      done();
+    });
+  });
+
 });
