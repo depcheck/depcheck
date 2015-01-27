@@ -10,7 +10,7 @@ And that is why `depcheck` exists.
 It's a nifty little tool that looks at your `package.json` file and scans your code in order to find any unused
 dependencies.
 
-Works with grunt dependencies too! And has a [grunt plugin](https://github.com/rumpl/grunt-depcheck).
+Using grunt ? Checkout the [grunt plugin](https://github.com/rumpl/grunt-depcheck).
 
 ## Installation
 
