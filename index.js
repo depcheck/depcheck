@@ -36,8 +36,8 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
   var invalidFiles = {};
 
   finder.on("directory", function (subdir) {
-    if (ignoreDirs.contains(path.basename(subdir))
-      || (deps.isEmpty() && devDeps.isEmpty()))  {
+    if (_.contains(ignoreDirs, path.basename(subdir))
+      || (_.isEmpty(deps) && _.isEmpty(devDeps)))  {
         return;
     }
 
@@ -53,8 +53,8 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
         modulesRequired = modulesRequired.map(function (module) {
           return module.replace ? module.replace(/\/.*$/, '') : module;
         });
-        deps = deps.difference(modulesRequired);
-        devDeps = devDeps.difference(modulesRequired);
+        deps = _.difference(deps, modulesRequired);
+        devDeps = _.difference(devDeps, modulesRequired);
       }
     }
   });
@@ -62,17 +62,17 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
   finder.on("end", function () {
     deferred.resolve(q.allSettled(directoryPromises).then(function(directoryResults) {
 
-      _(directoryResults).each(function(result) {
+      _.each(directoryResults, function(result) {
         if (result.state === 'fulfilled') {
           invalidFiles = _.merge(invalidFiles, result.value.invalidFiles, {});
-          deps = deps.intersection(result.value.dependencies);
-          devDeps = devDeps.intersection(result.value.devDependencies);
+          deps = _.intersection(deps, result.value.dependencies);
+          devDeps = _.intersection(devDeps, result.value.devDependencies);
         }
       });
 
       return {
-        dependencies: deps.valueOf(),
-        devDependencies: devDeps.valueOf(),
+        dependencies: deps,
+        devDependencies: devDeps,
         invalidFiles: invalidFiles
       };
     }));
@@ -96,7 +96,8 @@ function depCheck(rootDir, options, cb) {
     ])
     .concat(options.ignoreDirs)
     .flatten()
-    .unique();
+    .unique()
+    .valueOf();
 
   function isIgnored(dependency) {
     return _.any(options.ignoreMatches, function(match) {
@@ -116,6 +117,7 @@ function depCheck(rootDir, options, cb) {
       .keys()
       .reject(hasBin)
       .reject(isIgnored)
+      .valueOf();
   }
 
   return checkDirectory(rootDir, ignoreDirs, deps, devDeps)
