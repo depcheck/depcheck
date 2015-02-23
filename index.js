@@ -51,7 +51,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
         invalidFiles[filename] = modulesRequired;
       } else {
         modulesRequired = modulesRequired.map(function (module) {
-          return module.replace(/\/.*$/, '');
+          return module.replace ? module.replace(/\/.*$/, '') : module;
         });
         deps = deps.difference(modulesRequired);
         devDeps = devDeps.difference(modulesRequired);
