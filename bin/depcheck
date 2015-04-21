@@ -4,7 +4,8 @@ var optimist = require('optimist')
   .usage('Usage: $0 [DIRECTORY]')
   .boolean('dev')
   .default('dev', true)
-  .describe('no-dev', 'Don\'t look at devDependecies');
+  .describe('no-dev', 'Don\'t look at devDependecies')
+  .describe('json', 'Output results to JSON');
 
 var argv = optimist.argv;
 
@@ -33,6 +34,11 @@ fs.exists(absolutePath, function (pathExists) {
 
 function run() {
   checkDirectory(absolutePath, { "withoutDev": !argv.dev }, function (unused) {
+    if (argv.json) {
+      console.log(JSON.stringify(unused));
+      return process.exit(0);
+    }
+
     if (unused.dependencies.length === 0 && unused.devDependencies.length === 0) {
       console.log('No unused dependencies');
       process.exit(0);
