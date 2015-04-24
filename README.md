@@ -26,6 +26,7 @@ This will list all the unused dependencies in your code if any.
 ### Options
 
 `--no-dev` : by default `depcheck` looks at `dependencies` and `devDependencies`, this flag will tell it not to look at "devDependencies".
+
 `--json` : output results to JSON
 
 Or, as a lib:
