@@ -1,5 +1,6 @@
 var assert = require("should");
 var depcheck = require("../index");
+var fs = require("fs");
 var path = require("path");
 
 describe("depcheck", function () {
@@ -125,6 +126,27 @@ describe("depcheck", function () {
     depcheck(absolutePath, {  }, function checked(unused) {
       assert.equal(unused.dependencies.length, 0);
       done();
+    });
+  });
+
+  describe("#error-handling", function () {
+    var absolutePath = path.resolve("test/fake_modules/bad");
+    var unreadableDir = path.join(absolutePath, 'unreadable');
+
+    before(function createUnreadableDir() {
+      fs.mkdirSync(unreadableDir, '0000');
+    });
+
+    it("should handle walkdir errors", function testNonReadable(done) {
+      depcheck(absolutePath, {  }, function checked(unused) {
+        assert.equal(unused.dependencies.length, 1);
+        done();
+      });
+    });
+
+    after(function removeUnreadableDir() {
+      fs.chmodSync(unreadableDir, '0700');
+      fs.rmdirSync(unreadableDir);
     });
   });
 
