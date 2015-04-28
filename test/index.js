@@ -110,4 +110,13 @@ describe("depcheck", function () {
     });
   });
 
+  it("should exclude bin dependencies", function testBin(done) {
+    var absolutePath = path.resolve("test/fake_modules/bin");
+
+    depcheck(absolutePath, {  }, function checked(unused) {
+      assert.equal(unused.dependencies.length, 0);
+      done();
+    });
+  });
+
 });
