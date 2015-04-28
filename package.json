@@ -11,7 +11,7 @@
     "url": "git://github.com/lijunle/depcheck-es6.git"
   },
   "scripts": {
-    "test": "mocha test/index.js"
+    "test": "istanbul cover node_modules/mocha/bin/_mocha test/index.js"
   },
   "author": [
     "Djordje Lukic",
@@ -28,6 +28,7 @@
     "walkdir": "0.0.7"
   },
   "devDependencies": {
+    "istanbul": "^0.3.13",
     "mocha": "^2.1.0",
     "should": "^5.0.1"
   }
