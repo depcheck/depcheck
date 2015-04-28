@@ -119,4 +119,13 @@ describe("depcheck", function () {
     });
   });
 
+  it("should work without dependencies", function testNoDependencies(done) {
+    var absolutePath = path.resolve("test/fake_modules/empty");
+
+    depcheck(absolutePath, {  }, function checked(unused) {
+      assert.equal(unused.dependencies.length, 0);
+      done();
+    });
+  });
+
 });
