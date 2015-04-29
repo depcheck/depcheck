@@ -67,6 +67,8 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
           invalidFiles = _.merge(invalidFiles, result.value.invalidFiles, {});
           deps = _.intersection(deps, result.value.dependencies);
           devDeps = _.intersection(devDeps, result.value.devDependencies);
+        } else {
+          deferred.reject(result.reason);
         }
       });
 
@@ -76,6 +78,11 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
         invalidFiles: invalidFiles
       };
     }));
+  });
+
+  finder.on("error", function (path, err) {
+    console.error(err.message);
+    deferred.reject(err);
   });
 
   return deferred.promise;

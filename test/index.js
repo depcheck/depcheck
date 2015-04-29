@@ -1,12 +1,13 @@
 var assert = require("should");
 var depcheck = require("../index");
+var fs = require("fs");
 var path = require("path");
 
 describe("depcheck", function () {
   it("should find unused dependencies", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/bad");
 
-    depcheck(absolutePath, { "withouttDev": true }, function checked(unused) {
+    depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
       assert.equal(unused.dependencies.length, 1);
       done();
     });
@@ -15,7 +16,7 @@ describe("depcheck", function () {
   it("should find all dependencies", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/good");
 
-    depcheck(absolutePath, { "withouttDev": true }, function checked(unused) {
+    depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
       assert.equal(unused.dependencies.length, 0);
       done();
     });
@@ -24,7 +25,7 @@ describe("depcheck", function () {
   it("should find manage grunt dependencies", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/grunt");
 
-    depcheck(absolutePath, { "withouttDev": true }, function checked(unused) {
+    depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
       assert.equal(unused.dependencies.length, 0);
       done();
     });
@@ -33,7 +34,7 @@ describe("depcheck", function () {
   it("should find manage grunt task dependencies", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/grunt-tasks");
 
-    depcheck(absolutePath, { "withouttDev": true }, function checked(unused) {
+    depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
       assert.equal(unused.dependencies.length, 0);
       done();
     });
@@ -42,7 +43,7 @@ describe("depcheck", function () {
   it("should look at devDependencies", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/dev");
 
-    depcheck(absolutePath, { "withouttDev": false }, function checked(unused) {
+    depcheck(absolutePath, { "withoutDev": false }, function checked(unused) {
       assert.equal(unused.devDependencies.length, 1);
       done();
     });
@@ -107,6 +108,45 @@ describe("depcheck", function () {
     }, function checked(unused) {
       assert.equal(unused.dependencies.length, 2);
       done();
+    });
+  });
+
+  it("should exclude bin dependencies", function testBin(done) {
+    var absolutePath = path.resolve("test/fake_modules/bin");
+
+    depcheck(absolutePath, {  }, function checked(unused) {
+      assert.equal(unused.dependencies.length, 0);
+      done();
+    });
+  });
+
+  it("should work without dependencies", function testNoDependencies(done) {
+    var absolutePath = path.resolve("test/fake_modules/empty");
+
+    depcheck(absolutePath, {  }, function checked(unused) {
+      assert.equal(unused.dependencies.length, 0);
+      done();
+    });
+  });
+
+  describe("#error-handling", function () {
+    var absolutePath = path.resolve("test/fake_modules/bad");
+    var unreadableDir = path.join(absolutePath, 'unreadable');
+
+    before(function createUnreadableDir() {
+      fs.mkdirSync(unreadableDir, '0000');
+    });
+
+    it("should handle walkdir errors", function testNonReadable(done) {
+      depcheck(absolutePath, {  }, function checked(unused) {
+        assert.equal(unused.dependencies.length, 1);
+        done();
+      });
+    });
+
+    after(function removeUnreadableDir() {
+      fs.chmodSync(unreadableDir, '0700');
+      fs.rmdirSync(unreadableDir);
     });
   });
 
