@@ -49,7 +49,7 @@ describe("depcheck", function () {
   });
 
   it("should should ignore ignoreDirs", function testUnused(done) {
-    var absolutePath = path.resolve("test/fake_modules/bad");
+    var absolutePath = path.resolve("test/fake_modules/bad_deep");
 
     depcheck(absolutePath, { "ignoreDirs": ['sandbox'] }, function checked(unused) {
       assert.equal(unused.dependencies.length, 1);
