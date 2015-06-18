@@ -21,6 +21,15 @@ describe("depcheck", function () {
     });
   });
 
+  it("should find all dependencies in ES6 files", function testUnused(done) {
+    var absolutePath = path.resolve("test/fake_modules/good_es6");
+
+    depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
+      assert.equal(unused.dependencies.length, 0);
+      done();
+    });
+  });
+
   it("should find manage grunt dependencies", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/grunt");
 
