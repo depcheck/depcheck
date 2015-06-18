@@ -53,6 +53,7 @@ describe("depcheck", function () {
 
     depcheck(absolutePath, { "ignoreDirs": ['sandbox'] }, function checked(unused) {
       assert.equal(unused.dependencies.length, 1);
+      assert.equal(unused.dependencies[0], 'module_bad_deep');
       done();
     });
   });
