@@ -1,30 +1,55 @@
 var fs = require("fs");
 var path = require("path");
-var detective = require('detective');
+var Walker = require('node-source-walk');
 var q = require('q');
 var walkdir = require("walkdir");
 var _ = require('lodash');
 var minimatch = require('minimatch');
 var util = require('util');
 
+function getArgumentFromCall(node) {
+  return node.type === 'CallExpression' && node.arguments[0]
+    ? node.arguments[0].value
+    : undefined;
+}
+
+function isRequireFunction(node) {
+  var callee = node.callee;
+  return callee && callee.type === 'Identifier' && callee.name === 'require' &&
+    getArgumentFromCall(node);
+}
+
+function isGruntLoadTaskCall(node) {
+  var callee = node.callee;
+  return callee && callee.property && callee.property.name === 'loadNpmTasks' &&
+    getArgumentFromCall(node);
+}
+
+function isImportDeclaration(node) {
+  return node.type === 'ImportDeclaration' && node.source && node.source.value;
+}
+
 function getModulesRequiredFromFilename(filename) {
   var content = fs.readFileSync(filename, "utf-8");
+  if (!content) {
+    throw new TypeError('cannot read from file ' + filename);
+  }
+
+  var walker = new Walker();
+  var dependencies = [];
+
   try {
-    return detective(content, {
-      word: '',
-      isRequire: function(node) {
-        var callee = node.callee;
-        return callee &&
-          (
-            (node.type === 'CallExpression' && callee.type === 'Identifier'
-            && callee.name === 'require')
-            ||
-            (callee.property && callee.property.name === 'loadNpmTasks')
-          );
+    walker.walk(content, function(node) {
+      if (isRequireFunction(node) || isGruntLoadTaskCall(node)) {
+        dependencies.push(getArgumentFromCall(node));
+      } else if (isImportDeclaration(node)) {
+        dependencies.push(node.source.value);
       }
     });
+
+    return dependencies;
   } catch (err) {
-    return err;
+    return [];
   }
 }
 
