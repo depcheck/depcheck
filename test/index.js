@@ -1,3 +1,5 @@
+/* global describe, it */
+
 var assert = require("should");
 var depcheck = require("../index");
 var path = require("path");
