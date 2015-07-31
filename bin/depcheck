@@ -5,7 +5,8 @@ var optimist = require('optimist')
   .boolean('dev')
   .default('dev', true)
   .describe('no-dev', 'Don\'t look at devDependecies')
-  .describe('json', 'Output results to JSON');
+  .describe('json', 'Output results to JSON')
+	.describe('whitelist', 'Comma separated list of modules to whitelist');
 
 var argv = optimist.argv;
 
@@ -33,7 +34,7 @@ fs.exists(absolutePath, function (pathExists) {
 });
 
 function run() {
-  checkDirectory(absolutePath, { "withoutDev": !argv.dev }, function (unused) {
+  checkDirectory(absolutePath, { "withoutDev": !argv.dev, "whitelist": getWhitelistedDepAsArray() }, function (unused) {
     if (argv.json) {
       console.log(JSON.stringify(unused));
       return process.exit(0);
@@ -59,4 +60,11 @@ function run() {
       process.exit(-1);
     }
   });
+}
+
+function getWhitelistedDepAsArray() {
+	if(!argv.whitelist) {
+		return [];
+	}
+	return argv.whitelist.split(',');
 }
