@@ -29,6 +29,8 @@ This will list all the unused dependencies in your code if any.
 
 `--json` : output results to JSON
 
+`--whitelist` : comma separated list of modules to whitelist
+
 Or, as a lib:
 ```javascript
 var path = require("path");

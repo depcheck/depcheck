@@ -82,7 +82,6 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
 }
 
 function depCheck(rootDir, options, cb) {
-
   var pkg = options.package || require(path.join(rootDir, 'package.json'));
   var deps = filterDependencies(pkg.dependencies);
   var devDeps = filterDependencies(options.withoutDev ? [] : pkg.devDependencies);
@@ -112,13 +111,20 @@ function depCheck(rootDir, options, cb) {
     } catch (e) {}
   }
 
+	function isWhitelisted(dependency) {
+		var whitelisted = options.whitelist || [];
+		return whitelisted.indexOf(dependency) !== -1;
+	}
+
   function filterDependencies(dependencies) {
     return _(dependencies)
       .keys()
       .reject(hasBin)
       .reject(isIgnored)
+			.reject(isWhitelisted)
       .valueOf();
   }
+
 
   return checkDirectory(rootDir, ignoreDirs, deps, devDeps)
     .then(cb)

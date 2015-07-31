@@ -21,6 +21,15 @@ describe("depcheck", function () {
     });
   });
 
+	it('should not mark whitelisted dependencies as unused', function testWhitelist(done) {
+    var absolutePath = path.resolve("test/fake_modules/bad");
+
+		depcheck(absolutePath, { "whitelist": "optimist" }, function checked(unused) {
+			assert.equal(unused.dependencies.length, 0);
+			done();
+		});
+	});
+
   it("should find manage grunt dependencies", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/grunt");
 
