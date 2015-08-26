@@ -32,7 +32,7 @@ function isImportDeclaration(node) {
 function getModulesRequiredFromFilename(filename) {
   var content = fs.readFileSync(filename, "utf-8");
   if (!content) {
-    throw new TypeError('cannot read from file ' + filename);
+    return [];
   }
 
   var walker = new Walker();

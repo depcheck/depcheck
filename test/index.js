@@ -103,6 +103,15 @@ describe("depcheck", function () {
     });
   });
 
+  it("should handle empty JavaScript file", function testEmpty(done) {
+    var absolutePath = path.resolve("test/fake_modules/empty");
+
+    depcheck(absolutePath, {}, function checked(unused) {
+      assert.equal(unused.dependencies.length, 1);
+      done();
+    });
+  });
+
   it("should allow dynamic package metadata", function testDynamic(done) {
     var absolutePath = path.resolve("test/fake_modules/bad");
 
