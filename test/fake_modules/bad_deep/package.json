@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "optimist": "~0.6.0"
+    "module_bad_deep": "~0.0.1"
   }
 }
