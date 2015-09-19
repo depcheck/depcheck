@@ -1,3 +1,5 @@
+/* global describe, it */
+
 var assert = require("should");
 var depcheck = require("../index");
 var path = require("path");
@@ -58,10 +60,11 @@ describe("depcheck", function () {
   });
 
   it("should ignore ignoreDirs", function testUnused(done) {
-    var absolutePath = path.resolve("test/fake_modules/bad");
+    var absolutePath = path.resolve("test/fake_modules/bad_deep");
 
     depcheck(absolutePath, { "ignoreDirs": ['sandbox'] }, function checked(unused) {
       assert.equal(unused.dependencies.length, 1);
+      assert.equal(unused.dependencies[0], 'module_bad_deep');
       done();
     });
   });
