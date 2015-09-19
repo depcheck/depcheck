@@ -1,34 +1,59 @@
 var fs = require("fs");
 var path = require("path");
-var detective = require('detective');
+var Walker = require('node-source-walk');
 var q = require('q');
 var walkdir = require("walkdir");
 var _ = require('lodash');
 var minimatch = require('minimatch');
 var util = require('util');
 
-function getModulesRequiredFromFilename(filename) {
+function getArgumentFromCall(node) {
+  return node.type === 'CallExpression' && node.arguments[0]
+    ? node.arguments[0].value
+    : undefined;
+}
+
+function isRequireFunction(node) {
+  var callee = node.callee;
+  return callee && callee.type === 'Identifier' && callee.name === 'require' &&
+    getArgumentFromCall(node);
+}
+
+function isGruntLoadTaskCall(node) {
+  var callee = node.callee;
+  return callee && callee.property && callee.property.name === 'loadNpmTasks' &&
+    getArgumentFromCall(node);
+}
+
+function isImportDeclaration(node) {
+  return node.type === 'ImportDeclaration' && node.source && node.source.value;
+}
+
+function getModulesRequiredFromFilename(filename, options) {
   var content = fs.readFileSync(filename, "utf-8");
+  if (!content) {
+    return [];
+  }
+
+  var walker = new Walker(options);
+  var dependencies = [];
+
   try {
-    return detective(content, {
-      word: '',
-      isRequire: function(node) {
-        var callee = node.callee;
-        return callee &&
-          (
-            (node.type === 'CallExpression' && callee.type === 'Identifier'
-            && callee.name === 'require')
-            ||
-            (callee.property && callee.property.name === 'loadNpmTasks')
-          );
+    walker.walk(content, function(node) {
+      if (isRequireFunction(node) || isGruntLoadTaskCall(node)) {
+        dependencies.push(getArgumentFromCall(node));
+      } else if (isImportDeclaration(node)) {
+        dependencies.push(node.source.value);
       }
     });
+
+    return dependencies;
   } catch (err) {
-    return err;
+    return [];
   }
 }
 
-function checkDirectory(dir, ignoreDirs, deps, devDeps) {
+function checkDirectory(dir, ignoreDirs, deps, devDeps, options) {
 
   var deferred = q.defer();
   var directoryPromises = [];
@@ -41,12 +66,12 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
         return;
     }
 
-    directoryPromises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps));
+    directoryPromises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps, options));
   });
 
   finder.on("file", function (filename) {
     if (path.extname(filename) === ".js") {
-      var modulesRequired = getModulesRequiredFromFilename(filename);
+      var modulesRequired = getModulesRequiredFromFilename(filename, options);
       if (util.isError(modulesRequired)) {
         invalidFiles[filename] = modulesRequired;
       } else {
@@ -120,7 +145,7 @@ function depCheck(rootDir, options, cb) {
       .valueOf();
   }
 
-  return checkDirectory(rootDir, ignoreDirs, deps, devDeps)
+  return checkDirectory(rootDir, ignoreDirs, deps, devDeps, options)
     .then(cb)
     .done();
 }
