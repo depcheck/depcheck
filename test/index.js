@@ -112,6 +112,15 @@ describe("depcheck", function () {
     });
   });
 
+  it("should accept acron options and passthrough to parse logic", function testAcronOptions(done) {
+    var absolutePath = path.resolve("test/fake_modules/acron-options");
+
+    depcheck(absolutePath, { allowReturnOutsideFunction: true }, function checked(unused) {
+      assert.equal(unused.dependencies.length, 0);
+      done();
+    });
+  });
+
   it("should allow dynamic package metadata", function testDynamic(done) {
     var absolutePath = path.resolve("test/fake_modules/bad");
 

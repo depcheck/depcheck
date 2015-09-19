@@ -29,13 +29,13 @@ function isImportDeclaration(node) {
   return node.type === 'ImportDeclaration' && node.source && node.source.value;
 }
 
-function getModulesRequiredFromFilename(filename) {
+function getModulesRequiredFromFilename(filename, options) {
   var content = fs.readFileSync(filename, "utf-8");
   if (!content) {
     return [];
   }
 
-  var walker = new Walker();
+  var walker = new Walker(options);
   var dependencies = [];
 
   try {
@@ -53,7 +53,7 @@ function getModulesRequiredFromFilename(filename) {
   }
 }
 
-function checkDirectory(dir, ignoreDirs, deps, devDeps) {
+function checkDirectory(dir, ignoreDirs, deps, devDeps, options) {
 
   var deferred = q.defer();
   var directoryPromises = [];
@@ -66,12 +66,12 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
         return;
     }
 
-    directoryPromises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps));
+    directoryPromises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps, options));
   });
 
   finder.on("file", function (filename) {
     if (path.extname(filename) === ".js") {
-      var modulesRequired = getModulesRequiredFromFilename(filename);
+      var modulesRequired = getModulesRequiredFromFilename(filename, options);
       if (util.isError(modulesRequired)) {
         invalidFiles[filename] = modulesRequired;
       } else {
@@ -145,7 +145,7 @@ function depCheck(rootDir, options, cb) {
       .valueOf();
   }
 
-  return checkDirectory(rootDir, ignoreDirs, deps, devDeps)
+  return checkDirectory(rootDir, ignoreDirs, deps, devDeps, options)
     .then(cb)
     .done();
 }
