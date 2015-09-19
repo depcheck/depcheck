@@ -36,7 +36,7 @@ describe("depcheck", function () {
     var absolutePath = path.resolve("test/fake_modules/good_es6");
 
     depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 0);
+      assert.equal(unused.dependencies.length, 1);
       done();
     });
   });
