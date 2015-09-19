@@ -6,7 +6,7 @@ describe("depcheck", function () {
   it("should find unused dependencies", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/bad");
 
-    depcheck(absolutePath, { "withouttDev": true }, function checked(unused) {
+    depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
       assert.equal(unused.dependencies.length, 1);
       done();
     });
@@ -15,7 +15,7 @@ describe("depcheck", function () {
   it("should find all dependencies", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/good");
 
-    depcheck(absolutePath, { "withouttDev": true }, function checked(unused) {
+    depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
       assert.equal(unused.dependencies.length, 0);
       done();
     });
@@ -33,7 +33,7 @@ describe("depcheck", function () {
   it("should find manage grunt dependencies", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/grunt");
 
-    depcheck(absolutePath, { "withouttDev": true }, function checked(unused) {
+    depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
       assert.equal(unused.dependencies.length, 0);
       done();
     });
@@ -42,7 +42,7 @@ describe("depcheck", function () {
   it("should find manage grunt task dependencies", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/grunt-tasks");
 
-    depcheck(absolutePath, { "withouttDev": true }, function checked(unused) {
+    depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
       assert.equal(unused.dependencies.length, 0);
       done();
     });
@@ -51,13 +51,13 @@ describe("depcheck", function () {
   it("should look at devDependencies", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/dev");
 
-    depcheck(absolutePath, { "withouttDev": false }, function checked(unused) {
+    depcheck(absolutePath, { "withoutDev": false }, function checked(unused) {
       assert.equal(unused.devDependencies.length, 1);
       done();
     });
   });
 
-  it("should should ignore ignoreDirs", function testUnused(done) {
+  it("should ignore ignoreDirs", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/bad");
 
     depcheck(absolutePath, { "ignoreDirs": ['sandbox'] }, function checked(unused) {
@@ -66,7 +66,7 @@ describe("depcheck", function () {
     });
   });
 
-  it("should should ignore ignoreMatches", function testUnused(done) {
+  it("should ignore ignoreMatches", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/bad");
 
     depcheck(absolutePath, { "ignoreMatches": ['o*'] }, function checked(unused) {
@@ -75,7 +75,7 @@ describe("depcheck", function () {
     });
   });
 
-  it("should should ignore bad javascript", function testBadJS(done) {
+  it("should ignore bad javascript", function testBadJS(done) {
     var absolutePath = path.resolve("test/fake_modules/bad_js");
 
     depcheck(absolutePath, {  }, function checked(unused) {
