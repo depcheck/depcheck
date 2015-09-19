@@ -19,6 +19,7 @@ describe("depcheck", function () {
 
     depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
       assert.equal(unused.dependencies.length, 1);
+      assert.equal(unused.dependencies[0], "dont-find-me");
       done();
     });
   });
@@ -37,6 +38,7 @@ describe("depcheck", function () {
 
     depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
       assert.equal(unused.dependencies.length, 1);
+      assert.equal(unused.dependencies[0], "name-import-as");
       done();
     });
   });

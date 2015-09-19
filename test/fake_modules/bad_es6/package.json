@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "optimist": "~0.6.0",
+    "dont-find-me": "~0.0.1",
     "find-me": "^0.1.0"
   }
 }
