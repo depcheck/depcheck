@@ -70,7 +70,8 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, options) {
   });
 
   finder.on("file", function (filename) {
-    if (path.extname(filename) === ".js") {
+    var ext = path.extname(filename);
+    if (options.extensions.indexOf(ext) !== -1) {
       var modulesRequired = getModulesRequiredFromFilename(filename, options);
       if (util.isError(modulesRequired)) {
         invalidFiles[filename] = modulesRequired;
@@ -111,6 +112,7 @@ function depCheck(rootDir, options, cb) {
   var pkg = options.package || require(path.join(rootDir, 'package.json'));
   var deps = filterDependencies(pkg.dependencies);
   var devDeps = filterDependencies(options.withoutDev ? [] : pkg.devDependencies);
+  options.extensions = options.extensions || ['.js'];
   var ignoreDirs = _([
       '.git',
       '.svn',
