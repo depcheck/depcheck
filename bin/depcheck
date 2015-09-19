@@ -6,9 +6,15 @@ var optimist = require('optimist')
   .default('dev', true)
   .describe('no-dev', 'Don\'t look at devDependecies')
   .describe('json', 'Output results to JSON')
-  .describe('ignores', 'Comma separated package list to ignore');
+  .describe('ignores', 'Comma separated package list to ignore')
+  .describe('help', 'Show this help message');
 
 var argv = optimist.argv;
+
+if (argv.help) {
+  console.log(optimist.help());
+  process.exit(0);
+}
 
 var checkDirectory = require('../index');
 var fs = require('fs');
