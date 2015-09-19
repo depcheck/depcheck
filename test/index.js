@@ -14,6 +14,16 @@ describe("depcheck", function () {
     });
   });
 
+  it("should find unused dependencies in ES6 files", function testUnused(done) {
+    var absolutePath = path.resolve("test/fake_modules/bad_es6");
+
+    depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
+      assert.equal(unused.dependencies.length, 1);
+      assert.equal(unused.dependencies[0], "dont-find-me");
+      done();
+    });
+  });
+
   it("should find all dependencies", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/good");
 
@@ -27,7 +37,10 @@ describe("depcheck", function () {
     var absolutePath = path.resolve("test/fake_modules/good_es6");
 
     depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 0);
+      // See ./good_es6/index.js for more information on the unsupported ES6
+      // import syntax, which we assert here as the expected missing import.
+      assert.equal(unused.dependencies.length, 1);
+      assert.equal(unused.dependencies[0], "unsupported-syntax");
       done();
     });
   });
