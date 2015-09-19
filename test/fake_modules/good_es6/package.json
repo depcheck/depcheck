@@ -8,8 +8,8 @@
     "multiple-member-import": "1.2.3",
     "mixed-member-alias-import": "1.2.3",
     "mixed-name-memeber-import": "1.2.3",
-    "name-import-as": "1.2.3",
     "mixed-default-star-import": "1.2.3",
-    "default-member-import": "1.2.3"
+    "default-member-import": "1.2.3",
+    "unsupported-syntax": "1.2.3"
   }
 }

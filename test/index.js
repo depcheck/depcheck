@@ -37,8 +37,10 @@ describe("depcheck", function () {
     var absolutePath = path.resolve("test/fake_modules/good_es6");
 
     depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
+      // See ./good_es6/index.js for more information on the unsupported ES6
+      // import syntax, which we assert here as the expected missing import.
       assert.equal(unused.dependencies.length, 1);
-      assert.equal(unused.dependencies[0], "name-import-as");
+      assert.equal(unused.dependencies[0], "unsupported-syntax");
       done();
     });
   });
