@@ -2,7 +2,7 @@
  * This should cover all styles of ES6 imports as described by:
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
  */
-import "basic-import";
+import "jquery";
 import name from "name-import";
 import * as star from "star-import";
 import { member } from "member-import";

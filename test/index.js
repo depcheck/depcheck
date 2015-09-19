@@ -14,6 +14,15 @@ describe("depcheck", function () {
     });
   });
 
+  it("should find unused dependencies in ES6 files", function testUnused(done) {
+    var absolutePath = path.resolve("test/fake_modules/bad_es6");
+
+    depcheck(absolutePath, { "withoutDev": true }, function checked(unused) {
+      assert.equal(unused.dependencies.length, 1);
+      done();
+    });
+  });
+
   it("should find all dependencies", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/good");
 
