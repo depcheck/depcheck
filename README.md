@@ -1,4 +1,6 @@
-# depcheck [![build status](https://secure.travis-ci.org/rumpl/depcheck.png)](http://travis-ci.org/rumpl/depcheck)
+# depcheck-es6 [![build status](https://secure.travis-ci.org/lijunle/depcheck-es6.png)](http://travis-ci.org/lijunle/depcheck-es6)
+
+*Note*: Fork from rumpl's [depcheck](https://github.com/rumpl/depcheck) package and provide ES6 and continuous features support. This fork is fully backward compatible with depcheck.
 
 Keeping track of your dependencies is not an easy task, especially if you have a big application.
 Are you sure you are using all of the dependencies you define in your `package.json` file? One way to find out is to
@@ -10,11 +12,11 @@ And that is why `depcheck` exists.
 It's a nifty little tool that looks at your `package.json` file and scans your code in order to find any unused
 dependencies.
 
-Using grunt ? Checkout the [grunt plugin](https://github.com/rumpl/grunt-depcheck).
-
 ## Installation
 
-`npm install depcheck -g`
+```
+npm install depcheck-es6 -g
+```
 
 ## Usage
 
@@ -32,7 +34,7 @@ This will list all the unused dependencies in your code if any.
 Or, as a lib:
 ```javascript
 var path = require("path");
-var depcheck = require("depcheck");
+var depcheck = require("depcheck-es6");
 var options = {
   "withoutDev": false, // Check against devDependencies too
   "ignoreDirs": [      // Pathnames to ignore
@@ -64,4 +66,4 @@ you know you are using and that `depcheck` can't find in your code
 
 ## License
 
-[MIT](http://rumpl.mit-license.org)
+MIT License.
