@@ -1,4 +1,4 @@
-# depcheck-es6 [![build status](https://secure.travis-ci.org/lijunle/depcheck-es6.png)](http://travis-ci.org/lijunle/depcheck-es6)
+# depcheck-es6 [![build status](https://secure.travis-ci.org/lijunle/depcheck-es6.svg?branch=master)](http://travis-ci.org/lijunle/depcheck-es6)
 
 *Note*: Fork from rumpl's [depcheck](https://github.com/rumpl/depcheck) package and provide ES6 and continuous features support. This fork is fully backward compatible with depcheck.
 
