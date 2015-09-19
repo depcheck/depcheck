@@ -6,7 +6,7 @@ var optimist = require('optimist')
   .default('dev', true)
   .describe('no-dev', 'Don\'t look at devDependecies')
   .describe('json', 'Output results to JSON')
-  .describe('ignores', 'comma separated list of packages to ignore');
+  .describe('ignores', 'Comma separated package list to ignore');
 
 var argv = optimist.argv;
 
