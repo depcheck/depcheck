@@ -29,7 +29,9 @@ This will list all the unused dependencies in your code if any.
 
 `--no-dev` : by default `depcheck` looks at `dependencies` and `devDependencies`, this flag will tell it not to look at "devDependencies".
 
-`--json` : output results to JSON
+`--json` : output results to JSON.
+
+`--ignores`: a comma separated package list to ignore. It could be glob expressions.
 
 Or, as a lib:
 ```javascript
