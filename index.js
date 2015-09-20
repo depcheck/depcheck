@@ -29,13 +29,13 @@ function isImportDeclaration(node) {
   return node.type === 'ImportDeclaration' && node.source && node.source.value;
 }
 
-function getModulesRequiredFromFilename(filename, options) {
+function getModulesRequiredFromFilename(filename) {
   var content = fs.readFileSync(filename, "utf-8");
   if (!content) {
     return [];
   }
 
-  var walker = new Walker(options);
+  var walker = new Walker();
   var dependencies = [];
 
   try {
@@ -53,7 +53,7 @@ function getModulesRequiredFromFilename(filename, options) {
   }
 }
 
-function checkDirectory(dir, ignoreDirs, deps, devDeps, options) {
+function checkDirectory(dir, ignoreDirs, deps, devDeps) {
   var deferred = q.defer();
   var directoryPromises = [];
   var finder = walkdir(dir, { "no_recurse": true });
@@ -69,12 +69,12 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, options) {
       return;
     }
 
-    directoryPromises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps, options));
+    directoryPromises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps));
   });
 
   finder.on("file", function (filename) {
     if (path.extname(filename) === ".js") {
-      var modulesRequired = getModulesRequiredFromFilename(filename, options);
+      var modulesRequired = getModulesRequiredFromFilename(filename);
       if (util.isError(modulesRequired)) {
         invalidFiles[filename] = modulesRequired;
       } else {
@@ -160,7 +160,7 @@ function depCheck(rootDir, options, cb) {
       .valueOf();
   }
 
-  return checkDirectory(rootDir, ignoreDirs, deps, devDeps, options)
+  return checkDirectory(rootDir, ignoreDirs, deps, devDeps)
     .then(cb)
     .done();
 }
