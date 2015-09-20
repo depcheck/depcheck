@@ -228,4 +228,13 @@ describe("depcheck", function () {
     });
   });
 
+  it('should handle require function with parameterless', function testRequireNothing() {
+    var absolutePath = path.resolve("test/fake_modules/require_nothing");
+
+    depcheck(absolutePath, {  }, function checked(unused) {
+      assert.equal(unused.dependencies.length, 1);
+      assert.equal(unused.dependencies[0], 'require-nothing');
+      done();
+    });
+  });
 });
