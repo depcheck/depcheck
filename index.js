@@ -54,17 +54,19 @@ function getModulesRequiredFromFilename(filename, options) {
 }
 
 function checkDirectory(dir, ignoreDirs, deps, devDeps, options) {
-
   var deferred = q.defer();
   var directoryPromises = [];
   var finder = walkdir(dir, { "no_recurse": true });
   var invalidFiles = {};
   var invalidDirs = {};
 
+  if (_.isEmpty(deps) && _.isEmpty(devDeps)) {
+    finder.emit('end');
+  }
+
   finder.on("directory", function (subdir) {
-    if (_.contains(ignoreDirs, path.basename(subdir))
-      || (_.isEmpty(deps) && _.isEmpty(devDeps)))  {
-        return;
+    if (_.contains(ignoreDirs, path.basename(subdir)))  {
+      return;
     }
 
     directoryPromises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps, options));
