@@ -1,1 +1,1 @@
-console.log("I use a bin-dependency!");
+console.log('The dependency providing `bin` is ignored.');
