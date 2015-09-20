@@ -5,9 +5,16 @@ var optimist = require('optimist')
   .boolean('dev')
   .default('dev', true)
   .describe('no-dev', 'Don\'t look at devDependecies')
-  .describe('json', 'Output results to JSON');
+  .describe('json', 'Output results to JSON')
+  .describe('ignores', 'Comma separated package list to ignore')
+  .describe('help', 'Show this help message');
 
 var argv = optimist.argv;
+
+if (argv.help) {
+  console.log(optimist.help());
+  process.exit(0);
+}
 
 var checkDirectory = require('../index');
 var fs = require('fs');
@@ -33,7 +40,10 @@ fs.exists(absolutePath, function (pathExists) {
 });
 
 function run() {
-  checkDirectory(absolutePath, { "withoutDev": !argv.dev }, function (unused) {
+  checkDirectory(absolutePath, {
+    "withoutDev": !argv.dev,
+    "ignoreMatches": (argv.ignores || "").split(",")
+  }, function (unused) {
     if (argv.json) {
       console.log(JSON.stringify(unused));
       return process.exit(0);
