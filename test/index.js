@@ -147,7 +147,7 @@ describe("depcheck", function () {
   });
 
   it("should handle empty JavaScript file", function testEmpty(done) {
-    var absolutePath = path.resolve("test/fake_modules/empty");
+    var absolutePath = path.resolve("test/fake_modules/empty_file");
 
     depcheck(absolutePath, {}, function checked(unused) {
       assert.equal(unused.dependencies.length, 1);
