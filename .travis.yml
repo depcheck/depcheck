@@ -6,9 +6,9 @@ cache:
 
 node_js:
   - '0.10'
-  - '0.11'
   - '0.12'
   - 'iojs'
+  - 'node'
 
 script:
   - npm run test-coveralls
