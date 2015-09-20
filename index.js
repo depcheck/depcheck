@@ -59,6 +59,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, options) {
   var directoryPromises = [];
   var finder = walkdir(dir, { "no_recurse": true });
   var invalidFiles = {};
+  var invalidDirs = {};
 
   finder.on("directory", function (subdir) {
     if (_.contains(ignoreDirs, path.basename(subdir))
@@ -93,15 +94,27 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, options) {
           invalidFiles = _.merge(invalidFiles, result.value.invalidFiles, {});
           deps = _.intersection(deps, result.value.dependencies);
           devDeps = _.intersection(devDeps, result.value.devDependencies);
+        } else {
+          var path = result.reason.path;
+          var error = result.reason.error;
+          invalidDirs[path] = error;
         }
       });
 
       return {
         dependencies: deps,
         devDependencies: devDeps,
-        invalidFiles: invalidFiles
+        invalidFiles: invalidFiles,
+        invalidDirs: invalidDirs
       };
     }));
+  });
+
+  finder.on("error", function (path, err) {
+    deferred.reject({
+      path: path,
+      error: err
+    });
   });
 
   return deferred.promise;
