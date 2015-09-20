@@ -147,7 +147,7 @@ describe("depcheck", function () {
   });
 
   it("should handle empty JavaScript file", function testEmpty(done) {
-    var absolutePath = path.resolve("test/fake_modules/empty");
+    var absolutePath = path.resolve("test/fake_modules/empty_file");
 
     depcheck(absolutePath, {}, function checked(unused) {
       assert.equal(unused.dependencies.length, 1);
@@ -218,4 +218,14 @@ describe("depcheck", function () {
       .finally(asyncTo(fs.chmod, unreadableDir, '0700'))
       .finally(asyncTo(fs.rmdir, unreadableDir));
   });
+
+  it("should work without dependencies", function testNoDependencies(done) {
+    var absolutePath = path.resolve("test/fake_modules/empty_dep");
+
+    depcheck(absolutePath, {  }, function checked(unused) {
+      assert.equal(unused.dependencies.length, 0);
+      done();
+    });
+  });
+
 });
