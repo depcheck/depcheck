@@ -49,7 +49,7 @@ function getModulesRequiredFromFilename(filename, options) {
 
     return dependencies;
   } catch (err) {
-    return [];
+    return err;
   }
 }
 

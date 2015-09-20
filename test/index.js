@@ -95,8 +95,15 @@ describe("depcheck", function () {
     var absolutePath = path.resolve("test/fake_modules/bad_js");
 
     depcheck(absolutePath, {  }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 1);
-      //assert.deepEqual(Object.keys(unused.invalidFiles).length, 2);
+      unused.dependencies.should.have.length(1);
+
+      var invalidFiles = Object.keys(unused.invalidFiles);
+      invalidFiles.should.have.length(1);
+      invalidFiles[0].should.endWith('/test/fake_modules/bad_js/index.js');
+
+      var error = unused.invalidFiles[invalidFiles[0]];
+      error.should.be.instanceof(SyntaxError);
+
       done();
     });
   });
