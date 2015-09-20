@@ -188,6 +188,14 @@ describe("depcheck", function () {
     depcheck(absolutePath, {  }, function checked(unused) {
       assert.equal(unused.dependencies.length, 1);
 
+      var invalidDirs = Object.keys(unused.invalidDirs);
+      invalidDirs.should.have.length(1);
+      invalidDirs[0].should.endWith('/test/fake_modules/bad/unreadable');
+
+      var error = unused.invalidDirs[invalidDirs[0]];
+      error.should.be.instanceof(Error);
+      error.toString().should.containEql('EACCES');
+
       fs.chmodSync(unreadableDir, '0700');
       fs.rmdirSync(unreadableDir);
 
