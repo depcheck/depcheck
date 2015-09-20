@@ -179,24 +179,19 @@ describe("depcheck", function () {
     });
   });
 
-  describe("#error-handling", function () {
+  it('should handle directory access error', function testNonReadable(done) {
     var absolutePath = path.resolve("test/fake_modules/bad");
     var unreadableDir = path.join(absolutePath, 'unreadable');
 
-    before(function createUnreadableDir() {
-      fs.mkdirSync(unreadableDir, '0000');
-    });
+    fs.mkdirSync(unreadableDir, '0000');
 
-    it("should handle walkdir errors", function testNonReadable(done) {
-      depcheck(absolutePath, {  }, function checked(unused) {
-        assert.equal(unused.dependencies.length, 1);
-        done();
-      });
-    });
+    depcheck(absolutePath, {  }, function checked(unused) {
+      assert.equal(unused.dependencies.length, 1);
 
-    after(function removeUnreadableDir() {
       fs.chmodSync(unreadableDir, '0700');
       fs.rmdirSync(unreadableDir);
+
+      done();
     });
   });
 });
