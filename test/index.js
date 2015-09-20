@@ -4,6 +4,25 @@ var assert = require("should");
 var depcheck = require("../index");
 var fs = require("fs");
 var path = require("path");
+var q = require('q');
+
+function asyncTo(fn) {
+  var args = Array.prototype.slice.call(arguments, 1);
+  var defer = q.defer();
+
+  function callback(error, data) {
+    if (error) {
+      defer.reject(error);
+    } else {
+      defer.resolve(data);
+    }
+  }
+
+  return function () {
+    fn.apply(null, args.concat(callback));
+    return defer.promise;
+  }
+}
 
 describe("depcheck", function () {
   it("should find unused dependencies", function testUnused(done) {
@@ -179,27 +198,24 @@ describe("depcheck", function () {
     });
   });
 
-  it('should handle directory access error', function testNonReadable(done) {
+  it('should handle directory access error', function testNonReadable() {
     var absolutePath = path.resolve("test/fake_modules/bad");
     var unreadableDir = path.join(absolutePath, 'unreadable');
 
-    fs.mkdirSync(unreadableDir, '0000');
+    return asyncTo(fs.mkdir, unreadableDir, '0000')()
+      .then(asyncTo(depcheck, absolutePath, {}))
+      .catch(function checked(unused) {
+        unused.dependencies.should.have.length(1);
 
-    depcheck(absolutePath, {  }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 1);
+        var invalidDirs = Object.keys(unused.invalidDirs);
+        invalidDirs.should.have.length(1);
+        invalidDirs[0].should.endWith('/test/fake_modules/bad/unreadable');
 
-      var invalidDirs = Object.keys(unused.invalidDirs);
-      invalidDirs.should.have.length(1);
-      invalidDirs[0].should.endWith('/test/fake_modules/bad/unreadable');
-
-      var error = unused.invalidDirs[invalidDirs[0]];
-      error.should.be.instanceof(Error);
-      error.toString().should.containEql('EACCES');
-
-      fs.chmodSync(unreadableDir, '0700');
-      fs.rmdirSync(unreadableDir);
-
-      done();
-    });
+        var error = unused.invalidDirs[invalidDirs[0]];
+        error.should.be.instanceof(Error);
+        error.toString().should.containEql('EACCES');
+      })
+      .finally(asyncTo(fs.chmod, unreadableDir, '0700'))
+      .finally(asyncTo(fs.rmdir, unreadableDir));
   });
 });
