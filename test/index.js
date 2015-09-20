@@ -170,7 +170,7 @@ describe("depcheck", function () {
   });
 
   it("should exclude bin dependencies", function testBin(done) {
-    var absolutePath = path.resolve("test/fake_modules/bin");
+    var absolutePath = path.resolve("test/fake_modules/bin_js");
 
     depcheck(absolutePath, {  }, function checked(unused) {
       assert.equal(unused.dependencies.length, 0);
