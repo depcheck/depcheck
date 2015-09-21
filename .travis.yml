@@ -11,5 +11,6 @@ node_js:
   - 'node'
 
 script:
+  - npm run lint
   - npm run test-coveralls
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
