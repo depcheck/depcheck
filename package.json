@@ -11,9 +11,9 @@
     "url": "git://github.com/lijunle/depcheck-es6.git"
   },
   "scripts": {
-    "test": "mocha test/index.js",
-    "test-coverage": "istanbul cover node_modules/mocha/bin/_mocha test/index.js",
-    "test-coveralls": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- -R spec"
+    "test": "mocha --compilers js:babel/register test/index.js",
+    "test-coverage": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha test/index.js",
+    "test-coveralls": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha test/index.js --report lcovonly -- -R spec"
   },
   "author": [
     "Djordje Lukic",
@@ -32,7 +32,7 @@
   "devDependencies": {
     "babel": "^5.8.23",
     "coveralls": "^2.11.4",
-    "istanbul": "^0.3.13",
+    "isparta": "^3.0.4",
     "mocha": "^2.1.0",
     "mocha-lcov-reporter": "0.0.2",
     "should": "^5.0.1"
