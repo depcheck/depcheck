@@ -30,6 +30,7 @@
     "walkdir": "0.0.7"
   },
   "devDependencies": {
+    "babel": "^5.8.23",
     "coveralls": "^2.11.4",
     "istanbul": "^0.3.13",
     "mocha": "^2.1.0",
