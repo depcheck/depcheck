@@ -2,15 +2,16 @@
   "name": "depcheck-es6",
   "version": "0.5.1",
   "description": "Check dependencies in your node module",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "bin": {
-    "depcheck": "src/cli.js"
+    "depcheck": "dist/cli.js"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/lijunle/depcheck-es6.git"
   },
   "scripts": {
+    "prepublish": "babel src/ -d dist/",
     "test": "mocha --compilers js:babel/register test/index.js",
     "test-coverage": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha test/index.js",
     "test-coveralls": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha test/index.js --report lcovonly -- -R spec"
