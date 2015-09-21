@@ -18,7 +18,7 @@ if (argv.help) {
   process.exit(0);
 }
 
-var checkDirectory = require('..');
+var checkDirectory = require('./index');
 var fs = require('fs');
 var path = require('path');
 var dir = argv._[0] || '.';

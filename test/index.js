@@ -1,7 +1,7 @@
 /* global describe, it */
 
 import assert from "should";
-import depcheck from "..";
+import depcheck from "../src/index";
 import fs from "fs";
 import path from "path";
 import q from 'q';
