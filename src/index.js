@@ -1,11 +1,11 @@
-var fs = require("fs");
-var path = require("path");
-var Walker = require('node-source-walk');
-var q = require('q');
-var walkdir = require("walkdir");
-var _ = require('lodash');
-var minimatch = require('minimatch');
-var util = require('util');
+import fs from "fs";
+import path from "path";
+import Walker from 'node-source-walk';
+import q from 'q';
+import walkdir from "walkdir";
+import _ from 'lodash';
+import minimatch from 'minimatch';
+import util from 'util';
 
 function getArgumentFromCall(node) {
   return node.type === 'CallExpression' && node.arguments[0]

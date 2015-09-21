@@ -1,10 +1,10 @@
 /* global describe, it */
 
-var assert = require("should");
-var depcheck = require("..");
-var fs = require("fs");
-var path = require("path");
-var q = require('q');
+import assert from "should";
+import depcheck from "..";
+import fs from "fs";
+import path from "path";
+import q from 'q';
 
 function asyncTo(fn) {
   var args = Array.prototype.slice.call(arguments, 1);

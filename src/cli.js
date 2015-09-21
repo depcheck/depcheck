@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
-var optimist = require('optimist')
+import optimist from 'optimist';
+
+var opt = optimist
   .usage('Usage: $0 [DIRECTORY]')
   .boolean('dev')
   .default('dev', true)
@@ -9,10 +11,10 @@ var optimist = require('optimist')
   .describe('ignores', 'Comma separated package list to ignore')
   .describe('help', 'Show this help message');
 
-var argv = optimist.argv;
+var argv = opt.argv;
 
 if (argv.help) {
-  console.log(optimist.help());
+  console.log(opt.help());
   process.exit(0);
 }
 
@@ -29,7 +31,7 @@ fs.exists(absolutePath, function (pathExists) {
         run();
       } else {
         console.error('Path ' + dir + ' does not contain a package.json file');
-        optimist.showHelp();
+        opt.showHelp();
         process.exit(-1);
       }
     });
