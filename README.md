@@ -56,18 +56,10 @@ var root = path.resolve("some path");
 depcheck(root, options, function(unused) {
   console.log(unused.dependencies);
   console.log(unused.devDependencies);
-  console.log(unused.invalidFiles); // JS files that couldn't be parsed
+  console.log(unused.invalidFiles); // JavaScript files that cannot parse
+  console.log(unused.invalidDirs); // directories that cannot access
 });
 ```
-
-## TODOs
-
-Well, it's more of a "What do you think guys?".
-
-There are a couple of things I would like to do if anyone is interested:
-
- - There could be false positives, we could have a white list of modules that
-you know you are using and that `depcheck` can't find in your code
 
 ## License
 
