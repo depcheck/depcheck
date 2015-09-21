@@ -1,7 +1,7 @@
 /* global describe, it */
 
 var assert = require("should");
-var depcheck = require("../index");
+var depcheck = require("..");
 var fs = require("fs");
 var path = require("path");
 var q = require('q');
