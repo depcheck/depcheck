@@ -2,9 +2,9 @@
   "name": "depcheck-es6",
   "version": "0.5.1",
   "description": "Check dependencies in your node module",
-  "main": "index",
+  "main": "src/index.js",
   "bin": {
-    "depcheck": "bin/depcheck"
+    "depcheck": "src/cli.js"
   },
   "repository": {
     "type": "git",
