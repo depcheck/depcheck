@@ -162,9 +162,9 @@ describe("depcheck", function () {
       "package": {
         "dependencies": {
           "optimist": "~0.6.0",
-          "express": "^4.0.0"
-        }
-      }
+          "express": "^4.0.0",
+        },
+      },
     }, function checked(unused) {
       assert.equal(unused.dependencies.length, 2);
       done();

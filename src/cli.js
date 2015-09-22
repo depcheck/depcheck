@@ -44,7 +44,7 @@ fs.exists(absolutePath, function (pathExists) {
 function run() {
   checkDirectory(absolutePath, {
     "withoutDev": !argv.dev,
-    "ignoreMatches": (argv.ignores || "").split(",")
+    "ignoreMatches": (argv.ignores || "").split(","),
   }, function (unused) {
     if (argv.json) {
       console.log(JSON.stringify(unused));

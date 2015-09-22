@@ -106,7 +106,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
         dependencies: deps,
         devDependencies: devDeps,
         invalidFiles: invalidFiles,
-        invalidDirs: invalidDirs
+        invalidDirs: invalidDirs,
       };
     }));
   });
@@ -114,7 +114,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
   finder.on("error", function (path, err) {
     deferred.reject({
       path: path,
-      error: err
+      error: err,
     });
   });
 
@@ -132,7 +132,7 @@ function depCheck(rootDir, options, cb) {
       '.hg',
       '.idea',
       'node_modules',
-      'bower_components'
+      'bower_components',
     ])
     .concat(options.ignoreDirs)
     .flatten()
