@@ -4,7 +4,7 @@
 
 import optimist from 'optimist';
 
-var opt = optimist
+const opt = optimist
   .usage('Usage: $0 [DIRECTORY]')
   .boolean('dev')
   .default('dev', true)
@@ -13,18 +13,18 @@ var opt = optimist
   .describe('ignores', 'Comma separated package list to ignore')
   .describe('help', 'Show this help message');
 
-var argv = opt.argv;
+const argv = opt.argv;
 
 if (argv.help) {
   console.log(opt.help());
   process.exit(0);
 }
 
-var checkDirectory = require('./index');
-var fs = require('fs');
-var path = require('path');
-var dir = argv._[0] || '.';
-var absolutePath = path.resolve(dir);
+const checkDirectory = require('./index');
+const fs = require('fs');
+const path = require('path');
+const dir = argv._[0] || '.';
+const absolutePath = path.resolve(dir);
 
 function run() {
   checkDirectory(absolutePath, {

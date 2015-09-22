@@ -14,13 +14,13 @@ function getArgumentFromCall(node) {
 }
 
 function isRequireFunction(node) {
-  var callee = node.callee;
+  const callee = node.callee;
   return callee && callee.type === 'Identifier' && callee.name === 'require' &&
     getArgumentFromCall(node);
 }
 
 function isGruntLoadTaskCall(node) {
-  var callee = node.callee;
+  const callee = node.callee;
   return callee && callee.property && callee.property.name === 'loadNpmTasks' &&
     getArgumentFromCall(node);
 }
@@ -30,13 +30,13 @@ function isImportDeclaration(node) {
 }
 
 function getModulesRequiredFromFilename(filename) {
-  var content = fs.readFileSync(filename, "utf-8");
+  const content = fs.readFileSync(filename, "utf-8");
   if (!content) {
     return [];
   }
 
-  var walker = new Walker();
-  var dependencies = [];
+  const walker = new Walker();
+  const dependencies = [];
 
   try {
     walker.walk(content, node => {
@@ -54,11 +54,11 @@ function getModulesRequiredFromFilename(filename) {
 }
 
 function checkDirectory(dir, ignoreDirs, deps, devDeps) {
-  var deferred = q.defer();
-  var directoryPromises = [];
-  var finder = walkdir(dir, { "no_recurse": true });
-  var invalidFiles = {};
-  var invalidDirs = {};
+  const deferred = q.defer();
+  const directoryPromises = [];
+  const finder = walkdir(dir, { "no_recurse": true });
+  let invalidFiles = {};
+  const invalidDirs = {};
 
   if (_.isEmpty(deps) && _.isEmpty(devDeps)) {
     finder.emit('end');
@@ -74,7 +74,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
 
   finder.on("file", filename => {
     if (path.extname(filename) === ".js") {
-      var modulesRequired = getModulesRequiredFromFilename(filename);
+      let modulesRequired = getModulesRequiredFromFilename(filename);
       if (util.isError(modulesRequired)) {
         invalidFiles[filename] = modulesRequired;
       } else {
@@ -96,8 +96,8 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
           deps = _.intersection(deps, result.value.dependencies);
           devDeps = _.intersection(devDeps, result.value.devDependencies);
         } else {
-          var dirPath = result.reason.dirPath;
-          var error = result.reason.error;
+          const dirPath = result.reason.dirPath;
+          const error = result.reason.error;
           invalidDirs[dirPath] = error;
         }
       });
@@ -129,7 +129,7 @@ function isIgnored(ignoreMatches, dependency) {
 
 function hasBin(rootDir, dependency) {
   try {
-    var depPkg = require(path.join(rootDir, "node_modules", dependency, "package.json"));
+    const depPkg = require(path.join(rootDir, "node_modules", dependency, "package.json"));
     return _.has(depPkg, 'bin');
   } catch (e) {
     return false;
@@ -146,11 +146,11 @@ function filterDependencies(rootDir, ignoreMatches, dependencies) {
 
 function depCheck(rootDir, options, cb) {
 
-  var pkg = options.package || require(path.join(rootDir, 'package.json'));
-  var deps = filterDependencies(rootDir, options.ignoreMatches, pkg.dependencies);
-  var devDeps = filterDependencies(rootDir, options.ignoreMatches, options.withoutDev ? [] : pkg.devDependencies);
+  const pkg = options.package || require(path.join(rootDir, 'package.json'));
+  const deps = filterDependencies(rootDir, options.ignoreMatches, pkg.dependencies);
+  const devDeps = filterDependencies(rootDir, options.ignoreMatches, options.withoutDev ? [] : pkg.devDependencies);
 
-  var ignoreDirs =
+  const ignoreDirs =
     _([
       '.git',
       '.svn',
