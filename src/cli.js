@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* eslint-disable no-console */
+
 import optimist from 'optimist';
 
 var opt = optimist

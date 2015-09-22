@@ -1,1 +1,1 @@
-console.log('The dependency providing `bin` is ignored.');
+log('The dependency providing `bin` is ignored.');

@@ -1,1 +1,1 @@
-console.log("I'm bad!");
+log("I'm bad!");
