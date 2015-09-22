@@ -12,6 +12,7 @@
   },
   "scripts": {
     "prepublish": "babel src/ -d dist/",
+    "lint": "./node_modules/.bin/eslint ./src ./test",
     "test": "mocha --compilers js:babel/register test/index.js",
     "test-coverage": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha test/index.js",
     "test-coveralls": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha test/index.js --report lcovonly -- -R spec"
@@ -32,7 +33,10 @@
   },
   "devDependencies": {
     "babel": "^5.8.23",
+    "babel-eslint": "^4.1.3",
     "coveralls": "^2.11.4",
+    "eslint": "^1.5.0",
+    "eslint-config-airbnb": "0.0.8",
     "isparta": "^3.0.4",
     "mocha": "^2.1.0",
     "mocha-lcov-reporter": "0.0.2",
