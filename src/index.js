@@ -96,9 +96,9 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
           deps = _.intersection(deps, result.value.dependencies);
           devDeps = _.intersection(devDeps, result.value.devDependencies);
         } else {
-          var path = result.reason.path;
+          var dirPath = result.reason.path;
           var error = result.reason.error;
-          invalidDirs[path] = error;
+          invalidDirs[dirPath] = error;
         }
       });
 
@@ -111,9 +111,9 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
     }));
   });
 
-  finder.on("error", (path, err) => {
+  finder.on("error", (dirPath, err) => {
     deferred.reject({
-      path: path,
+      dirPath: dirPath,
       error: err,
     });
   });
@@ -151,7 +151,9 @@ function depCheck(rootDir, options, cb) {
     try {
       var depPkg = require(path.join(rootDir, "node_modules", dependency, "package.json"));
       return _.has(depPkg, 'bin');
-    } catch (e) {}
+    } catch (e) {
+      return false;
+    }
   }
 
   function filterDependencies(dependencies) {
