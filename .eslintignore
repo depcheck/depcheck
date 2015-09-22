@@ -1,0 +1,2 @@
+# Ignore the following file because it is expected to be syntax error
+test/fake_modules/bad_js/index.js
