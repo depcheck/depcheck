@@ -1,7 +1,10 @@
+/* eslint-disable no-unused-vars */
+
 /**
  * This should cover (nearly) all ES6 import syntaxes as described by:
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
  */
+
 import "basic-import";
 import name from "name-import";
 import * as star from "star-import";

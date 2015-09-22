@@ -1,7 +1,10 @@
+/* eslint-disable no-unused-vars */
+
 /**
  * This should cover all styles of ES6 imports as described by:
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
  */
+
 import "find-me";
 import name from "name-import";
 import * as star from "star-import";

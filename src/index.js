@@ -96,7 +96,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
           deps = _.intersection(deps, result.value.dependencies);
           devDeps = _.intersection(devDeps, result.value.devDependencies);
         } else {
-          var dirPath = result.reason.path;
+          var dirPath = result.reason.dirPath;
           var error = result.reason.error;
           invalidDirs[dirPath] = error;
         }
