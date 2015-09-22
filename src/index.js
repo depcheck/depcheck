@@ -60,7 +60,10 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
   let invalidFiles = {};
   const invalidDirs = {};
 
-  if (_.isEmpty(deps) && _.isEmpty(devDeps)) {
+  let unusedDeps = deps;
+  let unusedDevDeps = devDeps;
+
+  if (_.isEmpty(unusedDeps) && _.isEmpty(unusedDevDeps)) {
     finder.emit('end');
   }
 
@@ -69,7 +72,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
       return;
     }
 
-    directoryPromises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps));
+    directoryPromises.push(checkDirectory(subdir, ignoreDirs, unusedDeps, unusedDevDeps));
   });
 
   finder.on('file', filename => {
@@ -81,8 +84,8 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
         modulesRequired = modulesRequired.map(module => {
           return module.replace ? module.replace(/\/.*$/, '') : module;
         });
-        deps = _.difference(deps, modulesRequired);
-        devDeps = _.difference(devDeps, modulesRequired);
+        unusedDeps = _.difference(unusedDeps, modulesRequired);
+        unusedDevDeps = _.difference(unusedDevDeps, modulesRequired);
       }
     }
   });
@@ -92,8 +95,8 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
       _.each(directoryResults, result => {
         if (result.state === 'fulfilled') {
           invalidFiles = _.merge(invalidFiles, result.value.invalidFiles, {});
-          deps = _.intersection(deps, result.value.dependencies);
-          devDeps = _.intersection(devDeps, result.value.devDependencies);
+          unusedDeps = _.intersection(unusedDeps, result.value.dependencies);
+          unusedDevDeps = _.intersection(unusedDevDeps, result.value.devDependencies);
         } else {
           const dirPath = result.reason.dirPath;
           const error = result.reason.error;
@@ -102,8 +105,8 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
       });
 
       return {
-        dependencies: deps,
-        devDependencies: devDeps,
+        dependencies: unusedDeps,
+        devDependencies: unusedDevDeps,
         invalidFiles: invalidFiles,
         invalidDirs: invalidDirs,
       };
