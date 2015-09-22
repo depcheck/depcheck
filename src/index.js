@@ -39,7 +39,7 @@ function getModulesRequiredFromFilename(filename) {
   var dependencies = [];
 
   try {
-    walker.walk(content, function(node) {
+    walker.walk(content, node => {
       if (isRequireFunction(node) || isGruntLoadTaskCall(node)) {
         dependencies.push(getArgumentFromCall(node));
       } else if (isImportDeclaration(node)) {
@@ -64,7 +64,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
     finder.emit('end');
   }
 
-  finder.on("directory", function (subdir) {
+  finder.on("directory", subdir => {
     if (_.contains(ignoreDirs, path.basename(subdir)))  {
       return;
     }
@@ -72,13 +72,13 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
     directoryPromises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps));
   });
 
-  finder.on("file", function (filename) {
+  finder.on("file", filename => {
     if (path.extname(filename) === ".js") {
       var modulesRequired = getModulesRequiredFromFilename(filename);
       if (util.isError(modulesRequired)) {
         invalidFiles[filename] = modulesRequired;
       } else {
-        modulesRequired = modulesRequired.map(function (module) {
+        modulesRequired = modulesRequired.map(module => {
           return module.replace ? module.replace(/\/.*$/, '') : module;
         });
         deps = _.difference(deps, modulesRequired);
@@ -87,10 +87,10 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
     }
   });
 
-  finder.on("end", function () {
-    deferred.resolve(q.allSettled(directoryPromises).then(function(directoryResults) {
+  finder.on("end", () => {
+    deferred.resolve(q.allSettled(directoryPromises).then(directoryResults => {
 
-      _.each(directoryResults, function(result) {
+      _.each(directoryResults, result => {
         if (result.state === 'fulfilled') {
           invalidFiles = _.merge(invalidFiles, result.value.invalidFiles, {});
           deps = _.intersection(deps, result.value.dependencies);
@@ -111,7 +111,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
     }));
   });
 
-  finder.on("error", function (path, err) {
+  finder.on("error", (path, err) => {
     deferred.reject({
       path: path,
       error: err,
@@ -140,7 +140,7 @@ function depCheck(rootDir, options, cb) {
     .valueOf();
 
   function isIgnored(dependency) {
-    return _.any(options.ignoreMatches, function(match) {
+    return _.any(options.ignoreMatches, match => {
       return minimatch(dependency, match);
     });
   }

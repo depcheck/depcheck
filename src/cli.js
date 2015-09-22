@@ -24,9 +24,9 @@ var path = require('path');
 var dir = argv._[0] || '.';
 var absolutePath = path.resolve(dir);
 
-fs.exists(absolutePath, function (pathExists) {
+fs.exists(absolutePath, pathExists => {
   if (pathExists) {
-    fs.exists(absolutePath + path.sep + 'package.json', function (exists) {
+    fs.exists(absolutePath + path.sep + 'package.json', exists => {
       if (exists) {
         run();
       } else {
@@ -45,7 +45,7 @@ function run() {
   checkDirectory(absolutePath, {
     "withoutDev": !argv.dev,
     "ignoreMatches": (argv.ignores || "").split(","),
-  }, function (unused) {
+  }, unused => {
     if (argv.json) {
       console.log(JSON.stringify(unused));
       return process.exit(0);
@@ -57,14 +57,14 @@ function run() {
     } else {
       if (unused.dependencies.length !== 0) {
         console.log('Unused Dependencies');
-        unused.dependencies.forEach(function (u) {
+        unused.dependencies.forEach(u => {
           console.log('* ' + u);
         });
       }
       if (unused.devDependencies.length !== 0) {
         console.log();
         console.log('Unused devDependencies');
-        unused.devDependencies.forEach(function (u) {
+        unused.devDependencies.forEach(u => {
           console.log('* ' + u);
         });
       }

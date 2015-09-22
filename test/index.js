@@ -18,13 +18,13 @@ function asyncTo(fn) {
     }
   }
 
-  return function () {
+  return () => {
     fn.apply(null, args.concat(callback));
     return defer.promise;
   }
 }
 
-describe("depcheck", function () {
+describe("depcheck", () => {
   it("should find unused dependencies", function testUnused(done) {
     var absolutePath = path.resolve("test/fake_modules/bad");
 
