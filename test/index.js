@@ -21,7 +21,7 @@ function asyncTo(fn) {
   return () => {
     fn.apply(null, args.concat(callback));
     return defer.promise;
-  }
+  };
 }
 
 describe('depcheck', () => {
