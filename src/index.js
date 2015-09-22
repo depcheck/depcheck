@@ -121,11 +121,34 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
   return deferred.promise;
 }
 
+function isIgnored(ignoreMatches, dependency) {
+  return _.any(ignoreMatches, match => {
+    return minimatch(dependency, match);
+  });
+}
+
+function hasBin(rootDir, dependency) {
+  try {
+    var depPkg = require(path.join(rootDir, "node_modules", dependency, "package.json"));
+    return _.has(depPkg, 'bin');
+  } catch (e) {
+    return false;
+  }
+}
+
+function filterDependencies(rootDir, ignoreMatches, dependencies) {
+  return _(dependencies)
+    .keys()
+    .reject(dependency => hasBin(rootDir, dependency))
+    .reject(dependency => isIgnored(ignoreMatches, dependency))
+    .valueOf();
+}
+
 function depCheck(rootDir, options, cb) {
 
   var pkg = options.package || require(path.join(rootDir, 'package.json'));
-  var deps = filterDependencies(pkg.dependencies);
-  var devDeps = filterDependencies(options.withoutDev ? [] : pkg.devDependencies);
+  var deps = filterDependencies(rootDir, options.ignoreMatches, pkg.dependencies);
+  var devDeps = filterDependencies(rootDir, options.ignoreMatches, options.withoutDev ? [] : pkg.devDependencies);
 
   var ignoreDirs =
     _([
@@ -140,29 +163,6 @@ function depCheck(rootDir, options, cb) {
     .flatten()
     .unique()
     .valueOf();
-
-  function isIgnored(dependency) {
-    return _.any(options.ignoreMatches, match => {
-      return minimatch(dependency, match);
-    });
-  }
-
-  function hasBin(dependency) {
-    try {
-      var depPkg = require(path.join(rootDir, "node_modules", dependency, "package.json"));
-      return _.has(depPkg, 'bin');
-    } catch (e) {
-      return false;
-    }
-  }
-
-  function filterDependencies(dependencies) {
-    return _(dependencies)
-      .keys()
-      .reject(hasBin)
-      .reject(isIgnored)
-      .valueOf();
-  }
 
   return checkDirectory(rootDir, ignoreDirs, deps, devDeps)
     .then(cb)

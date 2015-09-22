@@ -26,23 +26,6 @@ var path = require('path');
 var dir = argv._[0] || '.';
 var absolutePath = path.resolve(dir);
 
-fs.exists(absolutePath, pathExists => {
-  if (pathExists) {
-    fs.exists(absolutePath + path.sep + 'package.json', exists => {
-      if (exists) {
-        run();
-      } else {
-        console.error('Path ' + dir + ' does not contain a package.json file');
-        opt.showHelp();
-        process.exit(-1);
-      }
-    });
-  } else {
-    console.error('Path ' + dir + ' does not exist');
-    process.exit(-1);
-  }
-});
-
 function run() {
   checkDirectory(absolutePath, {
     "withoutDev": !argv.dev,
@@ -74,3 +57,20 @@ function run() {
     }
   });
 }
+
+fs.exists(absolutePath, pathExists => {
+  if (pathExists) {
+    fs.exists(absolutePath + path.sep + 'package.json', exists => {
+      if (exists) {
+        run();
+      } else {
+        console.error('Path ' + dir + ' does not contain a package.json file');
+        opt.showHelp();
+        process.exit(-1);
+      }
+    });
+  } else {
+    console.error('Path ' + dir + ' does not exist');
+    process.exit(-1);
+  }
+});
