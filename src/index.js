@@ -89,7 +89,6 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
 
   finder.on("end", () => {
     deferred.resolve(q.allSettled(directoryPromises).then(directoryResults => {
-
       _.each(directoryResults, result => {
         if (result.state === 'fulfilled') {
           invalidFiles = _.merge(invalidFiles, result.value.invalidFiles, {});
@@ -145,7 +144,6 @@ function filterDependencies(rootDir, ignoreMatches, dependencies) {
 }
 
 function depCheck(rootDir, options, cb) {
-
   const pkg = options.package || require(path.join(rootDir, 'package.json'));
   const deps = filterDependencies(rootDir, options.ignoreMatches, pkg.dependencies);
   const devDeps = filterDependencies(rootDir, options.ignoreMatches, options.withoutDev ? [] : pkg.devDependencies);
