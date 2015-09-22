@@ -126,7 +126,9 @@ function depCheck(rootDir, options, cb) {
   var pkg = options.package || require(path.join(rootDir, 'package.json'));
   var deps = filterDependencies(pkg.dependencies);
   var devDeps = filterDependencies(options.withoutDev ? [] : pkg.devDependencies);
-  var ignoreDirs = _([
+
+  var ignoreDirs =
+    _([
       '.git',
       '.svn',
       '.hg',
