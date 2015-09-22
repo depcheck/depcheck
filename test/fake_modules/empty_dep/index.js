@@ -1,1 +1,1 @@
-log("I have no dependencies :-(");
+log('I have no dependencies :-(');

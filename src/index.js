@@ -1,8 +1,8 @@
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
 import Walker from 'node-source-walk';
 import q from 'q';
-import walkdir from "walkdir";
+import walkdir from 'walkdir';
 import _ from 'lodash';
 import minimatch from 'minimatch';
 import util from 'util';
@@ -30,7 +30,7 @@ function isImportDeclaration(node) {
 }
 
 function getModulesRequiredFromFilename(filename) {
-  const content = fs.readFileSync(filename, "utf-8");
+  const content = fs.readFileSync(filename, 'utf-8');
   if (!content) {
     return [];
   }
@@ -56,7 +56,7 @@ function getModulesRequiredFromFilename(filename) {
 function checkDirectory(dir, ignoreDirs, deps, devDeps) {
   const deferred = q.defer();
   const directoryPromises = [];
-  const finder = walkdir(dir, { "no_recurse": true });
+  const finder = walkdir(dir, { 'no_recurse': true });
   let invalidFiles = {};
   const invalidDirs = {};
 
@@ -64,7 +64,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
     finder.emit('end');
   }
 
-  finder.on("directory", subdir => {
+  finder.on('directory', subdir => {
     if (_.contains(ignoreDirs, path.basename(subdir)))  {
       return;
     }
@@ -72,8 +72,8 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
     directoryPromises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps));
   });
 
-  finder.on("file", filename => {
-    if (path.extname(filename) === ".js") {
+  finder.on('file', filename => {
+    if (path.extname(filename) === '.js') {
       let modulesRequired = getModulesRequiredFromFilename(filename);
       if (util.isError(modulesRequired)) {
         invalidFiles[filename] = modulesRequired;
@@ -87,7 +87,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
     }
   });
 
-  finder.on("end", () => {
+  finder.on('end', () => {
     deferred.resolve(q.allSettled(directoryPromises).then(directoryResults => {
       _.each(directoryResults, result => {
         if (result.state === 'fulfilled') {
@@ -110,7 +110,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
     }));
   });
 
-  finder.on("error", (dirPath, err) => {
+  finder.on('error', (dirPath, err) => {
     deferred.reject({
       dirPath: dirPath,
       error: err,
@@ -128,7 +128,7 @@ function isIgnored(ignoreMatches, dependency) {
 
 function hasBin(rootDir, dependency) {
   try {
-    const depPkg = require(path.join(rootDir, "node_modules", dependency, "package.json"));
+    const depPkg = require(path.join(rootDir, 'node_modules', dependency, 'package.json'));
     return _.has(depPkg, 'bin');
   } catch (e) {
     return false;

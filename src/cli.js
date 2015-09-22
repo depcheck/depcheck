@@ -28,8 +28,8 @@ const absolutePath = path.resolve(dir);
 
 function run() {
   checkDirectory(absolutePath, {
-    "withoutDev": !argv.dev,
-    "ignoreMatches": (argv.ignores || "").split(","),
+    'withoutDev': !argv.dev,
+    'ignoreMatches': (argv.ignores || '').split(','),
   }, unused => {
     if (argv.json) {
       console.log(JSON.stringify(unused));
