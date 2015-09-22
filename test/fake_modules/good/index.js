@@ -1,1 +1,3 @@
-var optimist = require("optimist");
+/* eslint-disable no-unused-vars */
+
+const optimist = require('optimist');

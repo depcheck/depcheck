@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
+/* eslint-disable no-console */
+
 import optimist from 'optimist';
 
-var opt = optimist
+const opt = optimist
   .usage('Usage: $0 [DIRECTORY]')
   .boolean('dev')
   .default('dev', true)
@@ -11,22 +13,54 @@ var opt = optimist
   .describe('ignores', 'Comma separated package list to ignore')
   .describe('help', 'Show this help message');
 
-var argv = opt.argv;
+const argv = opt.argv;
 
 if (argv.help) {
   console.log(opt.help());
   process.exit(0);
 }
 
-var checkDirectory = require('./index');
-var fs = require('fs');
-var path = require('path');
-var dir = argv._[0] || '.';
-var absolutePath = path.resolve(dir);
+const checkDirectory = require('./index');
+const fs = require('fs');
+const path = require('path');
+const dir = argv._[0] || '.';
+const absolutePath = path.resolve(dir);
 
-fs.exists(absolutePath, function (pathExists) {
+function run() {
+  checkDirectory(absolutePath, {
+    'withoutDev': !argv.dev,
+    'ignoreMatches': (argv.ignores || '').split(','),
+  }, unused => {
+    if (argv.json) {
+      console.log(JSON.stringify(unused));
+      return process.exit(0);
+    }
+
+    if (unused.dependencies.length === 0 && unused.devDependencies.length === 0) {
+      console.log('No unused dependencies');
+      process.exit(0);
+    } else {
+      if (unused.dependencies.length !== 0) {
+        console.log('Unused Dependencies');
+        unused.dependencies.forEach(u => {
+          console.log('* ' + u);
+        });
+      }
+      if (unused.devDependencies.length !== 0) {
+        console.log();
+        console.log('Unused devDependencies');
+        unused.devDependencies.forEach(u => {
+          console.log('* ' + u);
+        });
+      }
+      process.exit(-1);
+    }
+  });
+}
+
+fs.exists(absolutePath, pathExists => {
   if (pathExists) {
-    fs.exists(absolutePath + path.sep + 'package.json', function (exists) {
+    fs.exists(absolutePath + path.sep + 'package.json', exists => {
       if (exists) {
         run();
       } else {
@@ -40,35 +74,3 @@ fs.exists(absolutePath, function (pathExists) {
     process.exit(-1);
   }
 });
-
-function run() {
-  checkDirectory(absolutePath, {
-    "withoutDev": !argv.dev,
-    "ignoreMatches": (argv.ignores || "").split(",")
-  }, function (unused) {
-    if (argv.json) {
-      console.log(JSON.stringify(unused));
-      return process.exit(0);
-    }
-
-    if (unused.dependencies.length === 0 && unused.devDependencies.length === 0) {
-      console.log('No unused dependencies');
-      process.exit(0);
-    } else {
-      if (unused.dependencies.length !== 0) {
-        console.log('Unused Dependencies');
-        unused.dependencies.forEach(function (u) {
-          console.log('* ' + u);
-        });
-      }
-      if (unused.devDependencies.length !== 0) {
-        console.log();
-        console.log('Unused devDependencies');
-        unused.devDependencies.forEach(function (u) {
-          console.log('* ' + u);
-        });
-      }
-      process.exit(-1);
-    }
-  });
-}

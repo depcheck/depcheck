@@ -1,8 +1,8 @@
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
 import Walker from 'node-source-walk';
 import q from 'q';
-import walkdir from "walkdir";
+import walkdir from 'walkdir';
 import _ from 'lodash';
 import minimatch from 'minimatch';
 import util from 'util';
@@ -14,13 +14,13 @@ function getArgumentFromCall(node) {
 }
 
 function isRequireFunction(node) {
-  var callee = node.callee;
+  const callee = node.callee;
   return callee && callee.type === 'Identifier' && callee.name === 'require' &&
     getArgumentFromCall(node);
 }
 
 function isGruntLoadTaskCall(node) {
-  var callee = node.callee;
+  const callee = node.callee;
   return callee && callee.property && callee.property.name === 'loadNpmTasks' &&
     getArgumentFromCall(node);
 }
@@ -30,16 +30,16 @@ function isImportDeclaration(node) {
 }
 
 function getModulesRequiredFromFilename(filename) {
-  var content = fs.readFileSync(filename, "utf-8");
+  const content = fs.readFileSync(filename, 'utf-8');
   if (!content) {
     return [];
   }
 
-  var walker = new Walker();
-  var dependencies = [];
+  const walker = new Walker();
+  const dependencies = [];
 
   try {
-    walker.walk(content, function(node) {
+    walker.walk(content, node => {
       if (isRequireFunction(node) || isGruntLoadTaskCall(node)) {
         dependencies.push(getArgumentFromCall(node));
       } else if (isImportDeclaration(node)) {
@@ -54,17 +54,17 @@ function getModulesRequiredFromFilename(filename) {
 }
 
 function checkDirectory(dir, ignoreDirs, deps, devDeps) {
-  var deferred = q.defer();
-  var directoryPromises = [];
-  var finder = walkdir(dir, { "no_recurse": true });
-  var invalidFiles = {};
-  var invalidDirs = {};
+  const deferred = q.defer();
+  const directoryPromises = [];
+  const finder = walkdir(dir, { 'no_recurse': true });
+  let invalidFiles = {};
+  const invalidDirs = {};
 
   if (_.isEmpty(deps) && _.isEmpty(devDeps)) {
     finder.emit('end');
   }
 
-  finder.on("directory", function (subdir) {
+  finder.on('directory', subdir => {
     if (_.contains(ignoreDirs, path.basename(subdir)))  {
       return;
     }
@@ -72,13 +72,13 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
     directoryPromises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps));
   });
 
-  finder.on("file", function (filename) {
-    if (path.extname(filename) === ".js") {
-      var modulesRequired = getModulesRequiredFromFilename(filename);
+  finder.on('file', filename => {
+    if (path.extname(filename) === '.js') {
+      let modulesRequired = getModulesRequiredFromFilename(filename);
       if (util.isError(modulesRequired)) {
         invalidFiles[filename] = modulesRequired;
       } else {
-        modulesRequired = modulesRequired.map(function (module) {
+        modulesRequired = modulesRequired.map(module => {
           return module.replace ? module.replace(/\/.*$/, '') : module;
         });
         deps = _.difference(deps, modulesRequired);
@@ -87,18 +87,17 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
     }
   });
 
-  finder.on("end", function () {
-    deferred.resolve(q.allSettled(directoryPromises).then(function(directoryResults) {
-
-      _.each(directoryResults, function(result) {
+  finder.on('end', () => {
+    deferred.resolve(q.allSettled(directoryPromises).then(directoryResults => {
+      _.each(directoryResults, result => {
         if (result.state === 'fulfilled') {
           invalidFiles = _.merge(invalidFiles, result.value.invalidFiles, {});
           deps = _.intersection(deps, result.value.dependencies);
           devDeps = _.intersection(devDeps, result.value.devDependencies);
         } else {
-          var path = result.reason.path;
-          var error = result.reason.error;
-          invalidDirs[path] = error;
+          const dirPath = result.reason.dirPath;
+          const error = result.reason.error;
+          invalidDirs[dirPath] = error;
         }
       });
 
@@ -106,59 +105,62 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
         dependencies: deps,
         devDependencies: devDeps,
         invalidFiles: invalidFiles,
-        invalidDirs: invalidDirs
+        invalidDirs: invalidDirs,
       };
     }));
   });
 
-  finder.on("error", function (path, err) {
+  finder.on('error', (dirPath, err) => {
     deferred.reject({
-      path: path,
-      error: err
+      dirPath: dirPath,
+      error: err,
     });
   });
 
   return deferred.promise;
 }
 
-function depCheck(rootDir, options, cb) {
+function isIgnored(ignoreMatches, dependency) {
+  return _.any(ignoreMatches, match => {
+    return minimatch(dependency, match);
+  });
+}
 
-  var pkg = options.package || require(path.join(rootDir, 'package.json'));
-  var deps = filterDependencies(pkg.dependencies);
-  var devDeps = filterDependencies(options.withoutDev ? [] : pkg.devDependencies);
-  var ignoreDirs = _([
+function hasBin(rootDir, dependency) {
+  try {
+    const depPkg = require(path.join(rootDir, 'node_modules', dependency, 'package.json'));
+    return _.has(depPkg, 'bin');
+  } catch (e) {
+    return false;
+  }
+}
+
+function filterDependencies(rootDir, ignoreMatches, dependencies) {
+  return _(dependencies)
+    .keys()
+    .reject(dependency => hasBin(rootDir, dependency))
+    .reject(dependency => isIgnored(ignoreMatches, dependency))
+    .valueOf();
+}
+
+function depCheck(rootDir, options, cb) {
+  const pkg = options.package || require(path.join(rootDir, 'package.json'));
+  const deps = filterDependencies(rootDir, options.ignoreMatches, pkg.dependencies);
+  const devDeps = filterDependencies(rootDir, options.ignoreMatches, options.withoutDev ? [] : pkg.devDependencies);
+
+  const ignoreDirs =
+    _([
       '.git',
       '.svn',
       '.hg',
       '.idea',
       'node_modules',
-      'bower_components'
+      'bower_components',
     ])
     .concat(options.ignoreDirs)
     .flatten()
     .unique()
     .valueOf();
-
-  function isIgnored(dependency) {
-    return _.any(options.ignoreMatches, function(match) {
-      return minimatch(dependency, match);
-    });
-  }
-
-  function hasBin(dependency) {
-    try {
-      var depPkg = require(path.join(rootDir, "node_modules", dependency, "package.json"));
-      return _.has(depPkg, 'bin');
-    } catch (e) {}
-  }
-
-  function filterDependencies(dependencies) {
-    return _(dependencies)
-      .keys()
-      .reject(hasBin)
-      .reject(isIgnored)
-      .valueOf();
-  }
 
   return checkDirectory(rootDir, ignoreDirs, deps, devDeps)
     .then(cb)
