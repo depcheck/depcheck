@@ -210,7 +210,7 @@ describe('depcheck', () => {
     });
   });
 
-  it('should handle require function with parameterless', function testRequireNothing() {
+  it('should handle require function with parameterless', function testRequireNothing(done) {
     const absolutePath = path.resolve('test/fake_modules/require_nothing');
 
     depcheck(absolutePath, {  }, function checked(unused) {

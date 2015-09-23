@@ -1,3 +1,6 @@
 {
-  "extends": "airbnb/base"
+  "extends": "airbnb/base",
+  "rules": {
+    "no-undef": 2
+  }
 }
