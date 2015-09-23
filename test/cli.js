@@ -51,4 +51,24 @@ describe('depcheck command line', () => {
         exitCode.should.equal(0); // JSON output always return 0
       }));
   });
+
+  it('should output help message', () =>
+    new Promise(resolve => {
+      let help;
+
+      cli(
+        ['--help'],
+        data => help = data,
+        data => data.should.fail(), // should not go into error log
+        exitCode => resolve({ help, exitCode })
+      );
+    }).then(({ help, exitCode }) => {
+      const helpDocs = help.split('\n').map(x => x.trim()).filter(x => x);
+      const options = ['--help', '--json', '--dev', '--ignores'];
+
+      options.forEach(option =>
+        helpDocs.some(doc => doc.startsWith(option)).should.be.true());
+
+      exitCode.should.equal(0);
+    }));
 });
