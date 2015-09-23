@@ -25,89 +25,20 @@ function asyncTo(fn) {
 }
 
 describe('depcheck', () => {
-  describe('with spec', () => {
-    const spec = fs.readFileSync(__dirname + '/spec.json', { encoding: 'utf8' });
-    const testCases = JSON.parse(spec);
+  const spec = fs.readFileSync(__dirname + '/spec.json', { encoding: 'utf8' });
+  const testCases = JSON.parse(spec);
 
-    testCases.forEach(testCase => {
-      it('should ' + testCase.name, done => {
-        const testPath = path.resolve('test/fake_modules/' + testCase.module);
-        const options = testCase.options;
-        const expected = testCase.expected;
+  testCases.forEach(testCase => {
+    it('should ' + testCase.name, done => {
+      const testPath = path.resolve('test/fake_modules/' + testCase.module);
+      const options = testCase.options;
+      const expected = testCase.expected;
 
-        depcheck(testPath, options, result => {
-          result.dependencies.should.eql(expected.dependencies);
-          result.devDependencies.should.eql(expected.devDependencies);
-          done();
-        });
+      depcheck(testPath, options, result => {
+        result.dependencies.should.eql(expected.dependencies);
+        result.devDependencies.should.eql(expected.devDependencies);
+        done();
       });
-    });
-  });
-
-  it('should find unused dependencies', function testUnused(done) {
-    const absolutePath = path.resolve('test/fake_modules/bad');
-
-    depcheck(absolutePath, { 'withoutDev': true }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 1);
-      done();
-    });
-  });
-
-  it('should find unused dependencies in ES6 files', function testUnused(done) {
-    const absolutePath = path.resolve('test/fake_modules/bad_es6');
-
-    depcheck(absolutePath, { 'withoutDev': true }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 1);
-      assert.equal(unused.dependencies[0], 'dont-find-me');
-      done();
-    });
-  });
-
-  it('should find all dependencies', function testUnused(done) {
-    const absolutePath = path.resolve('test/fake_modules/good');
-
-    depcheck(absolutePath, { 'withoutDev': true }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 0);
-      done();
-    });
-  });
-
-  it('should find all dependencies in ES6 files', function testUnused(done) {
-    const absolutePath = path.resolve('test/fake_modules/good_es6');
-
-    depcheck(absolutePath, { 'withoutDev': true }, function checked(unused) {
-      // See ./good_es6/index.js for more information on the unsupported ES6
-      // import syntax, which we assert here as the expected missing import.
-      assert.equal(unused.dependencies.length, 1);
-      assert.equal(unused.dependencies[0], 'unsupported-syntax');
-      done();
-    });
-  });
-
-  it('should find manage grunt dependencies', function testUnused(done) {
-    const absolutePath = path.resolve('test/fake_modules/grunt');
-
-    depcheck(absolutePath, { 'withoutDev': true }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 0);
-      done();
-    });
-  });
-
-  it('should find manage grunt task dependencies', function testUnused(done) {
-    const absolutePath = path.resolve('test/fake_modules/grunt-tasks');
-
-    depcheck(absolutePath, { 'withoutDev': true }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 0);
-      done();
-    });
-  });
-
-  it('should look at devDependencies', function testUnused(done) {
-    const absolutePath = path.resolve('test/fake_modules/dev');
-
-    depcheck(absolutePath, { 'withoutDev': false }, function checked(unused) {
-      assert.equal(unused.devDependencies.length, 1);
-      done();
     });
   });
 
@@ -147,33 +78,6 @@ describe('depcheck', () => {
     });
   });
 
-  it('should recognize nested requires', function testNested(done) {
-    const absolutePath = path.resolve('test/fake_modules/nested');
-
-    depcheck(absolutePath, {  }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 0);
-      done();
-    });
-  });
-
-  it('should support module names that are numbers', function testNested(done) {
-    const absolutePath = path.resolve('test/fake_modules/number');
-
-    depcheck(absolutePath, {  }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 0);
-      done();
-    });
-  });
-
-  it('should handle empty JavaScript file', function testEmpty(done) {
-    const absolutePath = path.resolve('test/fake_modules/empty_file');
-
-    depcheck(absolutePath, {}, function checked(unused) {
-      assert.equal(unused.dependencies.length, 1);
-      done();
-    });
-  });
-
   it('should allow dynamic package metadata', function testDynamic(done) {
     const absolutePath = path.resolve('test/fake_modules/bad');
 
@@ -186,15 +90,6 @@ describe('depcheck', () => {
       },
     }, function checked(unused) {
       assert.equal(unused.dependencies.length, 2);
-      done();
-    });
-  });
-
-  it('should exclude bin dependencies', function testBin(done) {
-    const absolutePath = path.resolve('test/fake_modules/bin_js');
-
-    depcheck(absolutePath, {  }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 0);
       done();
     });
   });
@@ -218,24 +113,5 @@ describe('depcheck', () => {
       })
       .finally(asyncTo(fs.chmod, unreadableDir, '0700'))
       .finally(asyncTo(fs.rmdir, unreadableDir));
-  });
-
-  it('should work without dependencies', function testNoDependencies(done) {
-    const absolutePath = path.resolve('test/fake_modules/empty_dep');
-
-    depcheck(absolutePath, {  }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 0);
-      done();
-    });
-  });
-
-  it('should handle require function with parameterless', function testRequireNothing(done) {
-    const absolutePath = path.resolve('test/fake_modules/require_nothing');
-
-    depcheck(absolutePath, {  }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 1);
-      assert.equal(unused.dependencies[0], 'require-nothing');
-      done();
-    });
   });
 });
