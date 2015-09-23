@@ -108,4 +108,55 @@ describe('depcheck command line', () => {
       error.should.containEql('/not/exist/folder').and.containEql('not exist');
       exitCode.should.equal(-1);
     }));
+
+  it('should output no unused dependencies when happen', () =>
+    new Promise(resolve => {
+      let log;
+
+      cli(
+        [path.resolve(__dirname, './fake_modules/good')],
+        data => log = data,
+        data => data.should.fail(), // should not go into error output
+        exitCode => resolve({ log, exitCode })
+      );
+    }).then(({ log, exitCode }) => {
+      log.should.equal('No unused dependencies');
+      exitCode.should.equal(0);
+    }));
+
+  it('should output unused dependencies when happen', () =>
+    new Promise(resolve => {
+      const logs = [];
+
+      cli(
+        [path.resolve(__dirname, './fake_modules/bad')],
+        data => logs.push(data),
+        data => data.should.fail(), // should not go into error output
+        exitCode => resolve({ logs, exitCode })
+      );
+    }).then(({ logs, exitCode }) => {
+      logs.should.have.length(2);
+      logs[0].should.equal('Unused Dependencies');
+      logs[1].should.containEql('optimist');
+
+      exitCode.should.equal(-1);
+    }));
+
+  it('should output unused devDependencies when happen', () =>
+    new Promise(resolve => {
+      const logs = [];
+
+      cli(
+        [path.resolve(__dirname, './fake_modules/dev')],
+        data => data && logs.push(data), // not push undefined
+        data => data.should.fail(), // should not go into error output
+        exitCode => resolve({ logs, exitCode })
+      );
+    }).then(({ logs, exitCode }) => {
+      logs.should.have.length(2);
+      logs[0].should.equal('Unused devDependencies');
+      logs[1].should.containEql('mocha');
+
+      exitCode.should.equal(-1);
+    }));
 });
