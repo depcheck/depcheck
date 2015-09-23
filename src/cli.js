@@ -62,7 +62,7 @@ export default function cli(args, log, error, exit) {
           run(absolutePath, argv, log, exit);
         } else {
           error('Path ' + dir + ' does not contain a package.json file');
-          opt.showHelp();
+          log(opt.help());
           exit(-1);
         }
       });
