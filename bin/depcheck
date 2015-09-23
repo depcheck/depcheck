@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+
+/* eslint-disable no-console */
+
+require('../dist/cli')(console.log, console.error, process.exit);
