@@ -71,4 +71,26 @@ describe('depcheck command line', () => {
 
       exitCode.should.equal(0);
     }));
+
+  it('should output error when folder is not a package', () =>
+    new Promise(resolve => {
+      let help;
+      let error;
+
+      cli(
+        [__dirname],
+        data => help = data,
+        data => error = data,
+        exitCode => resolve({ help, error, exitCode })
+      );
+    }).then(({ help, error, exitCode }) => {
+      error.should.containEql(__dirname)
+        .and.containEql('not contain')
+        .and.containEql('package.json');
+
+      help.should.startWith('Usage: ')
+        .and.containEql('--help');
+
+      exitCode.should.equal(-1);
+    }));
 });
