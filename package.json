@@ -40,6 +40,6 @@
     "isparta": "^3.0.4",
     "mocha": "^2.1.0",
     "mocha-lcov-reporter": "0.0.2",
-    "should": "^5.0.1"
+    "should": "^7.1.0"
   }
 }
