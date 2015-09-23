@@ -1,0 +1,13 @@
+[
+  {
+    "name": "find unused dependencies",
+    "module": "bad",
+    "options": {
+      "withoutDev": true
+    },
+    "expected": {
+      "dependencies": ["optimist"],
+      "devDependencies": []
+    }
+  }
+]

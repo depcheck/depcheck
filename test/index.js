@@ -25,6 +25,25 @@ function asyncTo(fn) {
 }
 
 describe('depcheck', () => {
+  describe('with spec', () => {
+    const spec = fs.readFileSync(__dirname + '/spec.json', { encoding: 'utf8' });
+    const testCases = JSON.parse(spec);
+
+    testCases.forEach(testCase => {
+      it('should ' + testCase.name, done => {
+        const testPath = path.resolve('test/fake_modules/' + testCase.module);
+        const options = testCase.options;
+        const expected = testCase.expected;
+
+        depcheck(testPath, options, result => {
+          result.dependencies.should.eql(expected.dependencies);
+          result.devDependencies.should.eql(expected.devDependencies);
+          done();
+        });
+      });
+    });
+  });
+
   it('should find unused dependencies', function testUnused(done) {
     const absolutePath = path.resolve('test/fake_modules/bad');
 
