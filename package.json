@@ -13,9 +13,9 @@
   "scripts": {
     "prepublish": "babel src/ -d dist/",
     "lint": "./node_modules/.bin/eslint ./src ./test",
-    "test": "mocha --compilers js:babel/register test/index.js",
-    "test-coverage": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha test/index.js",
-    "test-coveralls": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha test/index.js --report lcovonly -- -R spec"
+    "test": "mocha --compilers js:babel/register ./test",
+    "test-coverage": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha ./test",
+    "test-coveralls": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha ./test --report lcovonly -- -R spec"
   },
   "author": [
     "Djordje Lukic",
