@@ -1,1 +1,3 @@
-log('I have no dependencies :-(');
+/* eslint-disable no-console */
+
+console.log('I have no dependencies :-(');
