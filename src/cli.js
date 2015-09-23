@@ -35,8 +35,8 @@ function run(absolutePath, argv, log, exit) {
   });
 }
 
-export default function cli(log, error, exit) {
-  const opt = optimist
+export default function cli(args, log, error, exit) {
+  const opt = optimist(args)
     .usage('Usage: $0 [DIRECTORY]')
     .boolean('dev')
     .default('dev', true)

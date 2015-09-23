@@ -2,4 +2,8 @@
 
 /* eslint-disable no-console */
 
-require('../dist/cli')(console.log, console.error, process.exit);
+require('../dist/cli')(
+  process.argv.slice(2),
+  console.log,
+  console.error,
+  process.exit);
