@@ -136,5 +136,27 @@
       "dependencies": ["require-nothing"],
       "devDependencies": []
     }
+  },
+  {
+    "name": "ignore ignoreDirs",
+    "module": "bad_deep",
+    "options": {
+      "ignoreDirs": ["sandbox"]
+    },
+    "expected": {
+      "dependencies": ["module_bad_deep"],
+      "devDependencies": []
+    }
+  },
+  {
+    "name": "ignore ignoreMatches",
+    "module": "bad",
+    "options": {
+      "ignoreMatches": ["o*"]
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": []
+    }
   }
 ]

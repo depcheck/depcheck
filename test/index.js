@@ -42,25 +42,6 @@ describe('depcheck', () => {
     });
   });
 
-  it('should ignore ignoreDirs', function testUnused(done) {
-    const absolutePath = path.resolve('test/fake_modules/bad_deep');
-
-    depcheck(absolutePath, { 'ignoreDirs': ['sandbox'] }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 1);
-      assert.equal(unused.dependencies[0], 'module_bad_deep');
-      done();
-    });
-  });
-
-  it('should ignore ignoreMatches', function testUnused(done) {
-    const absolutePath = path.resolve('test/fake_modules/bad');
-
-    depcheck(absolutePath, { 'ignoreMatches': ['o*'] }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 0);
-      done();
-    });
-  });
-
   it('should ignore bad javascript', function testBadJS(done) {
     const absolutePath = path.resolve('test/fake_modules/bad_js');
 
