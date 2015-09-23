@@ -93,4 +93,19 @@ describe('depcheck command line', () => {
 
       exitCode.should.equal(-1);
     }));
+
+  it('should output error when folder not exists', () =>
+    new Promise(resolve => {
+      let error;
+
+      cli(
+        ['./not/exist/folder'],
+        data => data.should.fail(), // should not go into log output
+        data => error = data,
+        exitCode => resolve({ error, exitCode })
+      );
+    }).then(({ error, exitCode }) => {
+      error.should.containEql('/not/exist/folder').and.containEql('not exist');
+      exitCode.should.equal(-1);
+    }));
 });
