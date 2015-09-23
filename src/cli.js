@@ -1,76 +1,74 @@
-#!/usr/bin/env node
-
-/* eslint-disable no-console */
-
 import optimist from 'optimist';
+import checkDirectory from './index';
+import fs from 'fs';
+import path from 'path';
 
-const opt = optimist
-  .usage('Usage: $0 [DIRECTORY]')
-  .boolean('dev')
-  .default('dev', true)
-  .describe('no-dev', 'Don\'t look at devDependecies')
-  .describe('json', 'Output results to JSON')
-  .describe('ignores', 'Comma separated package list to ignore')
-  .describe('help', 'Show this help message');
-
-const argv = opt.argv;
-
-if (argv.help) {
-  console.log(opt.help());
-  process.exit(0);
-}
-
-const checkDirectory = require('./index');
-const fs = require('fs');
-const path = require('path');
-const dir = argv._[0] || '.';
-const absolutePath = path.resolve(dir);
-
-function run() {
+function run(absolutePath, argv, log, exit) {
   checkDirectory(absolutePath, {
     'withoutDev': !argv.dev,
     'ignoreMatches': (argv.ignores || '').split(','),
   }, unused => {
     if (argv.json) {
-      console.log(JSON.stringify(unused));
-      return process.exit(0);
+      log(JSON.stringify(unused));
+      return exit(0);
     }
 
     if (unused.dependencies.length === 0 && unused.devDependencies.length === 0) {
-      console.log('No unused dependencies');
-      process.exit(0);
+      log('No unused dependencies');
+      exit(0);
     } else {
       if (unused.dependencies.length !== 0) {
-        console.log('Unused Dependencies');
+        log('Unused Dependencies');
         unused.dependencies.forEach(u => {
-          console.log('* ' + u);
+          log('* ' + u);
         });
       }
       if (unused.devDependencies.length !== 0) {
-        console.log();
-        console.log('Unused devDependencies');
+        log();
+        log('Unused devDependencies');
         unused.devDependencies.forEach(u => {
-          console.log('* ' + u);
+          log('* ' + u);
         });
       }
-      process.exit(-1);
+      exit(-1);
     }
   });
 }
 
-fs.exists(absolutePath, pathExists => {
-  if (pathExists) {
-    fs.exists(absolutePath + path.sep + 'package.json', exists => {
-      if (exists) {
-        run();
-      } else {
-        console.error('Path ' + dir + ' does not contain a package.json file');
-        opt.showHelp();
-        process.exit(-1);
-      }
-    });
-  } else {
-    console.error('Path ' + dir + ' does not exist');
-    process.exit(-1);
+export default function cli(log, error, exit) {
+  const opt = optimist
+    .usage('Usage: $0 [DIRECTORY]')
+    .boolean('dev')
+    .default('dev', true)
+    .describe('no-dev', 'Don\'t look at devDependecies')
+    .describe('json', 'Output results to JSON')
+    .describe('ignores', 'Comma separated package list to ignore')
+    .describe('help', 'Show this help message');
+
+  const argv = opt.argv;
+
+  if (argv.help) {
+    log(opt.help());
+    exit(0);
   }
-});
+
+  const dir = argv._[0] || '.';
+  const absolutePath = path.resolve(dir);
+
+  fs.exists(absolutePath, pathExists => {
+    if (pathExists) {
+      fs.exists(absolutePath + path.sep + 'package.json', exists => {
+        if (exists) {
+          run(absolutePath, argv, log, exit);
+        } else {
+          error('Path ' + dir + ' does not contain a package.json file');
+          opt.showHelp();
+          exit(-1);
+        }
+      });
+    } else {
+      error('Path ' + dir + ' does not exist');
+      exit(-1);
+    }
+  });
+}
