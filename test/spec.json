@@ -1,0 +1,162 @@
+[
+  {
+    "name": "find unused dependencies",
+    "module": "bad",
+    "options": {
+      "withoutDev": true
+    },
+    "expected": {
+      "dependencies": ["optimist"],
+      "devDependencies": []
+    }
+  },
+  {
+    "name": "find unused dependencies in ES6 files",
+    "module": "bad_es6",
+    "options": {
+      "withoutDev": true
+    },
+    "expected": {
+      "dependencies": ["dont-find-me"],
+      "devDependencies": []
+    }
+  },
+  {
+    "name": "find all dependencies",
+    "module": "good",
+    "options": {
+      "withoutDev": true
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": []
+    }
+  },
+  {
+    "name": "find all dependencies in ES6 files",
+    "module": "good_es6",
+    "options": {
+      "withoutDev": true
+    },
+    "expected": {
+      "dependencies": ["unsupported-syntax"],
+      "devDependencies": []
+    },
+    "notice": "See `good_es6/index.js` file for more information on the unsupported ES6 import syntax, which we assert here as the expected missing import."
+  },
+  {
+    "name": "find grunt dependencies",
+    "module": "grunt",
+    "options": {
+      "withoutDev": true
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": []
+    }
+  },
+  {
+    "name": "find grunt task dependencies",
+    "module": "grunt-tasks",
+    "options": {
+      "withoutDev": true
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": []
+    }
+  },
+  {
+    "name": "find unused package in devDependencies",
+    "module": "dev",
+    "options": {
+      "withoutDev": false
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": ["mocha"]
+    }
+  },
+  {
+    "name": "recognize nested requires",
+    "module": "nested",
+    "options": {
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": []
+    }
+  },
+  {
+    "name": "support module names that are numbers",
+    "module": "number",
+    "options": {
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": []
+    }
+  },
+  {
+    "name": "handle empty JavaScript file",
+    "module": "empty_file",
+    "options": {
+    },
+    "expected": {
+      "dependencies": ["empty-package"],
+      "devDependencies": []
+    }
+  },
+  {
+    "name": "handle a package without any dependencies",
+    "module": "empty_dep",
+    "options": {
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": []
+    }
+  },
+  {
+    "name": "exclude bin dependencies",
+    "module": "bin_js",
+    "options": {
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": []
+    }
+  },
+  {
+    "name": "handle require call without parameters",
+    "module": "require_nothing",
+    "options": {
+    },
+    "expected": {
+      "dependencies": ["require-nothing"],
+      "devDependencies": []
+    }
+  },
+  {
+    "name": "ignore ignoreDirs",
+    "module": "bad_deep",
+    "options": {
+      "ignoreDirs": ["sandbox"]
+    },
+    "expected": {
+      "dependencies": ["module_bad_deep"],
+      "devDependencies": []
+    }
+  },
+  {
+    "name": "ignore ignoreMatches",
+    "module": "bad",
+    "options": {
+      "ignoreMatches": ["o*"]
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": []
+    }
+  }
+]
