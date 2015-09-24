@@ -93,6 +93,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
       _.each(directoryResults, function(result) {
         if (result.state === 'fulfilled') {
           invalidFiles = _.merge(invalidFiles, result.value.invalidFiles, {});
+          invalidDirs = _.merge(invalidDirs, result.value.invalidDirs, {});
           deps = _.intersection(deps, result.value.dependencies);
           devDeps = _.intersection(devDeps, result.value.devDependencies);
         } else {
@@ -112,10 +113,10 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
   });
 
   finder.on("error", function (path, err) {
-    deferred.reject({
+    directoryPromises.push(q.reject({
       path: path,
       error: err
-    });
+    }));
   });
 
   return deferred.promise;
