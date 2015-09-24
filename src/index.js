@@ -5,7 +5,6 @@ import q from 'q';
 import walkdir from 'walkdir';
 import _ from 'lodash';
 import minimatch from 'minimatch';
-import util from 'util';
 import defaultParser from './parsers/default';
 import gruntLoadTaskDetector from './detectors/gruntLoadTaskCallExpression';
 import importDetector from './detectors/importDeclaration';
@@ -19,19 +18,34 @@ function safeDetect(detector, node) {
   }
 }
 
-function getModulesRequiredFromFilename(filename) {
-  try {
-    const content = fs.readFileSync(filename, 'utf-8');
-    const ast = defaultParser(content);
+function getDependencies(parsers, detectors, filename) {
+  return new Promise((resolve, reject) => {
+    const ext = path.extname(filename);
+    const parser = parsers[ext];
+
+    if (parser) {
+      fs.readFile(filename, 'utf8', (error, content) => {
+        if (error) {
+          reject(error);
+        }
+
+        try {
+          const ast = parser(content);
+          resolve(ast);
+        } catch (syntaxError) {
+          reject(syntaxError);
+        }
+      });
+    } else {
+      resolve(); // extension not supported
+    }
+  }).then(ast => {
+    if (!ast) {
+      return []; // unsupported extension return no dependencies
+    }
 
     const walker = new Walker();
     let dependencies = [];
-
-    const detectors = [
-      importDetector,
-      requireDetector,
-      gruntLoadTaskDetector,
-    ];
 
     walker.walk(ast, node => {
       const results = detectors.map(detector => safeDetect(detector, node));
@@ -39,9 +53,7 @@ function getModulesRequiredFromFilename(filename) {
     });
 
     return dependencies;
-  } catch (err) {
-    return err;
-  }
+  });
 }
 
 function checkDirectory(dir, ignoreDirs, deps, devDeps) {
@@ -68,18 +80,33 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
   });
 
   finder.on('file', filename => {
-    if (path.extname(filename) === '.js') {
-      let modulesRequired = getModulesRequiredFromFilename(filename);
-      if (util.isError(modulesRequired)) {
-        invalidFiles[filename] = modulesRequired;
-      } else {
-        modulesRequired = modulesRequired.map(module => {
-          return module.replace ? module.replace(/\/.*$/, '') : module;
-        });
-        unusedDeps = _.difference(unusedDeps, modulesRequired);
-        unusedDevDeps = _.difference(unusedDevDeps, modulesRequired);
-      }
-    }
+    const parsers = {
+      '.js': defaultParser,
+    };
+
+    const detectors = [
+      importDetector,
+      requireDetector,
+      gruntLoadTaskDetector,
+    ];
+
+    const promise = getDependencies(parsers, detectors, filename)
+      .then(dependencies => {
+        const used = dependencies.map(dependency =>
+          dependency.replace ? dependency.replace(/\/.*$/, '') : dependency);
+        return {
+          dependencies: _.difference(unusedDeps, used),
+          devDependencies: _.difference(unusedDevDeps, used),
+        };
+      }, error => ({
+        dependencies: unusedDeps,
+        devDependencies: unusedDevDeps,
+        invalidFiles: {
+          [filename]: error,
+        },
+      }));
+
+    directoryPromises.push(promise);
   });
 
   finder.on('end', () => {
