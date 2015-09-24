@@ -7,47 +7,35 @@ import _ from 'lodash';
 import minimatch from 'minimatch';
 import util from 'util';
 import defaultParser from './parsers/default';
+import gruntLoadTaskDetector from './detectors/gruntLoadTaskCallExpression';
+import importDetector from './detectors/importDeclaration';
+import requireDetector from './detectors/requireCallExpression';
 
-function getArgumentFromCall(node) {
-  return node.type === 'CallExpression' && node.arguments[0]
-    ? node.arguments[0].value
-    : undefined;
-}
-
-function isRequireFunction(node) {
-  const callee = node.callee;
-  return callee && callee.type === 'Identifier' && callee.name === 'require' &&
-    getArgumentFromCall(node);
-}
-
-function isGruntLoadTaskCall(node) {
-  const callee = node.callee;
-  return callee && callee.property && callee.property.name === 'loadNpmTasks' &&
-    getArgumentFromCall(node);
-}
-
-function isImportDeclaration(node) {
-  return node.type === 'ImportDeclaration' && node.source && node.source.value;
+function safeDetect(detector, node) {
+  try {
+    return detector(node);
+  } catch (e) {
+    return [];
+  }
 }
 
 function getModulesRequiredFromFilename(filename) {
-  const content = fs.readFileSync(filename, 'utf-8');
-  if (!content) {
-    return [];
-  }
-
-  const walker = new Walker();
-  const dependencies = [];
-
   try {
+    const content = fs.readFileSync(filename, 'utf-8');
     const ast = defaultParser(content);
 
+    const walker = new Walker();
+    let dependencies = [];
+
+    const detectors = [
+      importDetector,
+      requireDetector,
+      gruntLoadTaskDetector,
+    ];
+
     walker.walk(ast, node => {
-      if (isRequireFunction(node) || isGruntLoadTaskCall(node)) {
-        dependencies.push(getArgumentFromCall(node));
-      } else if (isImportDeclaration(node)) {
-        dependencies.push(node.source.value);
-      }
+      const results = detectors.map(detector => safeDetect(detector, node));
+      dependencies = dependencies.concat(...results);
     });
 
     return dependencies;
