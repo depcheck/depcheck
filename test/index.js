@@ -95,4 +95,25 @@ describe('depcheck', () => {
       .finally(asyncTo(fs.chmod, unreadableDir, '0700'))
       .finally(asyncTo(fs.rmdir, unreadableDir));
   });
+
+  it('should handle deep directory access error', function testNonReadable() {
+    const absolutePath = path.resolve('test/fake_modules/unreadable_deep');
+    const unreadableDir = path.join(absolutePath, 'deep/nested/unreadable');
+
+    return asyncTo(fs.mkdir, unreadableDir, '0000')()
+      .then(asyncTo(depcheck, absolutePath, {}))
+      .catch(function checked(unused) {
+        unused.dependencies.should.have.length(0);
+
+        const invalidDirs = Object.keys(unused.invalidDirs);
+        invalidDirs.should.have.length(1);
+        invalidDirs[0].should.endWith('/test/fake_modules/unreadable_deep/deep/nested/unreadable');
+
+        const error = unused.invalidDirs[invalidDirs[0]];
+        error.should.be.instanceof(Error);
+        error.toString().should.containEql('EACCES');
+      })
+      .finally(asyncTo(fs.chmod, unreadableDir, '0700'))
+      .finally(asyncTo(fs.rmdir, unreadableDir));
+  });
 });
