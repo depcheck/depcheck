@@ -50,6 +50,7 @@ export default function cli(args, log, error, exit) {
   if (argv.help) {
     log(opt.help());
     exit(0);
+    return; // HACK to not execute the following code in test
   }
 
   const dir = argv._[0] || '.';
