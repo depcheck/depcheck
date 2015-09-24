@@ -6,6 +6,7 @@ import walkdir from 'walkdir';
 import _ from 'lodash';
 import minimatch from 'minimatch';
 import util from 'util';
+import defaultParser from './parsers/default';
 
 function getArgumentFromCall(node) {
   return node.type === 'CallExpression' && node.arguments[0]
@@ -39,7 +40,9 @@ function getModulesRequiredFromFilename(filename) {
   const dependencies = [];
 
   try {
-    walker.walk(content, node => {
+    const ast = defaultParser(content);
+
+    walker.walk(ast, node => {
       if (isRequireFunction(node) || isGruntLoadTaskCall(node)) {
         dependencies.push(getArgumentFromCall(node));
       } else if (isImportDeclaration(node)) {
