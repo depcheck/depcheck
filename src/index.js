@@ -48,8 +48,9 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
   const deferred = q.defer();
   const directoryPromises = [];
   const finder = walkdir(dir, { 'no_recurse': true });
+
   let invalidFiles = {};
-  const invalidDirs = {};
+  let invalidDirs = {};
 
   let unusedDeps = deps;
   let unusedDevDeps = devDeps;
@@ -86,6 +87,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
       _.each(directoryResults, result => {
         if (result.state === 'fulfilled') {
           invalidFiles = _.merge(invalidFiles, result.value.invalidFiles, {});
+          invalidDirs = _.merge(invalidDirs, result.value.invalidDirs, {});
           unusedDeps = _.intersection(unusedDeps, result.value.dependencies);
           unusedDevDeps = _.intersection(unusedDevDeps, result.value.devDependencies);
         } else {
@@ -105,10 +107,10 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
   });
 
   finder.on('error', (dirPath, err) => {
-    deferred.reject({
+    directoryPromises.push(q.reject({
       dirPath: dirPath,
       error: err,
-    });
+    }));
   });
 
   return deferred.promise;
