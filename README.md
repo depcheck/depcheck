@@ -2,6 +2,8 @@
 
 [![build status](https://secure.travis-ci.org/lijunle/depcheck-es6.svg?branch=master)](http://travis-ci.org/lijunle/depcheck-es6)
 [![Coverage Status](https://coveralls.io/repos/lijunle/depcheck-es6/badge.svg?branch=master&service=github)](https://coveralls.io/github/lijunle/depcheck-es6?branch=master)
+[![Dependency Status](https://david-dm.org/lijunle/depcheck-es6.svg)](https://david-dm.org/lijunle/depcheck-es6)
+[![devDependency Status](https://david-dm.org/lijunle/depcheck-es6/dev-status.svg)](https://david-dm.org/lijunle/depcheck-es6#info=devDependencies)
 
 *Note*: Fork from rumpl's [depcheck](https://github.com/rumpl/depcheck) package and provide ES6 and continuous features support. This fork is fully backward compatible with depcheck.
 
