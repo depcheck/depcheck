@@ -1,4 +1,4 @@
-/* global describe, it */
+/* global describe, it, before, after */
 
 import 'should';
 import fs from 'fs';
@@ -159,4 +159,31 @@ describe('depcheck command line', () => {
 
       exitCode.should.equal(-1);
     }));
+
+  describe('without specified directory', () => {
+    const expectedCwd = '/not/exist';
+    let originalCwd;
+
+    before(() => {
+      originalCwd = process.cwd;
+      process.cwd = () => expectedCwd;
+    });
+
+    it('should default to the current directory', () =>
+      new Promise(resolve => {
+        let error;
+
+        cli(
+          [],
+          data => data.should.fail(), // should not go into log output
+          data => error = data,
+          exitCode => resolve({ error, exitCode })
+        );
+      }).then(({ error, exitCode }) => {
+        error.should.containEql('not exist');
+        exitCode.should.equal(-1);
+      }));
+
+    after(() => process.cwd = originalCwd);
+  });
 });
