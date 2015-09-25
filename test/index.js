@@ -1,28 +1,9 @@
-/* global describe, it */
+/* global describe, it, before, after */
 
 import assert from 'should';
 import depcheck from '../src/index';
 import fs from 'fs';
 import path from 'path';
-import q from 'q';
-
-function asyncTo(fn) {
-  const args = Array.prototype.slice.call(arguments, 1);
-  const defer = q.defer();
-
-  function callback(error, data) {
-    if (error) {
-      defer.reject(error);
-    } else {
-      defer.resolve(data);
-    }
-  }
-
-  return () => {
-    fn.apply(null, args.concat(callback));
-    return defer.promise;
-  };
-}
 
 describe('depcheck', () => {
   const spec = fs.readFileSync(__dirname + '/spec.json', { encoding: 'utf8' });
@@ -75,45 +56,46 @@ describe('depcheck', () => {
     });
   });
 
-  it('should handle directory access error', function testNonReadable() {
-    const absolutePath = path.resolve('test/fake_modules/bad');
-    const unreadableDir = path.join(absolutePath, 'unreadable');
+  function testAccessUnreadableDirectory(
+    module, unreadable, unusedDeps, unusedDevDeps) {
+    const modulePath = path.resolve(__dirname, 'fake_modules', module);
+    const unreadablePath = path.resolve(modulePath, unreadable);
 
-    return asyncTo(fs.mkdir, unreadableDir, '0000')()
-      .then(asyncTo(depcheck, absolutePath, {}))
-      .catch(function checked(unused) {
-        unused.dependencies.should.have.length(1);
+    before(done => fs.mkdir(unreadablePath, '0000', done));
+
+    it('should capture error', done =>
+      depcheck(modulePath, {}, unused => {
+        unused.dependencies.should.deepEqual(unusedDeps);
+        unused.devDependencies.should.deepEqual(unusedDevDeps);
 
         const invalidDirs = Object.keys(unused.invalidDirs);
-        invalidDirs.should.have.length(1);
-        invalidDirs[0].should.endWith('/test/fake_modules/bad/unreadable');
+        invalidDirs.should.deepEqual([unreadablePath]);
 
         const error = unused.invalidDirs[invalidDirs[0]];
         error.should.be.instanceof(Error);
         error.toString().should.containEql('EACCES');
-      })
-      .finally(asyncTo(fs.chmod, unreadableDir, '0700'))
-      .finally(asyncTo(fs.rmdir, unreadableDir));
+
+        done();
+      }));
+
+    after(done =>
+      fs.chmod(unreadablePath, '0700', error =>
+        error ? done(error) : fs.rmdir(unreadablePath, done)));
+  }
+
+  describe('access unreadable directory', () => {
+    testAccessUnreadableDirectory(
+      'bad',
+      'unreadable',
+      ['optimist'],
+      []);
   });
 
-  it('should handle deep directory access error', function testNonReadable() {
-    const absolutePath = path.resolve('test/fake_modules/unreadable_deep');
-    const unreadableDir = path.join(absolutePath, 'deep/nested/unreadable');
-
-    return asyncTo(fs.mkdir, unreadableDir, '0000')()
-      .then(asyncTo(depcheck, absolutePath, {}))
-      .catch(function checked(unused) {
-        unused.dependencies.should.have.length(0);
-
-        const invalidDirs = Object.keys(unused.invalidDirs);
-        invalidDirs.should.have.length(1);
-        invalidDirs[0].should.endWith('/test/fake_modules/unreadable_deep/deep/nested/unreadable');
-
-        const error = unused.invalidDirs[invalidDirs[0]];
-        error.should.be.instanceof(Error);
-        error.toString().should.containEql('EACCES');
-      })
-      .finally(asyncTo(fs.chmod, unreadableDir, '0700'))
-      .finally(asyncTo(fs.rmdir, unreadableDir));
+  describe('access deep unreadable directory', () => {
+    testAccessUnreadableDirectory(
+      'unreadable_deep',
+      'deep/nested/unreadable',
+      [],
+      []);
   });
 });

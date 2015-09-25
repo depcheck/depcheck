@@ -29,7 +29,6 @@
     "minimatch": "^2.0.1",
     "node-source-walk": "^2.0.0",
     "optimist": "~0.6.0",
-    "q": "^1.0.1",
     "walkdir": "0.0.7"
   },
   "devDependencies": {
