@@ -61,9 +61,6 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
   const directoryPromises = [];
   const finder = walkdir(dir, { 'no_recurse': true });
 
-  let invalidFiles = {};
-  let invalidDirs = {};
-
   let unusedDeps = deps;
   let unusedDevDeps = devDeps;
 
@@ -99,8 +96,8 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
           devDependencies: _.difference(unusedDevDeps, used),
         };
       }, error => ({
-        dependencies: unusedDeps,
-        devDependencies: unusedDevDeps,
+        dependencies: deps,
+        devDependencies: devDeps,
         invalidFiles: {
           [filename]: error,
         },
@@ -110,33 +107,29 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
   });
 
   finder.on('end', () => {
-    deferred.resolve(q.allSettled(directoryPromises).then(directoryResults => {
-      _.each(directoryResults, result => {
-        if (result.state === 'fulfilled') {
-          invalidFiles = _.merge(invalidFiles, result.value.invalidFiles, {});
-          invalidDirs = _.merge(invalidDirs, result.value.invalidDirs, {});
-          unusedDeps = _.intersection(unusedDeps, result.value.dependencies);
-          unusedDevDeps = _.intersection(unusedDevDeps, result.value.devDependencies);
-        } else {
-          const dirPath = result.reason.dirPath;
-          const error = result.reason.error;
-          invalidDirs[dirPath] = error;
-        }
-      });
+    const value = Promise.all(directoryPromises).then(results =>
+      results.reduce((obj, current) => ({
+        dependencies: _.intersection(obj.dependencies, current.dependencies),
+        devDependencies: _.intersection(obj.devDependencies, current.devDependencies),
+        invalidFiles: _.merge(obj.invalidFiles, current.invalidFiles, {}),
+        invalidDirs: _.merge(obj.invalidDirs, current.invalidDirs, {}),
+      }), {
+        dependencies: deps,
+        devDependencies: devDeps,
+        invalidFiles: {},
+        invalidDirs: {},
+      }));
 
-      return {
-        dependencies: unusedDeps,
-        devDependencies: unusedDevDeps,
-        invalidFiles: invalidFiles,
-        invalidDirs: invalidDirs,
-      };
-    }));
+    deferred.resolve(value);
   });
 
-  finder.on('error', (dirPath, err) => {
-    directoryPromises.push(q.reject({
-      dirPath: dirPath,
-      error: err,
+  finder.on('error', (dirPath, error) => {
+    directoryPromises.push(Promise.resolve({
+      dependencies: deps,
+      devDependencies: devDeps,
+      invalidDirs: {
+        [dirPath]: error,
+      },
     }));
   });
 
