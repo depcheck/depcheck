@@ -25,7 +25,6 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "acorn": "^2.4.0",
-    "lodash": "^3.3.0",
     "minimatch": "^2.0.1",
     "node-source-walk": "^2.0.0",
     "optimist": "~0.6.0",
