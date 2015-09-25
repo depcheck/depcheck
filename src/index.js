@@ -4,10 +4,30 @@ import Walker from 'node-source-walk';
 import walkdir from 'walkdir';
 import _ from 'lodash';
 import minimatch from 'minimatch';
+
 import defaultParser from './parsers/default';
 import gruntLoadTaskDetector from './detectors/gruntLoadTaskCallExpression';
 import importDetector from './detectors/importDeclaration';
 import requireDetector from './detectors/requireCallExpression';
+
+const defaultOptions = {
+  ignoreDirs: [
+    '.git',
+    '.svn',
+    '.hg',
+    '.idea',
+    'node_modules',
+    'bower_components',
+  ],
+  parsers: {
+    '.js': defaultParser,
+  },
+  detectors: [
+    importDetector,
+    requireDetector,
+    gruntLoadTaskDetector,
+  ],
+};
 
 function safeDetect(detector, node) {
   try {
@@ -135,29 +155,16 @@ function depCheck(rootDir, options, cb) {
   const deps = filterDependencies(rootDir, options.ignoreMatches, pkg.dependencies);
   const devDeps = filterDependencies(rootDir, options.ignoreMatches, options.withoutDev ? [] : pkg.devDependencies);
 
+  // TODO test pass parsers and detectors from options
+  const parsers = options.parsers || defaultOptions.parsers;
+  const detectors = options.detectors || defaultOptions.detectors;
+
   const ignoreDirs =
-    _([
-      '.git',
-      '.svn',
-      '.hg',
-      '.idea',
-      'node_modules',
-      'bower_components',
-    ])
+    _(defaultOptions.ignoreDirs)
     .concat(options.ignoreDirs)
     .flatten()
     .unique()
     .valueOf();
-
-  const parsers = {
-    '.js': defaultParser,
-  };
-
-  const detectors = [
-    importDetector,
-    requireDetector,
-    gruntLoadTaskDetector,
-  ];
 
   return checkDirectory(rootDir, ignoreDirs, deps, devDeps, parsers, detectors)
     .then(cb);
