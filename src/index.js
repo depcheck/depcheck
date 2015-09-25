@@ -174,4 +174,14 @@ function depCheck(rootDir, options, cb) {
     .then(cb);
 }
 
+depCheck.detectors = {
+  importDeclaration: importDetector,
+  requireCallExpression: requireDetector,
+  gruntLoadTaskCallExpression: gruntLoadTaskDetector,
+};
+
+depCheck.parsers = {
+  default: defaultParser,
+};
+
 module.exports = depCheck;
