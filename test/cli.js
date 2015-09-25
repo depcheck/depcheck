@@ -63,7 +63,7 @@ describe('depcheck command line', () => {
         exitCode => resolve({ help, exitCode })
       );
     }).then(({ help, exitCode }) => {
-      const helpDocs = help.split('\n').map(x => x.trim()).filter(x => x);
+      const helpDocs = help.split('\n').map(line => line.trim()).filter(line => line);
       const options = ['--help', '--json', '--dev', '--ignores'];
 
       options.forEach(option =>

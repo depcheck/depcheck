@@ -19,15 +19,15 @@ function run(absolutePath, argv, log, exit) {
     } else {
       if (unused.dependencies.length !== 0) {
         log('Unused Dependencies');
-        unused.dependencies.forEach(u => {
-          log('* ' + u);
+        unused.dependencies.forEach(dep => {
+          log('* ' + dep);
         });
       }
       if (unused.devDependencies.length !== 0) {
         log();
         log('Unused devDependencies');
-        unused.devDependencies.forEach(u => {
-          log('* ' + u);
+        unused.devDependencies.forEach(devDep => {
+          log('* ' + devDep);
         });
       }
       exit(-1);

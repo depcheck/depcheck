@@ -31,17 +31,17 @@ const defaultOptions = {
 function safeDetect(detector, node) {
   try {
     return detector(node);
-  } catch (e) {
+  } catch (error) {
     return [];
   }
 }
 
 function minus(array1, array2) {
-  return array1.filter(x => !array2.includes(x));
+  return array1.filter(item => !array2.includes(item));
 }
 
 function intersect(array1, array2) {
-  return array1.filter(x => array2.includes(x));
+  return array1.filter(item => array2.includes(item));
 }
 
 function unique(array) {
@@ -146,7 +146,7 @@ function hasBin(rootDir, dependency) {
   try {
     const depPkg = require(path.join(rootDir, 'node_modules', dependency, 'package.json'));
     return depPkg.hasOwnProperty('bin');
-  } catch (e) {
+  } catch (error) {
     return false;
   }
 }
