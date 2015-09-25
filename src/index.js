@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import Walker from 'node-source-walk';
-import q from 'q';
 import walkdir from 'walkdir';
 import _ from 'lodash';
 import minimatch from 'minimatch';
@@ -57,75 +56,74 @@ function getDependencies(parsers, detectors, filename) {
 }
 
 function checkDirectory(dir, ignoreDirs, deps, devDeps) {
-  const deferred = q.defer();
-  const directoryPromises = [];
-  const finder = walkdir(dir, { 'no_recurse': true });
+  return new Promise(resolve => {
+    const promises = [];
+    const finder = walkdir(dir, { 'no_recurse': true });
 
-  finder.on('directory', subdir => {
-    if (_.contains(ignoreDirs, path.basename(subdir)))  {
-      return;
-    }
+    finder.on('directory', subdir => {
+      if (_.contains(ignoreDirs, path.basename(subdir)))  {
+        return;
+      }
 
-    directoryPromises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps));
-  });
+      promises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps));
+    });
 
-  finder.on('file', filename => {
-    const parsers = {
-      '.js': defaultParser,
-    };
+    finder.on('file', filename => {
+      const parsers = {
+        '.js': defaultParser,
+      };
 
-    const detectors = [
-      importDetector,
-      requireDetector,
-      gruntLoadTaskDetector,
-    ];
+      const detectors = [
+        importDetector,
+        requireDetector,
+        gruntLoadTaskDetector,
+      ];
 
-    const promise = getDependencies(parsers, detectors, filename)
-      .then(dependencies =>
-        dependencies.map(dependency =>
-          dependency.replace ? dependency.replace(/\/.*$/, '') : dependency))
-      .then(used => ({
-        dependencies: _.difference(deps, used),
-        devDependencies: _.difference(devDeps, used),
-      }), error => ({
+      const promise = getDependencies(parsers, detectors, filename)
+        .then(dependencies =>
+          dependencies.map(dependency =>
+            dependency.replace ? dependency.replace(/\/.*$/, '') : dependency))
+        .then(used => ({
+          dependencies: _.difference(deps, used),
+          devDependencies: _.difference(devDeps, used),
+        }), error => ({
+          dependencies: deps,
+          devDependencies: devDeps,
+          invalidFiles: {
+            [filename]: error,
+          },
+        }));
+
+      promises.push(promise);
+    });
+
+    finder.on('end', () => {
+      const value = Promise.all(promises).then(results =>
+        results.reduce((obj, current) => ({
+          dependencies: _.intersection(obj.dependencies, current.dependencies),
+          devDependencies: _.intersection(obj.devDependencies, current.devDependencies),
+          invalidFiles: _.merge(obj.invalidFiles, current.invalidFiles, {}),
+          invalidDirs: _.merge(obj.invalidDirs, current.invalidDirs, {}),
+        }), {
+          dependencies: deps,
+          devDependencies: devDeps,
+          invalidFiles: {},
+          invalidDirs: {},
+        }));
+
+      resolve(value);
+    });
+
+    finder.on('error', (dirPath, error) => {
+      promises.push(Promise.resolve({
         dependencies: deps,
         devDependencies: devDeps,
-        invalidFiles: {
-          [filename]: error,
+        invalidDirs: {
+          [dirPath]: error,
         },
       }));
-
-    directoryPromises.push(promise);
+    });
   });
-
-  finder.on('end', () => {
-    const value = Promise.all(directoryPromises).then(results =>
-      results.reduce((obj, current) => ({
-        dependencies: _.intersection(obj.dependencies, current.dependencies),
-        devDependencies: _.intersection(obj.devDependencies, current.devDependencies),
-        invalidFiles: _.merge(obj.invalidFiles, current.invalidFiles, {}),
-        invalidDirs: _.merge(obj.invalidDirs, current.invalidDirs, {}),
-      }), {
-        dependencies: deps,
-        devDependencies: devDeps,
-        invalidFiles: {},
-        invalidDirs: {},
-      }));
-
-    deferred.resolve(value);
-  });
-
-  finder.on('error', (dirPath, error) => {
-    directoryPromises.push(Promise.resolve({
-      dependencies: deps,
-      devDependencies: devDeps,
-      invalidDirs: {
-        [dirPath]: error,
-      },
-    }));
-  });
-
-  return deferred.promise;
 }
 
 function isIgnored(ignoreMatches, dependency) {
@@ -170,9 +168,7 @@ function depCheck(rootDir, options, cb) {
     .unique()
     .valueOf();
 
-  return checkDirectory(rootDir, ignoreDirs, deps, devDeps)
-    .then(cb)
-    .done();
+  return checkDirectory(rootDir, ignoreDirs, deps, devDeps).then(cb);
 }
 
 module.exports = depCheck;
