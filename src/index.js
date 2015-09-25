@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import Walker from 'node-source-walk';
 import walkdir from 'walkdir';
-import _ from 'lodash';
 import minimatch from 'minimatch';
 
 import defaultParser from './parsers/default';
@@ -35,6 +34,18 @@ function safeDetect(detector, node) {
   } catch (e) {
     return [];
   }
+}
+
+function minus(array1, array2) {
+  return array1.filter(x => !array2.includes(x));
+}
+
+function intersect(array1, array2) {
+  return array1.filter(x => array2.includes(x));
+}
+
+function unique(array) {
+  return array.filter((value, index) => array.indexOf(value) === index);
 }
 
 function getDependencies(parsers, detectors, filename) {
@@ -92,8 +103,8 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
           dependencies.map(dependency =>
             dependency.replace ? dependency.replace(/\/.*$/, '') : dependency))
         .then(used => ({
-          dependencies: _.difference(deps, used),
-          devDependencies: _.difference(devDeps, used),
+          dependencies: minus(deps, used),
+          devDependencies: minus(devDeps, used),
         }), error => ({
           dependencies: deps,
           devDependencies: devDeps,
@@ -105,10 +116,10 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
     finder.on('end', () =>
       resolve(Promise.all(promises).then(results =>
         results.reduce((obj, current) => ({
-          dependencies: _.intersection(obj.dependencies, current.dependencies),
-          devDependencies: _.intersection(obj.devDependencies, current.devDependencies),
-          invalidFiles: _.merge(obj.invalidFiles, current.invalidFiles, {}),
-          invalidDirs: _.merge(obj.invalidDirs, current.invalidDirs, {}),
+          dependencies: intersect(obj.dependencies, current.dependencies),
+          devDependencies: intersect(obj.devDependencies, current.devDependencies),
+          invalidFiles: Object.assign(obj.invalidFiles, current.invalidFiles),
+          invalidDirs: Object.assign(obj.invalidDirs, current.invalidDirs),
         }), {
           dependencies: deps,
           devDependencies: devDeps,
@@ -128,43 +139,36 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
 }
 
 function isIgnored(ignoreMatches, dependency) {
-  return _.any(ignoreMatches, match => {
-    return minimatch(dependency, match);
-  });
+  return ignoreMatches.some(match => minimatch(dependency, match));
 }
 
 function hasBin(rootDir, dependency) {
   try {
     const depPkg = require(path.join(rootDir, 'node_modules', dependency, 'package.json'));
-    return _.has(depPkg, 'bin');
+    return depPkg.hasOwnProperty('bin');
   } catch (e) {
     return false;
   }
 }
 
 function filterDependencies(rootDir, ignoreMatches, dependencies) {
-  return _(dependencies)
-    .keys()
-    .reject(dependency => hasBin(rootDir, dependency))
-    .reject(dependency => isIgnored(ignoreMatches, dependency))
-    .valueOf();
+  return Object.keys(dependencies)
+    .filter(dependency => !hasBin(rootDir, dependency))
+    .filter(dependency => !isIgnored(ignoreMatches, dependency));
 }
 
 function depCheck(rootDir, options, cb) {
-  const pkg = options.package || require(path.join(rootDir, 'package.json'));
-  const deps = filterDependencies(rootDir, options.ignoreMatches, pkg.dependencies);
-  const devDeps = filterDependencies(rootDir, options.ignoreMatches, options.withoutDev ? [] : pkg.devDependencies);
-
   // TODO test pass parsers and detectors from options
   const parsers = options.parsers || defaultOptions.parsers;
   const detectors = options.detectors || defaultOptions.detectors;
+  const ignoreMatches = options.ignoreMatches || [];
+  const ignoreDirs = unique(defaultOptions.ignoreDirs.concat(options.ignoreDirs));
 
-  const ignoreDirs =
-    _(defaultOptions.ignoreDirs)
-    .concat(options.ignoreDirs)
-    .flatten()
-    .unique()
-    .valueOf();
+  const metadata = options.package || require(path.join(rootDir, 'package.json'));
+  const dependencies = metadata.dependencies || {};
+  const devDependencies = metadata.devDependencies || {};
+  const deps = filterDependencies(rootDir, ignoreMatches, dependencies);
+  const devDeps = filterDependencies(rootDir, ignoreMatches, options.withoutDev ? [] : devDependencies);
 
   return checkDirectory(rootDir, ignoreDirs, deps, devDeps, parsers, detectors)
     .then(cb);
