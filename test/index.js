@@ -1,6 +1,6 @@
 /* global describe, it, before, after */
 
-import assert from 'should';
+import 'should';
 import depcheck from '../src/index';
 import fs from 'fs';
 import path from 'path';
@@ -23,11 +23,11 @@ describe('depcheck', () => {
     });
   });
 
-  it('should ignore bad javascript', function testBadJS(done) {
+  it('should ignore bad javascript', done => {
     const absolutePath = path.resolve('test/fake_modules/bad_js');
 
-    depcheck(absolutePath, {  }, function checked(unused) {
-      unused.dependencies.should.have.length(1);
+    depcheck(absolutePath, {}, unused => {
+      unused.dependencies.should.deepEqual(['optimist']);
 
       const invalidFiles = Object.keys(unused.invalidFiles);
       invalidFiles.should.have.length(1);
@@ -40,7 +40,7 @@ describe('depcheck', () => {
     });
   });
 
-  it('should allow dynamic package metadata', function testDynamic(done) {
+  it('should allow dynamic package metadata', done => {
     const absolutePath = path.resolve('test/fake_modules/bad');
 
     depcheck(absolutePath, {
@@ -50,8 +50,8 @@ describe('depcheck', () => {
           'express': '^4.0.0',
         },
       },
-    }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 2);
+    }, unused => {
+      unused.dependencies.should.deepEqual(['optimist', 'express']);
       done();
     });
   });
