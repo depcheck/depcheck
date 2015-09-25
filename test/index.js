@@ -83,19 +83,51 @@ describe('depcheck', () => {
         error ? done(error) : fs.rmdir(unreadablePath, done)));
   }
 
-  describe('access unreadable directory', () => {
+  describe('access unreadable directory', () =>
     testAccessUnreadableDirectory(
       'unreadable',
       'unreadable',
       ['unreadable'],
-      []);
-  });
+      []));
 
-  describe('access deep unreadable directory', () => {
+  describe('access deep unreadable directory', () =>
     testAccessUnreadableDirectory(
       'unreadable_deep',
       'deep/nested/unreadable',
       [],
-      []);
-  });
+      []));
+
+  function testAccessUnreadableFile(
+    module, unreadable, unusedDeps, unusedDevDeps) {
+    const modulePath = path.resolve(__dirname, 'fake_modules', module);
+    const unreadablePath = path.resolve(modulePath, unreadable);
+
+    before(done => fs.writeFile(unreadablePath, '', { mode: 0 }, done));
+
+    it('should capture error', done =>
+      depcheck(modulePath, {}, unused => {
+        unused.dependencies.should.deepEqual(unusedDeps);
+        unused.devDependencies.should.deepEqual(unusedDevDeps);
+
+        const invalidFiles = Object.keys(unused.invalidFiles);
+        invalidFiles.should.deepEqual([unreadablePath]);
+
+        const error = unused.invalidFiles[invalidFiles[0]];
+        error.should.be.instanceof(Error);
+        error.toString().should.containEql('EACCES');
+
+        done();
+      }));
+
+    after(done =>
+      fs.chmod(unreadablePath, '0700', error =>
+        error ? done(error) : fs.unlink(unreadablePath, done)));
+  }
+
+  describe('access unreadable file', () =>
+    testAccessUnreadableFile(
+      'unreadable',
+      'unreadable.js',
+      ['unreadable'],
+      []));
 });
