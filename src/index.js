@@ -61,19 +61,12 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
   const directoryPromises = [];
   const finder = walkdir(dir, { 'no_recurse': true });
 
-  let unusedDeps = deps;
-  let unusedDevDeps = devDeps;
-
-  if (_.isEmpty(unusedDeps) && _.isEmpty(unusedDevDeps)) {
-    finder.emit('end');
-  }
-
   finder.on('directory', subdir => {
     if (_.contains(ignoreDirs, path.basename(subdir)))  {
       return;
     }
 
-    directoryPromises.push(checkDirectory(subdir, ignoreDirs, unusedDeps, unusedDevDeps));
+    directoryPromises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps));
   });
 
   finder.on('file', filename => {
@@ -88,14 +81,13 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
     ];
 
     const promise = getDependencies(parsers, detectors, filename)
-      .then(dependencies => {
-        const used = dependencies.map(dependency =>
-          dependency.replace ? dependency.replace(/\/.*$/, '') : dependency);
-        return {
-          dependencies: _.difference(unusedDeps, used),
-          devDependencies: _.difference(unusedDevDeps, used),
-        };
-      }, error => ({
+      .then(dependencies =>
+        dependencies.map(dependency =>
+          dependency.replace ? dependency.replace(/\/.*$/, '') : dependency))
+      .then(used => ({
+        dependencies: _.difference(deps, used),
+        devDependencies: _.difference(devDeps, used),
+      }), error => ({
         dependencies: deps,
         devDependencies: devDeps,
         invalidFiles: {
