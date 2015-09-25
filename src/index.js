@@ -55,31 +55,19 @@ function getDependencies(parsers, detectors, filename) {
   });
 }
 
-function checkDirectory(dir, ignoreDirs, deps, devDeps) {
+function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
   return new Promise(resolve => {
     const promises = [];
     const finder = walkdir(dir, { 'no_recurse': true });
 
-    finder.on('directory', subdir => {
-      if (_.contains(ignoreDirs, path.basename(subdir)))  {
-        return;
-      }
+    finder.on('directory', subdir =>
+      ignoreDirs.includes(path.basename(subdir))
+      ? null
+      : promises.push(
+          checkDirectory(subdir, ignoreDirs, deps, devDeps, parsers, detectors)));
 
-      promises.push(checkDirectory(subdir, ignoreDirs, deps, devDeps));
-    });
-
-    finder.on('file', filename => {
-      const parsers = {
-        '.js': defaultParser,
-      };
-
-      const detectors = [
-        importDetector,
-        requireDetector,
-        gruntLoadTaskDetector,
-      ];
-
-      const promise = getDependencies(parsers, detectors, filename)
+    finder.on('file', filename =>
+      promises.push(getDependencies(parsers, detectors, filename)
         .then(dependencies =>
           dependencies.map(dependency =>
             dependency.replace ? dependency.replace(/\/.*$/, '') : dependency))
@@ -92,13 +80,10 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
           invalidFiles: {
             [filename]: error,
           },
-        }));
+        }))));
 
-      promises.push(promise);
-    });
-
-    finder.on('end', () => {
-      const value = Promise.all(promises).then(results =>
+    finder.on('end', () =>
+      resolve(Promise.all(promises).then(results =>
         results.reduce((obj, current) => ({
           dependencies: _.intersection(obj.dependencies, current.dependencies),
           devDependencies: _.intersection(obj.devDependencies, current.devDependencies),
@@ -109,20 +94,16 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
           devDependencies: devDeps,
           invalidFiles: {},
           invalidDirs: {},
-        }));
+        }))));
 
-      resolve(value);
-    });
-
-    finder.on('error', (dirPath, error) => {
+    finder.on('error', (dirPath, error) =>
       promises.push(Promise.resolve({
         dependencies: deps,
         devDependencies: devDeps,
         invalidDirs: {
           [dirPath]: error,
         },
-      }));
-    });
+      })));
   });
 }
 
@@ -168,7 +149,18 @@ function depCheck(rootDir, options, cb) {
     .unique()
     .valueOf();
 
-  return checkDirectory(rootDir, ignoreDirs, deps, devDeps).then(cb);
+  const parsers = {
+    '.js': defaultParser,
+  };
+
+  const detectors = [
+    importDetector,
+    requireDetector,
+    gruntLoadTaskDetector,
+  ];
+
+  return checkDirectory(rootDir, ignoreDirs, deps, devDeps, parsers, detectors)
+    .then(cb);
 }
 
 module.exports = depCheck;
