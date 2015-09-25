@@ -85,9 +85,9 @@ describe('depcheck', () => {
 
   describe('access unreadable directory', () => {
     testAccessUnreadableDirectory(
-      'bad',
       'unreadable',
-      ['optimist'],
+      'unreadable',
+      ['unreadable'],
       []);
   });
 
