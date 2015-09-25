@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars, id-length */
 
 /**
  * This should cover all styles of ES6 imports as described by:
