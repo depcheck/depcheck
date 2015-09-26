@@ -138,6 +138,16 @@
     }
   },
   {
+    "name": "handle require call with dynamic expression",
+    "module": "require_dynamic",
+    "options": {
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": []
+    }
+  },
+  {
     "name": "ignore ignoreDirs",
     "module": "bad_deep",
     "options": {

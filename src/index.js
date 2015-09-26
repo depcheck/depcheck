@@ -115,7 +115,9 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
       promises.push(getDependencies(parsers, detectors, filename)
         .then(dependencies =>
           dependencies.map(dependency =>
-            dependency.replace ? dependency.replace(/\/.*$/, '') : dependency))
+            dependency && dependency.replace
+            ? dependency.replace(/\/.*$/, '')
+            : dependency))
         .then(used => ({
           dependencies: minus(deps, used),
           devDependencies: minus(devDeps, used),
