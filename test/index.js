@@ -5,6 +5,7 @@ import depcheck from '../src/index';
 import fs from 'fs';
 import path from 'path';
 
+import importListParser from './fake_parsers/importList';
 import exceptionDetector from './fake_detectors/exception';
 
 describe('depcheck', () => {
@@ -141,6 +142,24 @@ describe('depcheck', () => {
         depcheck.detectors.requireCallExpression,
         exceptionDetector,
       ],
+    }, unused => {
+      unused.dependencies.should.deepEqual([]);
+      unused.devDependencies.should.deepEqual([]);
+
+      Object.keys(unused.invalidFiles).should.have.length(0);
+      Object.keys(unused.invalidDirs).should.have.length(0);
+
+      done();
+    });
+  });
+
+  it('should use custom parsers to generate AST', done => {
+    const absolutePath = path.resolve('test/fake_modules/import_list');
+
+    depcheck(absolutePath, {
+      parsers: {
+        '.txt': importListParser,
+      },
     }, unused => {
       unused.dependencies.should.deepEqual([]);
       unused.devDependencies.should.deepEqual([]);
