@@ -47,11 +47,11 @@ function safeDetect(detector, node) {
 }
 
 function minus(array1, array2) {
-  return array1.filter(item => !array2.includes(item));
+  return array1.filter(item => array2.indexOf(item) === -1);
 }
 
 function intersect(array1, array2) {
-  return array1.filter(item => array2.includes(item));
+  return array1.filter(item => array2.indexOf(item) !== -1);
 }
 
 function unique(array) {
@@ -102,7 +102,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
     const finder = walkdir(dir, { 'no_recurse': true });
 
     finder.on('directory', subdir =>
-      ignoreDirs.includes(path.basename(subdir))
+      ignoreDirs.indexOf(path.basename(subdir)) !== -1
       ? null
       : promises.push(
           checkDirectory(subdir, ignoreDirs, deps, devDeps, parsers, detectors)));
