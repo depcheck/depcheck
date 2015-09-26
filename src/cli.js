@@ -26,6 +26,7 @@ export default function cli(args, log, error, exit) {
     .describe('dev', 'Check on devDependecies')
     .describe('json', 'Output results to JSON')
     .describe('ignores', 'Comma separated package list to ignore')
+    .describe('ignoreDirs', 'Comma separated folder names to ignore')
     .describe('help', 'Show this help message');
 
   if (opt.argv.help) {
@@ -49,6 +50,7 @@ export default function cli(args, log, error, exit) {
     .then(() => checkDirectory(rootDir, {
       withoutDev: !opt.argv.dev,
       ignoreMatches: (opt.argv.ignores || '').split(','),
+      ignoreDirs: (opt.argv.ignoreDirs || '').split(','),
     }, unused => {
       if (opt.argv.json) {
         log(JSON.stringify(unused));
