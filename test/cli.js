@@ -18,6 +18,10 @@ function makeArgv(testCase) {
     argv.push('--ignores=' + options.ignoreMatches.join(','));
   }
 
+  if (options.ignoreDirs) {
+    argv.push('--ignoreDirs=' + options.ignoreDirs.join(','));
+  }
+
   return argv;
 }
 
