@@ -1,9 +1,13 @@
 /* global describe, it, before, after */
 
-import assert from 'should';
+import 'should';
 import depcheck from '../src/index';
 import fs from 'fs';
 import path from 'path';
+
+import importListParser from './fake_parsers/importList';
+import exceptionDetector from './fake_detectors/exception';
+import dependDetector from './fake_detectors/dependCallExpression';
 
 describe('depcheck', () => {
   const spec = fs.readFileSync(__dirname + '/spec.json', { encoding: 'utf8' });
@@ -23,11 +27,11 @@ describe('depcheck', () => {
     });
   });
 
-  it('should ignore bad javascript', function testBadJS(done) {
+  it('should ignore bad javascript', done => {
     const absolutePath = path.resolve('test/fake_modules/bad_js');
 
-    depcheck(absolutePath, {  }, function checked(unused) {
-      unused.dependencies.should.have.length(1);
+    depcheck(absolutePath, {}, unused => {
+      unused.dependencies.should.deepEqual(['optimist']);
 
       const invalidFiles = Object.keys(unused.invalidFiles);
       invalidFiles.should.have.length(1);
@@ -40,7 +44,7 @@ describe('depcheck', () => {
     });
   });
 
-  it('should allow dynamic package metadata', function testDynamic(done) {
+  it('should allow dynamic package metadata', done => {
     const absolutePath = path.resolve('test/fake_modules/bad');
 
     depcheck(absolutePath, {
@@ -50,8 +54,8 @@ describe('depcheck', () => {
           'express': '^4.0.0',
         },
       },
-    }, function checked(unused) {
-      assert.equal(unused.dependencies.length, 2);
+    }, unused => {
+      unused.dependencies.should.deepEqual(['optimist', 'express']);
       done();
     });
   });
@@ -83,19 +87,86 @@ describe('depcheck', () => {
         error ? done(error) : fs.rmdir(unreadablePath, done)));
   }
 
-  describe('access unreadable directory', () => {
+  describe('access unreadable directory', () =>
     testAccessUnreadableDirectory(
-      'bad',
       'unreadable',
-      ['optimist'],
-      []);
-  });
+      'unreadable',
+      ['unreadable'],
+      []));
 
-  describe('access deep unreadable directory', () => {
+  describe('access deep unreadable directory', () =>
     testAccessUnreadableDirectory(
       'unreadable_deep',
       'deep/nested/unreadable',
       [],
-      []);
-  });
+      []));
+
+  function testAccessUnreadableFile(
+    module, unreadable, unusedDeps, unusedDevDeps) {
+    const modulePath = path.resolve(__dirname, 'fake_modules', module);
+    const unreadablePath = path.resolve(modulePath, unreadable);
+
+    before(done => fs.writeFile(unreadablePath, '', { mode: 0 }, done));
+
+    it('should capture error', done =>
+      depcheck(modulePath, {}, unused => {
+        unused.dependencies.should.deepEqual(unusedDeps);
+        unused.devDependencies.should.deepEqual(unusedDevDeps);
+
+        const invalidFiles = Object.keys(unused.invalidFiles);
+        invalidFiles.should.deepEqual([unreadablePath]);
+
+        const error = unused.invalidFiles[invalidFiles[0]];
+        error.should.be.instanceof(Error);
+        error.toString().should.containEql('EACCES');
+
+        done();
+      }));
+
+    after(done =>
+      fs.chmod(unreadablePath, '0700', error =>
+        error ? done(error) : fs.unlink(unreadablePath, done)));
+  }
+
+  describe('access unreadable file', () =>
+    testAccessUnreadableFile(
+      'unreadable',
+      'unreadable.js',
+      ['unreadable'],
+      []));
+
+  function testCustomPluggableComponents(module, options) {
+    return depcheck(
+      path.resolve('test/fake_modules', module),
+      options,
+      unused => {
+        unused.dependencies.should.deepEqual([]);
+        unused.devDependencies.should.deepEqual([]);
+
+        Object.keys(unused.invalidFiles).should.have.length(0);
+        Object.keys(unused.invalidDirs).should.have.length(0);
+      });
+  }
+
+  it('should work fine even a customer parser throws exceptions', () =>
+    testCustomPluggableComponents('good', {
+      detectors: [
+        depcheck.detectors.requireCallExpression,
+        exceptionDetector,
+      ],
+    }));
+
+  it('should use custom parsers to generate AST', () =>
+    testCustomPluggableComponents('import_list', {
+      parsers: {
+        '.txt': importListParser,
+      },
+    }));
+
+  it('should use custom detector to find dependencies', () =>
+    testCustomPluggableComponents('depend', {
+      detectors: [
+        dependDetector,
+      ],
+    }));
 });

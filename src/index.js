@@ -158,7 +158,6 @@ function filterDependencies(rootDir, ignoreMatches, dependencies) {
 }
 
 function depCheck(rootDir, options, cb) {
-  // TODO test pass parsers and detectors from options
   const parsers = options.parsers || defaultOptions.parsers;
   const detectors = options.detectors || defaultOptions.detectors;
   const ignoreMatches = options.ignoreMatches || [];
@@ -173,5 +172,15 @@ function depCheck(rootDir, options, cb) {
   return checkDirectory(rootDir, ignoreDirs, deps, devDeps, parsers, detectors)
     .then(cb);
 }
+
+depCheck.detectors = {
+  importDeclaration: importDetector,
+  requireCallExpression: requireDetector,
+  gruntLoadTaskCallExpression: gruntLoadTaskDetector,
+};
+
+depCheck.parsers = {
+  default: defaultParser,
+};
 
 module.exports = depCheck;
