@@ -158,7 +158,6 @@ function filterDependencies(rootDir, ignoreMatches, dependencies) {
 }
 
 function depCheck(rootDir, options, cb) {
-  // TODO test pass parsers and detectors from options
   const parsers = options.parsers || defaultOptions.parsers;
   const detectors = options.detectors || defaultOptions.detectors;
   const ignoreMatches = options.ignoreMatches || [];

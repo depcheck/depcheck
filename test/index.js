@@ -135,58 +135,38 @@ describe('depcheck', () => {
       ['unreadable'],
       []));
 
-  it('should work fine even a customer parser throws exceptions', done => {
-    const absolutePath = path.resolve('test/fake_modules/good');
+  function testCustomPluggableComponents(module, options) {
+    return depcheck(
+      path.resolve('test/fake_modules', module),
+      options,
+      unused => {
+        unused.dependencies.should.deepEqual([]);
+        unused.devDependencies.should.deepEqual([]);
 
-    depcheck(absolutePath, {
+        Object.keys(unused.invalidFiles).should.have.length(0);
+        Object.keys(unused.invalidDirs).should.have.length(0);
+      });
+  }
+
+  it('should work fine even a customer parser throws exceptions', () =>
+    testCustomPluggableComponents('good', {
       detectors: [
         depcheck.detectors.requireCallExpression,
         exceptionDetector,
       ],
-    }, unused => {
-      unused.dependencies.should.deepEqual([]);
-      unused.devDependencies.should.deepEqual([]);
+    }));
 
-      Object.keys(unused.invalidFiles).should.have.length(0);
-      Object.keys(unused.invalidDirs).should.have.length(0);
-
-      done();
-    });
-  });
-
-  it('should use custom parsers to generate AST', done => {
-    const absolutePath = path.resolve('test/fake_modules/import_list');
-
-    depcheck(absolutePath, {
+  it('should use custom parsers to generate AST', () =>
+    testCustomPluggableComponents('import_list', {
       parsers: {
         '.txt': importListParser,
       },
-    }, unused => {
-      unused.dependencies.should.deepEqual([]);
-      unused.devDependencies.should.deepEqual([]);
+    }));
 
-      Object.keys(unused.invalidFiles).should.have.length(0);
-      Object.keys(unused.invalidDirs).should.have.length(0);
-
-      done();
-    });
-  });
-
-  it('should use custom detector to find dependencies', done => {
-    const absolutePath = path.resolve('test/fake_modules/depend');
-
-    depcheck(absolutePath, {
+  it('should use custom detector to find dependencies', () =>
+    testCustomPluggableComponents('depend', {
       detectors: [
         dependDetector,
       ],
-    }, unused => {
-      unused.dependencies.should.deepEqual([]);
-      unused.devDependencies.should.deepEqual([]);
-
-      Object.keys(unused.invalidFiles).should.have.length(0);
-      Object.keys(unused.invalidDirs).should.have.length(0);
-
-      done();
-    });
-  });
+    }));
 });
