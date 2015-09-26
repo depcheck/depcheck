@@ -4,13 +4,13 @@ import Walker from 'node-source-walk';
 import walkdir from 'walkdir';
 import minimatch from 'minimatch';
 
-import defaultParser from './parsers/default';
+import es6Parser from './parsers/es6';
 import importDetector from './detectors/importDeclaration';
 import requireDetector from './detectors/requireCallExpression';
 import gruntLoadTaskDetector from './detectors/gruntLoadTaskCallExpression';
 
 const availableParsers = {
-  default: defaultParser,
+  es6: es6Parser,
 };
 
 const availableDetectors = {
@@ -29,7 +29,7 @@ const defaultOptions = {
     'bower_components',
   ],
   parsers: {
-    '.js': availableParsers.default,
+    '.js': availableParsers.es6,
   },
   detectors: [
     availableDetectors.importDeclaration,
