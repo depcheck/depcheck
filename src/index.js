@@ -5,9 +5,19 @@ import walkdir from 'walkdir';
 import minimatch from 'minimatch';
 
 import defaultParser from './parsers/default';
-import gruntLoadTaskDetector from './detectors/gruntLoadTaskCallExpression';
 import importDetector from './detectors/importDeclaration';
 import requireDetector from './detectors/requireCallExpression';
+import gruntLoadTaskDetector from './detectors/gruntLoadTaskCallExpression';
+
+const availableParsers = {
+  default: defaultParser,
+};
+
+const availableDetectors = {
+  importDeclaration: importDetector,
+  requireCallExpression: requireDetector,
+  gruntLoadTaskCallExpression: gruntLoadTaskDetector,
+};
 
 const defaultOptions = {
   ignoreDirs: [
@@ -19,12 +29,12 @@ const defaultOptions = {
     'bower_components',
   ],
   parsers: {
-    '.js': defaultParser,
+    '.js': availableParsers.default,
   },
   detectors: [
-    importDetector,
-    requireDetector,
-    gruntLoadTaskDetector,
+    availableDetectors.importDeclaration,
+    availableDetectors.requireCallExpression,
+    availableDetectors.gruntLoadTaskCallExpression,
   ],
 };
 
@@ -157,7 +167,7 @@ function filterDependencies(rootDir, ignoreMatches, dependencies) {
     .filter(dependency => !isIgnored(ignoreMatches, dependency));
 }
 
-function depCheck(rootDir, options, cb) {
+export default function depCheck(rootDir, options, cb) {
   const parsers = options.parsers || defaultOptions.parsers;
   const detectors = options.detectors || defaultOptions.detectors;
   const ignoreMatches = options.ignoreMatches || [];
@@ -173,14 +183,5 @@ function depCheck(rootDir, options, cb) {
     .then(cb);
 }
 
-depCheck.detectors = {
-  importDeclaration: importDetector,
-  requireCallExpression: requireDetector,
-  gruntLoadTaskCallExpression: gruntLoadTaskDetector,
-};
-
-depCheck.parsers = {
-  default: defaultParser,
-};
-
-module.exports = depCheck;
+depCheck.parsers = availableParsers;
+depCheck.detectors = availableDetectors;
