@@ -15,7 +15,7 @@ describe('depcheck', () => {
 
   testCases.forEach(testCase => {
     it('should ' + testCase.name, done => {
-      const testPath = path.resolve('test/fake_modules/' + testCase.module);
+      const testPath = path.resolve(__dirname, 'fake_modules', testCase.module);
       const options = testCase.options;
       const expected = testCase.expected;
 
@@ -28,7 +28,7 @@ describe('depcheck', () => {
   });
 
   it('should ignore bad javascript', done => {
-    const absolutePath = path.resolve('test/fake_modules/bad_js');
+    const absolutePath = path.resolve(__dirname, 'fake_modules/bad_js');
 
     depcheck(absolutePath, {}, unused => {
       unused.dependencies.should.deepEqual(['optimist']);
@@ -45,7 +45,7 @@ describe('depcheck', () => {
   });
 
   it('should allow dynamic package metadata', done => {
-    const absolutePath = path.resolve('test/fake_modules/bad');
+    const absolutePath = path.resolve(__dirname, 'fake_modules/bad');
 
     depcheck(absolutePath, {
       'package': {
@@ -137,7 +137,7 @@ describe('depcheck', () => {
 
   function testCustomPluggableComponents(module, options) {
     return depcheck(
-      path.resolve('test/fake_modules', module),
+      path.resolve(__dirname, 'fake_modules', module),
       options,
       unused => {
         unused.dependencies.should.deepEqual([]);
