@@ -5,12 +5,15 @@ import walkdir from 'walkdir';
 import minimatch from 'minimatch';
 
 import es6Parser from './parsers/es6';
+import jsxParser from './parsers/jsx';
+
 import importDetector from './detectors/importDeclaration';
 import requireDetector from './detectors/requireCallExpression';
 import gruntLoadTaskDetector from './detectors/gruntLoadTaskCallExpression';
 
 const availableParsers = {
   es6: es6Parser,
+  jsx: jsxParser,
 };
 
 const availableDetectors = {
@@ -30,6 +33,7 @@ const defaultOptions = {
   ],
   parsers: {
     '.js': availableParsers.es6,
+    '.jsx': availableParsers.jsx,
   },
   detectors: [
     availableDetectors.importDeclaration,

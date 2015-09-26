@@ -158,5 +158,15 @@
       "dependencies": [],
       "devDependencies": []
     }
+  },
+  {
+    "name": "support jsx syntax",
+    "module": "jsx",
+    "options": {
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": []
+    }
   }
 ]
