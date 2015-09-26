@@ -1,4 +1,4 @@
-import optimist from 'optimist';
+import yargs from 'yargs';
 import checkDirectory from './index';
 import fs from 'fs';
 import path from 'path';
@@ -19,11 +19,11 @@ function prettify(caption, deps) {
 }
 
 export default function cli(args, log, error, exit) {
-  const opt = optimist(args)
+  const opt = yargs(args)
     .usage('Usage: $0 [DIRECTORY]')
     .boolean('dev')
     .default('dev', true)
-    .describe('no-dev', 'Don\'t look at devDependecies')
+    .describe('dev', 'Check on devDependecies')
     .describe('json', 'Output results to JSON')
     .describe('ignores', 'Comma separated package list to ignore')
     .describe('help', 'Show this help message');
