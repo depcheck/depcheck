@@ -126,13 +126,16 @@ describe('depcheck command line', () => {
 
   it('should output unused dependencies when happen', () =>
     new Promise(resolve => {
-      const logs = [];
+      let log = '';
 
       cli(
         [path.resolve(__dirname, './fake_modules/bad')],
-        data => logs.push(data),
+        data => log = data,
         data => data.should.fail(), // should not go into error output
-        exitCode => resolve({ logs, exitCode })
+        exitCode => resolve({
+          logs: log.split('\n'),
+          exitCode,
+        })
       );
     }).then(({ logs, exitCode }) => {
       logs.should.have.length(2);
@@ -144,13 +147,16 @@ describe('depcheck command line', () => {
 
   it('should output unused devDependencies when happen', () =>
     new Promise(resolve => {
-      const logs = [];
+      let log = '';
 
       cli(
         [path.resolve(__dirname, './fake_modules/dev')],
-        data => data && logs.push(data), // not push undefined
+        data => log = data,
         data => data.should.fail(), // should not go into error output
-        exitCode => resolve({ logs, exitCode })
+        exitCode => resolve({
+          logs: log.split('\n'),
+          exitCode,
+        })
       );
     }).then(({ logs, exitCode }) => {
       logs.should.have.length(2);
