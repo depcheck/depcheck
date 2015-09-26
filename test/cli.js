@@ -26,11 +26,6 @@ describe('depcheck command line', () => {
   const testCases = JSON.parse(spec);
 
   testCases.forEach(testCase => {
-    if (testCase.name === 'ignore ignoreDirs') {
-      // TODO command line not supports ignoreDirs options yet, skip it
-      return true;
-    }
-
     it('should ' + testCase.name, () =>
       new Promise(resolve => {
         let log;
