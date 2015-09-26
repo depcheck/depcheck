@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "depend-1": "0.0.1",
+    "depend-2": "0.0.2",
+    "depend-3": "0.0.3"
+  }
+}

@@ -7,6 +7,7 @@ import path from 'path';
 
 import importListParser from './fake_parsers/importList';
 import exceptionDetector from './fake_detectors/exception';
+import dependDetector from './fake_detectors/dependCallExpression';
 
 describe('depcheck', () => {
   const spec = fs.readFileSync(__dirname + '/spec.json', { encoding: 'utf8' });
@@ -160,6 +161,24 @@ describe('depcheck', () => {
       parsers: {
         '.txt': importListParser,
       },
+    }, unused => {
+      unused.dependencies.should.deepEqual([]);
+      unused.devDependencies.should.deepEqual([]);
+
+      Object.keys(unused.invalidFiles).should.have.length(0);
+      Object.keys(unused.invalidDirs).should.have.length(0);
+
+      done();
+    });
+  });
+
+  it('should use custom detector to find dependencies', done => {
+    const absolutePath = path.resolve('test/fake_modules/depend');
+
+    depcheck(absolutePath, {
+      detectors: [
+        dependDetector,
+      ],
     }, unused => {
       unused.dependencies.should.deepEqual([]);
       unused.devDependencies.should.deepEqual([]);
