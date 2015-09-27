@@ -119,13 +119,22 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
     const finder = walkdir(dir, { 'no_recurse': true });
 
     finder.on('directory', subdir =>
-      ignoreDirs.indexOf(path.basename(subdir)) !== -1
-      ? null
-      : promises.push(
-          checkDirectory(subdir, ignoreDirs, deps, devDeps, parsers, detectors)));
+      ignoreDirs.indexOf(path.basename(subdir)) === -1 &&
+      promises.push(
+        checkDirectory(subdir, ignoreDirs, deps, devDeps, parsers, detectors)));
 
     finder.on('file', filename =>
-      promises.push(...checkFile(filename, deps, devDeps, parsers, detectors)));
+      promises.push(
+        ...checkFile(filename, deps, devDeps, parsers, detectors)));
+
+    finder.on('error', (dirPath, error) =>
+      promises.push(Promise.resolve({
+        dependencies: deps,
+        devDependencies: devDeps,
+        invalidDirs: {
+          [dirPath]: error,
+        },
+      })));
 
     finder.on('end', () =>
       resolve(Promise.all(promises).then(results =>
@@ -140,15 +149,6 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
           invalidFiles: {},
           invalidDirs: {},
         }))));
-
-    finder.on('error', (dirPath, error) =>
-      promises.push(Promise.resolve({
-        dependencies: deps,
-        devDependencies: devDeps,
-        invalidDirs: {
-          [dirPath]: error,
-        },
-      })));
   });
 }
 
