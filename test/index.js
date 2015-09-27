@@ -6,6 +6,8 @@ import fs from 'fs';
 import path from 'path';
 
 import importListParser from './fake_parsers/importList';
+import { multipleParserA, multipleParserB } from './fake_parsers/multiple';
+
 import exceptionDetector from './fake_detectors/exception';
 import dependDetector from './fake_detectors/dependCallExpression';
 
@@ -148,6 +150,16 @@ describe('depcheck', () => {
     testCustomPluggableComponents('import_list', {
       parsers: {
         '*.txt': importListParser,
+      },
+    }));
+
+  it('should support multiple parsers to generate ASTs', () =>
+    testCustomPluggableComponents('multiple_parsers', {
+      parsers: {
+        '*.csv': [
+          multipleParserA,
+          multipleParserB,
+        ],
       },
     }));
 
