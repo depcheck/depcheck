@@ -23,7 +23,7 @@ function makeArgv(testCase) {
   }
 
   if (options.ignoreDirs) {
-    argv.push('--ignoreDirs=' + options.ignoreDirs.join(','));
+    argv.push('--ignore-dirs=' + options.ignoreDirs.join(','));
   }
 
   return argv;

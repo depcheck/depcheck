@@ -33,7 +33,7 @@ export default function cli(args, log, error, exit) {
     .describe('ignore-bin-package', 'Ignore package with bin entry')
     .describe('json', 'Output results to JSON')
     .describe('ignores', 'Comma separated package list to ignore')
-    .describe('ignoreDirs', 'Comma separated folder names to ignore')
+    .describe('ignore-dirs', 'Comma separated folder names to ignore')
     .describe('help', 'Show this help message');
 
   if (opt.argv.help) {
