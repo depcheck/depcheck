@@ -17,6 +17,9 @@ const availableParsers = constructComponent(component, 'parser');
 const availableDetectors = constructComponent(component, 'detector');
 
 const defaultOptions = {
+  withoutDev: false,
+  ignoreMatches: [
+  ],
   ignoreDirs: [
     '.git',
     '.svn',
@@ -35,6 +38,10 @@ const defaultOptions = {
     availableDetectors.gruntLoadTaskCallExpression,
   ],
 };
+
+function getOrDefault(opt, key) {
+  return typeof opt[key] !== 'undefined' ? opt[key] : defaultOptions[key];
+}
 
 function unifyParser(parsers) {
   return Object.assign({}, ...Object.keys(parsers).map(key => ({
@@ -168,16 +175,17 @@ function filterDependencies(rootDir, ignoreMatches, dependencies) {
 }
 
 export default function depcheck(rootDir, options, cb) {
-  const parsers = unifyParser(options.parsers || defaultOptions.parsers);
-  const detectors = options.detectors || defaultOptions.detectors;
-  const ignoreMatches = options.ignoreMatches || [];
+  const withoutDev = getOrDefault(options, 'withoutDev');
+  const parsers = unifyParser(getOrDefault(options, 'parsers'));
+  const detectors = getOrDefault(options, 'detectors');
+  const ignoreMatches = getOrDefault(options, 'ignoreMatches');
   const ignoreDirs = unique(defaultOptions.ignoreDirs.concat(options.ignoreDirs));
 
   const metadata = options.package || require(path.join(rootDir, 'package.json'));
   const dependencies = metadata.dependencies || {};
   const devDependencies = metadata.devDependencies || {};
   const deps = filterDependencies(rootDir, ignoreMatches, dependencies);
-  const devDeps = filterDependencies(rootDir, ignoreMatches, options.withoutDev ? [] : devDependencies);
+  const devDeps = filterDependencies(rootDir, ignoreMatches, withoutDev ? [] : devDependencies);
 
   return checkDirectory(rootDir, ignoreDirs, deps, devDeps, parsers, detectors)
     .then(cb);
