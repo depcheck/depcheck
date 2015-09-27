@@ -169,6 +169,69 @@ describe('depcheck command line', () => {
       exitCode.should.equal(-1);
     }));
 
+  it('should recognize JSX file even only pass jsx parser and require detector', () =>
+    new Promise(resolve => {
+      let log = '';
+
+      cli(
+        [path.resolve(__dirname, 'fake_modules/jsx'), '--parsers="*.jsx:jsx"', '--dectors=requireCallExpression'],
+        data => log = data,
+        data => data.should.fail(), // should not go into error output
+        exitCode => resolve({
+          logs: log.split('\n'),
+          exitCode,
+        })
+      );
+    }).then(({ logs, exitCode }) => {
+      logs.should.have.length(2);
+      logs[0].should.equal('Unused Dependencies');
+      logs[1].should.containEql('react');
+
+      exitCode.should.equal(-1);
+    }));
+
+  it('should not recognize JSX file when not pass jsx parser', () =>
+    new Promise(resolve => {
+      let log = '';
+
+      cli(
+        [path.resolve(__dirname, 'fake_modules/jsx'), '--parsers="*.jsx:es6"'],
+        data => log = data,
+        data => data.should.fail(), // should not go into error output
+        exitCode => resolve({
+          logs: log.split('\n'),
+          exitCode,
+        })
+      );
+    }).then(({ logs, exitCode }) => {
+      logs.should.have.length(2);
+      logs[0].should.equal('Unused Dependencies');
+      logs[1].should.containEql('react');
+
+      exitCode.should.equal(-1);
+    }));
+
+  it('should not recognize JSX file when not enable require detector', () =>
+    new Promise(resolve => {
+      let log = '';
+
+      cli(
+        [path.resolve(__dirname, 'fake_modules/jsx'), '--detectors=importDeclaration'],
+        data => log = data,
+        data => data.should.fail(), // should not go into error output
+        exitCode => resolve({
+          logs: log.split('\n'),
+          exitCode,
+        })
+      );
+    }).then(({ logs, exitCode }) => {
+      logs.should.have.length(2);
+      logs[0].should.equal('Unused Dependencies');
+      logs[1].should.containEql('react');
+
+      exitCode.should.equal(-1);
+    }));
+
   describe('without specified directory', () => {
     const expectedCwd = '/not/exist';
     let originalCwd;
