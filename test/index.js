@@ -26,7 +26,8 @@ describe('depcheck', () => {
   const testCases = JSON.parse(spec);
 
   testCases.forEach(testCase => {
-    it('should ' + testCase.name, () =>
+    const run = testCase.only === 'index' ? it.only : it;
+    run('should ' + testCase.name, () =>
       check(testCase.module, testCase.options).then(result => {
         const expected = testCase.expected;
         result.dependencies.should.eql(expected.dependencies);
