@@ -163,6 +163,14 @@ describe('depcheck', () => {
       },
     }));
 
+  it('should generate ASTs when multiple globs match filename', () =>
+    testCustomPluggableComponents('multiple_parsers', {
+      parsers: {
+        '*.csv': multipleParserA,
+        'index.*': multipleParserB,
+      },
+    }));
+
   it('should use custom detector to find dependencies', () =>
     testCustomPluggableComponents('depend', {
       detectors: [
