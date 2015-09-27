@@ -167,7 +167,7 @@ function filterDependencies(rootDir, ignoreMatches, dependencies) {
     .filter(dependency => !isIgnored(ignoreMatches, dependency));
 }
 
-export default function depCheck(rootDir, options, cb) {
+export default function depcheck(rootDir, options, cb) {
   const parsers = options.parsers || defaultOptions.parsers;
   const detectors = options.detectors || defaultOptions.detectors;
   const ignoreMatches = options.ignoreMatches || [];
@@ -183,5 +183,5 @@ export default function depCheck(rootDir, options, cb) {
     .then(cb);
 }
 
-depCheck.parsers = availableParsers;
-depCheck.detectors = availableDetectors;
+depcheck.parser = availableParsers;
+depcheck.detector = availableDetectors;
