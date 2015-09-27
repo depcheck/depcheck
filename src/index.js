@@ -69,26 +69,23 @@ function getDependencies(parsers, detectors, filename) {
 
         try {
           const ast = parser(content);
-          resolve(ast);
+          resolve([ast]);
         } catch (syntaxError) {
           reject(syntaxError);
         }
       });
     } else {
-      resolve(); // extension not supported
+      resolve([]); // extension not supported
     }
-  }).then(ast => {
-    if (!ast) {
-      return []; // unsupported extension return no dependencies
-    }
-
+  }).then(asts => {
     const walker = new Walker();
     let dependencies = [];
 
-    walker.walk(ast, node => {
-      const results = detectors.map(detector => safeDetect(detector, node));
-      dependencies = dependencies.concat(...results);
-    });
+    asts.forEach(ast =>
+      walker.walk(ast, node => {
+        const results = detectors.map(detector => safeDetect(detector, node));
+        dependencies = dependencies.concat(...results);
+      }));
 
     return dependencies;
   });
