@@ -88,16 +88,6 @@
     }
   },
   {
-    "name": "support module names that are numbers",
-    "module": "number",
-    "options": {
-    },
-    "expected": {
-      "dependencies": [],
-      "devDependencies": []
-    }
-  },
-  {
     "name": "handle empty JavaScript file",
     "module": "empty_file",
     "options": {

@@ -26,8 +26,8 @@ const defaultOptions = {
     'bower_components',
   ],
   parsers: {
-    '.js': availableParsers.es6,
-    '.jsx': availableParsers.jsx,
+    '*.js': availableParsers.es6,
+    '*.jsx': availableParsers.jsx,
   },
   detectors: [
     availableDetectors.importDeclaration,
@@ -35,6 +35,12 @@ const defaultOptions = {
     availableDetectors.gruntLoadTaskCallExpression,
   ],
 };
+
+function unifyParser(parsers) {
+  return Object.assign({}, ...Object.keys(parsers).map(key => ({
+    [key]: parsers[key] instanceof Array ? parsers[key] : [parsers[key]],
+  })));
+}
 
 function safeDetect(detector, node) {
   try {
@@ -56,32 +62,21 @@ function unique(array) {
   return array.filter((value, index) => array.indexOf(value) === index);
 }
 
-function getDependencies(parsers, detectors, filename) {
+function getDependencies(filename, parser, detectors) {
   return new Promise((resolve, reject) => {
-    const ext = path.extname(filename);
-    const parser = parsers[ext];
+    fs.readFile(filename, 'utf8', (error, content) => {
+      if (error) {
+        reject(error);
+      }
 
-    if (parser) {
-      fs.readFile(filename, 'utf8', (error, content) => {
-        if (error) {
-          reject(error);
-        }
-
-        try {
-          const ast = parser(content);
-          resolve(ast);
-        } catch (syntaxError) {
-          reject(syntaxError);
-        }
-      });
-    } else {
-      resolve(); // extension not supported
-    }
+      try {
+        const ast = parser(content);
+        resolve(ast);
+      } catch (syntaxError) {
+        reject(syntaxError);
+      }
+    });
   }).then(ast => {
-    if (!ast) {
-      return []; // unsupported extension return no dependencies
-    }
-
     const walker = new Walker();
     let dependencies = [];
 
@@ -90,8 +85,28 @@ function getDependencies(parsers, detectors, filename) {
       dependencies = dependencies.concat(...results);
     });
 
-    return dependencies;
+    return dependencies.map(dependency => dependency.replace(/\/.*$/, ''));
   });
+}
+
+function checkFile(filename, deps, devDeps, parsers, detectors) {
+  const basename = path.basename(filename);
+  const targets = [].concat(...Object.keys(parsers)
+    .filter(glob => minimatch(basename, glob))
+    .map(key => parsers[key]));
+
+  return targets.map(parser =>
+    getDependencies(filename, parser, detectors)
+      .then(used => ({
+        dependencies: minus(deps, used),
+        devDependencies: minus(devDeps, used),
+      }), error => ({
+        dependencies: deps,
+        devDependencies: devDeps,
+        invalidFiles: {
+          [filename]: error,
+        },
+      })));
 }
 
 function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
@@ -100,28 +115,22 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
     const finder = walkdir(dir, { 'no_recurse': true });
 
     finder.on('directory', subdir =>
-      ignoreDirs.indexOf(path.basename(subdir)) !== -1
-      ? null
-      : promises.push(
-          checkDirectory(subdir, ignoreDirs, deps, devDeps, parsers, detectors)));
+      ignoreDirs.indexOf(path.basename(subdir)) === -1 &&
+      promises.push(
+        checkDirectory(subdir, ignoreDirs, deps, devDeps, parsers, detectors)));
 
     finder.on('file', filename =>
-      promises.push(getDependencies(parsers, detectors, filename)
-        .then(dependencies =>
-          dependencies.map(dependency =>
-            dependency && dependency.replace
-            ? dependency.replace(/\/.*$/, '')
-            : dependency))
-        .then(used => ({
-          dependencies: minus(deps, used),
-          devDependencies: minus(devDeps, used),
-        }), error => ({
-          dependencies: deps,
-          devDependencies: devDeps,
-          invalidFiles: {
-            [filename]: error,
-          },
-        }))));
+      promises.push(
+        ...checkFile(filename, deps, devDeps, parsers, detectors)));
+
+    finder.on('error', (dirPath, error) =>
+      promises.push(Promise.resolve({
+        dependencies: deps,
+        devDependencies: devDeps,
+        invalidDirs: {
+          [dirPath]: error,
+        },
+      })));
 
     finder.on('end', () =>
       resolve(Promise.all(promises).then(results =>
@@ -136,15 +145,6 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
           invalidFiles: {},
           invalidDirs: {},
         }))));
-
-    finder.on('error', (dirPath, error) =>
-      promises.push(Promise.resolve({
-        dependencies: deps,
-        devDependencies: devDeps,
-        invalidDirs: {
-          [dirPath]: error,
-        },
-      })));
   });
 }
 
@@ -168,7 +168,7 @@ function filterDependencies(rootDir, ignoreMatches, dependencies) {
 }
 
 export default function depcheck(rootDir, options, cb) {
-  const parsers = options.parsers || defaultOptions.parsers;
+  const parsers = unifyParser(options.parsers || defaultOptions.parsers);
   const detectors = options.detectors || defaultOptions.detectors;
   const ignoreMatches = options.ignoreMatches || [];
   const ignoreDirs = unique(defaultOptions.ignoreDirs.concat(options.ignoreDirs));
