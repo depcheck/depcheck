@@ -14,6 +14,10 @@ function makeArgv(testCase) {
     argv.push('--dev=false');
   }
 
+  if (typeof options.ignoreBinPackage !== 'undefined') {
+    argv.push('--ignore-bin-package=' + options.ignoreBinPackage);
+  }
+
   if (options.ignoreMatches) {
     argv.push('--ignores=' + options.ignoreMatches.join(','));
   }
