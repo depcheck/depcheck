@@ -1,5 +1,5 @@
 import yargs from 'yargs';
-import checkDirectory from './index';
+import depcheck from './index';
 import fs from 'fs';
 import path from 'path';
 
@@ -21,9 +21,16 @@ function prettify(caption, deps) {
 export default function cli(args, log, error, exit) {
   const opt = yargs(args)
     .usage('Usage: $0 [DIRECTORY]')
-    .boolean('dev')
-    .default('dev', true)
+    .boolean([
+      'dev',
+      'ignore-bin-package',
+    ])
+    .default({
+      'dev': true,
+      'ignore-bin-package': true,
+    })
     .describe('dev', 'Check on devDependecies')
+    .describe('ignore-bin-package', 'Ignore package with bin entry')
     .describe('json', 'Output results to JSON')
     .describe('ignores', 'Comma separated package list to ignore')
     .describe('ignoreDirs', 'Comma separated folder names to ignore')
@@ -47,8 +54,9 @@ export default function cli(args, log, error, exit) {
       log(opt.help());
       exit(-1);
     })
-    .then(() => checkDirectory(rootDir, {
+    .then(() => depcheck(rootDir, {
       withoutDev: !opt.argv.dev,
+      ignoreBinPackage: opt.argv.ignoreBinPackage,
       ignoreMatches: (opt.argv.ignores || '').split(','),
       ignoreDirs: (opt.argv.ignoreDirs || '').split(','),
     }, unused => {
