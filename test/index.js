@@ -139,7 +139,7 @@ describe('depcheck', () => {
   it('should work fine even a customer parser throws exceptions', () =>
     testCustomPluggableComponents('good', {
       detectors: [
-        depcheck.detectors.requireCallExpression,
+        depcheck.detector.requireCallExpression,
         exceptionDetector,
       ],
     }));

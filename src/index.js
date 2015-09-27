@@ -3,24 +3,18 @@ import path from 'path';
 import Walker from 'node-source-walk';
 import walkdir from 'walkdir';
 import minimatch from 'minimatch';
+import component from './component';
 
-import es6Parser from './parsers/es6';
-import jsxParser from './parsers/jsx';
+function constructComponent(source, name) {
+  return source[name].reduce((result, current) =>
+    Object.assign(result, {
+      [current]: require(path.resolve(__dirname, name, current)),
+    }), {});
+}
 
-import importDetector from './detectors/importDeclaration';
-import requireDetector from './detectors/requireCallExpression';
-import gruntLoadTaskDetector from './detectors/gruntLoadTaskCallExpression';
+const availableParsers = constructComponent(component, 'parser');
 
-const availableParsers = {
-  es6: es6Parser,
-  jsx: jsxParser,
-};
-
-const availableDetectors = {
-  importDeclaration: importDetector,
-  requireCallExpression: requireDetector,
-  gruntLoadTaskCallExpression: gruntLoadTaskDetector,
-};
+const availableDetectors = constructComponent(component, 'detector');
 
 const defaultOptions = {
   ignoreDirs: [
@@ -173,7 +167,7 @@ function filterDependencies(rootDir, ignoreMatches, dependencies) {
     .filter(dependency => !isIgnored(ignoreMatches, dependency));
 }
 
-export default function depCheck(rootDir, options, cb) {
+export default function depcheck(rootDir, options, cb) {
   const parsers = options.parsers || defaultOptions.parsers;
   const detectors = options.detectors || defaultOptions.detectors;
   const ignoreMatches = options.ignoreMatches || [];
@@ -189,5 +183,5 @@ export default function depCheck(rootDir, options, cb) {
     .then(cb);
 }
 
-depCheck.parsers = availableParsers;
-depCheck.detectors = availableDetectors;
+depcheck.parser = availableParsers;
+depcheck.detector = availableDetectors;

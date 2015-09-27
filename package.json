@@ -11,7 +11,9 @@
     "url": "git://github.com/lijunle/depcheck-es6.git"
   },
   "scripts": {
-    "prepublish": "babel --optional runtime src/ -d dist/",
+    "component": "babel-node ./build/component.js > ./dist/component.json",
+    "compile": "babel --optional runtime src/ -d dist/",
+    "prepublish": "npm run compile && npm run component",
     "lint": "./node_modules/.bin/eslint ./src ./test",
     "test": "mocha --compilers js:babel/register ./test",
     "test-coverage": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha ./test",
