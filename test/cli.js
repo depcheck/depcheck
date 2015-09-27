@@ -14,12 +14,16 @@ function makeArgv(testCase) {
     argv.push('--dev=false');
   }
 
+  if (typeof options.ignoreBinPackage !== 'undefined') {
+    argv.push('--ignore-bin-package=' + options.ignoreBinPackage);
+  }
+
   if (options.ignoreMatches) {
     argv.push('--ignores=' + options.ignoreMatches.join(','));
   }
 
   if (options.ignoreDirs) {
-    argv.push('--ignoreDirs=' + options.ignoreDirs.join(','));
+    argv.push('--ignore-dirs=' + options.ignoreDirs.join(','));
   }
 
   return argv;
