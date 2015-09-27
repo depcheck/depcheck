@@ -5,4 +5,5 @@
 # Reference: http://blog.xebia.com/2015/09/22/publishing-es6-code-to-npm/
 src/
 test/
+build/
 coverage/
