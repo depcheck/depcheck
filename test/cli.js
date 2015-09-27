@@ -5,10 +5,13 @@ import fs from 'fs';
 import path from 'path';
 import cli from '../src/cli';
 
-function makeArgv(testCase) {
-  const options = testCase.options;
-  const testPath = path.resolve('test/fake_modules/' + testCase.module);
-  const argv = [testPath, '--json'];
+function makeArgv(module, options) {
+  const testPath = path.resolve('test/fake_modules', module);
+  const argv = [testPath];
+
+  if (options.json) {
+    argv.push('--json');
+  }
 
   if (options.withoutDev) {
     argv.push('--dev=false');
@@ -26,7 +29,29 @@ function makeArgv(testCase) {
     argv.push('--ignore-dirs=' + options.ignoreDirs.join(','));
   }
 
+  if (options.argv && options.argv.length) {
+    argv.push(...options.argv);
+  }
+
   return argv;
+}
+
+function testCli(argv) {
+  let log = '';
+  let error = '';
+
+  return new Promise(resolve =>
+    cli(
+      argv,
+      data => log = data,
+      data => error = data,
+      exitCode => resolve({
+        log,
+        error,
+        exitCode,
+        logs: log.split('\n'),
+        errors: error.split('\n'),
+      })));
 }
 
 describe('depcheck command line', () => {
@@ -34,225 +59,137 @@ describe('depcheck command line', () => {
   const testCases = JSON.parse(spec);
 
   testCases.forEach(testCase => {
+    const options = Object.assign({ json: true }, testCase.options);
     it('should ' + testCase.name, () =>
-      new Promise(resolve => {
-        let log;
-
-        cli(
-          makeArgv(testCase),
-          data => log = data,
-          data => data.should.fail(), // should not go into error log
-          exitCode => resolve({ log, exitCode })
-        );
-      }).then(({ log, exitCode }) => {
+      testCli(makeArgv(testCase.module, options))
+      .then(({ log, error, exitCode }) => {
         const actual = JSON.parse(log);
         const expected = testCase.expected;
 
         actual.dependencies.should.eql(expected.dependencies);
         actual.devDependencies.should.eql(expected.devDependencies);
 
+        error.should.be.empty();
         exitCode.should.equal(0); // JSON output always return 0
       }));
   });
 
   it('should output help message', () =>
-    new Promise(resolve => {
-      let help;
-
-      cli(
-        ['--help'],
-        data => help = data,
-        data => data.should.fail(), // should not go into error log
-        exitCode => resolve({ help, exitCode })
-      );
-    }).then(({ help, exitCode }) => {
-      const helpDocs = help.split('\n').map(line => line.trim()).filter(line => line);
+    testCli(['--help'])
+    .then(({ log, error, exitCode }) => {
+      const help = log.split('\n').map(line => line.trim()).filter(line => line);
       const options = ['--help', '--json', '--dev', '--ignores'];
 
       options.forEach(option =>
-        helpDocs.some(doc => doc.startsWith(option)).should.be.true());
+        help.some(doc => doc.startsWith(option)).should.be.true());
 
+      error.should.be.empty();
       exitCode.should.equal(0);
     }));
 
   it('should output error when folder is not a package', () =>
-    new Promise(resolve => {
-      let help;
-      let error;
-
-      cli(
-        [__dirname],
-        data => help = data,
-        data => error = data,
-        exitCode => resolve({ help, error, exitCode })
-      );
-    }).then(({ help, error, exitCode }) => {
+    testCli([__dirname])
+    .then(({ log, error, exitCode }) => {
       error.should.containEql(__dirname)
         .and.containEql('not contain')
         .and.containEql('package.json');
 
-      help.should.startWith('Usage: ')
+      log.should.startWith('Usage: ')
         .and.containEql('--help');
 
       exitCode.should.equal(-1);
     }));
 
   it('should output error when folder not exists', () =>
-    new Promise(resolve => {
-      let error;
-
-      cli(
-        ['./not/exist/folder'],
-        data => data.should.fail(), // should not go into log output
-        data => error = data,
-        exitCode => resolve({ error, exitCode })
-      );
-    }).then(({ error, exitCode }) => {
+    testCli(['./not/exist/folder'])
+    .then(({ log, error, exitCode }) => {
       error.should.containEql('/not/exist/folder').and.containEql('not exist');
+      log.should.be.empty();
       exitCode.should.equal(-1);
     }));
 
   it('should output no unused dependencies when happen', () =>
-    new Promise(resolve => {
-      let log;
-
-      cli(
-        [path.resolve(__dirname, './fake_modules/good')],
-        data => log = data,
-        data => data.should.fail(), // should not go into error output
-        exitCode => resolve({ log, exitCode })
-      );
-    }).then(({ log, exitCode }) => {
+    testCli([path.resolve(__dirname, './fake_modules/good')])
+    .then(({ log, error, exitCode }) => {
       log.should.equal('No unused dependencies');
+      error.should.be.empty();
       exitCode.should.equal(0);
     }));
 
   it('should output unused dependencies when happen', () =>
-    new Promise(resolve => {
-      let log = '';
-
-      cli(
-        [path.resolve(__dirname, './fake_modules/bad')],
-        data => log = data,
-        data => data.should.fail(), // should not go into error output
-        exitCode => resolve({
-          logs: log.split('\n'),
-          exitCode,
-        })
-      );
-    }).then(({ logs, exitCode }) => {
+    testCli(makeArgv('bad', {}))
+    .then(({ logs, error, exitCode }) => {
       logs.should.have.length(2);
       logs[0].should.equal('Unused Dependencies');
       logs[1].should.containEql('optimist');
 
+      error.should.be.empty();
       exitCode.should.equal(-1);
     }));
 
   it('should output unused devDependencies when happen', () =>
-    new Promise(resolve => {
-      let log = '';
-
-      cli(
-        [path.resolve(__dirname, './fake_modules/dev')],
-        data => log = data,
-        data => data.should.fail(), // should not go into error output
-        exitCode => resolve({
-          logs: log.split('\n'),
-          exitCode,
-        })
-      );
-    }).then(({ logs, exitCode }) => {
+    testCli(makeArgv('dev', {}))
+    .then(({ logs, error, exitCode }) => {
       logs.should.have.length(2);
       logs[0].should.equal('Unused devDependencies');
       logs[1].should.containEql('mocha');
 
+      error.should.be.empty();
       exitCode.should.equal(-1);
     }));
 
   it('should recognize JSX file even only pass jsx parser and require detector', () =>
-    new Promise(resolve => {
-      let log = '';
-
-      cli(
-        [path.resolve(__dirname, 'fake_modules/jsx'), '--parsers="*.jsx:jsx"', '--dectors=requireCallExpression'],
-        data => log = data,
-        data => data.should.fail(), // should not go into error output
-        exitCode => resolve({
-          logs: log.split('\n'),
-          exitCode,
-        })
-      );
-    }).then(({ logs, exitCode }) => {
+    testCli(makeArgv('jsx', {
+      argv: ['--parsers="*.jsx:jsx"', '--dectors=requireCallExpression'],
+    }))
+    .then(({ logs, error, exitCode }) => {
       logs.should.have.length(2);
       logs[0].should.equal('Unused Dependencies');
       logs[1].should.containEql('react');
 
+      error.should.be.empty();
       exitCode.should.equal(-1);
     }));
 
   it('should not recognize JSX file when not pass jsx parser', () =>
-    new Promise(resolve => {
-      let log = '';
-
-      cli(
-        [path.resolve(__dirname, 'fake_modules/jsx'), '--parsers="*.jsx:es6"'],
-        data => log = data,
-        data => data.should.fail(), // should not go into error output
-        exitCode => resolve({
-          logs: log.split('\n'),
-          exitCode,
-        })
-      );
-    }).then(({ logs, exitCode }) => {
+    testCli(makeArgv('jsx', {
+      argv: ['--parsers="*.jsx:es6"'],
+    }))
+    .then(({ logs, error, exitCode }) => {
       logs.should.have.length(2);
       logs[0].should.equal('Unused Dependencies');
       logs[1].should.containEql('react');
 
+      error.should.be.empty();
       exitCode.should.equal(-1);
     }));
 
   it('should not recognize JSX file when not enable require detector', () =>
-    new Promise(resolve => {
-      let log = '';
-
-      cli(
-        [path.resolve(__dirname, 'fake_modules/jsx'), '--detectors=importDeclaration'],
-        data => log = data,
-        data => data.should.fail(), // should not go into error output
-        exitCode => resolve({
-          logs: log.split('\n'),
-          exitCode,
-        })
-      );
-    }).then(({ logs, exitCode }) => {
+    testCli(makeArgv('jsx', {
+      argv: ['--detectors=importDeclaration'],
+    }))
+    .then(({ logs, error, exitCode }) => {
       logs.should.have.length(2);
       logs[0].should.equal('Unused Dependencies');
       logs[1].should.containEql('react');
 
+      error.should.be.empty();
       exitCode.should.equal(-1);
     }));
 
   describe('without specified directory', () => {
-    const expectedCwd = '/not/exist';
     let originalCwd;
 
     before(() => {
       originalCwd = process.cwd;
-      process.cwd = () => expectedCwd;
+      process.cwd = () => '/not/exist';
     });
 
     it('should default to the current directory', () =>
-      new Promise(resolve => {
-        let error;
-
-        cli(
-          [],
-          data => data.should.fail(), // should not go into log output
-          data => error = data,
-          exitCode => resolve({ error, exitCode })
-        );
-      }).then(({ error, exitCode }) => {
+      testCli([])
+      .then(({ log, error, exitCode }) => {
         error.should.containEql('not exist');
+        log.should.be.empty();
         exitCode.should.equal(-1);
       }));
 
