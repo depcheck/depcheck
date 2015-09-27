@@ -85,11 +85,7 @@ function getDependencies(filename, parser, detectors) {
       dependencies = dependencies.concat(...results);
     });
 
-    return dependencies
-      .filter(dependency => dependency)
-      .map(dependency => dependency.replace
-        ? dependency.replace(/\/.*$/, '')
-        : dependency);
+    return dependencies.map(dependency => dependency.replace(/\/.*$/, ''));
   });
 }
 
