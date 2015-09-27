@@ -62,41 +62,55 @@ function unique(array) {
   return array.filter((value, index) => array.indexOf(value) === index);
 }
 
-function getDependencies(parsers, detectors, filename) {
+function getDependencies(filename, parser, detectors) {
   return new Promise((resolve, reject) => {
-    const basename = path.basename(filename);
-    const targets = [].concat(...Object.keys(parsers)
-      .filter(glob => minimatch(basename, glob))
-      .map(key => parsers[key]));
+    fs.readFile(filename, 'utf8', (error, content) => {
+      if (error) {
+        reject(error);
+      }
 
-    if (targets.length) {
-      fs.readFile(filename, 'utf8', (error, content) => {
-        if (error) {
-          reject(error);
-        }
-
-        try {
-          const asts = targets.map(parser => parser(content));
-          resolve(asts);
-        } catch (syntaxError) {
-          reject(syntaxError);
-        }
-      });
-    } else {
-      resolve([]); // extension not supported
-    }
-  }).then(asts => {
+      try {
+        const ast = parser(content);
+        resolve(ast);
+      } catch (syntaxError) {
+        reject(syntaxError);
+      }
+    });
+  }).then(ast => {
     const walker = new Walker();
     let dependencies = [];
 
-    asts.forEach(ast =>
-      walker.walk(ast, node => {
-        const results = detectors.map(detector => safeDetect(detector, node));
-        dependencies = dependencies.concat(...results);
-      }));
+    walker.walk(ast, node => {
+      const results = detectors.map(detector => safeDetect(detector, node));
+      dependencies = dependencies.concat(...results);
+    });
 
-    return dependencies;
+    return dependencies
+      .filter(dependency => dependency)
+      .map(dependency => dependency.replace
+        ? dependency.replace(/\/.*$/, '')
+        : dependency);
   });
+}
+
+function checkFile(filename, deps, devDeps, parsers, detectors) {
+  const basename = path.basename(filename);
+  const targets = [].concat(...Object.keys(parsers)
+    .filter(glob => minimatch(basename, glob))
+    .map(key => parsers[key]));
+
+  return targets.map(parser =>
+    getDependencies(filename, parser, detectors)
+      .then(used => ({
+        dependencies: minus(deps, used),
+        devDependencies: minus(devDeps, used),
+      }), error => ({
+        dependencies: deps,
+        devDependencies: devDeps,
+        invalidFiles: {
+          [filename]: error,
+        },
+      })));
 }
 
 function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
@@ -111,22 +125,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
           checkDirectory(subdir, ignoreDirs, deps, devDeps, parsers, detectors)));
 
     finder.on('file', filename =>
-      promises.push(getDependencies(parsers, detectors, filename)
-        .then(dependencies =>
-          dependencies.map(dependency =>
-            dependency && dependency.replace
-            ? dependency.replace(/\/.*$/, '')
-            : dependency))
-        .then(used => ({
-          dependencies: minus(deps, used),
-          devDependencies: minus(devDeps, used),
-        }), error => ({
-          dependencies: deps,
-          devDependencies: devDeps,
-          invalidFiles: {
-            [filename]: error,
-          },
-        }))));
+      promises.push(...checkFile(filename, deps, devDeps, parsers, detectors)));
 
     finder.on('end', () =>
       resolve(Promise.all(promises).then(results =>

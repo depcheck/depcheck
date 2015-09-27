@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 
 import importListParser from './fake_parsers/importList';
+import exceptionParser from './fake_parsers/exception';
 import { multipleParserA, multipleParserB } from './fake_parsers/multiple';
 
 import exceptionDetector from './fake_detectors/exception';
@@ -176,5 +177,24 @@ describe('depcheck', () => {
       detectors: [
         dependDetector,
       ],
+    }));
+
+  it('should handle other parsers even one throws exception', () =>
+    check('import_list', {
+      parsers: {
+        '*.txt': [
+          importListParser,
+          exceptionParser,
+        ],
+      },
+    }).then(unused => {
+      unused.dependencies.should.deepEqual([]);
+      unused.devDependencies.should.deepEqual([]);
+
+      Object.keys(unused.invalidDirs).should.have.length(0);
+
+      Object.keys(unused.invalidFiles).should.have.length(1);
+      Object.keys(unused.invalidFiles)[0].should.endWith(
+        '/test/fake_modules/import_list/index.txt');
     }));
 });
