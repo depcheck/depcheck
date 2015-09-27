@@ -18,6 +18,21 @@ function prettify(caption, deps) {
   return list.length ? [caption].concat(list) : [];
 }
 
+function getParsers(parsers) {
+  return typeof parsers === 'undefined'
+    ? undefined
+    : Object.assign({}, ...parsers.split(',').map(keyValuePair => {
+      const [glob, value] = keyValuePair.split(':');
+      return { [glob]: value.split('&').map(name => depcheck.parser[name]) };
+    }));
+}
+
+function getDetectors(detectors) {
+  return typeof detectors === 'undefined'
+    ? undefined
+    : detectors.split(',').map(name => depcheck.detector[name]);
+}
+
 export default function cli(args, log, error, exit) {
   const opt = yargs(args)
     .usage('Usage: $0 [DIRECTORY]')
@@ -34,6 +49,8 @@ export default function cli(args, log, error, exit) {
     .describe('json', 'Output results to JSON')
     .describe('ignores', 'Comma separated package list to ignore')
     .describe('ignore-dirs', 'Comma separated folder names to ignore')
+    .describe('parsers', 'Comma separated glob:pasers pair list')
+    .describe('detectors', 'Comma separated detector list')
     .describe('help', 'Show this help message');
 
   if (opt.argv.help) {
@@ -59,6 +76,8 @@ export default function cli(args, log, error, exit) {
       ignoreBinPackage: opt.argv.ignoreBinPackage,
       ignoreMatches: (opt.argv.ignores || '').split(','),
       ignoreDirs: (opt.argv.ignoreDirs || '').split(','),
+      parsers: getParsers(opt.argv.parsers),
+      detectors: getDetectors(opt.argv.detectors),
     }, unused => {
       if (opt.argv.json) {
         log(JSON.stringify(unused));
