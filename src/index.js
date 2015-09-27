@@ -18,6 +18,7 @@ const availableDetectors = constructComponent(component, 'detector');
 
 const defaultOptions = {
   withoutDev: false,
+  ignoreBinPackage: true,
   ignoreMatches: [
   ],
   ignoreDirs: [
@@ -168,14 +169,17 @@ function hasBin(rootDir, dependency) {
   }
 }
 
-function filterDependencies(rootDir, ignoreMatches, dependencies) {
-  return Object.keys(dependencies)
-    .filter(dependency => !hasBin(rootDir, dependency))
-    .filter(dependency => !isIgnored(ignoreMatches, dependency));
+function filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies) {
+  return Object.keys(dependencies).filter(dependency =>
+    ignoreBinPackage && hasBin(rootDir, dependency) ||
+    isIgnored(ignoreMatches, dependency)
+    ? false
+    : true);
 }
 
 export default function depcheck(rootDir, options, cb) {
   const withoutDev = getOrDefault(options, 'withoutDev');
+  const ignoreBinPackage = getOrDefault(options, 'ignoreBinPackage');
   const parsers = unifyParser(getOrDefault(options, 'parsers'));
   const detectors = getOrDefault(options, 'detectors');
   const ignoreMatches = getOrDefault(options, 'ignoreMatches');
@@ -184,8 +188,8 @@ export default function depcheck(rootDir, options, cb) {
   const metadata = options.package || require(path.join(rootDir, 'package.json'));
   const dependencies = metadata.dependencies || {};
   const devDependencies = metadata.devDependencies || {};
-  const deps = filterDependencies(rootDir, ignoreMatches, dependencies);
-  const devDeps = filterDependencies(rootDir, ignoreMatches, withoutDev ? [] : devDependencies);
+  const deps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies);
+  const devDeps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, withoutDev ? [] : devDependencies);
 
   return checkDirectory(rootDir, ignoreDirs, deps, devDeps, parsers, detectors)
     .then(cb);
