@@ -59,8 +59,9 @@ describe('depcheck command line', () => {
   const testCases = JSON.parse(spec);
 
   testCases.forEach(testCase => {
+    const run = testCase.only === 'cli' ? it.only : it;
     const options = Object.assign({ json: true }, testCase.options);
-    it('should ' + testCase.name, () =>
+    run('should ' + testCase.name, () =>
       testCli(makeArgv(testCase.module, options))
       .then(({ log, error, exitCode }) => {
         const actual = JSON.parse(log);
