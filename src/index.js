@@ -26,8 +26,8 @@ const defaultOptions = {
     'bower_components',
   ],
   parsers: {
-    '.js': availableParsers.es6,
-    '.jsx': availableParsers.jsx,
+    '*.js': availableParsers.es6,
+    '*.jsx': availableParsers.jsx,
   },
   detectors: [
     availableDetectors.importDeclaration,
@@ -35,6 +35,12 @@ const defaultOptions = {
     availableDetectors.gruntLoadTaskCallExpression,
   ],
 };
+
+function unifyParser(parsers) {
+  return Object.assign({}, ...Object.keys(parsers).map(key => ({
+    [key]: parsers[key] instanceof Array ? parsers[key] : [parsers[key]],
+  })));
+}
 
 function safeDetect(detector, node) {
   try {
@@ -58,18 +64,20 @@ function unique(array) {
 
 function getDependencies(parsers, detectors, filename) {
   return new Promise((resolve, reject) => {
-    const ext = path.extname(filename);
-    const parser = parsers[ext];
+    const basename = path.basename(filename);
+    const targets = [].concat(...Object.keys(parsers)
+      .filter(glob => minimatch(basename, glob))
+      .map(key => parsers[key]));
 
-    if (parser) {
+    if (targets.length) {
       fs.readFile(filename, 'utf8', (error, content) => {
         if (error) {
           reject(error);
         }
 
         try {
-          const ast = parser(content);
-          resolve([ast]);
+          const asts = targets.map(parser => parser(content));
+          resolve(asts);
         } catch (syntaxError) {
           reject(syntaxError);
         }
@@ -165,7 +173,7 @@ function filterDependencies(rootDir, ignoreMatches, dependencies) {
 }
 
 export default function depcheck(rootDir, options, cb) {
-  const parsers = options.parsers || defaultOptions.parsers;
+  const parsers = unifyParser(options.parsers || defaultOptions.parsers);
   const detectors = options.detectors || defaultOptions.detectors;
   const ignoreMatches = options.ignoreMatches || [];
   const ignoreDirs = unique(defaultOptions.ignoreDirs.concat(options.ignoreDirs));

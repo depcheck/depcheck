@@ -147,7 +147,7 @@ describe('depcheck', () => {
   it('should use custom parsers to generate AST', () =>
     testCustomPluggableComponents('import_list', {
       parsers: {
-        '.txt': importListParser,
+        '*.txt': importListParser,
       },
     }));
 
