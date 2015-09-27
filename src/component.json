@@ -1,0 +1,11 @@
+{
+  "parser": [
+    "es6",
+    "jsx"
+  ],
+  "detector": [
+    "gruntLoadTaskCallExpression",
+    "importDeclaration",
+    "requireCallExpression"
+  ]
+}
