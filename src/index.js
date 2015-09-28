@@ -74,7 +74,7 @@ function unique(array) {
   return array.filter((value, index) => array.indexOf(value) === index);
 }
 
-function getDependencies(filename, parser, detectors) {
+function getDependencies(dir, filename, deps, parser, detectors) {
   return new Promise((resolve, reject) => {
     fs.readFile(filename, 'utf8', (error, content) => {
       if (error) {
@@ -82,7 +82,7 @@ function getDependencies(filename, parser, detectors) {
       }
 
       try {
-        const ast = parser(content);
+        const ast = parser(content, filename, deps, dir);
         resolve(ast);
       } catch (syntaxError) {
         reject(syntaxError);
@@ -101,14 +101,14 @@ function getDependencies(filename, parser, detectors) {
   });
 }
 
-function checkFile(filename, deps, devDeps, parsers, detectors) {
+function checkFile(dir, filename, deps, devDeps, parsers, detectors) {
   const basename = path.basename(filename);
   const targets = [].concat(...Object.keys(parsers)
     .filter(glob => minimatch(basename, glob))
     .map(key => parsers[key]));
 
   return targets.map(parser =>
-    getDependencies(filename, parser, detectors)
+    getDependencies(dir, filename, deps.concat(devDeps), parser, detectors)
       .then(used => ({
         dependencies: minus(deps, used),
         devDependencies: minus(devDeps, used),
@@ -133,7 +133,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
 
     finder.on('file', filename =>
       promises.push(
-        ...checkFile(filename, deps, devDeps, parsers, detectors)));
+        ...checkFile(dir, filename, deps, devDeps, parsers, detectors)));
 
     finder.on('error', (dirPath, error) =>
       promises.push(Promise.resolve({
