@@ -13,6 +13,7 @@
   "scripts": {
     "component": "babel-node ./build/component.js > ./dist/component.json",
     "compile": "babel --optional runtime src/ -d dist/",
+    "depcheck": "./bin/depcheck --ignore-bin-package=false --ignores=babel,babel-eslint,coveralls,eslint,eslint-config-airbnb,isparta,mocha,mocha-lcov-reporter",
     "prepublish": "npm run compile && npm run component",
     "lint": "./node_modules/.bin/eslint ./src ./test",
     "test": "mocha --compilers js:babel/register ./test",
