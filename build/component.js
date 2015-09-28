@@ -18,10 +18,13 @@ function getList(name) {
 Promise.all([
   getList('parser'),
   getList('detector'),
+  getList('special'),
 ]).then(([
   parser,
   detector,
+  special,
 ]) => console.log(JSON.stringify({
   parser,
   detector,
+  special,
 }, null, 2)));

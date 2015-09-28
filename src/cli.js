@@ -33,6 +33,12 @@ function getDetectors(detectors) {
     : detectors.split(',').map(name => depcheck.detector[name]);
 }
 
+function getSpecials(specials) {
+  return typeof specials === 'undefined'
+    ? undefined
+    : specials.split(',').map(name => depcheck.special[name]);
+}
+
 export default function cli(args, log, error, exit) {
   const opt = yargs(args)
     .usage('Usage: $0 [DIRECTORY]')
@@ -51,6 +57,7 @@ export default function cli(args, log, error, exit) {
     .describe('ignore-dirs', 'Comma separated folder names to ignore')
     .describe('parsers', 'Comma separated glob:pasers pair list')
     .describe('detectors', 'Comma separated detector list')
+    .describe('specials', 'Comma separated special parser list')
     .describe('help', 'Show this help message');
 
   if (opt.argv.help) {
@@ -78,6 +85,7 @@ export default function cli(args, log, error, exit) {
       ignoreDirs: (opt.argv.ignoreDirs || '').split(','),
       parsers: getParsers(opt.argv.parsers),
       detectors: getDetectors(opt.argv.detectors),
+      specials: getSpecials(opt.argv.specials),
     }, unused => {
       if (opt.argv.json) {
         log(JSON.stringify(unused));

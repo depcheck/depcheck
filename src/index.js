@@ -16,6 +16,8 @@ const availableParsers = constructComponent(component, 'parser');
 
 const availableDetectors = constructComponent(component, 'detector');
 
+const availableSpecials = constructComponent(component, 'special');
+
 const defaultOptions = {
   withoutDev: false,
   ignoreBinPackage: true,
@@ -37,6 +39,8 @@ const defaultOptions = {
     availableDetectors.importDeclaration,
     availableDetectors.requireCallExpression,
     availableDetectors.gruntLoadTaskCallExpression,
+  ],
+  specials: [
   ],
 };
 
@@ -70,7 +74,7 @@ function unique(array) {
   return array.filter((value, index) => array.indexOf(value) === index);
 }
 
-function getDependencies(filename, parser, detectors) {
+function getDependencies(dir, filename, deps, parser, detectors) {
   return new Promise((resolve, reject) => {
     fs.readFile(filename, 'utf8', (error, content) => {
       if (error) {
@@ -78,7 +82,7 @@ function getDependencies(filename, parser, detectors) {
       }
 
       try {
-        const ast = parser(content);
+        const ast = parser(content, filename, deps, dir);
         resolve(ast);
       } catch (syntaxError) {
         reject(syntaxError);
@@ -97,14 +101,14 @@ function getDependencies(filename, parser, detectors) {
   });
 }
 
-function checkFile(filename, deps, devDeps, parsers, detectors) {
+function checkFile(dir, filename, deps, devDeps, parsers, detectors) {
   const basename = path.basename(filename);
   const targets = [].concat(...Object.keys(parsers)
-    .filter(glob => minimatch(basename, glob))
+    .filter(glob => minimatch(basename, glob, { dot: true }))
     .map(key => parsers[key]));
 
   return targets.map(parser =>
-    getDependencies(filename, parser, detectors)
+    getDependencies(dir, filename, deps.concat(devDeps), parser, detectors)
       .then(used => ({
         dependencies: minus(deps, used),
         devDependencies: minus(devDeps, used),
@@ -129,7 +133,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
 
     finder.on('file', filename =>
       promises.push(
-        ...checkFile(filename, deps, devDeps, parsers, detectors)));
+        ...checkFile(dir, filename, deps, devDeps, parsers, detectors)));
 
     finder.on('error', (dirPath, error) =>
       promises.push(Promise.resolve({
@@ -180,10 +184,13 @@ function filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependenci
 export default function depcheck(rootDir, options, cb) {
   const withoutDev = getOrDefault(options, 'withoutDev');
   const ignoreBinPackage = getOrDefault(options, 'ignoreBinPackage');
-  const parsers = unifyParser(getOrDefault(options, 'parsers'));
-  const detectors = getOrDefault(options, 'detectors');
   const ignoreMatches = getOrDefault(options, 'ignoreMatches');
   const ignoreDirs = unique(defaultOptions.ignoreDirs.concat(options.ignoreDirs));
+
+  const detectors = getOrDefault(options, 'detectors');
+  const parsers = Object.assign(
+    { '*': getOrDefault(options, 'specials') },
+    unifyParser(getOrDefault(options, 'parsers')));
 
   const metadata = options.package || require(path.join(rootDir, 'package.json'));
   const dependencies = metadata.dependencies || {};
@@ -197,3 +204,4 @@ export default function depcheck(rootDir, options, cb) {
 
 depcheck.parser = availableParsers;
 depcheck.detector = availableDetectors;
+depcheck.special = availableSpecials;
