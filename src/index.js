@@ -16,6 +16,8 @@ const availableParsers = constructComponent(component, 'parser');
 
 const availableDetectors = constructComponent(component, 'detector');
 
+const availableSpecials = constructComponent(component, 'special');
+
 const defaultOptions = {
   withoutDev: false,
   ignoreBinPackage: true,
@@ -37,6 +39,8 @@ const defaultOptions = {
     availableDetectors.importDeclaration,
     availableDetectors.requireCallExpression,
     availableDetectors.gruntLoadTaskCallExpression,
+  ],
+  specials: [
   ],
 };
 
@@ -180,10 +184,13 @@ function filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependenci
 export default function depcheck(rootDir, options, cb) {
   const withoutDev = getOrDefault(options, 'withoutDev');
   const ignoreBinPackage = getOrDefault(options, 'ignoreBinPackage');
-  const parsers = unifyParser(getOrDefault(options, 'parsers'));
-  const detectors = getOrDefault(options, 'detectors');
   const ignoreMatches = getOrDefault(options, 'ignoreMatches');
   const ignoreDirs = unique(defaultOptions.ignoreDirs.concat(options.ignoreDirs));
+
+  const detectors = getOrDefault(options, 'detectors');
+  const parsers = Object.assign(
+    { '*': getOrDefault(options, 'specials') },
+    unifyParser(getOrDefault(options, 'parsers')));
 
   const metadata = options.package || require(path.join(rootDir, 'package.json'));
   const dependencies = metadata.dependencies || {};
@@ -197,3 +204,4 @@ export default function depcheck(rootDir, options, cb) {
 
 depcheck.parser = availableParsers;
 depcheck.detector = availableDetectors;
+depcheck.special = availableSpecials;

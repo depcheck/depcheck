@@ -7,5 +7,7 @@
     "gruntLoadTaskCallExpression",
     "importDeclaration",
     "requireCallExpression"
+  ],
+  "special": [
   ]
 }
