@@ -1,4 +1,5 @@
 import path from 'path';
+import yaml from 'js-yaml';
 
 function getObjectValues(obj) {
   return Object.keys(obj).map(key => obj[key]);
@@ -30,17 +31,24 @@ function makeRequireNode(dependency) {
   };
 }
 
+function depsUsedByScripts(deps, scripts, dir) {
+  return deps
+    .filter(dep => {
+      const bin = getBin(dir, dep);
+      return Object.keys(bin).some(key =>
+        isUsing(dep, key, bin[key], scripts));
+    })
+    .map(makeRequireNode);
+}
+
 export default (content, filename, deps, dir) => {
   const basename = path.basename(filename);
   if (basename === 'package.json') {
     const scripts = getObjectValues(JSON.parse(content).scripts || {});
-    return deps
-      .filter(dep => {
-        const bin = getBin(dir, dep);
-        return Object.keys(bin).some(key =>
-          isUsing(dep, key, bin[key], scripts));
-      })
-      .map(makeRequireNode);
+    return depsUsedByScripts(deps, scripts, dir);
+  } else if (path.extname(basename) === '.yml') {
+    const scripts = yaml.safeLoad(content).scripts || [];
+    return depsUsedByScripts(deps, scripts, dir);
   }
 
   return {};
