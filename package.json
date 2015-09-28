@@ -31,7 +31,7 @@
     "acorn-jsx": "^2.0.0",
     "babel-runtime": "^5.8.25",
     "js-yaml": "^3.4.2",
-    "minimatch": "^2.0.1",
+    "minimatch": "^3.0.0",
     "node-source-walk": "^2.0.0",
     "walkdir": "0.0.10",
     "yargs": "^3.26.0"
@@ -41,7 +41,7 @@
     "babel-eslint": "^4.1.3",
     "coveralls": "^2.11.4",
     "eslint": "^1.5.0",
-    "eslint-config-airbnb": "0.0.9",
+    "eslint-config-airbnb": "0.1.0",
     "isparta": "^3.0.4",
     "mocha": "^2.1.0",
     "mocha-lcov-reporter": "1.0.0",
