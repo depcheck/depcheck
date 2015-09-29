@@ -18,27 +18,12 @@ function isUsing(dep, bin, value, scripts) {
     script.indexOf(path.join('node_modules', dep, value) !== -1));
 }
 
-function makeRequireNode(dependency) {
-  return {
-    type: 'CallExpression',
-    callee: {
-      type: 'Identifier',
-      name: 'require',
-    },
-    arguments: [
-      { value: dependency },
-    ],
-  };
-}
-
 function depsUsedByScripts(deps, scripts, dir) {
-  return deps
-    .filter(dep => {
-      const bin = getBin(dir, dep);
-      return Object.keys(bin).some(key =>
-        isUsing(dep, key, bin[key], scripts));
-    })
-    .map(makeRequireNode);
+  return deps.filter(dep => {
+    const bin = getBin(dir, dep);
+    return Object.keys(bin).some(key =>
+      isUsing(dep, key, bin[key], scripts));
+  });
 }
 
 export default (content, filename, deps, dir) => {
@@ -51,5 +36,5 @@ export default (content, filename, deps, dir) => {
     return depsUsedByScripts(deps, scripts, dir);
   }
 
-  return {};
+  return [];
 };

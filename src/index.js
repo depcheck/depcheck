@@ -74,6 +74,23 @@ function unique(array) {
   return array.filter((value, index) => array.indexOf(value) === index);
 }
 
+function isStringArray(obj) {
+  return obj instanceof Array && obj.every(item => typeof item === 'string');
+}
+
+function toRequire(dependency) {
+  return {
+    type: 'CallExpression',
+    callee: {
+      type: 'Identifier',
+      name: 'require',
+    },
+    arguments: [
+      { value: dependency },
+    ],
+  };
+}
+
 function getDependencies(dir, filename, deps, parser, detectors) {
   return new Promise((resolve, reject) => {
     fs.readFile(filename, 'utf8', (error, content) => {
@@ -82,7 +99,8 @@ function getDependencies(dir, filename, deps, parser, detectors) {
       }
 
       try {
-        const ast = parser(content, filename, deps, dir);
+        const result = parser(content, filename, deps, dir);
+        const ast = isStringArray(result) ? result.map(toRequire) : result;
         resolve(ast);
       } catch (syntaxError) {
         reject(syntaxError);
