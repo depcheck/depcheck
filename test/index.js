@@ -5,7 +5,12 @@ import depcheck from '../src/index';
 import fs from 'fs';
 import path from 'path';
 
-import importListParser from './fake_parsers/importList';
+
+import {
+  full as importListParser,
+  lite as importListParserLite,
+} from './fake_parsers/importList';
+
 import exceptionParser from './fake_parsers/exception';
 import { multipleParserA, multipleParserB } from './fake_parsers/multiple';
 
@@ -152,6 +157,13 @@ describe('depcheck', () => {
     testCustomPluggableComponents('import_list', {
       parsers: {
         '*.txt': importListParser,
+      },
+    }));
+
+  it('should handle the returned string array as dependent packages', () =>
+    testCustomPluggableComponents('import_list', {
+      parsers: {
+        '*.txt': importListParserLite,
       },
     }));
 
