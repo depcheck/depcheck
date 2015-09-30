@@ -1,4 +1,5 @@
 {
+  "notice": "This file is for debugging and testing only, the production one is built from `build/component.js` script.",
   "parser": [
     "es6",
     "jsx"
@@ -9,5 +10,6 @@
     "requireCallExpression"
   ],
   "special": [
+    "eslint"
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "eslint-airbnb-testing": "0.0.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "0.0.1",
+    "eslint": "0.0.1",
+    "eslint-config-airbnb": "0.0.1",
+    "eslint-plugin-react": "0.0.1"
+  }
+}
