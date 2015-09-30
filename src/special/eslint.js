@@ -22,7 +22,7 @@ function checkAirbnb(configs) {
   return false;
 }
 
-export default (content, filename, deps, dir) => {
+export default (content, filename) => {
   const basename = path.basename(filename);
   if (basename === '.eslintrc') {
     const configs = wrapToArray(JSON.parse(content).extends);
