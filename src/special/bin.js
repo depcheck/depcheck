@@ -15,7 +15,7 @@ function isUsing(dep, bin, value, scripts) {
   return scripts.some(script =>
     script.indexOf(bin) === 0 ||
     script.indexOf(`./node_modules/.bin/${bin}`) !== -1 ||
-    script.indexOf(path.join('node_modules', dep, value) !== -1));
+    script.indexOf(path.join('node_modules', dep, value)) !== -1);
 }
 
 function depsUsedByScripts(deps, scripts, dir) {
@@ -31,8 +31,9 @@ export default (content, filename, deps, dir) => {
   if (basename === 'package.json') {
     const scripts = getObjectValues(JSON.parse(content).scripts || {});
     return depsUsedByScripts(deps, scripts, dir);
-  } else if (path.extname(basename) === '.yml') {
-    const scripts = yaml.safeLoad(content).scripts || [];
+  } else if (basename === '.travis.yml') {
+    const metadata = yaml.safeLoad(content) || {};
+    const scripts = metadata.script || [];
     return depsUsedByScripts(deps, scripts, dir);
   }
 

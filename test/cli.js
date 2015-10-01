@@ -178,6 +178,19 @@ describe('depcheck command line', () => {
       exitCode.should.equal(-1);
     }));
 
+  it('should find dependencies with special parser', () =>
+    testCli(makeArgv('eslint_airbnb', {
+      argv: ['--specials=eslint'],
+    }))
+    .then(({ logs, error, exitCode }) => {
+      logs.should.have.length(2);
+      logs[0].should.equal('Unused Dependencies');
+      logs[1].should.containEql('eslint-airbnb-testing');
+
+      error.should.be.empty();
+      exitCode.should.equal(-1);
+    }));
+
   describe('without specified directory', () => {
     let originalCwd;
 

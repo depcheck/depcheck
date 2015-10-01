@@ -1,10 +1,16 @@
-export default content =>
-  content
-  .split('\n')
-  .filter(line => line)
-  .map(line => ({
+function toRequire(dep) {
+  return {
     type: 'ImportDeclaration',
     source: {
-      value: line,
+      value: dep,
     },
-  }));
+  };
+}
+
+export function lite(content) {
+  return content.split('\n').filter(line => line);
+}
+
+export function full(content) {
+  return lite(content).map(toRequire);
+}
