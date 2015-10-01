@@ -14,7 +14,7 @@ function noUnused(unused) {
 }
 
 function prettify(caption, deps) {
-  const list = deps.map(dep => `- ${dep}`);
+  const list = deps.map(dep => `* ${dep}`);
   return list.length ? [caption].concat(list) : [];
 }
 
@@ -95,7 +95,7 @@ export default function cli(args, log, error, exit) {
         exit(0);
       } else {
         log(prettify('Unused Dependencies', unused.dependencies)
-          .concat(prettify('Unused devDependencies', unused.devDependencies))
+          .concat(prettify('\nUnused devDependencies', unused.devDependencies))
           .join('\n'));
         exit(-1);
       }
