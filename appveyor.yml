@@ -1,0 +1,19 @@
+environment:
+  matrix:
+  - nodejs_version: '0.10'
+  - nodejs_version: '0.12'
+  - nodejs_version: '3'
+  - nodejs_version: '4'
+
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - npm install
+
+test_script:
+  - node --version
+  - npm --version
+  - npm run depcheck
+  - npm run lint
+  - npm test
+
+build: off
