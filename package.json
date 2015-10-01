@@ -13,7 +13,7 @@
   "scripts": {
     "component": "babel-node ./build/component.js > ./dist/component.json",
     "compile": "babel --optional runtime src/ -d dist/",
-    "depcheck": "./bin/depcheck --ignore-bin-package=false --specials=bin,eslint",
+    "depcheck": "node ./bin/depcheck --ignore-bin-package=false --specials=bin,eslint",
     "prepublish": "npm run compile && npm run component",
     "lint": "./node_modules/.bin/eslint ./src ./test",
     "test": "mocha --compilers js:babel/register ./test ./test/special",
