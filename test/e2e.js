@@ -25,5 +25,5 @@ describe('depcheck end-to-end', () => {
     testE2E('good', ['No unused dependencies']));
 
   it('should find unused dependencies', () =>
-    testE2E('bad', ['Unused Dependencies', '- optimist']));
+    testE2E('bad', ['Unused Dependencies', '* optimist']));
 });

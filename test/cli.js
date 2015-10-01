@@ -49,8 +49,8 @@ function testCli(argv) {
         log,
         error,
         exitCode,
-        logs: log.split('\n'),
-        errors: error.split('\n'),
+        logs: log.split('\n').filter(line => line),
+        errors: error.split('\n').filter(line => line),
       })));
 }
 
