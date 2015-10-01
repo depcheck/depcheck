@@ -1,0 +1,228 @@
+# Pluggable design
+
+Pluggable design is to make the depcheck flexible. The design allows user to customize the syntax parsing, dependencies package detection.
+
+Here is the normal depcheck workflow:
+
+```
+walk files under directory -> parse file -> detect packages it used
+```
+
+There are three parts in the workflow: *walk files*, *parse file* and *detect packages*. The second and third part can be customized with **parser** and **detection**.
+
+## Parser
+
+Parser is a function to parse file content to its abstract syntax tree (aka, AST).
+
+Depcheck ships the default JavaScript file parser as `depcheck.parser.es6` and the JSX file parser as `depcheck.parser.jsx`.
+
+### Use Parser From API
+
+Depcheck API accepts `parsers` property to specify the parsers. The syntax looks like:
+
+```js
+var opts = {
+  parsers: {
+    '*.js': depcheck.parser.es6,
+    '*.jsx': depcheck.parser.jsx,
+    '*.json': [
+      depcheck.parser.json,
+      customJsonParser
+    ]
+  }
+};
+```
+
+The `parsers` option accepts an object. The object key is a glob pattern. The value is the corresponding parser function or parser function array. Only the file whose name matches the glob pattern will be converted to ASTs by the corresponding parsers.
+
+When a file name matches multiple glob patterns, or the glob corresponds to a parser array, the file will be handled by these parsers one by one to generate multiple ASTs.
+
+Here is the default `parsers` option value when user not specify explicitly:
+
+```js
+var opts = {
+  parsers: {
+    '*.js': depcheck.parser.es6,
+    '*.jsx': depcheck.parser.jsx
+  }
+};
+```
+
+### Use Parser From CLI
+
+From CLI, user can only specify the out-of-box parsers. The CLI evaluates the value from `--parsers` argument, then convert it into *glob-parser* pairs. The syntax of `--parsers` argument looks like this:
+
+```
+--parsers="*.js:es6,*.jsx:jsx,*.json:json1&json2"
+```
+
+The quote mark (`"`) wrapping the value is to avoid the start mark (`*`) be parsed by CLI.
+
+As shown from the example, each *glob-parser* pair is concatenate with comma (`,`). For the glob corresponds to multiple parsers, concatenate them with `&` mark. Each parser name needs to match the parsers shipped under `depcheck.parser`.
+
+The above CLI argument is equivalent to the following API options:
+
+```js
+var opts = {
+  parsers: {
+    '*.js': depcheck.parser.es6,
+    '*.jsx': depcheck.parser.jsx,
+    '*.json': [
+      depcheck.parser.json1,
+      depcheck.parser.json2,
+    ]
+  }
+};
+```
+
+### Implement Custom Parser
+
+Because the parser is just a normal JavaScript function. Everybody can implement its own syntax parser, then pass its own parser via API.
+
+The interface of a parser looks like:
+
+```js
+function customerParser(content) {
+  return ast || ['package', 'name', 'array'];
+}
+```
+
+There are two return value type can be handled by depcheck. The first type is AST. When you implement your own AST, it is strongly recommended to following [the Node interface](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Parser_API#Node_objects), i.e, at least provides `type` properties.
+
+The second option is plain string array. The string array indicates these packages **is used** by the file. Depcheck converts them to `require` function call to be detected by `requireCallExpreesion` detector (mention below).
+
+On the parse error case, throw `SyntaxError` exception and depcheck will capture it and store it to the `invalidFiles` property in the result. When multiple parse error happens, *only one* error is stored in the `invalidFiles` property.
+
+## Detector
+
+After the file content is converted into an AST, the detectors are responsible to walk on each AST nodes to report dependency packages.
+
+Depcheck ships the detector for `require` function as `requireCallExpreesion` detector, for ES6 `import` declaration as `importDeclaration` detector, and for `grunt.tasks.loadNpmTasks` function as `gruntLoadTaskCallExpression` detector.
+
+### Use Detector From API
+
+Depcheck API exposes the `detectors` property in options to specify detectors.
+
+Here is the default `detectors` option value:
+
+```js
+const opts = {
+  detectors: [
+    depcheck.detector.requireCallExpression,
+    depcheck.detector.importDeclaration,
+    depcheck.detector.gruntLoadTaskCallExpression // for backward compatible
+  ]
+};
+```
+
+The `detectors` option accepts an array of detectors. **All** successful converted ASTs will be examined by **all** detectors one by one.
+
+### Use Detector From CLI
+
+Depcheck CLI provdes `--detectors` argument to specify out-of-box detectors. The syntax looks like:
+
+```
+--detectors=requireCallExpression,anotherDetector
+```
+
+Each detector is concatenated with comma mark (`,`).
+
+The above CLI argument is equivalent to the following API options:
+
+```js
+var opts = {
+  detectors: [
+    depcheck.detector.requireCallExpression,
+    depcheck.detector.anotherDetector
+  ]
+};
+```
+
+### Implement Custom Detector
+
+Detector is a JavaScript function accepts an AST node and returns an array of dependency package names.
+
+The following code snippet is the ES6 `import` declaration detector:
+
+```js
+function importDeclarationDetector(node) {
+  return node.type === 'ImportDeclaration' && node.source && node.source.value
+    ? [node.source.value]
+    : [];
+}
+```
+
+As seen in the snippet, the return value is an array, That is a chance to report undetermined multiple dependency guesses from the code. For example, [webpack loader](http://webpack.github.io/docs/using-loaders.html#configuration) has a naming convention to strip out the `-loader` from the package name. So, from the source code aspect, we cannot determine the name of the dependency package. That is a chance to return multiple values.
+
+Please ensure your detector test node type before evaluate it - AST's `node.type` property is a good entry for your detector. Besides, do **not** throw exceptions from detector, the exception will be ignored and treat detector is returning an empty array.
+
+## Special Parser
+
+Special parser is one kind of parser, but it is *special*.
+
+Usually, we find the using dependencies from source codes. But, sometimes, it is easier to target a specified dependency, then find whether it is used in the codes or not. That is the situation our *special* parser comes in.
+
+**Every** file will be passed to **every** special parser for evaluation. The special parser reports the dependency packages from files.
+
+### Use Special Parser From API
+
+Depcheck API exposes `specials` property, which accepts an array, in options to specify special parsers. The syntax look like:
+
+```js
+var opts = {
+  specials: [
+    depcheck.special.eslint,
+    depcheck.special.webpack
+  ]
+};
+```
+
+### Use Special Parser From CLI
+
+Depcheck CLI exposes `--specials` argument to specify out-of-box special parsers. The syntax looks like:
+
+```
+--specials=bin,eslint
+```
+
+The above example is equivalent to the following API options:
+
+```js
+var opts = {
+  specials: [
+    depcheck.special.bin,
+    depcheck.special.eslint
+  ]
+};
+```
+
+### Implement Custom Special Parser
+
+Special parser is just one kind of parsers. It has the same interface with parser, with more arguments. The following code snippet is a special parser for [eslint-config-airbnb](https://www.npmjs.com/package/eslint-config-airbnb) package:
+
+```js
+function airbnbEslintConfig(content, filename, deps, dir) {
+  var basename = path.basename(filename);
+  if (basename === '.eslintrc' && deps.indexOf('eslint-config-airbnb') !== -1) {
+    var eslintConfig = JSON.parser(content);
+    if (eslintConfig.extends === 'airbnb') {
+      return ['eslint-config-airbnb', 'eslint', 'babel-eslint', 'eslint-plugin-react'];
+    }
+  }
+
+  return [];
+}
+```
+
+As seen from the code snippet, there are four parameters passed into the *special* parser:
+
+- Content, same as normal parser, the file content.
+- Filename, the file name.
+- Deps, an array containing the dependencies and devDependencies. If user pass `withoutDev=true`, exclude devDependencies.
+- Dir, the checking root directory passed from API or CLI.
+
+Pay attention that, special parser will match **all** files, please do filename matching **by yourself** and only parse content only when necessary. In regards to the returning value, both AST node or plain string array are OK as a normal parser.
+
+---
+
+If you have any ideas or suggestions, please comment on [this issue page](https://github.com/lijunle/depcheck-es6/issues/27).
