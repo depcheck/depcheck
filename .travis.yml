@@ -16,6 +16,9 @@ script:
   - npm run test-coveralls
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
+before_deploy:
+  - npm run patch-version
+
 deploy:
   provider: npm
   skip_cleanup: true
