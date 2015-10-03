@@ -4,7 +4,7 @@ import 'should';
 import depcheck from '../src/index';
 import fs from 'fs';
 import path from 'path';
-
+import { platform } from 'os';
 
 import {
   full as importListParser,
@@ -67,6 +67,10 @@ describe('depcheck', () => {
 
   function testAccessUnreadableDirectory(
     module, unreadable, unusedDeps, unusedDevDeps) {
+    if (platform() === 'win32') {
+      return; // cannot test permission cases in Windows
+    }
+
     const unreadablePath =
       path.resolve(__dirname, 'fake_modules', module, unreadable);
 
@@ -106,6 +110,10 @@ describe('depcheck', () => {
 
   function testAccessUnreadableFile(
     module, unreadable, unusedDeps, unusedDevDeps) {
+    if (platform() === 'win32') {
+      return; // cannot test permission cases in Windows
+    }
+
     const unreadablePath =
       path.resolve(__dirname, 'fake_modules', module, unreadable);
 
