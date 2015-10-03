@@ -1,15 +1,19 @@
 # depcheck-es6
 
-[![build status](https://secure.travis-ci.org/lijunle/depcheck-es6.svg?branch=master)](http://travis-ci.org/lijunle/depcheck-es6)
-[![Coverage Status](https://coveralls.io/repos/lijunle/depcheck-es6/badge.svg?branch=master&service=github)](https://coveralls.io/github/lijunle/depcheck-es6?branch=master)
-[![Dependency Status](https://david-dm.org/lijunle/depcheck-es6.svg)](https://david-dm.org/lijunle/depcheck-es6)
-[![devDependency Status](https://david-dm.org/lijunle/depcheck-es6/dev-status.svg)](https://david-dm.org/lijunle/depcheck-es6#info=devDependencies)
-
 *Note*: This project is forked from rumpl's [depcheck](https://github.com/rumpl/depcheck), while extended to support **ES6**, **JSX** and more features. This fork is fully backward compatible with depcheck.
 
 Keeping track of your dependencies is not an easy task, especially if you have a big project. Are you sure you are using all of the dependencies you define in your `package.json` file? One way to find out is to look at all your files and check which modules you are using, but that's too time consuming. Or maybe you can do a `grep` on all the files of your project, and then some `grep -v` to remove the junk. But that's a hassle too.
 
 And that is why `depcheck` exists - it's a nifty little tool that looks at your project files and scans your code in order to find any unused dependencies.
+
+## Build Status
+
+[![build status](https://secure.travis-ci.org/lijunle/depcheck-es6.svg?branch=master)](http://travis-ci.org/lijunle/depcheck-es6)
+[![Build status](https://ci.appveyor.com/api/projects/status/w774aev2mj0s2hlf/branch/master?svg=true)](https://ci.appveyor.com/project/lijunle/depcheck-es6/branch/master)
+[![Coverage Status](https://coveralls.io/repos/lijunle/depcheck-es6/badge.svg?branch=master&service=github)](https://coveralls.io/github/lijunle/depcheck-es6?branch=master)
+
+[![Dependency Status](https://david-dm.org/lijunle/depcheck-es6.svg)](https://david-dm.org/lijunle/depcheck-es6)
+[![devDependency Status](https://david-dm.org/lijunle/depcheck-es6/dev-status.svg)](https://david-dm.org/lijunle/depcheck-es6#info=devDependencies)
 
 ## Installation
 

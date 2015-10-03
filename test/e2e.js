@@ -9,7 +9,7 @@ function testE2E(module, output) {
     const binary = path.resolve(__dirname, '../bin/depcheck');
     const modulePath = path.resolve(__dirname, 'fake_modules', module);
 
-    exec(`${binary} ${modulePath}`, (error, stdout, stderr) => {
+    exec(`node ${binary} ${modulePath}`, (error, stdout, stderr) => {
       const expectedStdOut = output.map(line => line + '\n').join('');
 
       stdout.should.equal(expectedStdOut);

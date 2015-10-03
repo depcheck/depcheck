@@ -4,7 +4,7 @@ import 'should';
 import depcheck from '../src/index';
 import fs from 'fs';
 import path from 'path';
-
+import { platform } from 'os';
 
 import {
   full as importListParser,
@@ -46,7 +46,8 @@ describe('depcheck', () => {
 
       const invalidFiles = Object.keys(unused.invalidFiles);
       invalidFiles.should.have.length(1);
-      invalidFiles[0].should.endWith('/test/fake_modules/bad_js/index.js');
+      invalidFiles[0].should.endWith(
+        path.join('/test/fake_modules/bad_js/index.js'));
 
       const error = unused.invalidFiles[invalidFiles[0]];
       error.should.be.instanceof(SyntaxError);
@@ -66,6 +67,10 @@ describe('depcheck', () => {
 
   function testAccessUnreadableDirectory(
     module, unreadable, unusedDeps, unusedDevDeps) {
+    if (platform() === 'win32') {
+      return; // cannot test permission cases in Windows
+    }
+
     const unreadablePath =
       path.resolve(__dirname, 'fake_modules', module, unreadable);
 
@@ -105,6 +110,10 @@ describe('depcheck', () => {
 
   function testAccessUnreadableFile(
     module, unreadable, unusedDeps, unusedDevDeps) {
+    if (platform() === 'win32') {
+      return; // cannot test permission cases in Windows
+    }
+
     const unreadablePath =
       path.resolve(__dirname, 'fake_modules', module, unreadable);
 
@@ -208,6 +217,6 @@ describe('depcheck', () => {
 
       Object.keys(unused.invalidFiles).should.have.length(1);
       Object.keys(unused.invalidFiles)[0].should.endWith(
-        '/test/fake_modules/import_list/index.txt');
+        path.join('/test/fake_modules/import_list/index.txt'));
     }));
 });
