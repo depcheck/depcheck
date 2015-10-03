@@ -1,6 +1,6 @@
 {
   "name": "depcheck-es6",
-  "version": "0.5.2",
+  "version": "0.0.1",
   "description": "Check dependencies in your node module",
   "main": "dist/index.js",
   "bin": {
