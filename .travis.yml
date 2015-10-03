@@ -15,3 +15,15 @@ script:
   - npm run lint
   - npm run test-coveralls
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+
+before_deploy:
+  - npm run patch-version
+
+deploy:
+  provider: npm
+  skip_cleanup: true
+  email: "lijunle@gmail.com"
+  api_key:
+    secure: "VRDidvfVawY0/OgU1Mna7C+Hs+E689U0wka+aiyEhRRDs6pc8iFQ//akYuiE6oH5OYwx8cJsFDMOREFV57+QabyAgxKOJy/IqOXOjaLmElHjuNe5Il9NABGh8w7L/Da1QT37KEMb8N7Ln0SGCDOb3x2YgEkmxBSwTUkJkvrv4u3GLStBmWE9WW8BbZlhSsDa1/cYBuYqZfCjTkSnw9/YL6qDOobMJPVlldF/UFxg2JarSm7LwjHb0vlVX5lwjDx+YeklfCfWBKmcC8j25GoA1J/QT58EsEMiq2ywKO8dcq1qb4Yk5zPUI53JO8V+dKlg1FFbkeqtUEczbyQ/HfPU6rfLPiYxKDe8REQ6mIClUYIFbWz6sGMo7yvilKWdiNowZSxnbtavAVt+kDPrzc4EjvZKFZ2y5wUHSN3QORiAnSihrP8dNyjDtcGXDJtxyE0Z63x26ysu9QrIlD+pdjfNksKykhuCZw+Me6pXkemxR6QC1ki1gy4/7lHMiM6iE+nLl//FeTIFOcH9f3hML9gp2niHi8nqDQEOo7fIw+NuBW2gOngekj/L3M5eupFatkxK1wTBKcRL3wtOH7bxbRRyqXbeVvDVdscMo4135laYa/8nm1CxLWZUqAhfdy44ZSRhMevbBeJ5Zo6x/ln1q87wGgssdHvZDwIBLinxVfeM0xo="
+  on:
+    tags: true
