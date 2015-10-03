@@ -5,6 +5,10 @@ function getObjectValues(obj) {
   return Object.keys(obj).map(key => obj[key]);
 }
 
+function join(...args) {
+  return path.join(...args).replace(/\\/g, '/');
+}
+
 function getBin(dir, dependency) {
   const packagePath = path.resolve(dir, 'node_modules', dependency, 'package.json');
   const metadata = require(packagePath);
@@ -15,7 +19,7 @@ function isUsing(dep, bin, value, scripts) {
   return scripts.some(script =>
     script.indexOf(bin) === 0 ||
     script.indexOf(`./node_modules/.bin/${bin}`) !== -1 ||
-    script.indexOf(path.join('node_modules', dep, value)) !== -1);
+    script.indexOf(join('node_modules', dep, value)) !== -1);
 }
 
 function depsUsedByScripts(deps, scripts, dir) {
