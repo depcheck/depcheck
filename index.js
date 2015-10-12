@@ -45,7 +45,7 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps) {
   });
 
   finder.on("file", function (filename) {
-    if (path.extname(filename) === ".js") {
+    if ((path.extname(filename) === ".js") || (path.extname(filename) === ".jsx")) {
       var modulesRequired = getModulesRequiredFromFilename(filename);
       if (util.isError(modulesRequired)) {
         invalidFiles[filename] = modulesRequired;
