@@ -34,6 +34,7 @@
     "js-yaml": "^3.4.2",
     "minimatch": "^3.0.0",
     "node-source-walk": "^2.0.0",
+    "require-package-name": "^2.0.1",
     "walkdir": "0.0.10",
     "yargs": "^3.26.0"
   },

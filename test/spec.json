@@ -179,5 +179,15 @@
       "dependencies": [],
       "devDependencies": []
     }
+  },
+  {
+    "name": "support scoped modules",
+    "module": "scoped_module",
+    "options": {
+    },
+    "expected": {
+      "dependencies": ["@unused/package"],
+      "devDependencies": []
+    }
   }
 ]
