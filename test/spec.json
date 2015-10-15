@@ -189,5 +189,15 @@
       "dependencies": ["@unused/package"],
       "devDependencies": []
     }
+  },
+  {
+    "name": "ignore require number",
+    "module": "ignore_number",
+    "options": {
+    },
+    "expected": {
+      "dependencies": ["number"],
+      "devDependencies": []
+    }
   }
 ]
