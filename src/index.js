@@ -4,6 +4,7 @@ import Walker from 'node-source-walk';
 import walkdir from 'walkdir';
 import minimatch from 'minimatch';
 import component from './component';
+import requirePackageName from 'require-package-name';
 
 function constructComponent(source, name) {
   return source[name].reduce((result, current) =>
@@ -115,7 +116,7 @@ function getDependencies(dir, filename, deps, parser, detectors) {
       dependencies = dependencies.concat(...results);
     });
 
-    return dependencies.map(dependency => dependency.replace(/\/.*$/, ''));
+    return dependencies.map(requirePackageName);
   });
 }
 

@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@owner/package": "~0.6.0",
+    "@secondowner/package": "~0.6.0",
+    "@org/parent": "~0.6.0",
+    "@unused/package": "~0.6.0",
+    "name-import": "1.2.3",
+    "child-import": "1.2.3"
+  }
+}
