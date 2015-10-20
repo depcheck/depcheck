@@ -46,15 +46,22 @@ export default function cli(args, log, error, exit) {
       'dev',
       'ignore-bin-package',
     ])
+    .string([
+      'web-report',
+      'web-service',
+    ])
     .default({
       'dev': true,
       'ignore-bin-package': true,
+      'web-service': 'https://depcheck.tk',
     })
     .describe('dev', 'Check on devDependecies')
     .describe('ignore-bin-package', 'Ignore package with bin entry')
     .describe('json', 'Output results to JSON')
     .describe('ignores', 'Comma separated package list to ignore')
     .describe('ignore-dirs', 'Comma separated folder names to ignore')
+    .describe('web-report', 'Generate web report with depcheck web service')
+    .describe('web-service', 'Specify depcheck web service URL')
     .describe('parsers', 'Comma separated glob:pasers pair list')
     .describe('detectors', 'Comma separated detector list')
     .describe('specials', 'Comma separated special parser list')
