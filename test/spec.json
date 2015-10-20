@@ -181,6 +181,16 @@
     }
   },
   {
+    "name": "support CoffeeScript syntax",
+    "module": "coffee_script",
+    "options": {
+    },
+    "expected": {
+      "dependencies": ["coffee"],
+      "devDependencies": []
+    }
+  },
+  {
     "name": "support scoped modules",
     "module": "scoped_module",
     "options": {
