@@ -3,6 +3,7 @@ import path from 'path';
 import yargs from 'yargs';
 import depcheck from './index';
 import output from './utils/output';
+import webReport from './utils/web-report';
 
 function checkPathExist(dir) {
   return new Promise((resolve, reject) =>
@@ -86,6 +87,7 @@ export default function cli(args, log, error, exit) {
       specials: getSpecials(opt.argv.specials),
     }))
     .then(result => output(result, log, opt.argv.json))
+    .then(result => webReport(result, log, error, process.env, opt.argv)) // TODO extract env
     .then(({ dependencies, devDependencies }) =>
       exit(opt.argv.json
         || dependencies.length === 0 && devDependencies.length === 0
