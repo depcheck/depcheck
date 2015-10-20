@@ -1,21 +1,12 @@
-import yargs from 'yargs';
-import depcheck from './index';
 import fs from 'fs';
 import path from 'path';
+import yargs from 'yargs';
+import depcheck from './index';
+import output from './utils/output';
 
 function checkPathExist(dir) {
   return new Promise((resolve, reject) =>
     fs.exists(dir, result => result ? resolve() : reject()));
-}
-
-function noUnused(unused) {
-  return unused.dependencies.length === 0
-      && unused.devDependencies.length === 0;
-}
-
-function prettify(caption, deps) {
-  const list = deps.map(dep => `* ${dep}`);
-  return list.length ? [caption].concat(list) : [];
 }
 
 function getParsers(parsers) {
@@ -93,19 +84,12 @@ export default function cli(args, log, error, exit) {
       parsers: getParsers(opt.argv.parsers),
       detectors: getDetectors(opt.argv.detectors),
       specials: getSpecials(opt.argv.specials),
-    }, unused => {
-      if (opt.argv.json) {
-        log(JSON.stringify(unused));
-        exit(0);
-      } else if (noUnused(unused)) {
-        log('No unused dependencies');
-        exit(0);
-      } else {
-        log(prettify('Unused Dependencies', unused.dependencies)
-          .concat(prettify('\nUnused devDependencies', unused.devDependencies))
-          .join('\n'));
-        exit(-1);
-      }
-    }));
+    }))
+    .then(result => output(result, log, opt.argv.json))
+    .then(({ dependencies, devDependencies }) =>
+      exit(opt.argv.json
+        || dependencies.length === 0 && devDependencies.length === 0
+        ? 0
+        : -1));
   }
 }
