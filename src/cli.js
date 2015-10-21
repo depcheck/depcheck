@@ -31,7 +31,7 @@ function getSpecials(specials) {
     : specials.split(',').map(name => depcheck.special[name]);
 }
 
-export default function cli(args, log, error, exit) {
+export default function cli(args, env, log, error, exit) {
   const opt = yargs(args)
     .usage('Usage: $0 [DIRECTORY]')
     .boolean([
@@ -87,7 +87,7 @@ export default function cli(args, log, error, exit) {
       specials: getSpecials(opt.argv.specials),
     }))
     .then(result => output(result, log, opt.argv.json))
-    .then(result => webReport(result, log, error, process.env, opt.argv)) // TODO extract env
+    .then(result => webReport(result, log, error, env, opt.argv))
     .then(({ dependencies, devDependencies }) =>
       exit(opt.argv.json
         || dependencies.length === 0 && devDependencies.length === 0
