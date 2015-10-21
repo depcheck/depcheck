@@ -49,6 +49,7 @@ describe('depcheck web-report', () => {
     testWebReport({
       TRAVIS: 'true',
       TRAVIS_REPO_SLUG: 'lijunle/depcheck-es6',
+      TRAVIS_PULL_REQUEST: 'false',
     })
     .then(actual => {
       actual.req.url.should.equal('/github/lijunle/depcheck-es6');
@@ -57,6 +58,22 @@ describe('depcheck web-report', () => {
       actual.logs.should.deepEqual([
         'No unused dependencies',
         'Post web report succeed.',
+      ]);
+    }));
+
+  it('should not post web report if triggered by a pull request', () =>
+    testWebReport({
+      TRAVIS: 'true',
+      TRAVIS_REPO_SLUG: 'lijunle/depcheck-es6',
+      TRAVIS_PULL_REQUEST: '123',
+    })
+    .then(actual => {
+      actual.should.have.property('req', null); // because no request is sent
+      actual.exitCode.should.equal(0);
+      actual.errors.should.have.length(0);
+      actual.logs.should.deepEqual([
+        'No unused dependencies',
+        'Skip posting depcheck report to web service because it run in a pull request.',
       ]);
     }));
 });

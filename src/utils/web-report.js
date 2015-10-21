@@ -6,6 +6,9 @@ function getSettings(env) {
     return {
       url: `/github/${env.TRAVIS_REPO_SLUG}`,
       branch: env.TRAVIS_BRANCH,
+      pullRequest: env.TRAVIS_PULL_REQUEST === 'false'
+        ? false
+        : parseInt(env.TRAVIS_PULL_REQUEST, 10),
     };
   }
 
@@ -18,9 +21,14 @@ export default function postWebReport(
     return Promise.resolve(result);
   }
 
-  const { url, branch } = getSettings(env);
+  const { url, branch, pullRequest } = getSettings(env);
   if (!url) {
     error('Build environment is not supported yet, please report issue to https://github.com/lijunle/depcheck-es6');
+    return Promise.resolve(result);
+  }
+
+  if (pullRequest) {
+    log('Skip posting depcheck report to web service because it run in a pull request.');
     return Promise.resolve(result);
   }
 
