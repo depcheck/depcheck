@@ -1,3 +1,6 @@
 {
-  "extends": "airbnb/base"
+  "extends": "airbnb/base",
+  "rules": {
+    "no-multiple-empty-lines": [2, {"max": 1}]
+  }
 }
