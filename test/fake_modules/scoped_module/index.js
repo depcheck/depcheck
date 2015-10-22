@@ -10,4 +10,3 @@ const anotherPackage = require('@secondowner/package');
 const childDep = require('@org/parent/child');
 const name = require('name-import/name');
 const deepName = require('child-import/deep/name');
-
