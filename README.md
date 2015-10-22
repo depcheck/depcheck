@@ -12,6 +12,7 @@ And that is why `depcheck` exists - it's a nifty little tool that looks at your 
 [![Build status](https://ci.appveyor.com/api/projects/status/w774aev2mj0s2hlf/branch/master?svg=true)](https://ci.appveyor.com/project/lijunle/depcheck-es6/branch/master)
 [![Coverage Status](https://coveralls.io/repos/lijunle/depcheck-es6/badge.svg?branch=master&service=github)](https://coveralls.io/github/lijunle/depcheck-es6?branch=master)
 
+[![Depcheck](https://depcheck.tk/github/lijunle/depcheck-es6/master.svg)](https://github.com/lijunle/depcheck-es6)
 [![Dependency Status](https://david-dm.org/lijunle/depcheck-es6.svg)](https://david-dm.org/lijunle/depcheck-es6)
 [![devDependency Status](https://david-dm.org/lijunle/depcheck-es6/dev-status.svg)](https://david-dm.org/lijunle/depcheck-es6#info=devDependencies)
 

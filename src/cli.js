@@ -1,21 +1,13 @@
-import yargs from 'yargs';
-import depcheck from './index';
 import fs from 'fs';
 import path from 'path';
+import yargs from 'yargs';
+import depcheck from './index';
+import output from './utils/output';
+import webReport from './utils/web-report';
 
 function checkPathExist(dir) {
   return new Promise((resolve, reject) =>
     fs.exists(dir, result => result ? resolve() : reject()));
-}
-
-function noUnused(unused) {
-  return unused.dependencies.length === 0
-      && unused.devDependencies.length === 0;
-}
-
-function prettify(caption, deps) {
-  const list = deps.map(dep => `* ${dep}`);
-  return list.length ? [caption].concat(list) : [];
 }
 
 function getParsers(parsers) {
@@ -39,22 +31,29 @@ function getSpecials(specials) {
     : specials.split(',').map(name => depcheck.special[name]);
 }
 
-export default function cli(args, log, error, exit) {
+export default function cli(args, env, log, error, exit) {
   const opt = yargs(args)
     .usage('Usage: $0 [DIRECTORY]')
     .boolean([
       'dev',
       'ignore-bin-package',
     ])
+    .string([
+      'web-report',
+      'web-service',
+    ])
     .default({
       'dev': true,
       'ignore-bin-package': true,
+      'web-service': 'https://depcheck.tk',
     })
     .describe('dev', 'Check on devDependecies')
     .describe('ignore-bin-package', 'Ignore package with bin entry')
     .describe('json', 'Output results to JSON')
     .describe('ignores', 'Comma separated package list to ignore')
     .describe('ignore-dirs', 'Comma separated folder names to ignore')
+    .describe('web-report', 'Generate web report with depcheck web service')
+    .describe('web-service', 'Specify depcheck web service URL')
     .describe('parsers', 'Comma separated glob:pasers pair list')
     .describe('detectors', 'Comma separated detector list')
     .describe('specials', 'Comma separated special parser list')
@@ -86,19 +85,13 @@ export default function cli(args, log, error, exit) {
       parsers: getParsers(opt.argv.parsers),
       detectors: getDetectors(opt.argv.detectors),
       specials: getSpecials(opt.argv.specials),
-    }, unused => {
-      if (opt.argv.json) {
-        log(JSON.stringify(unused));
-        exit(0);
-      } else if (noUnused(unused)) {
-        log('No unused dependencies');
-        exit(0);
-      } else {
-        log(prettify('Unused Dependencies', unused.dependencies)
-          .concat(prettify('\nUnused devDependencies', unused.devDependencies))
-          .join('\n'));
-        exit(-1);
-      }
-    }));
+    }))
+    .then(result => output(result, log, opt.argv.json))
+    .then(result => webReport(result, log, error, env, opt.argv))
+    .then(({ dependencies, devDependencies }) =>
+      exit(opt.argv.json
+        || dependencies.length === 0 && devDependencies.length === 0
+        ? 0
+        : -1));
   }
 }
