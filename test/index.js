@@ -174,6 +174,9 @@ describe('depcheck', () => {
       parsers: {
         '*.txt': importListParserLite,
       },
+      detectors: [
+        // the detector step is skipped because parser returns string array
+      ],
     }));
 
   it('should support multiple parsers to generate ASTs', () =>

@@ -2,6 +2,7 @@ function toRequire(dep) {
   return {
     type: 'ImportDeclaration',
     source: {
+      type: 'Literal',
       value: dep,
     },
   };

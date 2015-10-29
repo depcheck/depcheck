@@ -82,19 +82,6 @@ function isStringArray(obj) {
   return obj instanceof Array && obj.every(item => typeof item === 'string');
 }
 
-function toRequire(dependency) {
-  return {
-    type: 'CallExpression',
-    callee: {
-      type: 'Identifier',
-      name: 'require',
-    },
-    arguments: [
-      { value: dependency },
-    ],
-  };
-}
-
 function getDependencies(dir, filename, deps, parser, detectors) {
   return new Promise((resolve, reject) => {
     fs.readFile(filename, 'utf8', (error, content) => {
@@ -103,14 +90,17 @@ function getDependencies(dir, filename, deps, parser, detectors) {
       }
 
       try {
-        const result = parser(content, filename, deps, dir);
-        const ast = isStringArray(result) ? result.map(toRequire) : result;
-        resolve(ast);
+        resolve(parser(content, filename, deps, dir));
       } catch (syntaxError) {
         reject(syntaxError);
       }
     });
   }).then(ast => {
+    // when parser returns string array, skip detector step and treat them as dependencies directly.
+    if (isStringArray(ast)) {
+      return ast;
+    }
+
     const walker = new Walker();
     let dependencies = [];
 
