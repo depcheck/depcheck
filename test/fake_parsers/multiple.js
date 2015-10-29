@@ -6,6 +6,7 @@ function parser(prefix, content) {
     .map(line => ({
       type: 'ImportDeclaration',
       source: {
+        type: 'Literal',
         value: line.substring(prefix.length),
       },
     }));
