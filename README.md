@@ -1,6 +1,6 @@
 # depcheck-es6
 
-*Note:* This project is forked from rumpl's [depcheck](https://github.com/rumpl/depcheck), while extended to support **ES6**, **JSX**, **CoffeeScript** and more features. This fork is fully backward compatible with depcheck.
+*Note:* This project is forked from rumpl's [depcheck](https://github.com/rumpl/depcheck), while extended to support **ES6**, **ES7**, **JSX**, **CoffeeScript** and more features. This fork is fully backward compatible with depcheck.
 
 Keeping track of your dependencies is not an easy task, especially if you have a big project. Are you sure you are using all of the dependencies you define in your `package.json` file? One way to find out is to look at all your files and check which modules you are using, but that's too time consuming. Or maybe you can do a `grep` on all the files of your project, and then some `grep -v` to remove the junk. But that's a hassle too.
 
