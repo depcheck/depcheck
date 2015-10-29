@@ -1,9 +1,8 @@
-import * as acorn from 'acorn-jsx';
+import { parse } from 'babylon';
+import { config } from './es6';
 
 export default content =>
-  acorn.parse(content, {
-    ecmaVersion: 6,
-    sourceType: 'module',
-    allowHashBang: true,
+  parse(content, {
+    ...config,
     plugins: { jsx: true },
   });

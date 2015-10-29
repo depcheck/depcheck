@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import Walker from 'node-source-walk';
 import walkdir from 'walkdir';
 import minimatch from 'minimatch';
 import component from './component';
+import getNodes from './utils/get-nodes';
 import requirePackageName from 'require-package-name';
 
 function constructComponent(source, name) {
@@ -101,15 +101,13 @@ function getDependencies(dir, filename, deps, parser, detectors) {
       return ast;
     }
 
-    const walker = new Walker();
-    let dependencies = [];
+    // matrix looks like [ /* node1 */ [d1, d2], /* node2 */ [d1, d2], ...]
+    const matrix = getNodes(ast).map(node =>
+      [].concat(...detectors.map(detector => safeDetect(detector, node))));
 
-    walker.walk(ast, node => {
-      const results = detectors.map(detector => safeDetect(detector, node));
-      dependencies = dependencies.concat(...results);
-    });
+    const dependencies = unique([].concat(...matrix)).map(requirePackageName);
 
-    return dependencies.map(requirePackageName);
+    return dependencies;
   });
 }
 

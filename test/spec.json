@@ -45,6 +45,17 @@
     "notice": "See `good_es6/index.js` file for more information on the unsupported ES6 import syntax, which we assert here as the expected missing import."
   },
   {
+    "name": "recognize experimental ES7 syntax enabled in Babel by default",
+    "module": "good_es7",
+    "options": {
+      "withoutDev": true
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": []
+    }
+  },
+  {
     "name": "find grunt dependencies",
     "module": "grunt",
     "options": {
