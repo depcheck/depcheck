@@ -87,9 +87,9 @@ function customerParser(content) {
 }
 ```
 
-There are two return value type can be handled by depcheck. The first type is AST. When you implement your own AST, it is strongly recommended to following [the Node interface](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Parser_API#Node_objects), i.e, at least provides `type` properties.
+There are two return value type can be handled by depcheck. The first type is AST. When implement your own AST, please follow [ESTree Spec](https://github.com/estree/estree), and provides `type` properties in your [node objects](https://github.com/estree/estree/blob/master/spec.md#node-objects).
 
-The second option is plain string array. The string array indicates these packages **is used** by the file. Depcheck converts them to `require` function call to be detected by `requireCallExpreesion` detector (mention below).
+The second option is plain string array. The string array indicates these packages **is used** by the file. Depcheck will mark these packages as dependencies and **skip the detector step**.
 
 On the parse error case, throw `SyntaxError` exception and depcheck will capture it and store it to the `invalidFiles` property in the result. When multiple parse error happens, *only one* error is stored in the `invalidFiles` property.
 
@@ -140,19 +140,21 @@ var opts = {
 
 ### Implement Custom Detector
 
-Detector is a JavaScript function accepts an AST node and returns an array of dependency package names.
+Detector is a JavaScript function accepts an AST node and package dependencies (including devDependencies unless `withoutDev` option is `true`) and returns an array of dependency package names.
 
 The following code snippet is the ES6 `import` declaration detector:
 
 ```js
-function importDeclarationDetector(node) {
+function importDeclarationDetector(node, deps) {
   return node.type === 'ImportDeclaration' && node.source && node.source.value
     ? [node.source.value]
     : [];
 }
 ```
 
-As seen in the snippet, the return value is an array, That is a chance to report undetermined multiple dependency guesses from the code. For example, [webpack loader](http://webpack.github.io/docs/using-loaders.html#configuration) has a naming convention to strip out the `-loader` from the package name. So, from the source code aspect, we cannot determine the name of the dependency package. That is a chance to return multiple values.
+The returning array provides a chance to detect multiple dependencies from one node. The might be useful when handle Webpack or Babel configuration file.
+
+The package dependencies is passed into the detector. It provides the ability to figure out undetermined dependencies. For example, [webpack loader](http://webpack.github.io/docs/using-loaders.html#configuration) has a naming convention to strip out the `-loader` from the package name. So, from the source code aspect (the node object), it cannot figure out the dependency names. However, diff the candidates with the package dependencies, we are getting the answer.
 
 Please ensure your detector test node type before evaluate it - AST's `node.type` property is a good entry for your detector. Besides, do **not** throw exceptions from detector, the exception will be ignored and treat detector is returning an empty array.
 
@@ -218,7 +220,7 @@ As seen from the code snippet, there are four parameters passed into the *specia
 
 - Content, same as normal parser, the file content.
 - Filename, the file name.
-- Deps, an array containing the dependencies and devDependencies. If user pass `withoutDev=true`, exclude devDependencies.
+- Deps, an array containing the package dependencies (including devDependencies unless `withoutDev` option is `true`).
 - Dir, the checking root directory passed from API or CLI.
 
 Pay attention that, special parser will match **all** files, please do filename matching **by yourself** and only parse content only when necessary. In regards to the returning value, both AST node or plain string array are OK as a normal parser.
