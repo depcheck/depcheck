@@ -1,3 +1,5 @@
+sudo: false
+
 language: node_js
 
 node_js:
@@ -7,10 +9,10 @@ node_js:
   - 'node'
 
 script:
-  - npm run depcheck-web
+  - npm run depcheck
   - npm run lint
-  - npm run test-coveralls
-  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  - npm run test-coverage
+  - cat ./coverage/coverage.json | ./node_modules/codecov.io/bin/codecov.io.js
 
 before_deploy:
   - npm run patch-version

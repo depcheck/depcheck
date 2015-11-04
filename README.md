@@ -6,13 +6,12 @@ And that is why `depcheck` exists - it's a nifty little tool that looks at your 
 
 ## Build Status
 
-[![build status](https://secure.travis-ci.org/lijunle/depcheck-es6.svg?branch=master)](http://travis-ci.org/lijunle/depcheck-es6)
-[![Build status](https://ci.appveyor.com/api/projects/status/w774aev2mj0s2hlf/branch/master?svg=true)](https://ci.appveyor.com/project/lijunle/depcheck-es6/branch/master)
-[![Coverage Status](https://coveralls.io/repos/lijunle/depcheck-es6/badge.svg?branch=master&service=github)](https://coveralls.io/github/lijunle/depcheck-es6?branch=master)
+[![Build Status](https://travis-ci.org/depcheck/depcheck.svg?branch=master)](https://travis-ci.org/depcheck/depcheck)
+[![Build status](https://ci.appveyor.com/api/projects/status/xbooh370dinuyi0y/branch/master?svg=true)](https://ci.appveyor.com/project/lijunle/depcheck/branch/master)
+[![codecov.io](https://codecov.io/github/depcheck/depcheck/coverage.svg?branch=master)](https://codecov.io/github/depcheck/depcheck?branch=master)
 
-[![Depcheck](https://depcheck.tk/github/lijunle/depcheck-es6/master.svg)](https://github.com/lijunle/depcheck-es6)
-[![Dependency Status](https://david-dm.org/lijunle/depcheck-es6.svg)](https://david-dm.org/lijunle/depcheck-es6)
-[![devDependency Status](https://david-dm.org/lijunle/depcheck-es6/dev-status.svg)](https://david-dm.org/lijunle/depcheck-es6#info=devDependencies)
+[![Dependency Status](https://david-dm.org/depcheck/depcheck.svg)](https://david-dm.org/depcheck/depcheck)
+[![devDependency Status](https://david-dm.org/depcheck/depcheck/dev-status.svg)](https://david-dm.org/depcheck/depcheck#info=devDependencies)
 
 ## Installation
 
@@ -42,7 +41,7 @@ All the arguments are optional:
 
 `--help`: Show the help message.
 
-`--parsers`, `--detectors` and `--specials`: These arguments are for advanced usage. They provide an easy way to customize the file parser and dependency detection. Check [the pluggable design document](https://github.com/lijunle/depcheck-es6/blob/master/doc/pluggable-design.md) for more information.
+`--parsers`, `--detectors` and `--specials`: These arguments are for advanced usage. They provide an easy way to customize the file parser and dependency detection. Check [the pluggable design document](https://github.com/depcheck/depcheck/blob/master/doc/pluggable-design.md) for more information.
 
 ## API
 
