@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/lijunle/depcheck-es6.git"
+    "url": "git://github.com/depcheck/depcheck.git"
   },
   "scripts": {
     "component": "babel-node ./build/component.js > ./dist/component.json",
@@ -24,6 +24,16 @@
   "author": [
     "Djordje Lukic <lukic.djordje@gmail.com>",
     "Junle Li <lijunle@gmail.com>"
+  ],
+  "keywords": [
+    "check",
+    "unused",
+    "package",
+    "packages",
+    "depcheck",
+    "dependency",
+    "dependencies",
+    "devDependencies"
   ],
   "license": "MIT",
   "readmeFilename": "README.md",
