@@ -25,6 +25,16 @@
     "Djordje Lukic <lukic.djordje@gmail.com>",
     "Junle Li <lijunle@gmail.com>"
   ],
+  "keywords": [
+    "check",
+    "unused",
+    "package",
+    "packages",
+    "depcheck",
+    "dependency",
+    "dependencies",
+    "devDependencies"
+  ],
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
