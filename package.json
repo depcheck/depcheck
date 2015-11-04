@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/lijunle/depcheck-es6.git"
+    "url": "git://github.com/depcheck/depcheck.git"
   },
   "scripts": {
     "component": "babel-node ./build/component.js > ./dist/component.json",
