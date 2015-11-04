@@ -19,8 +19,7 @@
     "prepublish": "npm run compile && npm run component",
     "lint": "eslint ./src ./test ./build",
     "test": "mocha --compilers js:babel/register ./test ./test/special",
-    "test-coverage": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha -- ./test ./test/special",
-    "test-coveralls": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha --report lcovonly -- ./test ./test/special -R spec"
+    "test-coverage": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha -- ./test ./test/special"
   },
   "author": [
     "Djordje Lukic <lukic.djordje@gmail.com>",
@@ -42,7 +41,7 @@
   "devDependencies": {
     "babel": "^5.8.23",
     "babel-eslint": "^4.1.3",
-    "coveralls": "^2.11.4",
+    "codecov.io": "^0.1.6",
     "eslint": "^1.7.3",
     "eslint-config-airbnb": "0.1.0",
     "isparta": "^3.0.4",
