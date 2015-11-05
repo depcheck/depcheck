@@ -109,6 +109,16 @@
     }
   },
   {
+    "name": "handle script file with node shebang",
+    "module": "shebang",
+    "options": {
+    },
+    "expected": {
+      "dependencies": ["shebang"],
+      "devDependencies": []
+    }
+  },
+  {
     "name": "handle a package without any dependencies",
     "module": "empty_dep",
     "options": {
