@@ -57,6 +57,15 @@ describe('babel special parser', () => {
     result.should.deepEqual([]);
   });
 
+  it('should recognize dependencies not a babel plugin', () => {
+    const content = JSON.stringify({
+      presets: ['es2015'],
+    });
+
+    const result = parse(content, '.babelrc', ['babel-preset-es2015', 'dep']);
+    result.should.deepEqual(['babel-preset-es2015']);
+  });
+
   testCases.forEach(testCase =>
     it(`should ${testCase.name} in .babelrc file`, () =>
       testBabel('.babelrc', testCase.deps, testCase.options)));
