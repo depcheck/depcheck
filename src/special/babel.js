@@ -30,15 +30,23 @@ function filter(deps, options) {
   return presets.concat(plugins);
 }
 
+function getFromOptions(deps, options) {
+  const optDeps = filter(deps, options);
+  const envDeps = values(options.env).map(env => filter(deps, env))
+    .reduce((array, item) => array.concat(item), []);
+
+  return optDeps.concat(envDeps);
+}
+
 export default (content, filename, deps) => {
   if (filename === '.babelrc') {
     const options = JSON.parse(content);
+    return getFromOptions(deps, options);
+  }
 
-    const optDeps = filter(deps, options);
-    const envDeps = values(options.env).map(env => filter(deps, env))
-      .reduce((array, item) => array.concat(item), []);
-
-    return optDeps.concat(envDeps);
+  if (filename === 'package.json') {
+    const metadata = JSON.parse(content);
+    return getFromOptions(deps, metadata.babel);
   }
 
   return [];

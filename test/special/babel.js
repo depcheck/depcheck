@@ -68,4 +68,24 @@ describe('babel special parser', () => {
           production: testCase.options,
         },
       })));
+
+  testCases.forEach(testCase =>
+    it(`should ${testCase.name} in package.json file`, () =>
+      testBabel('package.json', testCase.deps, {
+        name: 'my-package',
+        version: '1.0.0',
+        babel: testCase.options,
+      })));
+
+  testCases.forEach(testCase =>
+    it(`should ${testCase.name} inside .babelrc file env section`, () =>
+      testBabel('package.json', testCase.deps, {
+        name: 'my-package',
+        version: '1.0.0',
+        babel: {
+          env: {
+            development: testCase.options,
+          },
+        },
+      })));
 });
