@@ -32,6 +32,18 @@ const testCases = [
       presets: ['babel-preset-es2015'],
     },
   },
+  {
+    name: 'recognize plugin specified with options',
+    deps: ['babel-plugin-transform-async-to-module-method'],
+    options: {
+      plugins: [
+        ['transform-async-to-module-method', {
+          module: 'bluebird',
+          method: 'coroutine',
+        }],
+      ],
+    },
+  },
 ];
 
 function testBabel(filename, deps, content) {

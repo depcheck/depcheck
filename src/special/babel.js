@@ -3,13 +3,14 @@ function contain(array, dep, prefix) {
     return false;
   }
 
-  if (array.indexOf(dep) !== -1) {
+  // extract name if wrapping with options
+  const names = array.map(item => typeof item === 'string' ? item : item[0]);
+  if (names.indexOf(dep) !== -1) {
     return true;
   }
 
-  if (dep.indexOf(prefix) === 0 &&
-      array.indexOf(dep.substring(prefix.length)) !== -1) {
-    return true;
+  if (prefix && dep.indexOf(prefix) === 0) {
+    return contain(array, dep.substring(prefix.length), false);
   }
 
   return false;
