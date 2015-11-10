@@ -60,4 +60,12 @@ describe('babel special parser', () => {
   testCases.forEach(testCase =>
     it(`should ${testCase.name} in .babelrc file`, () =>
       testBabel('.babelrc', testCase.deps, testCase.options)));
+
+  testCases.forEach(testCase =>
+    it(`should ${testCase.name} inside .babelrc file env section`, () =>
+      testBabel('.babelrc', testCase.deps, {
+        env: {
+          production: testCase.options,
+        },
+      })));
 });

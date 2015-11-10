@@ -1,3 +1,7 @@
+function values(object) {
+  return Object.keys(object || {}).map(key => object[key]);
+}
+
 function contain(array, dep, prefix) {
   if (!array) {
     return false;
@@ -16,17 +20,25 @@ function contain(array, dep, prefix) {
   return false;
 }
 
+function filter(deps, options) {
+  const presets = deps.filter(dep =>
+    contain(options.presets, dep, 'babel-preset-'));
+
+  const plugins = deps.filter(dep =>
+    contain(options.plugins, dep, 'babel-plugin-'));
+
+  return presets.concat(plugins);
+}
+
 export default (content, filename, deps) => {
   if (filename === '.babelrc') {
     const options = JSON.parse(content);
 
-    const presets = deps.filter(dep =>
-      contain(options.presets, dep, 'babel-preset-'));
+    const optDeps = filter(deps, options);
+    const envDeps = values(options.env).map(env => filter(deps, env))
+      .reduce((array, item) => array.concat(item), []);
 
-    const plugins = deps.filter(dep =>
-      contain(options.plugins, dep, 'babel-plugin-'));
-
-    return presets.concat(plugins);
+    return optDeps.concat(envDeps);
   }
 
   return [];
