@@ -203,9 +203,9 @@ var opts = {
 Special parser is just one kind of parsers. It has the same interface with parser, with more arguments. The following code snippet is a special parser for [eslint-config-airbnb](https://www.npmjs.com/package/eslint-config-airbnb) package:
 
 ```js
-function airbnbEslintConfig(content, filename, deps, dir) {
-  var basename = path.basename(filename);
-  if (basename === '.eslintrc' && deps.indexOf('eslint-config-airbnb') !== -1) {
+function airbnbEslintConfig(content, filePath, deps, dir) {
+  var filename = path.basename(filePath);
+  if (filename === '.eslintrc' && deps.indexOf('eslint-config-airbnb') !== -1) {
     var eslintConfig = JSON.parser(content);
     if (eslintConfig.extends === 'airbnb') {
       return ['eslint-config-airbnb', 'eslint', 'babel-eslint', 'eslint-plugin-react'];
@@ -219,11 +219,11 @@ function airbnbEslintConfig(content, filename, deps, dir) {
 As seen from the code snippet, there are four parameters passed into the *special* parser:
 
 - Content, same as normal parser, the file content.
-- Filename, the file name.
+- FilePath, the file path, use `path.basename` to retrieve the file name.
 - Deps, an array containing the package dependencies (including devDependencies unless `withoutDev` option is `true`).
 - Dir, the checking root directory passed from API or CLI.
 
-Pay attention that, special parser will match **all** files, please do filename matching **by yourself** and only parse content only when necessary. In regards to the returning value, both AST node or plain string array are OK as a normal parser.
+Pay attention that, special parser will match **all** files, please do file path or file name matching **by yourself** and only parse content only when necessary. In regards to the returning value, both AST node or plain string array are OK as a normal parser.
 
 ---
 
