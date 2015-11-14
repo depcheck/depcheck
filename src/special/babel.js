@@ -1,3 +1,5 @@
+import path from 'path';
+
 function values(object) {
   return Object.keys(object || {}).map(key => object[key]);
 }
@@ -38,7 +40,9 @@ function getFromOptions(deps, options) {
   return optDeps.concat(envDeps);
 }
 
-export default (content, filename, deps) => {
+export default (content, filePath, deps) => {
+  const filename = path.basename(filePath);
+
   if (filename === '.babelrc') {
     const options = JSON.parse(content);
     return getFromOptions(deps, options);

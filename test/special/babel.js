@@ -62,7 +62,7 @@ describe('babel special parser', () => {
       presets: ['es2015'],
     });
 
-    const result = parse(content, '.babelrc', ['babel-preset-es2015', 'dep']);
+    const result = parse(content, '/path/to/.babelrc', ['babel-preset-es2015', 'dep']);
     result.should.deepEqual(['babel-preset-es2015']);
   });
 
