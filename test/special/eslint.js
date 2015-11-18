@@ -1,6 +1,7 @@
 /* global describe, it */
 
 import 'should';
+import yaml from 'js-yaml';
 import eslintSpecialParser from '../../src/special/eslint';
 
 const testCases = [
@@ -66,6 +67,14 @@ describe('eslint special parser', () => {
     testCases.forEach(testCase =>
       it(`should ${testCase.name}`, () => {
         const content = JSON.stringify(testCase.content);
+        const result = eslintSpecialParser(content, '/path/to/.eslintrc');
+        result.should.deepEqual(testCase.expected);
+      })));
+
+  describe('with YAML format', () =>
+    testCases.forEach(testCase =>
+      it(`should ${testCase.name}`, () => {
+        const content = yaml.safeDump(testCase.content);
         const result = eslintSpecialParser(content, '/path/to/.eslintrc');
         result.should.deepEqual(testCase.expected);
       })));

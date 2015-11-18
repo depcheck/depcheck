@@ -1,4 +1,22 @@
 import path from 'path';
+import yaml from 'js-yaml';
+
+function parse(content) {
+  try {
+    return JSON.parse(content);
+  } catch (error) {
+    // not JSON format
+  }
+
+  try {
+    return yaml.safeLoad(content);
+  } catch (error) {
+    // not YAML format
+  }
+
+  // parse fail, return nothing
+  return {};
+}
 
 function wrapToArray(obj) {
   if (!obj) {
@@ -24,7 +42,7 @@ function checkAirbnb(configs) {
 export default (content, filename) => {
   const basename = path.basename(filename);
   if (basename === '.eslintrc') {
-    const configs = wrapToArray(JSON.parse(content).extends);
+    const configs = wrapToArray(parse(content).extends);
 
     const airbnbResult = checkAirbnb(configs);
     if (airbnbResult) {
