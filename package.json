@@ -39,7 +39,7 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "babel-runtime": "^5.8.34",
-    "babylon": "^5.8.29",
+    "babylon": "^6.1.21",
     "deps-regex": "^0.1.4",
     "js-yaml": "^3.4.2",
     "minimatch": "^3.0.0",
