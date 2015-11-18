@@ -5,6 +5,6 @@ export default content =>
     sourceType: 'module',
 
     // Enable all possible babylon plugins.
-    // Because the guys using React always want the newest syntax.
-    plugins: ['*', 'jsx'],
+    // Because we only parse them, not evaluate any code, it is safe to do so.
+    plugins: ['*'],
   });
