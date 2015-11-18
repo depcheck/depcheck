@@ -1,6 +1,4 @@
 {
-  "extends": "airbnb/base",
-  "rules": {
-    "no-multiple-empty-lines": [2, {"max": 1}]
-  }
+  "parser": "babel-eslint",
+  "extends": "airbnb/base"
 }
