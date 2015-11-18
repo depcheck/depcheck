@@ -55,6 +55,15 @@ const testCases = [
       'eslint-plugin-react',
     ],
   },
+  {
+    name: 'detect specific parser',
+    content: {
+      parser: 'babel-eslint',
+    },
+    expected: [
+      'babel-eslint',
+    ],
+  },
 ];
 
 describe('eslint special parser', () => {

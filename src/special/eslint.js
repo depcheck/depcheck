@@ -36,20 +36,19 @@ function checkAirbnb(configs) {
     return ['eslint-config-airbnb'];
   }
 
-  return false;
+  return [];
 }
 
 export default (content, filename) => {
   const basename = path.basename(filename);
   if (basename === '.eslintrc') {
-    const configs = wrapToArray(parse(content).extends);
+    const config = parse(content);
+    const parser = wrapToArray(config.parser);
+    const presets = wrapToArray(config.extends);
 
-    const airbnbResult = checkAirbnb(configs);
-    if (airbnbResult) {
-      return airbnbResult;
-    }
+    const airbnbResult = checkAirbnb(presets);
 
-    return [];
+    return parser.concat(airbnbResult);
   }
 
   return [];
