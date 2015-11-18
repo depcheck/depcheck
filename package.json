@@ -12,14 +12,14 @@
   },
   "scripts": {
     "component": "babel-node ./build/component.js > ./dist/component.json",
-    "compile": "babel --optional runtime src/ -d dist/",
-    "depcheck": "node ./bin/depcheck --ignore-bin-package=false --specials=bin,eslint",
+    "compile": "babel src/ -d dist/",
+    "depcheck": "node ./bin/depcheck --ignore-bin-package=false --specials=bin,eslint,babel",
     "depcheck-web": "node ./bin/depcheck --ignore-bin-package=false --specials=bin,eslint --web-report",
     "patch-version": "babel-node ./build/patch-version.js",
     "prepublish": "npm run compile && npm run component",
     "lint": "eslint ./src ./test ./build",
-    "test": "mocha --compilers js:babel/register ./test ./test/special",
-    "test-coverage": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha -- ./test ./test/special"
+    "test": "babel-node node_modules/mocha/bin/_mocha ./test ./test/special",
+    "test-coverage": "babel-node node_modules/isparta/bin/isparta cover node_modules/mocha/bin/_mocha -- ./test ./test/special"
   },
   "author": [
     "Djordje Lukic <lukic.djordje@gmail.com>",
@@ -38,7 +38,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "babel-runtime": "^5.8.25",
+    "babel-runtime": "^5.8.34",
     "babylon": "^5.8.29",
     "deps-regex": "^0.1.4",
     "js-yaml": "^3.4.2",
@@ -49,12 +49,16 @@
     "yargs": "^3.26.0"
   },
   "devDependencies": {
-    "babel": "^5.8.23",
+    "babel-cli": "^6.1.1",
     "babel-eslint": "^4.1.3",
+    "babel-plugin-add-module-exports": "^0.1.1",
+    "babel-plugin-transform-runtime": "^6.1.18",
+    "babel-preset-es2015": "^6.0.15",
+    "babel-preset-stage-2": "^6.0.15",
     "codecov.io": "^0.1.6",
     "eslint": "^1.7.3",
     "eslint-config-airbnb": "0.1.0",
-    "isparta": "^3.0.4",
+    "isparta": "^4.0.0",
     "mocha": "^2.1.0",
     "should": "^7.1.0"
   }

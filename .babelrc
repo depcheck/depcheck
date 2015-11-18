@@ -1,0 +1,10 @@
+{
+  "plugins": [
+    "add-module-exports",
+    "transform-runtime"
+  ],
+  "presets": [
+    "es2015",
+    "stage-2"
+  ]
+}
