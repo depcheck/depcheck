@@ -63,6 +63,12 @@ describe('eslint special parser', () => {
     result.should.deepEqual([]);
   });
 
+  it(`should handle parse error`, () => {
+    const content = '{ this is an invalid JSON string';
+    const result = eslintSpecialParser(content, '/path/to/.eslintrc');
+    result.should.deepEqual([]);
+  });
+
   describe('with JSON format', () =>
     testCases.forEach(testCase =>
       it(`should ${testCase.name}`, () => {
