@@ -44,11 +44,12 @@ export default (content, filename) => {
   if (basename === '.eslintrc') {
     const config = parse(content);
     const parser = wrapToArray(config.parser);
+    const plugins = wrapToArray(config.plugins).map(plugin => `eslint-plugin-${plugin}`);
     const presets = wrapToArray(config.extends);
 
     const airbnbResult = checkAirbnb(presets);
 
-    return parser.concat(airbnbResult);
+    return parser.concat(plugins).concat(airbnbResult);
   }
 
   return [];

@@ -64,6 +64,15 @@ const testCases = [
       'babel-eslint',
     ],
   },
+  {
+    name: 'detect specific plugins',
+    content: {
+      plugins: ['mocha'],
+    },
+    expected: [
+      'eslint-plugin-mocha',
+    ],
+  },
 ];
 
 describe('eslint special parser', () => {
