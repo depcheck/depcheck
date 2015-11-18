@@ -39,6 +39,14 @@ function checkAirbnb(configs) {
   return [];
 }
 
+function checkStandard(configs) {
+  if (configs.indexOf('standard') !== -1) {
+    return ['eslint-config-standard', 'eslint-plugin-standard'];
+  }
+
+  return [];
+}
+
 export default (content, filename) => {
   const basename = path.basename(filename);
   if (basename === '.eslintrc') {
@@ -47,9 +55,11 @@ export default (content, filename) => {
     const plugins = wrapToArray(config.plugins).map(plugin => `eslint-plugin-${plugin}`);
     const presets = wrapToArray(config.extends);
 
+    // check presets
     const airbnbResult = checkAirbnb(presets);
+    const standardResult = checkStandard(presets);
 
-    return parser.concat(plugins).concat(airbnbResult);
+    return parser.concat(plugins).concat(airbnbResult).concat(standardResult);
   }
 
   return [];

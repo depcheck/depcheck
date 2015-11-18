@@ -18,6 +18,16 @@ const testCases = [
     expected: [],
   },
   {
+    name: 'handle the `standard` config',
+    content: {
+      extends: 'standard',
+    },
+    expected: [
+      'eslint-config-standard',
+      'eslint-plugin-standard',
+    ],
+  },
+  {
     name: 'handle the `airbnb` config',
     content: {
       extends: 'airbnb',
