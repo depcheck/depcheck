@@ -27,36 +27,31 @@ describe('eslint special parser', () => {
     const content = JSON.stringify({ extends: 'airbnb' });
     const result = eslintSpecialParser(content, '/path/to/.eslintrc');
 
-    result.should.have.length(4);
+    result.should.have.length(2);
     result.should.containEql('eslint-config-airbnb');
-    result.should.containEql('babel-eslint');
     result.should.containEql('eslint-plugin-react');
-    result.should.containEql('eslint');
   });
 
   it('should handle the `airbnb/base` config', () => {
     const content = JSON.stringify({ extends: 'airbnb/base' });
     const result = eslintSpecialParser(content, '/path/to/.eslintrc');
 
-    result.should.have.length(3);
+    result.should.have.length(1);
     result.should.containEql('eslint-config-airbnb');
-    result.should.containEql('babel-eslint');
-    result.should.containEql('eslint');
   });
 
   it('should handle the `airbnb/legacy` config', () => {
     const content = JSON.stringify({ extends: 'airbnb/legacy' });
     const result = eslintSpecialParser(content, '/path/to/.eslintrc');
 
-    result.should.have.length(2);
+    result.should.have.length(1);
     result.should.containEql('eslint-config-airbnb');
-    result.should.containEql('eslint');
   });
 
   it('should detect `airbnb` even multiple configs are used', () => {
     const content = JSON.stringify({ extends: ['airbnb', 'others'] });
     const result = eslintSpecialParser(content, '/path/to/.eslintrc');
 
-    result.should.have.length(4);
+    result.should.have.length(2);
   });
 });

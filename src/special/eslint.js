@@ -12,11 +12,10 @@ function wrapToArray(obj) {
 
 function checkAirbnb(configs) {
   if (configs.indexOf('airbnb') !== -1) {
-    return ['eslint-config-airbnb', 'babel-eslint', 'eslint-plugin-react', 'eslint'];
-  } else if (configs.indexOf('airbnb/base') !== -1) {
-    return ['eslint-config-airbnb', 'babel-eslint', 'eslint'];
-  } else if (configs.indexOf('airbnb/legacy') !== -1) {
-    return ['eslint-config-airbnb', 'eslint'];
+    return ['eslint-config-airbnb', 'eslint-plugin-react'];
+  } else if (configs.indexOf('airbnb/base') !== -1 ||
+             configs.indexOf('airbnb/legacy') !== -1) {
+    return ['eslint-config-airbnb'];
   }
 
   return false;
