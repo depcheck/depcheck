@@ -38,7 +38,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "babel-runtime": "^5.8.34",
+    "babel-runtime": "^6.2.0",
     "babylon": "^6.1.21",
     "deps-regex": "^0.1.4",
     "js-yaml": "^3.4.2",
