@@ -3,6 +3,8 @@ sudo: false
 language: node_js
 
 node_js:
+  - 0.12
+  - 3
   - 4
   - 5
 
