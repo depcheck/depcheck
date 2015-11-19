@@ -8,7 +8,7 @@ function recursive(ast, visited) {
 
   if (Array.isArray(ast)) {
     return nodes.concat(...ast.map(node => recursive(node, visited)));
-  } else if (ast && typeof ast === 'object') {
+  } else if (ast && ast instanceof Object) {
     return nodes.concat(...Object.keys(ast)
       .filter(key => key !== 'tokens' && key !== 'comments')
       .map(key => recursive(ast[key], visited)));
