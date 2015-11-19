@@ -22,6 +22,43 @@ const testCases = [
       ],
     },
   },
+  {
+    name: 'recognize duplicated loader names',
+    deps: ['jsx-loader'],
+    module: {
+      loaders: [
+        { test: /\.js$/, loader: 'jsx' },
+        { test: /\.jsx$/, loader: 'jsx' },
+      ],
+    },
+  },
+  {
+    name: 'recognize multiple webpack loaders concatenated with exclamation',
+    deps: ['style-loader', 'css-loader'],
+    module: {
+      loaders: [
+        { test: /\.css$/, loader: 'style!css' },
+      ],
+    },
+  },
+  {
+    name: 'recognize multiple webpack loaders within loaders property',
+    deps: ['style-loader', 'css-loader'],
+    module: {
+      loaders: [
+        { test: /\.css$/, loaders: ['style', 'css'] },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack loader with query parameters',
+    deps: ['url-loader'],
+    module: {
+      loaders: [
+        { test: /\.png$/, loader: 'url-loader?mimetype=image/png' },
+      ],
+    },
+  },
 ];
 
 function testWebpack(filename, deps, module) {
