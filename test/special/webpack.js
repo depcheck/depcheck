@@ -13,6 +13,15 @@ const testCases = [
       ],
     },
   },
+  {
+    name: 'recognize single short-name webpack loader',
+    deps: ['jade-loader'],
+    module: {
+      loaders: [
+        { test: /\.jade$/, loader: 'jade' },
+      ],
+    },
+  },
 ];
 
 function testWebpack(filename, deps, module) {
