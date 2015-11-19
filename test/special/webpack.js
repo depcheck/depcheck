@@ -59,6 +59,18 @@ const testCases = [
       ],
     },
   },
+  {
+    name: 'recognize webpack loaders in preLoaders and postLoaders properties',
+    deps: ['pre-webpack-loader', 'post-webpack-loader'],
+    module: {
+      preLoaders: [
+        { test: /\.pre$/, loader: 'pre' },
+      ],
+      postLoaders: [
+        { test: /\.post$/, loader: 'post' },
+      ],
+    },
+  },
 ];
 
 function testWebpack(filename, deps, module) {

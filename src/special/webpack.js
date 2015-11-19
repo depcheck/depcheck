@@ -45,18 +45,24 @@ function normalizeLoader(deps, loader) {
   return names[0];
 }
 
+function getLoaders(deps, loaders) {
+  return (loaders || [])
+    .map(extractLoaders)
+    .reduce(concat, [])
+    .map(loader => stripQueryParameter(loader))
+    .map(loader => normalizeLoader(deps, loader))
+    .filter(loader => loader)
+    .reduce(duplicate, []);
+}
+
 export default (content, filepath, deps) => {
   const filename = path.basename(filepath);
   if (filename === 'webpack.config.js') {
     const module = load(content).module || {};
-    const loaders = module.loaders || [];
-
-    return loaders.map(extractLoaders)
-      .reduce(concat, [])
-      .map(loader => stripQueryParameter(loader))
-      .map(loader => normalizeLoader(deps, loader))
-      .filter(loader => loader)
-      .reduce(duplicate, []);
+    const loaders = getLoaders(deps, module.loaders);
+    const preLoaders = getLoaders(deps, module.preLoaders);
+    const postLoaders = getLoaders(deps, module.postLoaders);
+    return loaders.concat(preLoaders).concat(postLoaders);
   }
 
   return [];
