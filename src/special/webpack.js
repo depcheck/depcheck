@@ -1,17 +1,5 @@
-import vm from 'vm';
 import path from 'path';
-
-function load(code) {
-  const exports = {};
-  const sandbox = {
-    exports,
-    module: { exports },
-  };
-
-  vm.runInNewContext(code, sandbox);
-
-  return sandbox.module.exports;
-}
+import load from '../utils/load';
 
 function concat(array, item) {
   return array.concat(item);
