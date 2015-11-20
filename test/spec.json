@@ -89,6 +89,16 @@
     }
   },
   {
+    "name": "recognize peer dependencies",
+    "module": "peer_dep",
+    "options": {
+    },
+    "expected": {
+      "dependencies": ["unused-dep"],
+      "devDependencies": []
+    }
+  },
+  {
     "name": "recognize nested requires",
     "module": "nested",
     "options": {
