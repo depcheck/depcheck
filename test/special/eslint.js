@@ -11,13 +11,6 @@ const testCases = [
     expected: [],
   },
   {
-    name: 'ignore when `airbnb` is not used `.eslintrc`',
-    content: {
-      extends: 'others',
-    },
-    expected: [],
-  },
-  {
     name: 'handle the `standard` config',
     content: {
       extends: 'standard',
@@ -44,25 +37,6 @@ const testCases = [
     },
     expected: [
       'eslint-config-airbnb',
-    ],
-  },
-  {
-    name: 'handle the `airbnb/legacy` config',
-    content: {
-      extends: 'airbnb/legacy',
-    },
-    expected: [
-      'eslint-config-airbnb',
-    ],
-  },
-  {
-    name: 'detect `airbnb` even multiple configs are used',
-    content: {
-      extends: ['airbnb', 'others'],
-    },
-    expected: [
-      'eslint-config-airbnb',
-      'eslint-plugin-react',
     ],
   },
   {
@@ -101,7 +75,7 @@ describe('eslint special parser', () => {
     testCases.forEach(testCase =>
       it(`should ${testCase.name}`, () => {
         const content = JSON.stringify(testCase.content);
-        const result = eslintSpecialParser(content, '/path/to/.eslintrc');
+        const result = eslintSpecialParser(content, '/path/to/.eslintrc', testCase.expected, __dirname);
         result.should.deepEqual(testCase.expected);
       })));
 
@@ -109,7 +83,7 @@ describe('eslint special parser', () => {
     testCases.forEach(testCase =>
       it(`should ${testCase.name}`, () => {
         const content = yaml.safeDump(testCase.content);
-        const result = eslintSpecialParser(content, '/path/to/.eslintrc');
+        const result = eslintSpecialParser(content, '/path/to/.eslintrc', testCase.expected, __dirname);
         result.should.deepEqual(testCase.expected);
       })));
 });
