@@ -75,8 +75,8 @@ function intersect(array1, array2) {
   return array1.filter(item => array2.indexOf(item) !== -1);
 }
 
-function unique(array) {
-  return array.filter((value, index) => array.indexOf(value) === index);
+function unique(array, item) {
+  return array.indexOf(item) === -1 ? array.concat([item]) : array;
 }
 
 function concat(array, item) {
@@ -88,6 +88,9 @@ function isStringArray(obj) {
 }
 
 function getDependencies(dir, filename, deps, parser, detectors) {
+  const detect = node =>
+    detectors.map(detector => safeDetect(detector, node)).reduce(concat, []);
+
   return new Promise((resolve, reject) => {
     fs.readFile(filename, 'utf8', (error, content) => {
       if (error) {
@@ -106,11 +109,12 @@ function getDependencies(dir, filename, deps, parser, detectors) {
       return ast;
     }
 
-    // matrix looks like [ /* node1 */ [d1, d2], /* node2 */ [d1, d2], ...]
-    const matrix = getNodes(ast).map(node =>
-      [].concat(...detectors.map(detector => safeDetect(detector, node))));
+    const dependencies = getNodes(ast)
+      .map(detect)
+      .reduce(concat, [])
+      .reduce(unique, [])
+      .map(requirePackageName);
 
-    const dependencies = unique([].concat(...matrix)).map(requirePackageName);
     const peerDeps = dependencies
       .map(dep => discoverPeerDep(dep, dir))
       .reduce(concat, []);
@@ -203,7 +207,7 @@ export default function depcheck(rootDir, options, cb) {
   const withoutDev = getOrDefault(options, 'withoutDev');
   const ignoreBinPackage = getOrDefault(options, 'ignoreBinPackage');
   const ignoreMatches = getOrDefault(options, 'ignoreMatches');
-  const ignoreDirs = unique(defaultOptions.ignoreDirs.concat(options.ignoreDirs));
+  const ignoreDirs = defaultOptions.ignoreDirs.concat(options.ignoreDirs).reduce(unique, []);
 
   const detectors = getOrDefault(options, 'detectors');
   const parsers = Object.assign(
