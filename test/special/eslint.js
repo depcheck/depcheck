@@ -59,31 +59,29 @@ const testCases = [
   },
 ];
 
+function testEslint(deps, content) {
+  const result = eslintSpecialParser(
+    content, '/path/to/.eslintrc', deps, __dirname);
+
+  result.should.deepEqual(deps);
+}
+
 describe('eslint special parser', () => {
   it('should ignore when filename is not `.eslintrc`', () => {
     const result = eslintSpecialParser('content', '/a/file');
     result.should.deepEqual([]);
   });
 
-  it(`should handle parse error`, () => {
-    const content = '{ this is an invalid JSON string';
-    const result = eslintSpecialParser(content, '/path/to/.eslintrc');
-    result.should.deepEqual([]);
-  });
+  it(`should handle parse error`, () =>
+    testEslint([], '{ this is an invalid JSON string'));
 
   describe('with JSON format', () =>
     testCases.forEach(testCase =>
-      it(`should ${testCase.name}`, () => {
-        const content = JSON.stringify(testCase.content);
-        const result = eslintSpecialParser(content, '/path/to/.eslintrc', testCase.expected, __dirname);
-        result.should.deepEqual(testCase.expected);
-      })));
+      it(`should ${testCase.name}`, () =>
+        testEslint(testCase.expected, JSON.stringify(testCase.content)))));
 
   describe('with YAML format', () =>
     testCases.forEach(testCase =>
-      it(`should ${testCase.name}`, () => {
-        const content = yaml.safeDump(testCase.content);
-        const result = eslintSpecialParser(content, '/path/to/.eslintrc', testCase.expected, __dirname);
-        result.should.deepEqual(testCase.expected);
-      })));
+      it(`should ${testCase.name}`, () =>
+        testEslint(testCase.expected, yaml.safeDump(testCase.content)))));
 });
