@@ -40,6 +40,45 @@ const testCases = [
     ],
   },
   {
+    name: 'handle config with full name',
+    content: {
+      extends: 'eslint-config-full-name',
+    },
+    expected: [
+      'eslint-config-full-name',
+    ],
+  },
+  {
+    name: 'skip eslint recommended config',
+    content: {
+      extends: 'eslint:recommended',
+    },
+    expected: [],
+  },
+  {
+    name: 'handle config of absolute local path',
+    content: {
+      extends: '/path/to/config',
+    },
+    expected: [],
+  },
+  {
+    name: 'handle config of relative local path',
+    content: {
+      extends: './config',
+    },
+    expected: [],
+  },
+  {
+    name: 'handle peer dependencies from relative path config',
+    content: {
+      extends: './node_modules/eslint-config-standard',
+    },
+    expected: [
+      'eslint-plugin-standard',
+    ],
+  },
+  {
     name: 'detect specific parser',
     content: {
       parser: 'babel-eslint',
