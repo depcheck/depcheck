@@ -5,6 +5,7 @@ import minimatch from 'minimatch';
 import component from './component';
 import getNodes from './utils/get-nodes';
 import requirePackageName from 'require-package-name';
+import discoverPeerDep from './utils/discover-peer-dep';
 
 function constructComponent(source, name) {
   return source[name].reduce((result, current) =>
@@ -78,6 +79,10 @@ function unique(array) {
   return array.filter((value, index) => array.indexOf(value) === index);
 }
 
+function concat(array, item) {
+  return array.concat(item);
+}
+
 function isStringArray(obj) {
   return obj instanceof Array && obj.every(item => typeof item === 'string');
 }
@@ -106,8 +111,11 @@ function getDependencies(dir, filename, deps, parser, detectors) {
       [].concat(...detectors.map(detector => safeDetect(detector, node))));
 
     const dependencies = unique([].concat(...matrix)).map(requirePackageName);
+    const peerDeps = dependencies
+      .map(dep => discoverPeerDep(dep, dir))
+      .reduce(concat, []);
 
-    return dependencies;
+    return dependencies.concat(peerDeps);
   });
 }
 
