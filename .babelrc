@@ -1,7 +1,7 @@
 {
   "plugins": [
     "add-module-exports",
-    "transform-runtime"
+    "transform-object-assign"
   ],
   "presets": [
     "es2015",
