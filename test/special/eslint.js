@@ -11,13 +11,6 @@ const testCases = [
     expected: [],
   },
   {
-    name: 'ignore when `airbnb` is not used `.eslintrc`',
-    content: {
-      extends: 'others',
-    },
-    expected: [],
-  },
-  {
     name: 'handle the `standard` config',
     content: {
       extends: 'standard',
@@ -47,22 +40,42 @@ const testCases = [
     ],
   },
   {
-    name: 'handle the `airbnb/legacy` config',
+    name: 'handle config with full name',
     content: {
-      extends: 'airbnb/legacy',
+      extends: 'eslint-config-full-name',
     },
     expected: [
-      'eslint-config-airbnb',
+      'eslint-config-full-name',
     ],
   },
   {
-    name: 'detect `airbnb` even multiple configs are used',
+    name: 'skip eslint recommended config',
     content: {
-      extends: ['airbnb', 'others'],
+      extends: 'eslint:recommended',
+    },
+    expected: [],
+  },
+  {
+    name: 'handle config of absolute local path',
+    content: {
+      extends: '/path/to/config',
+    },
+    expected: [],
+  },
+  {
+    name: 'handle config of relative local path',
+    content: {
+      extends: './config',
+    },
+    expected: [],
+  },
+  {
+    name: 'handle peer dependencies from relative path config',
+    content: {
+      extends: './node_modules/eslint-config-standard',
     },
     expected: [
-      'eslint-config-airbnb',
-      'eslint-plugin-react',
+      'eslint-plugin-standard',
     ],
   },
   {
@@ -85,31 +98,29 @@ const testCases = [
   },
 ];
 
+function testEslint(deps, content) {
+  const result = eslintSpecialParser(
+    content, '/path/to/.eslintrc', deps, __dirname);
+
+  result.should.deepEqual(deps);
+}
+
 describe('eslint special parser', () => {
   it('should ignore when filename is not `.eslintrc`', () => {
     const result = eslintSpecialParser('content', '/a/file');
     result.should.deepEqual([]);
   });
 
-  it(`should handle parse error`, () => {
-    const content = '{ this is an invalid JSON string';
-    const result = eslintSpecialParser(content, '/path/to/.eslintrc');
-    result.should.deepEqual([]);
-  });
+  it(`should handle parse error`, () =>
+    testEslint([], '{ this is an invalid JSON string'));
 
   describe('with JSON format', () =>
     testCases.forEach(testCase =>
-      it(`should ${testCase.name}`, () => {
-        const content = JSON.stringify(testCase.content);
-        const result = eslintSpecialParser(content, '/path/to/.eslintrc');
-        result.should.deepEqual(testCase.expected);
-      })));
+      it(`should ${testCase.name}`, () =>
+        testEslint(testCase.expected, JSON.stringify(testCase.content)))));
 
   describe('with YAML format', () =>
     testCases.forEach(testCase =>
-      it(`should ${testCase.name}`, () => {
-        const content = yaml.safeDump(testCase.content);
-        const result = eslintSpecialParser(content, '/path/to/.eslintrc');
-        result.should.deepEqual(testCase.expected);
-      })));
+      it(`should ${testCase.name}`, () =>
+        testEslint(testCase.expected, yaml.safeDump(testCase.content)))));
 });
