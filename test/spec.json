@@ -222,6 +222,16 @@
     }
   },
   {
+    "name": "parser jsx syntax in JavaScript file by default",
+    "module": "jsx_js",
+    "options": {
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": []
+    }
+  },
+  {
     "name": "support CoffeeScript syntax",
     "module": "coffee_script",
     "options": {
