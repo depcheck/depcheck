@@ -29,6 +29,18 @@ const testCases = [
     expected: ['binary-package'],
   },
   {
+    name: 'detect package bin without prefix dot',
+    script: 'node_modules/.bin/binary-entry',
+    dependencies: ['binary-package'],
+    expected: ['binary-package'],
+  },
+  {
+    name: 'detect package path without prefix dot',
+    script: 'node_modules/binary-package/bin/binary-exe',
+    dependencies: ['binary-package'],
+    expected: ['binary-package'],
+  },
+  {
     name: 'not report it when it is not used',
     script: 'other-binary-entry',
     dependencies: ['binary-package'],

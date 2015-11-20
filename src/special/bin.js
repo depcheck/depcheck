@@ -19,6 +19,7 @@ function isUsing(dep, bin, value, scripts) {
   return scripts.some(script =>
     script.indexOf(bin) === 0 ||
     script.indexOf(`$(npm bin)/${bin}`) !== -1 ||
+    script.indexOf(`node_modules/.bin/${bin}`) !== -1 ||
     script.indexOf(`./node_modules/.bin/${bin}`) !== -1 ||
     script.indexOf(join('node_modules', dep, value)) !== -1);
 }
