@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "host": "0.0.1",
+    "optional": "0.0.1",
+    "unused-dep": "0.0.1"
+  }
+}
