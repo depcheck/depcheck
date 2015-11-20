@@ -1,5 +1,10 @@
 import path from 'path';
 import yaml from 'js-yaml';
+import discoverPropertyDep from '../utils/discover-property-dep';
+
+function concat(array, item) {
+  return array.concat(item);
+}
 
 function parse(content) {
   try {
@@ -28,38 +33,30 @@ function wrapToArray(obj) {
   return [obj];
 }
 
-function checkAirbnb(configs) {
-  if (configs.indexOf('airbnb') !== -1) {
+function extractPreset(preset, deps, rootDir) {
+  // special check on airbnb config
+  if (preset === 'airbnb') {
     return ['eslint-config-airbnb', 'eslint-plugin-react'];
-  } else if (configs.indexOf('airbnb/base') !== -1 ||
-             configs.indexOf('airbnb/legacy') !== -1) {
-    return ['eslint-config-airbnb'];
   }
 
-  return [];
+  const presetPackage = `eslint-config-${preset.split('/')[0]}`; // TODO follow ESLint resolve logic
+  const peerDeps = discoverPropertyDep(presetPackage, 'peerDependencies', deps, rootDir);
+  const optionalDeps = discoverPropertyDep(presetPackage, 'optionalDependencies', deps, rootDir);
+
+  return [presetPackage].concat(peerDeps).concat(optionalDeps);
 }
 
-function checkStandard(configs) {
-  if (configs.indexOf('standard') !== -1) {
-    return ['eslint-config-standard', 'eslint-plugin-standard'];
-  }
-
-  return [];
-}
-
-export default (content, filename) => {
+export default (content, filename, deps, rootDir) => {
   const basename = path.basename(filename);
   if (basename === '.eslintrc') {
     const config = parse(content);
     const parser = wrapToArray(config.parser);
     const plugins = wrapToArray(config.plugins).map(plugin => `eslint-plugin-${plugin}`);
-    const presets = wrapToArray(config.extends);
+    const presets = wrapToArray(config.extends)
+      .map(preset => extractPreset(preset, deps, rootDir))
+      .reduce(concat, []);
 
-    // check presets
-    const airbnbResult = checkAirbnb(presets);
-    const standardResult = checkStandard(presets);
-
-    return parser.concat(plugins).concat(airbnbResult).concat(standardResult);
+    return parser.concat(plugins).concat(presets);
   }
 
   return [];
