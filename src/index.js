@@ -5,7 +5,7 @@ import minimatch from 'minimatch';
 import component from './component';
 import getNodes from './utils/get-nodes';
 import requirePackageName from 'require-package-name';
-import discoverPeerDep from './utils/discover-peer-dep';
+import discoverPropertyDep from './utils/discover-property-dep';
 
 function constructComponent(source, name) {
   return source[name].reduce((result, current) =>
@@ -116,10 +116,14 @@ function getDependencies(dir, filename, deps, parser, detectors) {
       .map(requirePackageName);
 
     const peerDeps = dependencies
-      .map(dep => discoverPeerDep(dep, dir))
+      .map(dep => discoverPropertyDep(dep, 'peerDependencies', deps, dir))
       .reduce(concat, []);
 
-    return dependencies.concat(peerDeps);
+    const optionalDeps = dependencies
+      .map(dep => discoverPropertyDep(dep, 'optionalDependencies', deps, dir))
+      .reduce(concat, []);
+
+    return dependencies.concat(peerDeps).concat(optionalDeps);
   });
 }
 
