@@ -1,6 +1,8 @@
 import path from 'path';
 import yaml from 'js-yaml';
 import requirePackageName from 'require-package-name';
+
+import load from '../utils/load';
 import discoverPropertyDep from '../utils/discover-property-dep';
 
 function concat(array, item) {
@@ -18,6 +20,12 @@ function parse(content) {
     return yaml.safeLoad(content);
   } catch (error) {
     // not YAML format
+  }
+
+  try {
+    return load(`module.exports = ${content}`);
+  } catch (error) {
+    // not valid JavaScript code
   }
 
   // parse fail, return nothing
