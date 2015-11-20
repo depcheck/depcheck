@@ -34,7 +34,7 @@ const defaultOptions = {
     'bower_components',
   ],
   parsers: {
-    '*.js': availableParsers.es7,
+    '*.js': availableParsers.jsx,
     '*.jsx': availableParsers.jsx,
     '*.coffee': availableParsers.coffee,
     '*.litcoffee': availableParsers.coffee,
