@@ -23,6 +23,12 @@ const testCases = [
     expected: ['binary-package'],
   },
   {
+    name: 'detect packages combined with `npm bin` command',
+    script: '$(npm bin)/binary-entry',
+    dependencies: ['binary-package'],
+    expected: ['binary-package'],
+  },
+  {
     name: 'not report it when it is not used',
     script: 'other-binary-entry',
     dependencies: ['binary-package'],
