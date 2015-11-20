@@ -114,6 +114,11 @@ describe('eslint special parser', () => {
   it(`should handle parse error`, () =>
     testEslint([], '{ this is an invalid JSON string'));
 
+  it(`should handle non-standard JSON content`, () =>
+    testEslint(
+      testCases[1].expected,
+      JSON.stringify(testCases[1].content) + '\n// this is ignored'));
+
   describe('with JSON format', () =>
     testCases.forEach(testCase =>
       it(`should ${testCase.name}`, () =>
