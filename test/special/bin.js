@@ -41,6 +41,12 @@ const testCases = [
     expected: ['binary-package'],
   },
   {
+    name: 'detect binary call with variable set',
+    script: 'NODE_ENV=production binary-entry',
+    dependencies: ['binary-package'],
+    expected: ['binary-package'],
+  },
+  {
     name: 'not report it when it is not used',
     script: 'other-binary-entry',
     dependencies: ['binary-package'],

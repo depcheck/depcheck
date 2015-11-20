@@ -16,12 +16,18 @@ function getBin(dir, dependency) {
 }
 
 function isUsing(dep, bin, value, scripts) {
+  const concretePath = join('node_modules', dep, value);
+  const characteristics = [
+    bin,
+    `$(npm bin)/${bin}`,
+    `node_modules/.bin/${bin}`,
+    `./node_modules/.bin/${bin}`,
+    concretePath,
+    `./${concretePath}`,
+  ];
+
   return scripts.some(script =>
-    script.indexOf(bin) === 0 ||
-    script.indexOf(`$(npm bin)/${bin}`) !== -1 ||
-    script.indexOf(`node_modules/.bin/${bin}`) !== -1 ||
-    script.indexOf(`./node_modules/.bin/${bin}`) !== -1 ||
-    script.indexOf(join('node_modules', dep, value)) !== -1);
+    characteristics.some(char => ` ${script} `.indexOf(` ${char} `) !== -1));
 }
 
 function depsUsedByScripts(deps, scripts, dir) {
