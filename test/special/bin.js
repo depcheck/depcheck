@@ -1,52 +1,99 @@
 /* global describe, it */
 
 import 'should';
-import path from 'path';
-import binSpecialParser from '../../src/special/bin';
+import parse from '../../src/special/bin';
+
+const testCases = [
+  {
+    name: 'detect packages used in scripts',
+    script: 'binary-entry --argument',
+    dependencies: ['binary-package'],
+    expected: ['binary-package'],
+  },
+  {
+    name: 'detect packages used as `.bin` path',
+    script: './node_modules/.bin/binary-entry',
+    dependencies: ['binary-package'],
+    expected: ['binary-package'],
+  },
+  {
+    name: 'detect packages used as package path',
+    script: './node_modules/binary-package/bin/binary-exe',
+    dependencies: ['binary-package'],
+    expected: ['binary-package'],
+  },
+  {
+    name: 'detect packages combined with `npm bin` command',
+    script: '$(npm bin)/binary-entry',
+    dependencies: ['binary-package'],
+    expected: ['binary-package'],
+  },
+  {
+    name: 'detect package bin without prefix dot',
+    script: 'node_modules/.bin/binary-entry',
+    dependencies: ['binary-package'],
+    expected: ['binary-package'],
+  },
+  {
+    name: 'detect package path without prefix dot',
+    script: 'node_modules/binary-package/bin/binary-exe',
+    dependencies: ['binary-package'],
+    expected: ['binary-package'],
+  },
+  {
+    name: 'detect binary call with variable set',
+    script: 'NODE_ENV=production binary-entry',
+    dependencies: ['binary-package'],
+    expected: ['binary-package'],
+  },
+  {
+    name: 'not report it when it is not used',
+    script: 'other-binary-entry',
+    dependencies: ['binary-package'],
+    expected: [],
+  },
+  {
+    name: 'ignore detection when no scripts section',
+    script: false,
+    dependencies: ['binary-package'],
+    expected: [],
+  },
+  {
+    name: 'ignore the dependencies without bin entry',
+    script: 'binary-entry',
+    dependencies: ['eslint-config-standard'],
+    expected: [],
+  },
+];
+
+function testParser(testCase, content, filename) {
+  const result = parse(content, filename, testCase.dependencies, __dirname);
+  result.should.deepEqual(testCase.expected);
+}
 
 describe('bin special parser', () => {
   it('should ignore when filename is not supported', () => {
-    const result = binSpecialParser('content', 'not-supported.txt', [], '/root/dir');
+    const result = parse('content', 'not-supported.txt', [], '/root/dir');
     result.should.deepEqual([]);
   });
 
-  function testBinSpecialParser(filename, serializer) {
-    function testScript(script, dependencies) {
-      const content = serializer(script);
-      const deps = dependencies || ['anybin'];
-      const dir = path.resolve(__dirname, '../fake_modules/bin_js');
-      const result = binSpecialParser(content, filename, deps, dir);
-      return result;
-    }
+  describe('on `package.json`', () =>
+    testCases.forEach(testCase =>
+      it(`should ${testCase.name}`, () => {
+        const content = testCase.script
+          ? JSON.stringify({ scripts: { t: testCase.script } })
+          : '{}';
 
-    it('should detect packages used in scripts', () =>
-      testScript('any --bin').should.deepEqual(['anybin']));
+        testParser(testCase, content, '/path/to/package.json');
+      })));
 
-    it('should detect packages used as `.bin` path', () =>
-      testScript('./node_modules/.bin/any').should.deepEqual(['anybin']));
+  describe('on `.travis.yml`', () =>
+    testCases.forEach(testCase =>
+      it(`should ${testCase.name}`, () => {
+        const content = testCase.script
+          ? `script:\n  - ${testCase.script}`
+          : '';
 
-    it('should detect packages used as package path', () =>
-      testScript('./node_modules/anybin/bin/bin').should.deepEqual(['anybin']));
-
-    it('should not report it when it is not used', () =>
-      testScript('other-bin').should.deepEqual([]));
-
-    it('should ignore detection when no scripts section', () =>
-      testScript(false).should.deepEqual([]));
-
-    it('should ignore the dependencies without bin entry', () =>
-      testScript('no-bin', ['nobin']).should.deepEqual([]));
-  }
-
-  describe('on `package.json`', () => {
-    testBinSpecialParser(
-      '/path/to/package.json',
-      script => JSON.stringify(script ? { scripts: { t: script } } : {}));
-  });
-
-  describe('on `.travis.yml`', () => {
-    testBinSpecialParser(
-      '/path/to/.travis.yml',
-      script => script ? `script:\n  - ${script}` : '');
-  });
+        testParser(testCase, content, '/path/to/.travis.yml');
+      })));
 });
