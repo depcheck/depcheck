@@ -1,6 +1,8 @@
 /* global describe, it */
 
 import 'should';
+import fs from 'fs';
+import path from 'path';
 import parse from '../../src/special/webpack';
 
 const testCases = [
@@ -73,9 +75,19 @@ const testCases = [
   },
 ];
 
+function getTempPath(filename, content) {
+  const tempFolder = path.resolve(__dirname, `temp-${Date.now()}`);
+  const tempPath = path.resolve(tempFolder, filename);
+  fs.mkdirSync(tempFolder);
+  fs.writeFileSync(tempPath, content);
+  return tempPath;
+}
+
 function testWebpack(filename, deps, module) {
   const config = JSON.stringify({ module });
-  const result = parse(`module.exports = ${config}`, filename, deps);
+  const content = `module.exports = ${config}`;
+  const tempPath = getTempPath(filename, content);
+  const result = parse(content, tempPath, deps, __dirname);
   Array.from(result).should.deepEqual(deps); // result is from vm, needs to wrap
 }
 
@@ -86,13 +98,19 @@ describe('webpack special parser', () => {
   });
 
   it('should recognize unused dependencies in webpack configuration', () => {
-    const module = testCases[0].module;
-    const config = JSON.stringify({ module });
-    const result = parse(
-      `module.exports = ${config}`,
-      '/path/to/webpack.config.js',
-      testCases[0].deps.concat(['unused-loader']));
+    const config = JSON.stringify({ module: testCases[0].module });
+    const content = `module.exports = ${config}`;
+    const tempPath = getTempPath('webpack.config.js', content);
+    const deps = testCases[0].deps.concat(['unused-loader']);
+    const result = parse(content, tempPath, deps, __dirname);
+    Array.from(result).should.deepEqual(testCases[0].deps);
+  });
 
+  it('should handle require call to other modules', () => {
+    const config = JSON.stringify({ module: testCases[0].module });
+    const content = `module.exports = ${config}\nrequire('webpack')`;
+    const tempPath = getTempPath('webpack.config.js', content);
+    const result = parse(content, tempPath, testCases[0].deps, __dirname);
     Array.from(result).should.deepEqual(testCases[0].deps);
   });
 

@@ -1,5 +1,4 @@
 import path from 'path';
-import load from '../utils/load';
 
 function concat(array, item) {
   return array.concat(item);
@@ -46,7 +45,7 @@ function getLoaders(deps, loaders) {
 export default (content, filepath, deps) => {
   const filename = path.basename(filepath);
   if (filename === 'webpack.config.js') {
-    const module = load(content).module || {};
+    const module = require(filepath).module || {};
     const loaders = getLoaders(deps, module.loaders);
     const preLoaders = getLoaders(deps, module.preLoaders);
     const postLoaders = getLoaders(deps, module.postLoaders);
