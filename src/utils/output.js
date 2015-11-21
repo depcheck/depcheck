@@ -1,3 +1,11 @@
+function replacer(key, value) {
+  if (value instanceof Error) {
+    return value.toString();
+  }
+
+  return value;
+}
+
 function noUnused(result) {
   return result.dependencies.length === 0
       && result.devDependencies.length === 0;
@@ -11,7 +19,7 @@ function prettify(caption, deps) {
 export default function output(result, log, json) {
   return new Promise(resolve => {
     if (json) {
-      log(JSON.stringify(result));
+      log(JSON.stringify(result, replacer));
     } else if (noUnused(result)) {
       log('No unused dependencies');
     } else {

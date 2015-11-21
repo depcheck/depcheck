@@ -1,5 +1,13 @@
 import path from 'path';
 
+function parse(content) {
+  try {
+    return JSON.parse(content);
+  } catch (error) {
+    return {}; // ignore parse error silently
+  }
+}
+
 function values(object) {
   return Object.keys(object || {}).map(key => object[key]);
 }
@@ -32,7 +40,7 @@ function filter(deps, options) {
   return presets.concat(plugins);
 }
 
-function getFromOptions(deps, options) {
+function checkOptions(deps, options = {}) {
   const optDeps = filter(deps, options);
   const envDeps = values(options.env).map(env => filter(deps, env))
     .reduce((array, item) => array.concat(item), []);
@@ -44,13 +52,13 @@ export default (content, filePath, deps) => {
   const filename = path.basename(filePath);
 
   if (filename === '.babelrc') {
-    const options = JSON.parse(content);
-    return getFromOptions(deps, options);
+    const options = parse(content);
+    return checkOptions(deps, options);
   }
 
   if (filename === 'package.json') {
-    const metadata = JSON.parse(content);
-    return getFromOptions(deps, metadata.babel);
+    const metadata = parse(content);
+    return checkOptions(deps, metadata.babel);
   }
 
   return [];

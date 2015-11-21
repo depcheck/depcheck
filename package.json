@@ -14,6 +14,7 @@
     "component": "babel-node ./build/component.js > ./dist/component.json",
     "compile": "babel src/ -d dist/",
     "depcheck": "node ./bin/depcheck",
+    "depcheck-json": "node ./bin/depcheck --json | babel-node ./build/check-json",
     "patch-version": "babel-node ./build/patch-version.js",
     "prepublish": "npm run compile && npm run component",
     "lint": "eslint ./src ./test ./build",
