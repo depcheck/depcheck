@@ -5,6 +5,11 @@ import parse from '../../src/special/babel';
 
 const testCases = [
   {
+    name: 'handle no options case',
+    deps: [],
+    options: undefined,
+  },
+  {
     name: 'recognize the short-name plugin',
     deps: ['babel-plugin-syntax-jsx'],
     options: {
@@ -47,7 +52,7 @@ const testCases = [
 ];
 
 function testBabel(filename, deps, content) {
-  const result = parse(JSON.stringify(content), filename, deps);
+  const result = parse(content ? JSON.stringify(content) : '', filename, deps);
   result.should.deepEqual(deps);
 }
 
