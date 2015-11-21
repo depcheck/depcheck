@@ -41,7 +41,6 @@
     "deps-regex": "^0.1.4",
     "js-yaml": "^3.4.2",
     "minimatch": "^3.0.0",
-    "request": "^2.65.0",
     "require-package-name": "^2.0.1",
     "walkdir": "0.0.11",
     "yargs": "^3.26.0"
