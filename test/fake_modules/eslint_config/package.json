@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "eslint-config-preset": "0.0.1",
+    "eslint-config-unused": "0.0.1"
+  }
+}

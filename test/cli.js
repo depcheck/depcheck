@@ -180,13 +180,13 @@ describe('depcheck command line', () => {
     }));
 
   it('should find dependencies with special parser', () =>
-    testCli(makeArgv('eslint_airbnb', {
+    testCli(makeArgv('eslint_config', {
       argv: ['--specials=eslint'],
     }))
     .then(({ logs, error, exitCode }) => {
       logs.should.have.length(2);
-      logs[0].should.equal('Unused Dependencies');
-      logs[1].should.containEql('eslint-airbnb-testing');
+      logs[0].should.equal('Unused devDependencies');
+      logs[1].should.containEql('eslint-config-unused');
 
       error.should.be.empty();
       exitCode.should.equal(-1);
