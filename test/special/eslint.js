@@ -11,27 +11,43 @@ const testCases = [
     expected: [],
   },
   {
-    name: 'handle the `standard` config',
+    name: 'detect specific parser',
     content: {
-      extends: 'standard',
+      parser: 'babel-eslint',
     },
     expected: [
-      'eslint-config-standard',
-      'eslint-plugin-standard',
+      'babel-eslint',
     ],
   },
   {
-    name: 'handle the `airbnb` config',
+    name: 'detect specific plugins',
     content: {
-      extends: 'airbnb',
+      plugins: ['mocha'],
     },
     expected: [
-      'eslint-config-airbnb',
-      'eslint-plugin-react',
+      'eslint-plugin-mocha',
     ],
   },
   {
-    name: 'handle the `airbnb/base` config',
+    name: 'handle eslint config with short name',
+    content: {
+      extends: 'preset',
+    },
+    expected: [
+      'eslint-config-preset',
+    ],
+  },
+  {
+    name: 'handle eslint config with full name',
+    content: {
+      extends: 'eslint-config-preset',
+    },
+    expected: [
+      'eslint-config-preset',
+    ],
+  },
+  {
+    name: 'handle eslint config from package module',
     content: {
       extends: 'airbnb/base',
     },
@@ -40,12 +56,23 @@ const testCases = [
     ],
   },
   {
-    name: 'handle config with full name',
+    name: 'handle eslint config with undeclared plugins',
     content: {
-      extends: 'eslint-config-full-name',
+      extends: 'airbnb/react',
     },
     expected: [
-      'eslint-config-full-name',
+      'eslint-config-airbnb',
+      'eslint-plugin-react',
+    ],
+  },
+  {
+    name: 'handle eslint config with nested extends',
+    content: {
+      extends: 'airbnb',
+    },
+    expected: [
+      'eslint-config-airbnb',
+      'eslint-plugin-react',
     ],
   },
   {
@@ -68,33 +95,6 @@ const testCases = [
       extends: './config',
     },
     expected: [],
-  },
-  {
-    name: 'handle peer dependencies from relative path config',
-    content: {
-      extends: './node_modules/eslint-config-standard',
-    },
-    expected: [
-      'eslint-plugin-standard',
-    ],
-  },
-  {
-    name: 'detect specific parser',
-    content: {
-      parser: 'babel-eslint',
-    },
-    expected: [
-      'babel-eslint',
-    ],
-  },
-  {
-    name: 'detect specific plugins',
-    content: {
-      plugins: ['mocha'],
-    },
-    expected: [
-      'eslint-plugin-mocha',
-    ],
   },
 ];
 
