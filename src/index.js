@@ -14,6 +14,10 @@ function constructComponent(source, name) {
     }), {});
 }
 
+function objectValues(object) {
+  return Object.keys(object).map(key => object[key]);
+}
+
 const availableParsers = constructComponent(component, 'parser');
 
 const availableDetectors = constructComponent(component, 'detector');
@@ -45,8 +49,7 @@ const defaultOptions = {
     availableDetectors.requireCallExpression,
     availableDetectors.gruntLoadTaskCallExpression,
   ],
-  specials: [
-  ],
+  specials: objectValues(availableSpecials),
 };
 
 function getOrDefault(opt, key) {
