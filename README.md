@@ -13,6 +13,15 @@ And that is why `depcheck` exists - it's a nifty little tool that looks at your 
 [![Dependency Status](https://david-dm.org/depcheck/depcheck.svg)](https://david-dm.org/depcheck/depcheck)
 [![devDependency Status](https://david-dm.org/depcheck/depcheck/dev-status.svg)](https://david-dm.org/depcheck/depcheck#info=devDependencies)
 
+## Features
+
+- Support ES5, ES6, ES7, JSX and CoffeeScript syntax.
+- Detect using ESLint configuration preset, parser and plugins.
+- Detect using Webpack loaders.
+- Detect Babel presets and plugins.
+- Recognize the packages used in `grunt.tasks.loadNpmTasks` call.
+- Smart to identify the binary package used in commands.
+
 ## Installation
 
 ```
