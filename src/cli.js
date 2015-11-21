@@ -44,7 +44,7 @@ export default function cli(args, env, log, error, exit) {
     ])
     .default({
       'dev': true,
-      'ignore-bin-package': true,
+      'ignore-bin-package': false,
       'web-service': 'https://depcheck.tk',
     })
     .describe('dev', 'Check on devDependecies')

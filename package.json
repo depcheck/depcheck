@@ -13,8 +13,7 @@
   "scripts": {
     "component": "babel-node ./build/component.js > ./dist/component.json",
     "compile": "babel src/ -d dist/",
-    "depcheck": "node ./bin/depcheck --ignore-bin-package=false --specials=bin,eslint,babel",
-    "depcheck-web": "node ./bin/depcheck --ignore-bin-package=false --specials=bin,eslint --web-report",
+    "depcheck": "node ./bin/depcheck",
     "patch-version": "babel-node ./build/patch-version.js",
     "prepublish": "npm run compile && npm run component",
     "lint": "eslint ./src ./test ./build",
