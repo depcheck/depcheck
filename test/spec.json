@@ -160,6 +160,28 @@
     }
   },
   {
+    "name": "report unused bin dependencies if ignoreBinPackage equal false",
+    "module": "bin_js",
+    "options": {
+      "ignoreBinPackage": false
+    },
+    "expected": {
+      "dependencies": ["anybin"],
+      "devDependencies": []
+    }
+  },
+  {
+    "name": "handle dependencies without bin if ignoreBinPackage equal true",
+    "module": "good",
+    "options": {
+      "ignoreBinPackage": true
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": []
+    }
+  },
+  {
     "name": "not ignore bin dependencies when ignoreBinPackage is false",
     "module": "bin_js",
     "options": {
