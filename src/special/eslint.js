@@ -1,12 +1,14 @@
 import path from 'path';
 import yaml from 'js-yaml';
 import requirePackageName from 'require-package-name';
-
 import load from '../utils/load';
-import discoverPropertyDep from '../utils/discover-property-dep';
 
 function concat(array, item) {
   return array.concat(item);
+}
+
+function unique(array, item) {
+  return array.indexOf(item) === -1 ? array.concat([item]) : array;
 }
 
 function parse(content) {
@@ -51,42 +53,49 @@ function resolvePresetPackage(preset, rootDir) {
   } else if (preset.charAt(0) === '@') {
     throw new Error('Not support scoped package in ESLint config.'); // TODO implementation
   } else if (preset.indexOf('eslint-config-') === 0) {
-    return requirePackageName(preset);
+    return preset;
   } else { // eslint-disable-line no-else-return
-    return requirePackageName(`eslint-config-${preset}`);
+    return `eslint-config-${preset}`;
   }
 }
 
-function extractPreset(preset, deps, rootDir) {
-  // eslint recommended config is handled by ESLint itself
-  if (preset === 'eslint:recommended') {
-    return [];
+function loadConfig(preset, rootDir) {
+  const presetPath = path.isAbsolute(preset)
+    ? preset
+    : path.resolve(rootDir, 'node_modules', preset);
+
+  try {
+    return require(presetPath);
+  } catch (error) {
+    return {}; // silently return nothing
   }
+}
 
-  // special check on airbnb config
-  if (preset === 'airbnb') {
-    return ['eslint-config-airbnb', 'eslint-plugin-react'];
-  }
+function checkConfig(config, rootDir) {
+  const parser = wrapToArray(config.parser);
+  const plugins = wrapToArray(config.plugins).map(plugin => `eslint-plugin-${plugin}`);
 
-  const presetPackage = resolvePresetPackage(preset, rootDir);
-  const peerDeps = discoverPropertyDep(presetPackage, 'peerDependencies', deps, rootDir);
-  const optionalDeps = discoverPropertyDep(presetPackage, 'optionalDependencies', deps, rootDir);
-  const presetDep = path.isAbsolute(presetPackage) ? [] : [presetPackage];
+  const presets = wrapToArray(config.extends)
+    .filter(preset => preset !== 'eslint:recommended')
+    .map(preset => resolvePresetPackage(preset, rootDir));
 
-  return presetDep.concat(peerDeps).concat(optionalDeps);
+  const presetPackages = presets
+    .filter(preset => !path.isAbsolute(preset))
+    .map(requirePackageName);
+
+  const presetDeps = presets
+    .map(preset => loadConfig(preset, rootDir))
+    .map(presetConfig => checkConfig(presetConfig, rootDir))
+    .reduce(concat, []);
+
+  return parser.concat(plugins).concat(presetPackages).concat(presetDeps);
 }
 
 export default (content, filename, deps, rootDir) => {
   const basename = path.basename(filename);
   if (basename === '.eslintrc') {
     const config = parse(content);
-    const parser = wrapToArray(config.parser);
-    const plugins = wrapToArray(config.plugins).map(plugin => `eslint-plugin-${plugin}`);
-    const presets = wrapToArray(config.extends)
-      .map(preset => extractPreset(preset, deps, rootDir))
-      .reduce(concat, []);
-
-    return parser.concat(plugins).concat(presets);
+    return checkConfig(config, rootDir).reduce(unique, []);
   }
 
   return [];
