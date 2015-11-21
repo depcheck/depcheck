@@ -43,7 +43,6 @@ function testCli(argv) {
   return new Promise(resolve =>
     cli(
       argv,
-      {},
       data => log = data,
       data => error = data,
       exitCode => resolve({
