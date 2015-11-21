@@ -149,9 +149,10 @@
     }
   },
   {
-    "name": "exclude bin dependencies",
+    "name": "exclude bin dependencies if ignoreBinPackage equal true",
     "module": "bin_js",
     "options": {
+      "ignoreBinPackage": true
     },
     "expected": {
       "dependencies": [],

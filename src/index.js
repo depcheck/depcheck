@@ -22,7 +22,7 @@ const availableSpecials = constructComponent(component, 'special');
 
 const defaultOptions = {
   withoutDev: false,
-  ignoreBinPackage: true,
+  ignoreBinPackage: false,
   ignoreMatches: [
   ],
   ignoreDirs: [
