@@ -75,8 +75,12 @@ const testCases = [
   },
 ];
 
+function random() {
+  return Math.random().toString().substring(2);
+}
+
 async function getTempPath(filename, content) {
-  const tempFolder = path.resolve(__dirname, `temp-${Date.now()}`);
+  const tempFolder = path.resolve(__dirname, `temp-${random()}`);
   const tempPath = path.resolve(tempFolder, filename);
   await fsp.mkdir(tempFolder);
   await fsp.writeFile(tempPath, content);
