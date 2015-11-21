@@ -83,12 +83,17 @@ function getTempPath(filename, content) {
   return tempPath;
 }
 
-function testWebpack(filename, deps, module) {
-  const config = JSON.stringify({ module });
-  const content = `module.exports = ${config}`;
+function removeTempFile(filepath) {
+  const fileFolder = path.dirname(filepath);
+  fs.unlinkSync(filepath);
+  fs.rmdirSync(fileFolder);
+}
+
+function testWebpack(filename, content, deps, expectedDeps) {
   const tempPath = getTempPath(filename, content);
   const result = parse(content, tempPath, deps, __dirname);
-  Array.from(result).should.deepEqual(deps); // result is from vm, needs to wrap
+  removeTempFile(tempPath);
+  Array.from(result).should.deepEqual(expectedDeps);
 }
 
 describe('webpack special parser', () => {
@@ -100,21 +105,20 @@ describe('webpack special parser', () => {
   it('should recognize unused dependencies in webpack configuration', () => {
     const config = JSON.stringify({ module: testCases[0].module });
     const content = `module.exports = ${config}`;
-    const tempPath = getTempPath('webpack.config.js', content);
     const deps = testCases[0].deps.concat(['unused-loader']);
-    const result = parse(content, tempPath, deps, __dirname);
-    Array.from(result).should.deepEqual(testCases[0].deps);
+    testWebpack('webpack.config.js', content, deps, testCases[0].deps);
   });
 
   it('should handle require call to other modules', () => {
     const config = JSON.stringify({ module: testCases[0].module });
     const content = `module.exports = ${config}\nrequire('webpack')`;
-    const tempPath = getTempPath('webpack.config.js', content);
-    const result = parse(content, tempPath, testCases[0].deps, __dirname);
-    Array.from(result).should.deepEqual(testCases[0].deps);
+    testWebpack('webpack.config.js', content, testCases[0].deps, testCases[0].deps);
   });
 
   testCases.forEach(testCase =>
-    it(`should ${testCase.name} in configuration file`, () =>
-      testWebpack('webpack.config.js', testCase.deps, testCase.module)));
+    it(`should ${testCase.name} in configuration file`, () => {
+      const config = JSON.stringify({ module: testCase.module });
+      const content = `module.exports = ${config}`;
+      testWebpack('webpack.config.js', content, testCase.deps, testCase.deps);
+    }));
 });
