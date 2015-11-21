@@ -9,9 +9,17 @@ function toKeyValuePair(object) {
   return Object.keys(object).map(key => ({ key, value: object[key] }));
 }
 
+function loadMetadata(dep, dir) {
+  try {
+    const packagePath = path.resolve(dir, 'node_modules', dep, 'package.json');
+    return require(packagePath);
+  } catch (error) {
+    return {}; // ignore silently
+  }
+}
+
 function toMetadata(dep, dir) {
-  const packagePath = path.resolve(dir, 'node_modules', dep, 'package.json');
-  const metadata = require(packagePath);
+  const metadata = loadMetadata(dep, dir);
   const binaryLookup = metadata.bin || {};
   const binaries = toKeyValuePair(binaryLookup);
 

@@ -59,9 +59,15 @@ const testCases = [
     expected: [],
   },
   {
-    name: 'ignore the dependencies without bin entry',
+    name: 'ignore dependency without bin entry',
     script: 'binary-entry',
-    dependencies: ['eslint-config-standard'],
+    dependencies: ['binary-no-bin'],
+    expected: [],
+  },
+  {
+    name: 'handle dependency without package.json',
+    script: 'binary-entry',
+    dependencies: ['binary-no-package'],
     expected: [],
   },
 ];
