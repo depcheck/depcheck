@@ -102,4 +102,9 @@ describe('bin special parser', () => {
 
         testParser(testCase, content, '/path/to/.travis.yml');
       })));
+
+  it('should check lifecycle commands in `.travis.yml` file', () => {
+    const content = `before_deploy:\n  - ${testCases[0].script}`;
+    testParser(testCases[0], content, '/path/to/.travis.yml');
+  });
 });

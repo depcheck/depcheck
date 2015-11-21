@@ -1,6 +1,23 @@
 import path from 'path';
 import yaml from 'js-yaml';
 
+const travisCommands = [
+  // Reference: http://docs.travis-ci.com/user/customizing-the-build/#The-Build-Lifecycle
+  'before_install',
+  'install',
+  'before_script',
+  'script',
+  'after_success or after_failure',
+  'before_deploy',
+  'deploy',
+  'after_deploy',
+  'after_script',
+];
+
+function concat(array, item) {
+  return array.concat(item);
+}
+
 function getObjectValues(object) {
   return Object.keys(object).map(key => object[key]);
 }
@@ -62,7 +79,7 @@ export default (content, filename, deps, dir) => {
     return getUsedDeps(deps, scripts, dir);
   } else if (basename === '.travis.yml') {
     const metadata = yaml.safeLoad(content) || {};
-    const scripts = metadata.script || [];
+    const scripts = travisCommands.map(cmd => metadata[cmd] || []).reduce(concat, []);
     return getUsedDeps(deps, scripts, dir);
   }
 

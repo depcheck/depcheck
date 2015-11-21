@@ -15,7 +15,6 @@
     "compile": "babel src/ -d dist/",
     "depcheck": "node ./bin/depcheck",
     "depcheck-json": "node ./bin/depcheck --json | babel-node ./build/check-json",
-    "patch-version": "babel-node ./build/patch-version.js",
     "prepublish": "npm run compile && npm run component",
     "lint": "eslint ./src ./test ./build",
     "test": "babel-node node_modules/mocha/bin/_mocha ./test ./test/special --timeout 10000",
@@ -59,6 +58,7 @@
     "fs-promise": "^0.3.1",
     "isparta": "^4.0.0",
     "mocha": "^2.1.0",
+    "patch-version": "0.0.2",
     "should": "^7.1.0"
   }
 }
