@@ -23,7 +23,7 @@ deploy:
   skip_cleanup: true
   email: "lijunle@gmail.com"
   api_key:
-    secure: "cSC/2o1T1T5CswkA1UwoLRgH7QimCZUHFX/KwRPwS9p/8oJhbuUOtiZ3mHX9bkCav3SUX78keiIG4ciALrCHGUz2DvJ5DTCW+2Myl+yn6JP9UEuv37bLsJQSjPcZ/SLJp7ml/xy+i/S8sJPhSP7Etc8iqLPAvoCV3HGCoCEw1H8="
+    secure: "dEwnWZyvE95Amn3Ivcftk9wlDnRrNS2roVXREamsEJI3Rdilim7iHsINeVW/hZIv6VGepETKdSZ+nbyY/Du4rFkMyimHFBM9KkHgw46J7cf3juwZChzna/qOY+DniwGgikFscL+XAuKNx6Rv8xX4dD28TNoYzL00AtDhHJKla3E="
   on:
     tags: true
     node: 5
