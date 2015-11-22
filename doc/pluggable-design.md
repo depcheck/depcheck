@@ -227,4 +227,4 @@ Pay attention that, special parser will match **all** files, please do file path
 
 ---
 
-If you have any ideas or suggestions, please comment on [this issue page](https://github.com/lijunle/depcheck-es6/issues/27).
+If you have any ideas or suggestions, please [open an issue](https://github.com/depcheck/depcheck/issues/new).
