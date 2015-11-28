@@ -109,6 +109,26 @@ describe('depcheck command line', () => {
       exitCode.should.equal(-1);
     }));
 
+  it('should output call stack for invalid files in JSON view', () =>
+    testCli(makeArgv('bad_js', { json: true }))
+    .then(({ log, error, exitCode }) => {
+      const json = JSON.parse(log);
+      json.should.have.properties([
+        'dependencies',
+        'devDependencies',
+        'invalidFiles',
+        'invalidDirs',
+      ]);
+
+      const badJsPath = path.resolve(__dirname, './fake_modules/bad_js/index.js');
+      json.invalidFiles.should.have.property(badJsPath)
+        .startWith('SyntaxError: Unexpected token')
+        .and.containEql('\n    at '); // call stack information
+
+      error.should.be.empty();
+      exitCode.should.equal(0);
+    }));
+
   it('should output no unused dependencies when happen', () =>
     testCli([path.resolve(__dirname, './fake_modules/good')])
     .then(({ log, error, exitCode }) => {

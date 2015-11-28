@@ -1,6 +1,6 @@
 function replacer(key, value) {
   if (value instanceof Error) {
-    return value.toString();
+    return value.stack;
   }
 
   return value;
