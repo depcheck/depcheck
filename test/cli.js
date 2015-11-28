@@ -79,11 +79,19 @@ describe('depcheck command line', () => {
     testCli(['--help'])
     .then(({ log, error, exitCode }) => {
       const help = log.split('\n').map(line => line.trim()).filter(line => line);
-      const options = ['--help', '--json', '--dev', '--ignores'];
+      const options = ['--help', '--version', '--json', '--dev', '--ignores'];
 
       options.forEach(option =>
         help.some(doc => doc.startsWith(option)).should.be.true());
 
+      error.should.be.empty();
+      exitCode.should.equal(0);
+    }));
+
+  it('should output help message', () =>
+    testCli(['--version'])
+    .then(({ log, error, exitCode }) => {
+      log.should.be.equal('0.0.1');
       error.should.be.empty();
       exitCode.should.equal(0);
     }));
