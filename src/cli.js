@@ -3,6 +3,7 @@ import path from 'path';
 import yargs from 'yargs';
 import depcheck from './index';
 import output from './utils/output';
+import { version } from '../package.json';
 
 function checkPathExist(dir) {
   return new Promise((resolve, reject) =>
@@ -49,10 +50,14 @@ export default function cli(args, log, error, exit) {
     .describe('parsers', 'Comma separated glob:pasers pair list')
     .describe('detectors', 'Comma separated detector list')
     .describe('specials', 'Comma separated special parser list')
+    .describe('version', `Show the version, which is ${version}`)
     .describe('help', 'Show this help message');
 
   if (opt.argv.help) {
     log(opt.help());
+    exit(0);
+  } else if (opt.argv.version) {
+    log(version);
     exit(0);
   } else {
     const dir = opt.argv._[0] || '.';
