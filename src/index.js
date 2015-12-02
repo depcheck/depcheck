@@ -150,7 +150,7 @@ function checkFile(dir, filename, deps, devDeps, parsers, detectors) {
       })));
 }
 
-function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
+function checkDirectory(dir, rootDir, ignoreDirs, deps, devDeps, parsers, detectors) {
   return new Promise(resolve => {
     const promises = [];
     const finder = walkdir(dir, { 'no_recurse': true });
@@ -158,11 +158,11 @@ function checkDirectory(dir, ignoreDirs, deps, devDeps, parsers, detectors) {
     finder.on('directory', subdir =>
       ignoreDirs.indexOf(path.basename(subdir)) === -1 &&
       promises.push(
-        checkDirectory(subdir, ignoreDirs, deps, devDeps, parsers, detectors)));
+        checkDirectory(subdir, rootDir, ignoreDirs, deps, devDeps, parsers, detectors)));
 
     finder.on('file', filename =>
       promises.push(
-        ...checkFile(dir, filename, deps, devDeps, parsers, detectors)));
+        ...checkFile(rootDir, filename, deps, devDeps, parsers, detectors)));
 
     finder.on('error', (dirPath, error) =>
       promises.push(Promise.resolve({
@@ -227,7 +227,7 @@ export default function depcheck(rootDir, options, cb) {
   const deps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies);
   const devDeps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, withoutDev ? [] : devDependencies);
 
-  return checkDirectory(rootDir, ignoreDirs, deps, devDeps, parsers, detectors)
+  return checkDirectory(rootDir, rootDir, ignoreDirs, deps, devDeps, parsers, detectors)
     .then(cb);
 }
 
