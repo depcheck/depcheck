@@ -99,6 +99,16 @@
     }
   },
   {
+    "name": "recognize nested peer dependencies",
+    "module": "peer_dep_nested",
+    "options": {
+    },
+    "expected": {
+      "dependencies": ["unused-nested-dep"],
+      "devDependencies": []
+    }
+  },
+  {
     "name": "recognize optional dependencies",
     "module": "optional_dep",
     "options": {
