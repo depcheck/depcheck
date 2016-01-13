@@ -29,6 +29,8 @@ And that is why `depcheck` exists - it's a nifty little tool that looks at your 
 npm install depcheck -g
 ```
 
+*Notice:* depcheck needs node.js >= 0.12.
+
 ## Usage
 
 ```
