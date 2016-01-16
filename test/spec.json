@@ -71,6 +71,17 @@
     }
   },
   {
+    "name": "ignore the missing dependencies in nested module",
+    "module": "missing_nested",
+    "options": {
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": [],
+      "missing": ["outer-missing-dep"]
+    }
+  },
+  {
     "name": "find grunt dependencies",
     "module": "grunt",
     "options": {
