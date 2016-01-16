@@ -74,10 +74,6 @@ function minus(array1, array2) {
   return array1.filter(item => array2.indexOf(item) === -1);
 }
 
-function intersect(array1, array2) {
-  return array1.filter(item => array2.indexOf(item) !== -1);
-}
-
 function unique(array, item) {
   return array.indexOf(item) === -1 ? array.concat([item]) : array;
 }
@@ -139,11 +135,8 @@ function checkFile(dir, filename, deps, devDeps, parsers, detectors) {
   return targets.map(parser =>
     getDependencies(dir, filename, deps.concat(devDeps), parser, detectors)
       .then(used => ({
-        dependencies: minus(deps, used),
-        devDependencies: minus(devDeps, used),
+        used,
       }), error => ({
-        dependencies: deps,
-        devDependencies: devDeps,
         invalidFiles: {
           [filename]: error,
         },
@@ -166,8 +159,6 @@ function checkDirectory(dir, rootDir, ignoreDirs, deps, devDeps, parsers, detect
 
     finder.on('error', (dirPath, error) =>
       promises.push(Promise.resolve({
-        dependencies: deps,
-        devDependencies: devDeps,
         invalidDirs: {
           [dirPath]: error,
         },
@@ -176,13 +167,11 @@ function checkDirectory(dir, rootDir, ignoreDirs, deps, devDeps, parsers, detect
     finder.on('end', () =>
       resolve(Promise.all(promises).then(results =>
         results.reduce((obj, current) => ({
-          dependencies: intersect(obj.dependencies, current.dependencies),
-          devDependencies: intersect(obj.devDependencies, current.devDependencies),
+          used: obj.used.concat(current.used).reduce(unique, []),
           invalidFiles: Object.assign(obj.invalidFiles, current.invalidFiles),
           invalidDirs: Object.assign(obj.invalidDirs, current.invalidDirs),
         }), {
-          dependencies: deps,
-          devDependencies: devDeps,
+          used: [],
           invalidFiles: {},
           invalidDirs: {},
         }))));
@@ -228,6 +217,12 @@ export default function depcheck(rootDir, options, cb) {
   const devDeps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, withoutDev ? [] : devDependencies);
 
   return checkDirectory(rootDir, rootDir, ignoreDirs, deps, devDeps, parsers, detectors)
+    .then(result => ({
+      dependencies: minus(deps, result.used),
+      devDependencies: minus(devDeps, result.used),
+      invalidFiles: result.invalidFiles,
+      invalidDirs: result.invalidDirs,
+    }))
     .then(cb);
 }
 
