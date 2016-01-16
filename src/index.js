@@ -2,9 +2,11 @@ import fs from 'fs';
 import path from 'path';
 import walkdir from 'walkdir';
 import minimatch from 'minimatch';
+import builtInModules from 'builtin-modules';
+import requirePackageName from 'require-package-name';
+
 import component from './component';
 import getNodes from './utils/get-nodes';
-import requirePackageName from 'require-package-name';
 import discoverPropertyDep from './utils/discover-property-dep';
 
 function constructComponent(source, name) {
@@ -136,7 +138,7 @@ function checkFile(dir, filename, deps, parsers, detectors) {
   return targets.map(parser =>
     getDependencies(dir, filename, deps, parser, detectors)
       .then(used => ({
-        used,
+        used: used.filter(dep => dep && dep !== '.' && dep !== '..'),
       }), error => ({
         invalidFiles: {
           [filename]: error,
@@ -166,7 +168,7 @@ function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
     finder.on('end', () =>
       resolve(Promise.all(promises).then(results =>
         results.reduce((obj, current) => ({
-          used: obj.used.concat(current.used).reduce(unique, []),
+          used: obj.used.concat(current.used || []).reduce(unique, []),
           invalidFiles: Object.assign(obj.invalidFiles, current.invalidFiles),
           invalidDirs: Object.assign(obj.invalidDirs, current.invalidDirs),
         }), {
@@ -215,11 +217,13 @@ export default function depcheck(rootDir, options, callback) {
   const devDependencies = metadata.devDependencies || {};
   const deps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies);
   const devDeps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, withoutDev ? [] : devDependencies);
+  const allDeps = deps.concat(devDeps).reduce(unique, []);
 
-  return checkDirectory(rootDir, rootDir, ignoreDirs, deps.concat(devDeps), parsers, detectors)
+  return checkDirectory(rootDir, rootDir, ignoreDirs, allDeps, parsers, detectors)
     .then(result => ({
       dependencies: minus(deps, result.used),
       devDependencies: minus(devDeps, result.used),
+      missing: minus(result.used, allDeps).filter(dep => builtInModules.indexOf(dep) === -1),
       invalidFiles: result.invalidFiles,
       invalidDirs: result.invalidDirs,
     }))

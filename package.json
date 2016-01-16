@@ -42,6 +42,7 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "babylon": "^6.1.21",
+    "builtin-modules": "^1.1.1",
     "deps-regex": "^0.1.4",
     "js-yaml": "^3.4.2",
     "minimatch": "^3.0.0",
