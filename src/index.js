@@ -128,9 +128,10 @@ function getDependencies(dir, filename, deps, parser, detectors) {
 
 function checkFile(dir, filename, deps, parsers, detectors) {
   const basename = path.basename(filename);
-  const targets = [].concat(...Object.keys(parsers)
+  const targets = Object.keys(parsers)
     .filter(glob => minimatch(basename, glob, { dot: true }))
-    .map(key => parsers[key]));
+    .map(key => parsers[key])
+    .reduce(concat, []);
 
   return targets.map(parser =>
     getDependencies(dir, filename, deps, parser, detectors)
@@ -150,12 +151,10 @@ function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
 
     finder.on('directory', subdir =>
       ignoreDirs.indexOf(path.basename(subdir)) === -1 &&
-      promises.push(
-        checkDirectory(subdir, rootDir, ignoreDirs, deps, parsers, detectors)));
+      promises.push(checkDirectory(subdir, rootDir, ignoreDirs, deps, parsers, detectors)));
 
     finder.on('file', filename =>
-      promises.push(
-        ...checkFile(rootDir, filename, deps, parsers, detectors)));
+      promises.push(...checkFile(rootDir, filename, deps, parsers, detectors)));
 
     finder.on('error', (dirPath, error) =>
       promises.push(Promise.resolve({
@@ -184,22 +183,23 @@ function isIgnored(ignoreMatches, dependency) {
 
 function hasBin(rootDir, dependency) {
   try {
-    const depPkg = require(path.join(rootDir, 'node_modules', dependency, 'package.json'));
-    return depPkg.hasOwnProperty('bin');
+    const metadata = require(path.join(rootDir, 'node_modules', dependency, 'package.json'));
+    return metadata.hasOwnProperty('bin');
   } catch (error) {
     return false;
   }
 }
 
 function filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies) {
-  return Object.keys(dependencies).filter(dependency =>
-    ignoreBinPackage && hasBin(rootDir, dependency) ||
-    isIgnored(ignoreMatches, dependency)
-    ? false
-    : true);
+  return Object.keys(dependencies)
+    .filter(dependency =>
+      ignoreBinPackage && hasBin(rootDir, dependency) ||
+      isIgnored(ignoreMatches, dependency)
+      ? false
+      : true);
 }
 
-export default function depcheck(rootDir, options, cb) {
+export default function depcheck(rootDir, options, callback) {
   const withoutDev = getOrDefault(options, 'withoutDev');
   const ignoreBinPackage = getOrDefault(options, 'ignoreBinPackage');
   const ignoreMatches = getOrDefault(options, 'ignoreMatches');
@@ -223,7 +223,7 @@ export default function depcheck(rootDir, options, cb) {
       invalidFiles: result.invalidFiles,
       invalidDirs: result.invalidDirs,
     }))
-    .then(cb);
+    .then(callback);
 }
 
 depcheck.parser = availableParsers;
