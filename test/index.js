@@ -37,6 +37,7 @@ describe('depcheck', () => {
         const expected = testCase.expected;
         result.dependencies.should.eql(expected.dependencies);
         result.devDependencies.should.eql(expected.devDependencies);
+        result.missing.should.eql(expected.missing);
       }));
   });
 

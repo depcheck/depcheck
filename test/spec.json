@@ -7,7 +7,8 @@
     },
     "expected": {
       "dependencies": ["optimist"],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -17,7 +18,8 @@
     },
     "expected": {
       "dependencies": ["dont-find-me"],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -28,7 +30,8 @@
     },
     "expected": {
       "dependencies": [],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -39,7 +42,8 @@
     },
     "expected": {
       "dependencies": ["unsupported-syntax"],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     },
     "notice": "See `good_es6/index.js` file for more information on the unsupported ES6 import syntax, which we assert here as the expected missing import."
   },
@@ -51,7 +55,19 @@
     },
     "expected": {
       "dependencies": [],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
+    }
+  },
+  {
+    "name": "find dependencies used in code but not declared in package.json",
+    "module": "missing",
+    "options": {
+    },
+    "expected": {
+      "dependencies": [],
+      "devDependencies": [],
+      "missing": ["missing-dep"]
     }
   },
   {
@@ -62,7 +78,8 @@
     },
     "expected": {
       "dependencies": [],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -73,7 +90,8 @@
     },
     "expected": {
       "dependencies": [],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -84,7 +102,8 @@
     },
     "expected": {
       "dependencies": [],
-      "devDependencies": ["unused-dev-dep"]
+      "devDependencies": ["unused-dev-dep"],
+      "missing": []
     }
   },
   {
@@ -94,7 +113,8 @@
     },
     "expected": {
       "dependencies": ["unused-dep"],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -104,7 +124,8 @@
     },
     "expected": {
       "dependencies": ["unused-nested-dep"],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -114,7 +135,8 @@
     },
     "expected": {
       "dependencies": ["unused-dep"],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -124,7 +146,8 @@
     },
     "expected": {
       "dependencies": [],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -134,7 +157,8 @@
     },
     "expected": {
       "dependencies": ["empty-package"],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -144,7 +168,8 @@
     },
     "expected": {
       "dependencies": ["shebang"],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -154,7 +179,8 @@
     },
     "expected": {
       "dependencies": [],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -165,7 +191,8 @@
     },
     "expected": {
       "dependencies": [],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -176,7 +203,8 @@
     },
     "expected": {
       "dependencies": ["anybin"],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -187,7 +215,8 @@
     },
     "expected": {
       "dependencies": [],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -198,7 +227,8 @@
     },
     "expected": {
       "dependencies": ["anybin"],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -208,7 +238,8 @@
     },
     "expected": {
       "dependencies": ["require-nothing"],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -218,7 +249,8 @@
     },
     "expected": {
       "dependencies": [],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -229,7 +261,8 @@
     },
     "expected": {
       "dependencies": ["module_bad_deep"],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -240,7 +273,8 @@
     },
     "expected": {
       "dependencies": [],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -250,7 +284,8 @@
     },
     "expected": {
       "dependencies": [],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -260,7 +295,8 @@
     },
     "expected": {
       "dependencies": [],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -270,7 +306,8 @@
     },
     "expected": {
       "dependencies": ["coffee"],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -280,7 +317,8 @@
     },
     "expected": {
       "dependencies": ["@unused/package"],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   },
   {
@@ -290,7 +328,8 @@
     },
     "expected": {
       "dependencies": ["number"],
-      "devDependencies": []
+      "devDependencies": [],
+      "missing": []
     }
   }
 ]
