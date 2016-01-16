@@ -126,14 +126,14 @@ function getDependencies(dir, filename, deps, parser, detectors) {
   });
 }
 
-function checkFile(dir, filename, deps, devDeps, parsers, detectors) {
+function checkFile(dir, filename, deps, parsers, detectors) {
   const basename = path.basename(filename);
   const targets = [].concat(...Object.keys(parsers)
     .filter(glob => minimatch(basename, glob, { dot: true }))
     .map(key => parsers[key]));
 
   return targets.map(parser =>
-    getDependencies(dir, filename, deps.concat(devDeps), parser, detectors)
+    getDependencies(dir, filename, deps, parser, detectors)
       .then(used => ({
         used,
       }), error => ({
@@ -143,7 +143,7 @@ function checkFile(dir, filename, deps, devDeps, parsers, detectors) {
       })));
 }
 
-function checkDirectory(dir, rootDir, ignoreDirs, deps, devDeps, parsers, detectors) {
+function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
   return new Promise(resolve => {
     const promises = [];
     const finder = walkdir(dir, { 'no_recurse': true });
@@ -151,11 +151,11 @@ function checkDirectory(dir, rootDir, ignoreDirs, deps, devDeps, parsers, detect
     finder.on('directory', subdir =>
       ignoreDirs.indexOf(path.basename(subdir)) === -1 &&
       promises.push(
-        checkDirectory(subdir, rootDir, ignoreDirs, deps, devDeps, parsers, detectors)));
+        checkDirectory(subdir, rootDir, ignoreDirs, deps, parsers, detectors)));
 
     finder.on('file', filename =>
       promises.push(
-        ...checkFile(rootDir, filename, deps, devDeps, parsers, detectors)));
+        ...checkFile(rootDir, filename, deps, parsers, detectors)));
 
     finder.on('error', (dirPath, error) =>
       promises.push(Promise.resolve({
@@ -216,7 +216,7 @@ export default function depcheck(rootDir, options, cb) {
   const deps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies);
   const devDeps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, withoutDev ? [] : devDependencies);
 
-  return checkDirectory(rootDir, rootDir, ignoreDirs, deps, devDeps, parsers, detectors)
+  return checkDirectory(rootDir, rootDir, ignoreDirs, deps.concat(devDeps), parsers, detectors)
     .then(result => ({
       dependencies: minus(deps, result.used),
       devDependencies: minus(devDeps, result.used),
