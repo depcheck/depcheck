@@ -74,10 +74,6 @@ function minus(array1, array2) {
   return array1.filter(item => array2.indexOf(item) === -1);
 }
 
-function intersect(array1, array2) {
-  return array1.filter(item => array2.indexOf(item) !== -1);
-}
-
 function unique(array, item) {
   return array.indexOf(item) === -1 ? array.concat([item]) : array;
 }
@@ -130,44 +126,38 @@ function getDependencies(dir, filename, deps, parser, detectors) {
   });
 }
 
-function checkFile(dir, filename, deps, devDeps, parsers, detectors) {
+function checkFile(dir, filename, deps, parsers, detectors) {
   const basename = path.basename(filename);
-  const targets = [].concat(...Object.keys(parsers)
+  const targets = Object.keys(parsers)
     .filter(glob => minimatch(basename, glob, { dot: true }))
-    .map(key => parsers[key]));
+    .map(key => parsers[key])
+    .reduce(concat, []);
 
   return targets.map(parser =>
-    getDependencies(dir, filename, deps.concat(devDeps), parser, detectors)
+    getDependencies(dir, filename, deps, parser, detectors)
       .then(used => ({
-        dependencies: minus(deps, used),
-        devDependencies: minus(devDeps, used),
+        used,
       }), error => ({
-        dependencies: deps,
-        devDependencies: devDeps,
         invalidFiles: {
           [filename]: error,
         },
       })));
 }
 
-function checkDirectory(dir, rootDir, ignoreDirs, deps, devDeps, parsers, detectors) {
+function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
   return new Promise(resolve => {
     const promises = [];
     const finder = walkdir(dir, { 'no_recurse': true });
 
     finder.on('directory', subdir =>
       ignoreDirs.indexOf(path.basename(subdir)) === -1 &&
-      promises.push(
-        checkDirectory(subdir, rootDir, ignoreDirs, deps, devDeps, parsers, detectors)));
+      promises.push(checkDirectory(subdir, rootDir, ignoreDirs, deps, parsers, detectors)));
 
     finder.on('file', filename =>
-      promises.push(
-        ...checkFile(rootDir, filename, deps, devDeps, parsers, detectors)));
+      promises.push(...checkFile(rootDir, filename, deps, parsers, detectors)));
 
     finder.on('error', (dirPath, error) =>
       promises.push(Promise.resolve({
-        dependencies: deps,
-        devDependencies: devDeps,
         invalidDirs: {
           [dirPath]: error,
         },
@@ -176,13 +166,11 @@ function checkDirectory(dir, rootDir, ignoreDirs, deps, devDeps, parsers, detect
     finder.on('end', () =>
       resolve(Promise.all(promises).then(results =>
         results.reduce((obj, current) => ({
-          dependencies: intersect(obj.dependencies, current.dependencies),
-          devDependencies: intersect(obj.devDependencies, current.devDependencies),
+          used: obj.used.concat(current.used).reduce(unique, []),
           invalidFiles: Object.assign(obj.invalidFiles, current.invalidFiles),
           invalidDirs: Object.assign(obj.invalidDirs, current.invalidDirs),
         }), {
-          dependencies: deps,
-          devDependencies: devDeps,
+          used: [],
           invalidFiles: {},
           invalidDirs: {},
         }))));
@@ -195,22 +183,23 @@ function isIgnored(ignoreMatches, dependency) {
 
 function hasBin(rootDir, dependency) {
   try {
-    const depPkg = require(path.join(rootDir, 'node_modules', dependency, 'package.json'));
-    return depPkg.hasOwnProperty('bin');
+    const metadata = require(path.join(rootDir, 'node_modules', dependency, 'package.json'));
+    return metadata.hasOwnProperty('bin');
   } catch (error) {
     return false;
   }
 }
 
 function filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies) {
-  return Object.keys(dependencies).filter(dependency =>
-    ignoreBinPackage && hasBin(rootDir, dependency) ||
-    isIgnored(ignoreMatches, dependency)
-    ? false
-    : true);
+  return Object.keys(dependencies)
+    .filter(dependency =>
+      ignoreBinPackage && hasBin(rootDir, dependency) ||
+      isIgnored(ignoreMatches, dependency)
+      ? false
+      : true);
 }
 
-export default function depcheck(rootDir, options, cb) {
+export default function depcheck(rootDir, options, callback) {
   const withoutDev = getOrDefault(options, 'withoutDev');
   const ignoreBinPackage = getOrDefault(options, 'ignoreBinPackage');
   const ignoreMatches = getOrDefault(options, 'ignoreMatches');
@@ -227,8 +216,14 @@ export default function depcheck(rootDir, options, cb) {
   const deps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies);
   const devDeps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, withoutDev ? [] : devDependencies);
 
-  return checkDirectory(rootDir, rootDir, ignoreDirs, deps, devDeps, parsers, detectors)
-    .then(cb);
+  return checkDirectory(rootDir, rootDir, ignoreDirs, deps.concat(devDeps), parsers, detectors)
+    .then(result => ({
+      dependencies: minus(deps, result.used),
+      devDependencies: minus(devDeps, result.used),
+      invalidFiles: result.invalidFiles,
+      invalidDirs: result.invalidDirs,
+    }))
+    .then(callback);
 }
 
 depcheck.parser = availableParsers;
