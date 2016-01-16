@@ -49,6 +49,33 @@ const testCases = [
       ],
     },
   },
+  {
+    name: 'recognize tranforms used in babel-plugin-react-transform',
+    deps: ['babel-plugin-react-transform', 'react-transform-hmr', 'react-transform-catch-errors'],
+    options: {
+      plugins: [
+        [
+          'react-transform',
+          {
+            transforms: [
+              {
+                transform: 'react-transform-hmr',
+                imports: ['react'],
+                locals: ['module'],
+              },
+              {
+                transform: 'react-transform-catch-errors',
+                imports: ['react', 'redbox-react'],
+              },
+              {
+                transform: './my-custom-transform',
+              },
+            ],
+          },
+        ],
+      ],
+    },
+  },
 ];
 
 function testBabel(filename, deps, content) {
