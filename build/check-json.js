@@ -1,4 +1,3 @@
-import path from 'path';
 import assert from 'assert';
 
 function readStdin() {
@@ -22,12 +21,12 @@ function readStdin() {
 }
 
 function check(result) {
-  const badJsFile = path.resolve(__dirname, '../test/fake_modules/bad_js/index.js');
   return new Promise(() => {
     assert.deepEqual(result.dependencies, []);
     assert.deepEqual(result.devDependencies, []);
+    assert.deepEqual(result.missing, []);
     assert.deepEqual(result.invalidDirs, {});
-    assert.deepEqual(Object.keys(result.invalidFiles), [badJsFile]);
+    assert.deepEqual(result.invalidFiles, {});
   });
 }
 

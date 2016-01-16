@@ -88,6 +88,15 @@ function isStringArray(obj) {
   return obj instanceof Array && obj.every(item => typeof item === 'string');
 }
 
+function isModule(dir) {
+  try {
+    require(path.resolve(dir, 'package.json'));
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 function getDependencies(dir, filename, deps, parser, detectors) {
   const detect = node =>
     detectors.map(detector => safeDetect(detector, node)).reduce(concat, []);
@@ -152,8 +161,9 @@ function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
     const finder = walkdir(dir, { 'no_recurse': true });
 
     finder.on('directory', subdir =>
-      ignoreDirs.indexOf(path.basename(subdir)) === -1 &&
-      promises.push(checkDirectory(subdir, rootDir, ignoreDirs, deps, parsers, detectors)));
+      ignoreDirs.indexOf(path.basename(subdir)) === -1 && !isModule(subdir)
+      ? promises.push(checkDirectory(subdir, rootDir, ignoreDirs, deps, parsers, detectors))
+      : null);
 
     finder.on('file', filename =>
       promises.push(...checkFile(rootDir, filename, deps, parsers, detectors)));
