@@ -1,6 +1,8 @@
 {
-  "dependencies": {},
+  "dependencies": {
+    "used-dep": "0.0.1"
+  },
   "devDependencies": {
-    "mocha": "~1.8.1"
+    "unused-dev-dep": "~1.8.1"
   }
 }

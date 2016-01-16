@@ -1,3 +1,1 @@
-/* eslint-disable no-unused-vars */
-
-const optimist = require('optimist');
+require('used-dep');

@@ -161,7 +161,7 @@ describe('depcheck command line', () => {
     .then(({ logs, error, exitCode }) => {
       logs.should.have.length(2);
       logs[0].should.equal('Unused devDependencies');
-      logs[1].should.containEql('mocha');
+      logs[1].should.containEql('unused-dev-dep');
 
       error.should.be.empty();
       exitCode.should.equal(-1);

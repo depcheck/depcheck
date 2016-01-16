@@ -14,7 +14,6 @@
     "name": "find unused dependencies in ES6 files",
     "module": "bad_es6",
     "options": {
-      "withoutDev": true
     },
     "expected": {
       "dependencies": ["dont-find-me"],
@@ -85,7 +84,7 @@
     },
     "expected": {
       "dependencies": [],
-      "devDependencies": ["mocha"]
+      "devDependencies": ["unused-dev-dep"]
     }
   },
   {

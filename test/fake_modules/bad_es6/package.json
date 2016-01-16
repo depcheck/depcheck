@@ -2,5 +2,16 @@
   "dependencies": {
     "dont-find-me": "~0.0.1",
     "find-me": "^0.1.0"
+  },
+  "devDependencies": {
+    "name-import": "1.2.3",
+    "star-import": "1.2.3",
+    "member-import": "1.2.3",
+    "member-alias-import": "1.2.3",
+    "multiple-member-import": "1.2.3",
+    "mixed-member-alias-import": "1.2.3",
+    "mixed-name-memeber-import": "1.2.3",
+    "mixed-default-star-import": "1.2.3",
+    "default-member-import": "1.2.3"
   }
 }
