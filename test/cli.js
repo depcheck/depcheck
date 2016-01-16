@@ -137,10 +137,10 @@ describe('depcheck command line', () => {
       exitCode.should.equal(0);
     }));
 
-  it('should output no unused dependencies when happen', () =>
+  it('should output no depcheck issue when happen', () =>
     testCli([path.resolve(__dirname, './fake_modules/good')])
     .then(({ log, error, exitCode }) => {
-      log.should.equal('No unused dependencies');
+      log.should.equal('No depcheck issue');
       error.should.be.empty();
       exitCode.should.equal(0);
     }));
@@ -149,7 +149,7 @@ describe('depcheck command line', () => {
     testCli(makeArgv('bad', {}))
     .then(({ logs, error, exitCode }) => {
       logs.should.have.length(2);
-      logs[0].should.equal('Unused Dependencies');
+      logs[0].should.equal('Unused dependencies');
       logs[1].should.containEql('optimist');
 
       error.should.be.empty();
@@ -173,7 +173,7 @@ describe('depcheck command line', () => {
     }))
     .then(({ logs, error, exitCode }) => {
       logs.should.have.length(2);
-      logs[0].should.equal('Unused Dependencies');
+      logs[0].should.equal('Unused dependencies');
       logs[1].should.containEql('react');
 
       error.should.be.empty();
@@ -186,7 +186,7 @@ describe('depcheck command line', () => {
     }))
     .then(({ logs, error, exitCode }) => {
       logs.should.have.length(2);
-      logs[0].should.equal('Unused Dependencies');
+      logs[0].should.equal('Unused dependencies');
       logs[1].should.containEql('react');
 
       error.should.be.empty();
@@ -199,7 +199,7 @@ describe('depcheck command line', () => {
     }))
     .then(({ logs, error, exitCode }) => {
       logs.should.have.length(2);
-      logs[0].should.equal('Unused Dependencies');
+      logs[0].should.equal('Unused dependencies');
       logs[1].should.containEql('react');
 
       error.should.be.empty();
