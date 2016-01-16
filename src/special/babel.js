@@ -12,6 +12,12 @@ function values(object) {
   return Object.keys(object || {}).map(key => object[key]);
 }
 
+function isPlugin(target, plugin) {
+  return typeof target === 'string'
+    ? target === plugin || target === `babel-plugin-${plugin}`
+    : target[0] === plugin || target[0] === `babel-plugin-${plugin}`;
+}
+
 function contain(array, dep, prefix) {
   if (!array) {
     return false;
@@ -30,6 +36,22 @@ function contain(array, dep, prefix) {
   return false;
 }
 
+function getReactTransforms(deps, plugins) {
+  if (!plugins) {
+    return [];
+  }
+
+  const transforms = plugins
+    .filter(plugin => isPlugin(plugin, 'react-transform'))
+    .map(plugin => plugin[1].transforms.map(transform => transform.transform))[0];
+
+  if (!transforms) {
+    return [];
+  }
+
+  return transforms.filter(transform => deps.indexOf(transform) !== -1);
+}
+
 function filter(deps, options) {
   const presets = deps.filter(dep =>
     contain(options.presets, dep, 'babel-preset-'));
@@ -37,7 +59,9 @@ function filter(deps, options) {
   const plugins = deps.filter(dep =>
     contain(options.plugins, dep, 'babel-plugin-'));
 
-  return presets.concat(plugins);
+  const reactTransforms = getReactTransforms(deps, options.plugins);
+
+  return presets.concat(plugins).concat(reactTransforms);
 }
 
 function checkOptions(deps, options = {}) {
