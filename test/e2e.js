@@ -22,8 +22,11 @@ function testE2E(module, output) {
 
 describe('depcheck end-to-end', () => {
   it('should find all dependencies', () =>
-    testE2E('good', ['No unused dependencies']));
+    testE2E('good', ['No depcheck issue']));
 
   it('should find unused dependencies', () =>
-    testE2E('bad', ['Unused Dependencies', '* optimist']));
+    testE2E('bad', ['Unused dependencies', '* optimist']));
+
+  it('should find missing dependencies', () =>
+    testE2E('missing', ['Missing dependencies', '* missing-dep']));
 });

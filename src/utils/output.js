@@ -6,9 +6,10 @@ function replacer(key, value) {
   return value;
 }
 
-function noUnused(result) {
+function noIssue(result) {
   return result.dependencies.length === 0
-      && result.devDependencies.length === 0;
+      && result.devDependencies.length === 0
+      && result.missing.length === 0;
 }
 
 function prettify(caption, deps) {
@@ -20,12 +21,13 @@ export default function output(result, log, json) {
   return new Promise(resolve => {
     if (json) {
       log(JSON.stringify(result, replacer));
-    } else if (noUnused(result)) {
-      log('No unused dependencies');
+    } else if (noIssue(result)) {
+      log('No depcheck issue');
     } else {
-      const deps = prettify('Unused Dependencies', result.dependencies);
-      const devDeps = prettify('\nUnused devDependencies', result.devDependencies);
-      const content = deps.concat(devDeps).join('\n');
+      const deps = prettify('Unused dependencies', result.dependencies);
+      const devDeps = prettify('Unused devDependencies', result.devDependencies);
+      const missing = prettify('Missing dependencies', result.missing);
+      const content = deps.concat(devDeps, missing).join('\n');
 
       log(content);
     }
