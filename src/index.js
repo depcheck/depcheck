@@ -148,7 +148,7 @@ function checkFile(dir, filename, deps, parsers, detectors) {
     getDependencies(dir, filename, deps, parser, detectors)
       .then(used => ({
         hits: {
-          [filename]: used.filter(dep => dep && dep !== '.' && dep !== '..'),
+          [filename]: used.filter(dep => dep && dep !== '.' && dep !== '..').reduce(unique, []),
         },
         used: used.filter(dep => dep && dep !== '.' && dep !== '..'),
       }), error => ({
