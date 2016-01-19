@@ -20,13 +20,14 @@ function prettify(caption, deps) {
 export default function output(result, log, argv) {
   return new Promise(resolve => {
     if (argv.json) {
-      var clone = Object.assign({}, result);
+      const clone = Object.assign({}, result);
       if (!argv.used) delete clone.used;
       log(JSON.stringify(clone, replacer));
     } else if (noIssue(result)) {
       const unused = ['No depcheck issue'];
       const used = prettify('Used Dependencies', Object.keys(result.used));
       const content = unused.concat(argv.used ? used : []).join('\n');
+
       log(content);
     } else {
       const deps = prettify('Unused dependencies', result.dependencies);

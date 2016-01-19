@@ -148,7 +148,7 @@ function checkFile(dir, filename, deps, parsers, detectors) {
     getDependencies(dir, filename, deps, parser, detectors)
       .then(used => ({
         hits: {
-          [filename]: used.filter(dep => dep && dep !== '.' && dep !== '..')
+          [filename]: used.filter(dep => dep && dep !== '.' && dep !== '..'),
         },
         used: used.filter(dep => dep && dep !== '.' && dep !== '..'),
       }), error => ({
@@ -241,7 +241,8 @@ export default function depcheck(rootDir, options, callback) {
       missing: minus(result.used, allDeps).filter(dep => builtInModules.indexOf(dep) === -1),
       used: Object.keys(result.hits).reduce((obj, current) => {
         return result.hits[current].reduce((o, d) => {
-          return (o[d] = o[d] || []).push(current), o;
+          (o[d] = o[d] || []).push(current);
+          return o;
         }, obj);
       }, {}),
       invalidFiles: result.invalidFiles,
