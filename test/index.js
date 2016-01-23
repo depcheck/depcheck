@@ -5,7 +5,9 @@ import depcheck from '../src/index';
 import fs from 'fs';
 import path from 'path';
 import testCases from './spec';
+
 import { platform } from 'os';
+import { resolveShortPath } from './utils';
 
 import {
   full as importListParser,
@@ -34,7 +36,7 @@ describe('depcheck', () => {
         const expected = testCase.expected;
         result.dependencies.should.eql(expected.dependencies);
         result.devDependencies.should.eql(expected.devDependencies);
-        result.missing.should.eql(expected.missing);
+        result.missing.should.eql(resolveShortPath(expected.missing, testCase.module));
       }));
   });
 

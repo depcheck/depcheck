@@ -88,6 +88,10 @@ function isStringArray(obj) {
   return obj instanceof Array && obj.every(item => typeof item === 'string');
 }
 
+function isNpmPackage(dep) {
+  return dep && dep !== '.' && dep !== '..' && builtInModules.indexOf(dep) === -1;
+}
+
 function isModule(dir) {
   try {
     require(path.resolve(dir, 'package.json'));
@@ -95,6 +99,13 @@ function isModule(dir) {
   } catch (error) {
     return false;
   }
+}
+
+function mergeBuckets(object1, object2) {
+  return Object.keys(object2).reduce((result, key) => ({
+    ...result,
+    [key]: object2[key].concat(object1[key] || []),
+  }), object1);
 }
 
 function getDependencies(dir, filename, deps, parser, detectors) {
@@ -146,8 +157,10 @@ function checkFile(dir, filename, deps, parsers, detectors) {
 
   return targets.map(parser =>
     getDependencies(dir, filename, deps, parser, detectors)
-      .then(used => ({
-        used: used.filter(dep => dep && dep !== '.' && dep !== '..'),
+      .then(using => ({
+        using: {
+          [filename]: using.filter(isNpmPackage).reduce(unique, []),
+        },
       }), error => ({
         invalidFiles: {
           [filename]: error,
@@ -178,11 +191,11 @@ function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
     finder.on('end', () =>
       resolve(Promise.all(promises).then(results =>
         results.reduce((obj, current) => ({
-          used: obj.used.concat(current.used || []).reduce(unique, []),
+          using: mergeBuckets(obj.using, current.using || {}),
           invalidFiles: Object.assign(obj.invalidFiles, current.invalidFiles),
           invalidDirs: Object.assign(obj.invalidDirs, current.invalidDirs),
         }), {
-          used: [],
+          using: {},
           invalidFiles: {},
           invalidDirs: {},
         }))));
@@ -211,6 +224,30 @@ function filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependenci
       : true);
 }
 
+function buildResult(result, deps, devDeps) {
+  const usingDepsLookup = Object.keys(result.using).reduce((obj, filename) =>
+    result.using[filename].reduce((object, dep) => ({
+      ...object,
+      [dep]: [filename].concat(object[dep] || []),
+    }), obj), {});
+
+  const usingDeps = Object.keys(usingDepsLookup);
+  const missingDeps = minus(usingDeps, deps.concat(devDeps));
+
+  const missingDepsLookup = missingDeps.reduce((obj, missingDep) => ({
+    ...obj,
+    [missingDep]: usingDepsLookup[missingDep],
+  }), {});
+
+  return {
+    dependencies: minus(deps, usingDeps),
+    devDependencies: minus(devDeps, usingDeps),
+    missing: missingDepsLookup,
+    invalidFiles: result.invalidFiles,
+    invalidDirs: result.invalidDirs,
+  };
+}
+
 export default function depcheck(rootDir, options, callback) {
   const withoutDev = getOrDefault(options, 'withoutDev');
   const ignoreBinPackage = getOrDefault(options, 'ignoreBinPackage');
@@ -230,13 +267,7 @@ export default function depcheck(rootDir, options, callback) {
   const allDeps = deps.concat(devDeps).reduce(unique, []);
 
   return checkDirectory(rootDir, rootDir, ignoreDirs, allDeps, parsers, detectors)
-    .then(result => ({
-      dependencies: minus(deps, result.used),
-      devDependencies: minus(devDeps, result.used),
-      missing: minus(result.used, allDeps).filter(dep => builtInModules.indexOf(dep) === -1),
-      invalidFiles: result.invalidFiles,
-      invalidDirs: result.invalidDirs,
-    }))
+    .then(result => buildResult(result, deps, devDeps))
     .then(callback);
 }
 

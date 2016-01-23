@@ -24,7 +24,7 @@ function check(result) {
   return new Promise(() => {
     assert.deepEqual(result.dependencies, []);
     assert.deepEqual(result.devDependencies, []);
-    assert.deepEqual(result.missing, []);
+    assert.deepEqual(result.missing, {});
     assert.deepEqual(result.invalidDirs, {});
     assert.deepEqual(result.invalidFiles, {});
   });

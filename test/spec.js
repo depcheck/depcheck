@@ -8,7 +8,7 @@ export default [
     expected: {
       dependencies: ['optimist'],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -19,7 +19,7 @@ export default [
     expected: {
       dependencies: ['dont-find-me'],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -31,7 +31,7 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -44,7 +44,7 @@ export default [
     expected: {
       dependencies: ['unsupported-syntax'],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -56,7 +56,7 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -67,7 +67,9 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: [],
-      missing: ['missing-dep'],
+      missing: {
+        'missing-dep': ['index.js'],
+      },
     },
   },
   {
@@ -78,7 +80,9 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: [],
-      missing: ['outer-missing-dep'],
+      missing: {
+        'outer-missing-dep': ['index.js'],
+      },
     },
   },
   {
@@ -90,7 +94,7 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -102,7 +106,7 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -114,7 +118,7 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: ['unused-dev-dep'],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -125,7 +129,7 @@ export default [
     expected: {
       dependencies: ['unused-dep'],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -136,7 +140,7 @@ export default [
     expected: {
       dependencies: ['unused-nested-dep'],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -147,7 +151,7 @@ export default [
     expected: {
       dependencies: ['unused-dep'],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -158,7 +162,7 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -169,7 +173,7 @@ export default [
     expected: {
       dependencies: ['empty-package'],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -180,7 +184,7 @@ export default [
     expected: {
       dependencies: ['shebang'],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -191,7 +195,7 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -203,7 +207,7 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -215,7 +219,7 @@ export default [
     expected: {
       dependencies: ['anybin'],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -227,7 +231,7 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -239,7 +243,7 @@ export default [
     expected: {
       dependencies: ['anybin'],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -250,7 +254,7 @@ export default [
     expected: {
       dependencies: ['require-nothing'],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -261,7 +265,7 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -273,7 +277,7 @@ export default [
     expected: {
       dependencies: ['module_bad_deep'],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -285,7 +289,7 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -296,7 +300,7 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -307,7 +311,7 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -318,7 +322,7 @@ export default [
     expected: {
       dependencies: ['coffee'],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -329,7 +333,7 @@ export default [
     expected: {
       dependencies: ['@unused/package'],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
   {
@@ -340,7 +344,7 @@ export default [
     expected: {
       dependencies: ['number'],
       devDependencies: [],
-      missing: [],
+      missing: {},
     },
   },
 ];
