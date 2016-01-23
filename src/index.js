@@ -147,6 +147,9 @@ function checkFile(dir, filename, deps, parsers, detectors) {
   return targets.map(parser =>
     getDependencies(dir, filename, deps, parser, detectors)
       .then(used => ({
+        hits: {
+          [filename]: used.filter(dep => dep && dep !== '.' && dep !== '..').reduce(unique, []),
+        },
         used: used.filter(dep => dep && dep !== '.' && dep !== '..'),
       }), error => ({
         invalidFiles: {
@@ -179,9 +182,11 @@ function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
       resolve(Promise.all(promises).then(results =>
         results.reduce((obj, current) => ({
           used: obj.used.concat(current.used || []).reduce(unique, []),
+          hits: Object.assign(obj.hits, current.hits),
           invalidFiles: Object.assign(obj.invalidFiles, current.invalidFiles),
           invalidDirs: Object.assign(obj.invalidDirs, current.invalidDirs),
         }), {
+          hits: {},
           used: [],
           invalidFiles: {},
           invalidDirs: {},
@@ -234,6 +239,12 @@ export default function depcheck(rootDir, options, callback) {
       dependencies: minus(deps, result.used),
       devDependencies: minus(devDeps, result.used),
       missing: minus(result.used, allDeps).filter(dep => builtInModules.indexOf(dep) === -1),
+      used: Object.keys(result.hits).reduce((obj, current) => {
+        return result.hits[current].reduce((o, d) => {
+          (o[d] = o[d] || []).push(current);
+          return o;
+        }, obj);
+      }, {}),
       invalidFiles: result.invalidFiles,
       invalidDirs: result.invalidDirs,
     }))

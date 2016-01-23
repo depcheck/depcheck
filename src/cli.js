@@ -45,6 +45,7 @@ export default function cli(args, log, error, exit) {
     .describe('dev', 'Check on devDependecies')
     .describe('ignore-bin-package', 'Ignore package with bin entry')
     .describe('json', 'Output results to JSON')
+    .describe('used', 'Report on which dependencies are used')
     .describe('ignores', 'Comma separated package list to ignore')
     .describe('ignore-dirs', 'Comma separated folder names to ignore')
     .describe('parsers', 'Comma separated glob:pasers pair list')
@@ -83,7 +84,7 @@ export default function cli(args, log, error, exit) {
       detectors: getDetectors(opt.argv.detectors),
       specials: getSpecials(opt.argv.specials),
     }))
-    .then(result => output(result, log, opt.argv.json))
+    .then(result => output(result, log, opt.argv))
     .then(({ dependencies, devDependencies }) =>
       exit(opt.argv.json
         || dependencies.length === 0 && devDependencies.length === 0
