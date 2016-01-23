@@ -1,9 +1,9 @@
 /* global describe, it, before, after */
 
 import 'should';
-import fs from 'fs';
 import path from 'path';
 import cli from '../src/cli';
+import testCases from './spec';
 
 function makeArgv(module, options) {
   const testPath = path.resolve('test/fake_modules', module);
@@ -55,9 +55,6 @@ function testCli(argv) {
 }
 
 describe('depcheck command line', () => {
-  const spec = fs.readFileSync(__dirname + '/spec.json', { encoding: 'utf8' });
-  const testCases = JSON.parse(spec);
-
   testCases.forEach(testCase => {
     const run = testCase.only === 'cli' ? it.only : it;
     const options = Object.assign({ json: true }, testCase.options);

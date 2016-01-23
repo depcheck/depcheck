@@ -4,6 +4,7 @@ import 'should';
 import depcheck from '../src/index';
 import fs from 'fs';
 import path from 'path';
+import testCases from './spec';
 import { platform } from 'os';
 
 import {
@@ -26,10 +27,6 @@ function check(module, options) {
 }
 
 describe('depcheck', () => {
-  const specPath = path.resolve(__dirname, 'spec.json');
-  const spec = fs.readFileSync(specPath, { encoding: 'utf8' });
-  const testCases = JSON.parse(spec);
-
   testCases.forEach(testCase => {
     const run = testCase.only === 'index' ? it.only : it;
     run('should ' + testCase.name, () =>
