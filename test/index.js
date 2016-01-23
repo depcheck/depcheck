@@ -37,6 +37,7 @@ describe('depcheck', () => {
         result.dependencies.should.eql(expected.dependencies);
         result.devDependencies.should.eql(expected.devDependencies);
         result.missing.should.eql(resolveShortPath(expected.missing, testCase.module));
+        result.using.should.eql(resolveShortPath(expected.using, testCase.module));
       }));
   });
 

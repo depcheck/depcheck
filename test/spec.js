@@ -9,6 +9,7 @@ export default [
       dependencies: ['optimist'],
       devDependencies: [],
       missing: {},
+      using: {},
     },
   },
   {
@@ -20,6 +21,18 @@ export default [
       dependencies: ['dont-find-me'],
       devDependencies: [],
       missing: {},
+      using: {
+        'find-me': ['index.js'],
+        'default-member-import': ['index.js'],
+        'member-alias-import': ['index.js'],
+        'member-import': ['index.js'],
+        'mixed-default-star-import': ['index.js'],
+        'mixed-member-alias-import': ['index.js'],
+        'mixed-name-memeber-import': ['index.js'],
+        'multiple-member-import': ['index.js'],
+        'name-import': ['index.js'],
+        'star-import': ['index.js'],
+      },
     },
   },
   {
@@ -32,6 +45,9 @@ export default [
       dependencies: [],
       devDependencies: [],
       missing: {},
+      using: {
+        'optimist': ['index.js'],
+      },
     },
   },
   {
@@ -45,6 +61,18 @@ export default [
       dependencies: ['unsupported-syntax'],
       devDependencies: [],
       missing: {},
+      using: {
+        'basic-import': ['index.js'],
+        'default-member-import': ['index.js'],
+        'member-alias-import': ['index.js'],
+        'member-import': ['index.js'],
+        'mixed-default-star-import': ['index.js'],
+        'mixed-member-alias-import': ['index.js'],
+        'mixed-name-memeber-import': ['index.js'],
+        'multiple-member-import': ['index.js'],
+        'name-import': ['index.js'],
+        'star-import': ['index.js'],
+      },
     },
   },
   {
@@ -57,6 +85,9 @@ export default [
       dependencies: [],
       devDependencies: [],
       missing: {},
+      using: {
+        'ecmascript-rest-spread': ['index.js'],
+      },
     },
   },
   {
@@ -68,6 +99,9 @@ export default [
       dependencies: [],
       devDependencies: [],
       missing: {
+        'missing-dep': ['index.js'],
+      },
+      using: {
         'missing-dep': ['index.js'],
       },
     },
@@ -83,6 +117,10 @@ export default [
       missing: {
         'outer-missing-dep': ['index.js'],
       },
+      using: {
+        'outer-missing-dep': ['index.js'],
+        'used-dep': ['index.js'],
+      },
     },
   },
   {
@@ -95,6 +133,9 @@ export default [
       dependencies: [],
       devDependencies: [],
       missing: {},
+      using: {
+        'grunt-contrib-jshint': ['index.js'],
+      },
     },
   },
   {
@@ -107,6 +148,9 @@ export default [
       dependencies: [],
       devDependencies: [],
       missing: {},
+      using: {
+        'grunt-contrib-jshint': ['index.js'],
+      },
     },
   },
   {
@@ -119,6 +163,9 @@ export default [
       dependencies: [],
       devDependencies: ['unused-dev-dep'],
       missing: {},
+      using: {
+        'used-dep': ['index.js'],
+      },
     },
   },
   {
@@ -130,6 +177,10 @@ export default [
       dependencies: ['unused-dep'],
       devDependencies: [],
       missing: {},
+      using: {
+        'host': ['index.js'],
+        'peer': ['index.js'],
+      },
     },
   },
   {
@@ -141,6 +192,10 @@ export default [
       dependencies: ['unused-nested-dep'],
       devDependencies: [],
       missing: {},
+      using: {
+        'host': ['nested/index.js'],
+        'peer': ['nested/index.js'],
+      },
     },
   },
   {
@@ -152,6 +207,10 @@ export default [
       dependencies: ['unused-dep'],
       devDependencies: [],
       missing: {},
+      using: {
+        'host': ['index.js'],
+        'optional': ['index.js'],
+      },
     },
   },
   {
@@ -163,6 +222,9 @@ export default [
       dependencies: [],
       devDependencies: [],
       missing: {},
+      using: {
+        'optimist': ['index.js'],
+      },
     },
   },
   {
@@ -174,6 +236,7 @@ export default [
       dependencies: ['empty-package'],
       devDependencies: [],
       missing: {},
+      using: {},
     },
   },
   {
@@ -185,6 +248,9 @@ export default [
       dependencies: ['shebang'],
       devDependencies: [],
       missing: {},
+      using: {
+        'shebang-script': ['index.js'],
+      },
     },
   },
   {
@@ -196,6 +262,7 @@ export default [
       dependencies: [],
       devDependencies: [],
       missing: {},
+      using: {},
     },
   },
   {
@@ -208,6 +275,7 @@ export default [
       dependencies: [],
       devDependencies: [],
       missing: {},
+      using: {},
     },
   },
   {
@@ -220,6 +288,7 @@ export default [
       dependencies: ['anybin'],
       devDependencies: [],
       missing: {},
+      using: {},
     },
   },
   {
@@ -232,6 +301,9 @@ export default [
       dependencies: [],
       devDependencies: [],
       missing: {},
+      using: {
+        'optimist': ['index.js'],
+      },
     },
   },
   {
@@ -244,6 +316,7 @@ export default [
       dependencies: ['anybin'],
       devDependencies: [],
       missing: {},
+      using: {},
     },
   },
   {
@@ -255,6 +328,7 @@ export default [
       dependencies: ['require-nothing'],
       devDependencies: [],
       missing: {},
+      using: {},
     },
   },
   {
@@ -266,6 +340,9 @@ export default [
       dependencies: [],
       devDependencies: [],
       missing: {},
+      using: {
+        'dynamic': ['index.js'],
+      },
     },
   },
   {
@@ -278,6 +355,7 @@ export default [
       dependencies: ['module_bad_deep'],
       devDependencies: [],
       missing: {},
+      using: {},
     },
   },
   {
@@ -290,6 +368,7 @@ export default [
       dependencies: [],
       devDependencies: [],
       missing: {},
+      using: {},
     },
   },
   {
@@ -301,6 +380,9 @@ export default [
       dependencies: [],
       devDependencies: [],
       missing: {},
+      using: {
+        'react': ['index.jsx'],
+      },
     },
   },
   {
@@ -312,6 +394,10 @@ export default [
       dependencies: [],
       devDependencies: [],
       missing: {},
+      using: {
+        'react': ['index.js'],
+        'jsx-as-js': ['index.js'],
+      },
     },
   },
   {
@@ -323,6 +409,11 @@ export default [
       dependencies: ['coffee'],
       devDependencies: [],
       missing: {},
+      using: {
+        'bar': ['index.coffee'],
+        'baz': ['index.coffee'],
+        'foo': ['index.coffee'],
+      },
     },
   },
   {
@@ -334,6 +425,13 @@ export default [
       dependencies: ['@unused/package'],
       devDependencies: [],
       missing: {},
+      using: {
+        '@owner/package': ['index.js'],
+        '@secondowner/package': ['index.js'],
+        '@org/parent': ['index.js'],
+        'name-import': ['index.js'],
+        'child-import': ['index.js'],
+      },
     },
   },
   {
@@ -345,6 +443,7 @@ export default [
       dependencies: ['number'],
       devDependencies: [],
       missing: {},
+      using: {},
     },
   },
 ];
