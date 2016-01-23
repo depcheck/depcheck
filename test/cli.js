@@ -4,6 +4,7 @@ import 'should';
 import path from 'path';
 import cli from '../src/cli';
 import testCases from './spec';
+import { resolveShortPath } from './utils';
 
 function makeArgv(module, options) {
   const testPath = path.resolve('test/fake_modules', module);
@@ -66,7 +67,7 @@ describe('depcheck command line', () => {
 
         actual.dependencies.should.eql(expected.dependencies);
         actual.devDependencies.should.eql(expected.devDependencies);
-        actual.missing.should.eql(expected.missing);
+        actual.missing.should.eql(resolveShortPath(expected.missing, testCase.module));
 
         error.should.be.empty();
         exitCode.should.equal(0); // JSON output always return 0
