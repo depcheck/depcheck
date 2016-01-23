@@ -234,10 +234,15 @@ function buildResult(result, deps, devDeps) {
   const usingDeps = Object.keys(usingDepsLookup);
   const missingDeps = minus(usingDeps, deps.concat(devDeps));
 
+  const missingDepsLookup = missingDeps.reduce((obj, missingDep) => ({
+    ...obj,
+    [missingDep]: usingDepsLookup[missingDep],
+  }), {});
+
   return {
     dependencies: minus(deps, usingDeps),
     devDependencies: minus(devDeps, usingDeps),
-    missing: missingDeps,
+    missing: missingDepsLookup,
     invalidFiles: result.invalidFiles,
     invalidDirs: result.invalidDirs,
   };

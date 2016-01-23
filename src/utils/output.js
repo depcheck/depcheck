@@ -9,7 +9,7 @@ function replacer(key, value) {
 function noIssue(result) {
   return result.dependencies.length === 0
       && result.devDependencies.length === 0
-      && result.missing.length === 0;
+      && Object.keys(result.missing).length === 0;
 }
 
 function prettify(caption, deps) {
@@ -26,7 +26,7 @@ export default function output(result, log, json) {
     } else {
       const deps = prettify('Unused dependencies', result.dependencies);
       const devDeps = prettify('Unused devDependencies', result.devDependencies);
-      const missing = prettify('Missing dependencies', result.missing);
+      const missing = prettify('Missing dependencies', Object.keys(result.missing));
       const content = deps.concat(devDeps, missing).join('\n');
 
       log(content);
