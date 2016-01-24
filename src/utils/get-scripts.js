@@ -1,0 +1,38 @@
+import fs from 'fs';
+import path from 'path';
+import yaml from 'js-yaml';
+
+const travisCommands = [
+  // Reference: http://docs.travis-ci.com/user/customizing-the-build/#The-Build-Lifecycle
+  'before_install',
+  'install',
+  'before_script',
+  'script',
+  'after_success or after_failure',
+  'before_deploy',
+  'deploy',
+  'after_deploy',
+  'after_script',
+];
+
+function concat(array, item) {
+  return array.concat(item);
+}
+
+function getObjectValues(object) {
+  return Object.keys(object).map(key => object[key]);
+}
+
+export default function getScripts(filepath, content = null) {
+  const basename = path.basename(filepath);
+  const fileContent = content !== null ? content : fs.readFileSync(filepath, 'utf-8');
+
+  if (basename === 'package.json') {
+    return getObjectValues(JSON.parse(fileContent).scripts || {});
+  } else if (basename === '.travis.yml') {
+    const metadata = yaml.safeLoad(content) || {};
+    return travisCommands.map(cmd => metadata[cmd] || []).reduce(concat, []);
+  }
+
+  return [];
+}
