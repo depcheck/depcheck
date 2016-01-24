@@ -10,7 +10,7 @@ function testE2E(module, output) {
     const modulePath = path.resolve(__dirname, 'fake_modules', module);
 
     exec(`node ${binary} ${modulePath}`, (error, stdout, stderr) => {
-      const expectedStdOut = output.map(line => line + '\n').join('');
+      const expectedStdOut = output.map(line => `${line}\n`).join('');
 
       stdout.should.equal(expectedStdOut);
       stderr.should.be.empty();

@@ -31,7 +31,7 @@ function check(module, options) {
 describe('depcheck', () => {
   testCases.forEach(testCase => {
     const run = testCase.only === 'index' ? it.only : it;
-    run('should ' + testCase.name, () =>
+    run(`should ${testCase.name}`, () =>
       check(testCase.module, testCase.options).then(result => {
         const expected = testCase.expected;
         result.dependencies.should.eql(expected.dependencies);
@@ -56,10 +56,10 @@ describe('depcheck', () => {
 
   it('should allow dynamic package metadata', () =>
     check('bad', {
-      'package': {
-        'dependencies': {
-          'optimist': '~0.6.0',
-          'express': '^4.0.0',
+      package: {
+        dependencies: {
+          optimist: '~0.6.0',
+          express: '^4.0.0',
         },
       },
     }).then(unused => {

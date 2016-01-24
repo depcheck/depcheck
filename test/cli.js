@@ -19,15 +19,15 @@ function makeArgv(module, options) {
   }
 
   if (typeof options.ignoreBinPackage !== 'undefined') {
-    argv.push('--ignore-bin-package=' + options.ignoreBinPackage);
+    argv.push(`--ignore-bin-package=${options.ignoreBinPackage}`);
   }
 
   if (options.ignoreMatches) {
-    argv.push('--ignores=' + options.ignoreMatches.join(','));
+    argv.push(`--ignores=${options.ignoreMatches.join(',')}`);
   }
 
   if (options.ignoreDirs) {
-    argv.push('--ignore-dirs=' + options.ignoreDirs.join(','));
+    argv.push(`--ignore-dirs=${options.ignoreDirs.join(',')}`);
   }
 
   if (options.argv && options.argv.length) {
@@ -59,7 +59,7 @@ describe('depcheck command line', () => {
   testCases.forEach(testCase => {
     const run = testCase.only === 'cli' ? it.only : it;
     const options = Object.assign({ json: true }, testCase.options);
-    run('should ' + testCase.name, () =>
+    run(`should ${testCase.name}`, () =>
       testCli(makeArgv(testCase.module, options))
       .then(({ log, error, exitCode }) => {
         const actual = JSON.parse(log);

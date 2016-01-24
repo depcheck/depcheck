@@ -171,7 +171,7 @@ function checkFile(dir, filename, deps, parsers, detectors) {
 function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
   return new Promise(resolve => {
     const promises = [];
-    const finder = walkdir(dir, { 'no_recurse': true });
+    const finder = walkdir(dir, { no_recurse: true });
 
     finder.on('directory', subdir =>
       ignoreDirs.indexOf(path.basename(subdir)) === -1 && !isModule(subdir)
@@ -262,9 +262,9 @@ export default function depcheck(rootDir, options, callback) {
 
   const metadata = options.package || require(path.join(rootDir, 'package.json'));
   const dependencies = metadata.dependencies || {};
-  const devDependencies = metadata.devDependencies || {};
+  const devDependencies = !withoutDev && metadata.devDependencies ? metadata.devDependencies : {};
   const deps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies);
-  const devDeps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, withoutDev ? [] : devDependencies);
+  const devDeps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, devDependencies);
   const allDeps = deps.concat(devDeps).reduce(unique, []);
 
   return checkDirectory(rootDir, rootDir, ignoreDirs, allDeps, parsers, detectors)
