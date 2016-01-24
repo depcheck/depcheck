@@ -39,7 +39,7 @@ export default function cli(args, log, error, exit) {
       'ignore-bin-package',
     ])
     .default({
-      'dev': true,
+      dev: true,
       'ignore-bin-package': false,
     })
     .describe('dev', 'Check on devDependecies')
@@ -65,12 +65,12 @@ export default function cli(args, log, error, exit) {
 
     checkPathExist(rootDir)
     .catch(() => {
-      error('Path ' + dir + ' does not exist');
+      error(`Path ${dir} does not exist`);
       exit(-1);
     })
     .then(() => checkPathExist(path.resolve(rootDir, 'package.json')))
     .catch(() => {
-      error('Path ' + dir + ' does not contain a package.json file');
+      error(`Path ${dir} does not contain a package.json file`);
       log(opt.help());
       exit(-1);
     })

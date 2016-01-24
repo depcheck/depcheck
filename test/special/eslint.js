@@ -111,13 +111,13 @@ describe('eslint special parser', () => {
     result.should.deepEqual([]);
   });
 
-  it(`should handle parse error`, () =>
+  it('should handle parse error', () =>
     testEslint([], '{ this is an invalid JSON string'));
 
-  it(`should handle non-standard JSON content`, () =>
+  it('should handle non-standard JSON content', () =>
     testEslint(
       testCases[1].expected,
-      JSON.stringify(testCases[1].content) + '\n// this is ignored'));
+      `${JSON.stringify(testCases[1].content)}\n// this is ignored`));
 
   describe('with JSON format', () =>
     testCases.forEach(testCase =>

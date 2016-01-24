@@ -46,12 +46,13 @@ export default [
       devDependencies: [],
       missing: {},
       using: {
-        'optimist': ['index.js'],
+        optimist: ['index.js'],
       },
     },
   },
   {
-    // See `good_es6/index.js` file for more information on the unsupported ES6 import syntax, which we assert here as the expected missing import.
+    // See `good_es6/index.js` file for more information about the unsupported
+    // ES6 import syntax, which we assert here as the expected missing import.
     name: 'find all dependencies in ES6 files',
     module: 'good_es6',
     options: {
@@ -178,8 +179,8 @@ export default [
       devDependencies: [],
       missing: {},
       using: {
-        'host': ['index.js'],
-        'peer': ['index.js'],
+        host: ['index.js'],
+        peer: ['index.js'],
       },
     },
   },
@@ -193,8 +194,8 @@ export default [
       devDependencies: [],
       missing: {},
       using: {
-        'host': ['nested/index.js'],
-        'peer': ['nested/index.js'],
+        host: ['nested/index.js'],
+        peer: ['nested/index.js'],
       },
     },
   },
@@ -208,8 +209,8 @@ export default [
       devDependencies: [],
       missing: {},
       using: {
-        'host': ['index.js'],
-        'optional': ['index.js'],
+        host: ['index.js'],
+        optional: ['index.js'],
       },
     },
   },
@@ -223,7 +224,7 @@ export default [
       devDependencies: [],
       missing: {},
       using: {
-        'optimist': ['index.js'],
+        optimist: ['index.js'],
       },
     },
   },
@@ -302,7 +303,7 @@ export default [
       devDependencies: [],
       missing: {},
       using: {
-        'optimist': ['index.js'],
+        optimist: ['index.js'],
       },
     },
   },
@@ -341,7 +342,7 @@ export default [
       devDependencies: [],
       missing: {},
       using: {
-        'dynamic': ['index.js'],
+        dynamic: ['index.js'],
       },
     },
   },
@@ -381,7 +382,7 @@ export default [
       devDependencies: [],
       missing: {},
       using: {
-        'react': ['index.jsx'],
+        react: ['index.jsx'],
       },
     },
   },
@@ -395,7 +396,7 @@ export default [
       devDependencies: [],
       missing: {},
       using: {
-        'react': ['index.js'],
+        react: ['index.js'],
         'jsx-as-js': ['index.js'],
       },
     },
@@ -410,9 +411,9 @@ export default [
       devDependencies: [],
       missing: {},
       using: {
-        'bar': ['index.coffee'],
-        'baz': ['index.coffee'],
-        'foo': ['index.coffee'],
+        bar: ['index.coffee'],
+        baz: ['index.coffee'],
+        foo: ['index.coffee'],
       },
     },
   },
