@@ -1,4 +1,5 @@
 import assert from 'assert';
+import metadata from '../package.json';
 
 function readStdin() {
   return new Promise(resolve => {
@@ -27,6 +28,12 @@ function check(result) {
     assert.deepEqual(result.missing, {});
     assert.deepEqual(result.invalidDirs, {});
     assert.deepEqual(result.invalidFiles, {});
+
+    // assert all dependencies in package.json are using
+    const declaredDeps = Object.keys(metadata.dependencies);
+    const declaredDevDeps = Object.keys(metadata.devDependencies);
+    assert.deepEqual(Object.keys(result.using).sort(),
+      declaredDeps.concat(declaredDevDeps).sort());
   });
 }
 

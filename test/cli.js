@@ -68,6 +68,7 @@ describe('depcheck command line', () => {
         actual.dependencies.should.eql(expected.dependencies);
         actual.devDependencies.should.eql(expected.devDependencies);
         actual.missing.should.eql(resolveShortPath(expected.missing, testCase.module));
+        actual.using.should.eql(resolveShortPath(expected.using, testCase.module));
 
         error.should.be.empty();
         exitCode.should.equal(0); // JSON output always return 0

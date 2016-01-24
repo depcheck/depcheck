@@ -243,6 +243,7 @@ function buildResult(result, deps, devDeps) {
     dependencies: minus(deps, usingDeps),
     devDependencies: minus(devDeps, usingDeps),
     missing: missingDepsLookup,
+    using: usingDepsLookup,
     invalidFiles: result.invalidFiles,
     invalidDirs: result.invalidDirs,
   };
