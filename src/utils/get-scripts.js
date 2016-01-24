@@ -23,7 +23,6 @@ const travisCommands = [
   'script',
   'after_success or after_failure',
   'before_deploy',
-  'deploy',
   'after_deploy',
   'after_script',
 ];
