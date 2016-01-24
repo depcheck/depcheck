@@ -1,14 +1,26 @@
 import path from 'path';
 import getScripts from '../utils/get-scripts';
 
+const metadataCache = {};
+
 function toKeyValuePair(object) {
   return Object.keys(object).map(key => ({ key, value: object[key] }));
+}
+
+function getCacheOrRequire(packagePath) {
+  if (metadataCache[packagePath]) {
+    return metadataCache[packagePath];
+  }
+
+  const metadata = require(packagePath);
+  metadataCache[packagePath] = metadata;
+  return metadata;
 }
 
 function loadMetadata(dep, dir) {
   try {
     const packagePath = path.resolve(dir, 'node_modules', dep, 'package.json');
-    return require(packagePath);
+    return getCacheOrRequire(packagePath);
   } catch (error) {
     return {}; // ignore silently
   }
@@ -52,11 +64,6 @@ function getUsedDeps(deps, scripts, dir) {
 }
 
 export default (content, filepath, deps, dir) => {
-  const basename = path.basename(filepath);
-  if (basename === 'package.json' || basename === '.travis.yml') {
-    const scripts = getScripts(filepath, content);
-    return getUsedDeps(deps, scripts, dir);
-  }
-
-  return [];
+  const scripts = getScripts(filepath, content);
+  return getUsedDeps(deps, scripts, dir);
 };
