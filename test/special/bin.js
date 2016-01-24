@@ -90,7 +90,7 @@ describe('bin special parser', () => {
           ? JSON.stringify({ scripts: { t: testCase.script } })
           : '{}';
 
-        testParser(testCase, content, '/path/to/package.json');
+        testParser(testCase, content, `/path/to/${testCase.name}/package.json`);
       })));
 
   describe('on `.travis.yml`', () =>
@@ -100,7 +100,7 @@ describe('bin special parser', () => {
           ? `script:\n  - ${testCase.script}`
           : '';
 
-        testParser(testCase, content, '/path/to/.travis.yml');
+        testParser(testCase, content, `/path/to/${testCase.name}/.travis.yml`);
       })));
 
   it('should check lifecycle commands in `.travis.yml` file', () => {
