@@ -2,6 +2,19 @@ import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 
+const scriptCache = {};
+
+function getCacheOrFile(key, fn) {
+  if (scriptCache[key]) {
+    return scriptCache[key];
+  }
+
+  const value = fn();
+  scriptCache[key] = value;
+
+  return value;
+}
+
 const travisCommands = [
   // Reference: http://docs.travis-ci.com/user/customizing-the-build/#The-Build-Lifecycle
   'before_install',
@@ -24,15 +37,17 @@ function getObjectValues(object) {
 }
 
 export default function getScripts(filepath, content = null) {
-  const basename = path.basename(filepath);
-  const fileContent = content !== null ? content : fs.readFileSync(filepath, 'utf-8');
+  return getCacheOrFile(filepath, () => {
+    const basename = path.basename(filepath);
+    const fileContent = content !== null ? content : fs.readFileSync(filepath, 'utf-8');
 
-  if (basename === 'package.json') {
-    return getObjectValues(JSON.parse(fileContent).scripts || {});
-  } else if (basename === '.travis.yml') {
-    const metadata = yaml.safeLoad(content) || {};
-    return travisCommands.map(cmd => metadata[cmd] || []).reduce(concat, []);
-  }
+    if (basename === 'package.json') {
+      return getObjectValues(JSON.parse(fileContent).scripts || {});
+    } else if (basename === '.travis.yml') {
+      const metadata = yaml.safeLoad(content) || {};
+      return travisCommands.map(cmd => metadata[cmd] || []).reduce(concat, []);
+    }
 
-  return [];
+    return [];
+  });
 }
