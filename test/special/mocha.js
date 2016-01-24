@@ -11,8 +11,15 @@ describe('mocha special parser', () => {
     result.should.deepEqual([]);
   });
 
-  it('should recognize unused dependencies in default mocha options', () => {
+  it('should recognize dependencies used in default mocha options', () => {
     const content = ['--require chai', '--ui bdd', '--reporter spec'].join('\n');
+    const optPath = path.resolve(__dirname, 'test/mocha.opts');
+    const result = parse(content, optPath, ['chai', 'unused'], __dirname);
+    result.should.deepEqual(['chai']);
+  });
+
+  it('should recognize dependencies path-module used in mocha options', () => {
+    const content = ['--require chai/path/to/module', '--ui bdd', '--reporter spec'].join('\n');
     const optPath = path.resolve(__dirname, 'test/mocha.opts');
     const result = parse(content, optPath, ['chai', 'unused'], __dirname);
     result.should.deepEqual(['chai']);

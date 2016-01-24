@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import requirePackageName from 'require-package-name';
 import getScripts from '../utils/get-scripts';
 
 function concat(result, array) {
@@ -18,6 +19,7 @@ function getRequires(content, deps) {
     .map(line => line.trim())
     .filter(line => line.indexOf('--require ') === 0)
     .map(line => line.substring('--require '.length).trim())
+    .map(requirePackageName)
     .filter(name => deps.indexOf(name) !== -1);
 }
 
