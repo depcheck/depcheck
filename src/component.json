@@ -12,6 +12,7 @@
     "requireCallExpression"
   ],
   "special": [
-    "eslint"
+    "eslint",
+    "mocha"
   ]
 }
