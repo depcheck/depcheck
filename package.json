@@ -60,11 +60,11 @@
     "codecov.io": "^0.1.6",
     "depcheck-web": "^0.1.0",
     "eslint": "^1.7.3",
-    "eslint-config-airbnb": "^1.0.0",
+    "eslint-config-airbnb": "^4.0.0",
     "fs-promise": "^0.3.1",
     "isparta": "^4.0.0",
     "mocha": "^2.1.0",
     "patch-version": "^0.1.1",
-    "should": "^7.1.0"
+    "should": "^8.0.0"
   }
 }
