@@ -1,0 +1,4 @@
+--require babel
+--require chai
+--reporter dot
+--ui bdd

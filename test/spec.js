@@ -447,4 +447,19 @@ export default [
       using: {},
     },
   },
+  {
+    name: 'discover dependencies from mocha opts specified by scripts',
+    module: 'mocha_opts',
+    options: {
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: ['mocha'],
+      missing: {},
+      using: {
+        babel: ['package.json'],
+        chai: ['package.json'],
+      },
+    },
+  },
 ];
