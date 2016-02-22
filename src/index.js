@@ -218,10 +218,8 @@ function hasBin(rootDir, dependency) {
 function filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies) {
   return Object.keys(dependencies)
     .filter(dependency =>
-      ignoreBinPackage && hasBin(rootDir, dependency) ||
-      isIgnored(ignoreMatches, dependency)
-      ? false
-      : true);
+      !(ignoreBinPackage && hasBin(rootDir, dependency) ||
+        isIgnored(ignoreMatches, dependency)));
 }
 
 function buildResult(result, deps, devDeps) {

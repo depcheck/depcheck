@@ -44,8 +44,8 @@ function testCli(argv) {
   return new Promise(resolve =>
     cli(
       argv,
-      data => log = data,
-      data => error = data,
+      data => (log = data),
+      data => (error = data),
       exitCode => resolve({
         log,
         error,
@@ -214,6 +214,6 @@ describe('depcheck command line', () => {
         exitCode.should.equal(-1);
       }));
 
-    after(() => process.cwd = originalCwd);
+    after(() => (process.cwd = originalCwd));
   });
 });
