@@ -48,7 +48,7 @@
     "minimatch": "^3.0.0",
     "require-package-name": "^2.0.1",
     "walkdir": "0.0.11",
-    "yargs": "^3.26.0"
+    "yargs": "^4.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.1.1",

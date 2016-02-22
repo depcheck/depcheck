@@ -75,27 +75,6 @@ describe('depcheck command line', () => {
       }));
   });
 
-  it('should output help message', () =>
-    testCli(['--help'])
-    .then(({ log, error, exitCode }) => {
-      const help = log.split('\n').map(line => line.trim()).filter(line => line);
-      const options = ['--help', '--version', '--json', '--dev', '--ignores'];
-
-      options.forEach(option =>
-        help.some(doc => doc.startsWith(option)).should.be.true());
-
-      error.should.be.empty();
-      exitCode.should.equal(0);
-    }));
-
-  it('should output help message', () =>
-    testCli(['--version'])
-    .then(({ log, error, exitCode }) => {
-      log.should.be.equal('0.0.1');
-      error.should.be.empty();
-      exitCode.should.equal(0);
-    }));
-
   it('should output error when folder is not a package', () =>
     testCli([__dirname])
     .then(({ log, error, exitCode }) => {
