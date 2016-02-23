@@ -44,8 +44,8 @@ function testCli(argv) {
   return new Promise(resolve =>
     cli(
       argv,
-      data => log = data,
-      data => error = data,
+      data => (log = data),
+      data => (error = data),
       exitCode => resolve({
         log,
         error,
@@ -74,27 +74,6 @@ describe('depcheck command line', () => {
         exitCode.should.equal(0); // JSON output always return 0
       }));
   });
-
-  it('should output help message', () =>
-    testCli(['--help'])
-    .then(({ log, error, exitCode }) => {
-      const help = log.split('\n').map(line => line.trim()).filter(line => line);
-      const options = ['--help', '--version', '--json', '--dev', '--ignores'];
-
-      options.forEach(option =>
-        help.some(doc => doc.startsWith(option)).should.be.true());
-
-      error.should.be.empty();
-      exitCode.should.equal(0);
-    }));
-
-  it('should output help message', () =>
-    testCli(['--version'])
-    .then(({ log, error, exitCode }) => {
-      log.should.be.equal('0.0.1');
-      error.should.be.empty();
-      exitCode.should.equal(0);
-    }));
 
   it('should output error when folder is not a package', () =>
     testCli([__dirname])
@@ -235,6 +214,6 @@ describe('depcheck command line', () => {
         exitCode.should.equal(-1);
       }));
 
-    after(() => process.cwd = originalCwd);
+    after(() => (process.cwd = originalCwd));
   });
 });

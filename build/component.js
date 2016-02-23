@@ -12,7 +12,7 @@ function unify(list) {
 function getList(name) {
   return new Promise(resolve =>
     fs.readdir(path.resolve(__dirname, '../src', name), (error, list) =>
-      resolve(error ? error : unify(list))));
+      resolve(error || unify(list))));
 }
 
 Promise.all([

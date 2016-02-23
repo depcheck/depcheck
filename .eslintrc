@@ -1,4 +1,7 @@
 {
   "parser": "babel-eslint",
-  "extends": "airbnb/base"
+  "extends": "airbnb/base",
+  "rules": {
+    "no-confusing-arrow": [0]
+  }
 }

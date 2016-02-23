@@ -50,44 +50,36 @@ export default function cli(args, log, error, exit) {
     .describe('parsers', 'Comma separated glob:pasers pair list')
     .describe('detectors', 'Comma separated detector list')
     .describe('specials', 'Comma separated special parser list')
-    .describe('version', `Show the version, which is ${version}`)
-    .describe('help', 'Show this help message');
+    .version('version', 'Show version number', version)
+    .help('help', 'Show this help message');
 
-  if (opt.argv.help) {
-    log(opt.help());
-    exit(0);
-  } else if (opt.argv.version) {
-    log(version);
-    exit(0);
-  } else {
-    const dir = opt.argv._[0] || '.';
-    const rootDir = path.resolve(dir);
+  const dir = opt.argv._[0] || '.';
+  const rootDir = path.resolve(dir);
 
-    checkPathExist(rootDir)
-    .catch(() => {
-      error(`Path ${dir} does not exist`);
-      exit(-1);
-    })
-    .then(() => checkPathExist(path.resolve(rootDir, 'package.json')))
-    .catch(() => {
-      error(`Path ${dir} does not contain a package.json file`);
-      log(opt.help());
-      exit(-1);
-    })
-    .then(() => depcheck(rootDir, {
-      withoutDev: !opt.argv.dev,
-      ignoreBinPackage: opt.argv.ignoreBinPackage,
-      ignoreMatches: (opt.argv.ignores || '').split(','),
-      ignoreDirs: (opt.argv.ignoreDirs || '').split(','),
-      parsers: getParsers(opt.argv.parsers),
-      detectors: getDetectors(opt.argv.detectors),
-      specials: getSpecials(opt.argv.specials),
-    }))
-    .then(result => output(result, log, opt.argv.json))
-    .then(({ dependencies, devDependencies }) =>
-      exit(opt.argv.json
-        || dependencies.length === 0 && devDependencies.length === 0
-        ? 0
-        : -1));
-  }
+  checkPathExist(rootDir)
+  .catch(() => {
+    error(`Path ${dir} does not exist`);
+    exit(-1);
+  })
+  .then(() => checkPathExist(path.resolve(rootDir, 'package.json')))
+  .catch(() => {
+    error(`Path ${dir} does not contain a package.json file`);
+    log(opt.getUsageInstance().help());
+    exit(-1);
+  })
+  .then(() => depcheck(rootDir, {
+    withoutDev: !opt.argv.dev,
+    ignoreBinPackage: opt.argv.ignoreBinPackage,
+    ignoreMatches: (opt.argv.ignores || '').split(','),
+    ignoreDirs: (opt.argv.ignoreDirs || '').split(','),
+    parsers: getParsers(opt.argv.parsers),
+    detectors: getDetectors(opt.argv.detectors),
+    specials: getSpecials(opt.argv.specials),
+  }))
+  .then(result => output(result, log, opt.argv.json))
+  .then(({ dependencies, devDependencies }) =>
+    exit(opt.argv.json
+      || dependencies.length === 0 && devDependencies.length === 0
+      ? 0
+      : -1));
 }
