@@ -1,10 +1,8 @@
 # depcheck
 
-Keeping track of your dependencies is not an easy task, especially if you have a big project. Are you sure you are using all of the dependencies you define in your `package.json` file? One way to find out is to look at all your files and check which modules you are using, but that's too time consuming. Or maybe you can do a `grep` on all the files of your project, and then some `grep -v` to remove the junk. But that's a hassle too.
+Depcheck is a tool to analysis the dependencies in a project, and figures out which dependencies are useless, which dependencies are missing in `package.json`, how does each dependencies is used.
 
-And that is why `depcheck` exists - it's a nifty little tool that looks at your project files and scans your code in order to find any unused dependencies.
-
-## Build Status
+## Status
 
 [![Build Status](https://travis-ci.org/depcheck/depcheck.svg?branch=master)](https://travis-ci.org/depcheck/depcheck)
 [![Build status](https://ci.appveyor.com/api/projects/status/xbooh370dinuyi0y/branch/master?svg=true)](https://ci.appveyor.com/project/lijunle/depcheck/branch/master)
@@ -17,11 +15,12 @@ And that is why `depcheck` exists - it's a nifty little tool that looks at your 
 ## Features
 
 - Support ES5, ES6, ES7, JSX and CoffeeScript syntax.
-- Detect using ESLint configuration preset, parser and plugins.
-- Detect using Webpack loaders.
-- Detect Babel presets and plugins.
-- Recognize the packages used in `grunt.tasks.loadNpmTasks` call.
-- Smart to identify the binary package used in commands.
+- Detect dependencies used as ESLint configuration preset, parser and plugins.
+- Detect dependencies used as Webpack loaders.
+- Detect dependencies used as Babel presets and plugins.
+- Recognize peerDependencies and optionalDependencies used by other dependencies.
+- Recognize dependencies used inside `grunt.tasks.loadNpmTasks` call.
+- Smart to identify dependencies used in commands.
 
 ## Installation
 
@@ -57,13 +56,12 @@ All the arguments are optional:
 
 ## API
 
-Want to call depcheck from code? See the example:
+Similar options are provided to `depcheck` function for programming.
 
 ```js
-var path = require('path');
-var depcheck = require('depcheck');
+import depcheck from 'depcheck';
 
-var options = {
+const options = {
   withoutDev: false, // check against devDependencies
   ignoreBinPackage: false, // ignore the packages with bin entry
   ignoreDirs: [ // folder with these names will be ignored
@@ -85,16 +83,92 @@ var options = {
   specials: [ // the target special parsers
     depcheck.special.eslint,
     depcheck.special.webpack
-  ]
+  ],
 };
 
-depcheck('/path/to/your/project', options, function(unused) {
+depcheck('/path/to/your/project', options, (unused) => {
   console.log(unused.dependencies); // an array containing the unused dependencies
   console.log(unused.devDependencies); // an array containing the unused devDependencies
+  console.log(unused.missing); // an array containing the dependencies missing in `package.json`
+  console.log(unused.using); // a lookup indicating each dependency is used by which files
   console.log(unused.invalidFiles); // files that cannot access or parse
   console.log(unused.invalidDirs); // directories that cannot access
 });
 ```
+
+## Example
+
+The following example checks the dependencies under `/path/to/my/project` folder.
+
+```sh
+$> depcheck /path/to/my/project
+Unused dependencies
+* underscore
+Unused devDependencies
+* jasmine
+Missing dependencies
+* lodash
+```
+
+It figures out:
+
+- The dependency `underscore` is declared in the `package.json` file, but not used by any code.
+- The devDependency `jasmine` is declared in the `package.json` file, but not used by any code.
+- The dependency `lodash` is used somewhere in the code, but not declared in the `package.json` file.
+
+Please note that, if a subfolder has a `package.json` file, it is considered another project and should be checked with another depcheck command.
+
+The following example checks the same project, however, outputs as a JSON blob. Depcheck's JSON output is in one single line for easy pipe and computation. The [`json`](https://www.npmjs.com/package/json) command after the pipe is a node.js program to beautify the output.
+
+```js
+$> depcheck /path/to/my/project --json | json
+{
+  "dependencies": [
+    "underscore"
+  ],
+  "devDependencies": [
+    "jasmine"
+  ],
+  "missing": {
+    "lodash": [
+      "/path/to/my/project/file.using.lodash.js"
+    ]
+  },
+  "using": {
+    "react": [
+      "/path/to/my/project/file.using.react.jsx",
+      "/path/to/my/project/another.file.using.react.jsx"
+    ],
+    "lodash": [
+      "/path/to/my/project/file.using.lodash.js"
+    ]
+  },
+  "invalidFiles": {
+    "/path/to/my/project/file.having.syntax.error.js": "SyntaxError: <call stack here>"
+  },
+  "invalidDirs": {
+    "/path/to/my/project/folder/without/permission": "Error: EACCES, <call stack here>"
+  }
+}
+```
+
+- The `dependencies`, `devDependencies` and `missing` properties have the same meanings in the previous example.
+- The `using` property is a lookup indicating each dependency is used by which files.
+- The value of `missing` and `using` lookup is an array. It means the dependency may be used by many files.
+- The `invalidFiles` property contains the files having syntax error or permission error. The value is the error details. However, only one error is stored in the lookup.
+- The `invalidDirs` property contains the directories having permission error. The value is the error details.
+
+## False Alert
+
+Depcheck just walks through all files and try to figure out the dependencies according to some predefined rules. However, the predefined rules may not enough or even be wrong.
+
+There may be some cases that, a dependency is using but reported as unused, or a dependency is not used but reported as missing. These are *false alert* situations.
+
+If you find that depcheck is reporting a false alert, please [open an issue](https://github.com/depcheck/depcheck/issues/new) with the following information to let us know:
+
+- The output from `depcheck --json` command. Beautified JSON is better.
+- Which dependencies are considered as false alert?
+- How are you using those dependencies, how do the files look like?
 
 ## License
 
