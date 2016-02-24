@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import lodash from 'lodash';
 import walkdir from 'walkdir';
 import minimatch from 'minimatch';
 import builtInModules from 'builtin-modules';
@@ -14,10 +15,6 @@ function constructComponent(source, name) {
     Object.assign(result, {
       [current]: require(path.resolve(__dirname, name, current)),
     }), {});
-}
-
-function objectValues(object) {
-  return Object.keys(object).map(key => object[key]);
 }
 
 const availableParsers = constructComponent(component, 'parser');
@@ -51,7 +48,7 @@ const defaultOptions = {
     availableDetectors.requireCallExpression,
     availableDetectors.gruntLoadTaskCallExpression,
   ],
-  specials: objectValues(availableSpecials),
+  specials: lodash.values(availableSpecials),
 };
 
 function getOrDefault(opt, key) {

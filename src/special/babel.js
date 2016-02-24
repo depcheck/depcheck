@@ -1,4 +1,5 @@
 import path from 'path';
+import lodash from 'lodash';
 
 function parse(content) {
   try {
@@ -6,10 +7,6 @@ function parse(content) {
   } catch (error) {
     return {}; // ignore parse error silently
   }
-}
-
-function values(object) {
-  return Object.keys(object || {}).map(key => object[key]);
 }
 
 function isPlugin(target, plugin) {
@@ -66,8 +63,11 @@ function filter(deps, options) {
 
 function checkOptions(deps, options = {}) {
   const optDeps = filter(deps, options);
-  const envDeps = values(options.env).map(env => filter(deps, env))
-    .reduce((array, item) => array.concat(item), []);
+  const envDeps = lodash(options.env)
+    .values()
+    .map(env => filter(deps, env))
+    .flatten()
+    .value();
 
   return optDeps.concat(envDeps);
 }
