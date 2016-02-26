@@ -6,53 +6,15 @@ import minimatch from 'minimatch';
 import builtInModules from 'builtin-modules';
 import requirePackageName from 'require-package-name';
 
-import component from './component';
 import getNodes from './utils/get-nodes';
 import discoverPropertyDep from './utils/discover-property-dep';
 
-function constructComponent(source, name) {
-  return lodash(source[name])
-    .map(file => [
-      file,
-      require(path.resolve(__dirname, name, file)),
-    ])
-    .fromPairs()
-    .value();
-}
-
-const availableParsers = constructComponent(component, 'parser');
-
-const availableDetectors = constructComponent(component, 'detector');
-
-const availableSpecials = constructComponent(component, 'special');
-
-const defaultOptions = {
-  withoutDev: false,
-  ignoreBinPackage: false,
-  ignoreMatches: [
-  ],
-  ignoreDirs: [
-    '.git',
-    '.svn',
-    '.hg',
-    '.idea',
-    'node_modules',
-    'bower_components',
-  ],
-  parsers: {
-    '*.js': availableParsers.jsx,
-    '*.jsx': availableParsers.jsx,
-    '*.coffee': availableParsers.coffee,
-    '*.litcoffee': availableParsers.coffee,
-    '*.coffee.md': availableParsers.coffee,
-  },
-  detectors: [
-    availableDetectors.importDeclaration,
-    availableDetectors.requireCallExpression,
-    availableDetectors.gruntLoadTaskCallExpression,
-  ],
-  specials: lodash.values(availableSpecials),
-};
+import {
+  defaultOptions,
+  availableParsers,
+  availableDetectors,
+  availableSpecials,
+} from './constants';
 
 function isModule(dir) {
   try {
