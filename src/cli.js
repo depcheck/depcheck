@@ -3,7 +3,6 @@ import path from 'path';
 import yargs from 'yargs';
 import lodash from 'lodash';
 import depcheck from './index';
-import output from './utils/output';
 import { version } from '../package.json';
 
 function checkPathExist(dir) {
@@ -32,6 +31,44 @@ function getSpecials(specials) {
   return lodash.isUndefined(specials)
     ? undefined
     : specials.split(',').map(name => depcheck.special[name]);
+}
+
+function replacer(key, value) {
+  if (value instanceof Error) {
+    return value.stack;
+  }
+
+  return value;
+}
+
+function noIssue(result) {
+  return result.dependencies.length === 0
+      && result.devDependencies.length === 0
+      && Object.keys(result.missing).length === 0;
+}
+
+function prettify(caption, deps) {
+  const list = deps.map(dep => `* ${dep}`);
+  return list.length ? [caption].concat(list) : [];
+}
+
+function print(result, log, json) {
+  return new Promise(resolve => {
+    if (json) {
+      log(JSON.stringify(result, replacer));
+    } else if (noIssue(result)) {
+      log('No depcheck issue');
+    } else {
+      const deps = prettify('Unused dependencies', result.dependencies);
+      const devDeps = prettify('Unused devDependencies', result.devDependencies);
+      const missing = prettify('Missing dependencies', Object.keys(result.missing));
+      const content = deps.concat(devDeps, missing).join('\n');
+
+      log(content);
+    }
+
+    resolve(result);
+  });
 }
 
 export default function cli(args, log, error, exit) {
@@ -79,7 +116,7 @@ export default function cli(args, log, error, exit) {
     detectors: getDetectors(opt.argv.detectors),
     specials: getSpecials(opt.argv.specials),
   }))
-  .then(result => output(result, log, opt.argv.json))
+  .then(result => print(result, log, opt.argv.json))
   .then(({ dependencies: deps, devDependencies: devDeps }) =>
     exit(opt.argv.json || deps.length === 0 && devDeps.length === 0 ? 0 : -1));
 }

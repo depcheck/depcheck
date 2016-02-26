@@ -6,9 +6,6 @@ import minimatch from 'minimatch';
 import builtInModules from 'builtin-modules';
 import requirePackageName from 'require-package-name';
 
-import getNodes from './utils/get-nodes';
-import discoverPropertyDep from './utils/discover-property-dep';
-
 function isModule(dir) {
   try {
     require(path.resolve(dir, 'package.json'));
@@ -37,6 +34,54 @@ function detect(detectors, node) {
     })
     .flatten()
     .value();
+}
+
+// fix for node.js <= 3, it throws TypeError when value type invalid in weak set
+function hasVisited(ast, visited) {
+  try {
+    return visited.has(ast);
+  } catch (e) {
+    return false;
+  }
+}
+
+function recursive(ast, visited) {
+  if (!ast || hasVisited(ast, visited)) {
+    return [];
+  } else if (lodash.isArray(ast)) {
+    return lodash(ast)
+      .map(node => recursive(node, visited))
+      .flatten()
+      .value();
+  } else if (ast.type) {
+    visited.add(ast);
+    return lodash(ast)
+      .keys()
+      .filter(key => key !== 'tokens' && key !== 'comments')
+      .map(key => recursive(ast[key], visited))
+      .flatten()
+      .concat(ast)
+      .value();
+  }
+
+  return [];
+}
+
+function getNodes(ast) {
+  const visited = new WeakSet();
+  const nodes = recursive(ast, visited);
+  return nodes;
+}
+
+function discoverPropertyDep(rootDir, deps, property, depName) {
+  try {
+    const file = path.resolve(rootDir, 'node_modules', depName, 'package.json');
+    const metadata = require(file);
+    const propertyDeps = Object.keys(metadata[property] || {});
+    return lodash.intersection(deps, propertyDeps);
+  } catch (error) {
+    return [];
+  }
 }
 
 function getDependencies(dir, filename, deps, parser, detectors) {
