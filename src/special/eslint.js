@@ -2,7 +2,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
-import load from '../utils/load';
+import evaluate from '../utils/evaluate';
 
 function parse(content) {
   try {
@@ -18,7 +18,7 @@ function parse(content) {
   }
 
   try {
-    return load(`module.exports = ${content}`);
+    return evaluate(`module.exports = ${content}`);
   } catch (error) {
     // not valid JavaScript code
   }

@@ -1,6 +1,6 @@
 import vm from 'vm';
 
-export default function load(code) {
+export default function evaluate(code) {
   const exports = {};
   const sandbox = {
     exports,
