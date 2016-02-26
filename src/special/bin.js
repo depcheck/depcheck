@@ -1,11 +1,8 @@
 import path from 'path';
+import lodash from 'lodash';
 import getScripts from '../utils/get-scripts';
 
 const metadataCache = {};
-
-function toKeyValuePair(object) {
-  return Object.keys(object).map(key => ({ key, value: object[key] }));
-}
 
 function getCacheOrRequire(packagePath) {
   if (metadataCache[packagePath]) {
@@ -26,22 +23,14 @@ function loadMetadata(dep, dir) {
   }
 }
 
-function toMetadata(dep, dir) {
-  const metadata = loadMetadata(dep, dir);
-  const binaryLookup = metadata.bin || {};
-  const binaries = toKeyValuePair(binaryLookup);
-
-  return { dep, binaries };
-}
-
-function getBinFeatures(dep, bin) {
-  const binPath = path.join('node_modules', dep, bin.value).replace(/\\/g, '/');
+function getBinaryFeatures(dep, [key, value]) {
+  const binPath = path.join('node_modules', dep, value).replace(/\\/g, '/');
 
   const features = [
-    bin.key,
-    `$(npm bin)/${bin.key}`,
-    `node_modules/.bin/${bin.key}`,
-    `./node_modules/.bin/${bin.key}`,
+    key,
+    `$(npm bin)/${key}`,
+    `node_modules/.bin/${key}`,
+    `./node_modules/.bin/${key}`,
     binPath,
     `./${binPath}`,
   ];
@@ -49,21 +38,16 @@ function getBinFeatures(dep, bin) {
   return features;
 }
 
-function isUsedBin(dep, bin, scripts) {
-  const features = getBinFeatures(dep, bin);
-  return scripts.some(script =>
-    features.some(char => ` ${script} `.indexOf(` ${char} `) !== -1));
-}
-
-function getUsedDeps(deps, scripts, dir) {
-  return deps
-  .map(dep => toMetadata(dep, dir))
-  .filter(metadata =>
-    metadata.binaries.some(bin => isUsedBin(metadata.dep, bin, scripts)))
-  .map(metadata => metadata.dep);
+function isBinaryInUse(dep, scripts, dir) {
+  const metadata = loadMetadata(dep, dir);
+  const binaries = lodash.toPairs(metadata.bin || {});
+  return binaries.some(bin =>
+    getBinaryFeatures(dep, bin).some(feature =>
+      scripts.some(script =>
+        lodash.includes(` ${script} `, ` ${feature} `))));
 }
 
 export default (content, filepath, deps, dir) => {
   const scripts = getScripts(filepath, content);
-  return getUsedDeps(deps, scripts, dir);
+  return deps.filter(dep => isBinaryInUse(dep, scripts, dir));
 };
