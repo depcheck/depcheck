@@ -11,10 +11,13 @@ import getNodes from './utils/get-nodes';
 import discoverPropertyDep from './utils/discover-property-dep';
 
 function constructComponent(source, name) {
-  return source[name].reduce((result, current) =>
-    Object.assign(result, {
-      [current]: require(path.resolve(__dirname, name, current)),
-    }), {});
+  return lodash(source[name])
+    .map(file => [
+      file,
+      require(path.resolve(__dirname, name, file)),
+    ])
+    .fromPairs()
+    .value();
 }
 
 const availableParsers = constructComponent(component, 'parser');
@@ -51,44 +54,6 @@ const defaultOptions = {
   specials: lodash.values(availableSpecials),
 };
 
-function getOrDefault(opt, key) {
-  return typeof opt[key] !== 'undefined' ? opt[key] : defaultOptions[key];
-}
-
-function unifyParser(parsers) {
-  return Object.assign({}, ...Object.keys(parsers).map(key => ({
-    [key]: parsers[key] instanceof Array ? parsers[key] : [parsers[key]],
-  })));
-}
-
-function safeDetect(detector, node) {
-  try {
-    return detector(node);
-  } catch (error) {
-    return [];
-  }
-}
-
-function minus(array1, array2) {
-  return array1.filter(item => array2.indexOf(item) === -1);
-}
-
-function unique(array, item) {
-  return array.indexOf(item) === -1 ? array.concat([item]) : array;
-}
-
-function concat(array, item) {
-  return array.concat(item);
-}
-
-function isStringArray(obj) {
-  return obj instanceof Array && obj.every(item => typeof item === 'string');
-}
-
-function isNpmPackage(dep) {
-  return dep && dep !== '.' && dep !== '..' && builtInModules.indexOf(dep) === -1;
-}
-
 function isModule(dir) {
   try {
     require(path.resolve(dir, 'package.json'));
@@ -99,16 +64,27 @@ function isModule(dir) {
 }
 
 function mergeBuckets(object1, object2) {
-  return Object.keys(object2).reduce((result, key) => ({
-    ...result,
-    [key]: object2[key].concat(object1[key] || []),
-  }), object1);
+  return lodash.mergeWith(object1, object2, (value1, value2) => {
+    const array1 = value1 || [];
+    const array2 = value2 || [];
+    return array1.concat(array2);
+  });
+}
+
+function detect(detectors, node) {
+  return lodash(detectors)
+    .map(detector => {
+      try {
+        return detector(node);
+      } catch (error) {
+        return [];
+      }
+    })
+    .flatten()
+    .value();
 }
 
 function getDependencies(dir, filename, deps, parser, detectors) {
-  const detect = node =>
-    detectors.map(detector => safeDetect(detector, node)).reduce(concat, []);
-
   return new Promise((resolve, reject) => {
     fs.readFile(filename, 'utf8', (error, content) => {
       if (error) {
@@ -123,23 +99,22 @@ function getDependencies(dir, filename, deps, parser, detectors) {
     });
   }).then(ast => {
     // when parser returns string array, skip detector step and treat them as dependencies directly.
-    if (isStringArray(ast)) {
+    if (lodash.isArray(ast) && ast.every(lodash.isString)) {
       return ast;
     }
 
-    const dependencies = getNodes(ast)
-      .map(detect)
-      .reduce(concat, [])
-      .reduce(unique, [])
-      .map(requirePackageName);
+    const dependencies = lodash(getNodes(ast))
+      .map(node => detect(detectors, node))
+      .flatten()
+      .uniq()
+      .map(requirePackageName)
+      .value();
 
-    const peerDeps = dependencies
-      .map(dep => discoverPropertyDep(dep, 'peerDependencies', deps, dir))
-      .reduce(concat, []);
-
-    const optionalDeps = dependencies
-      .map(dep => discoverPropertyDep(dep, 'optionalDependencies', deps, dir))
-      .reduce(concat, []);
+    const discover = lodash.partial(discoverPropertyDep, dir, deps);
+    const discoverPeerDeps = lodash.partial(discover, 'peerDependencies');
+    const discoverOptionalDeps = lodash.partial(discover, 'optionalDependencies');
+    const peerDeps = lodash(dependencies).map(discoverPeerDeps).flatten().value();
+    const optionalDeps = lodash(dependencies).map(discoverOptionalDeps).flatten().value();
 
     return dependencies.concat(peerDeps).concat(optionalDeps);
   });
@@ -147,16 +122,22 @@ function getDependencies(dir, filename, deps, parser, detectors) {
 
 function checkFile(dir, filename, deps, parsers, detectors) {
   const basename = path.basename(filename);
-  const targets = Object.keys(parsers)
+  const targets = lodash(parsers)
+    .keys()
     .filter(glob => minimatch(basename, glob, { dot: true }))
     .map(key => parsers[key])
-    .reduce(concat, []);
+    .flatten()
+    .value();
 
   return targets.map(parser =>
     getDependencies(dir, filename, deps, parser, detectors)
       .then(using => ({
         using: {
-          [filename]: using.filter(isNpmPackage).reduce(unique, []),
+          [filename]: lodash(using)
+            .filter(dep => dep && dep !== '.' && dep !== '..') // TODO why need check?
+            .filter(dep => !lodash.includes(builtInModules, dep))
+            .uniq()
+            .value(),
         },
       }), error => ({
         invalidFiles: {
@@ -200,7 +181,8 @@ function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
 }
 
 function isIgnored(ignoreMatches, dependency) {
-  return ignoreMatches.some(match => minimatch(dependency, match));
+  const match = lodash.partial(minimatch, dependency);
+  return ignoreMatches.some(match);
 }
 
 function hasBin(rootDir, dependency) {
@@ -213,30 +195,42 @@ function hasBin(rootDir, dependency) {
 }
 
 function filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies) {
-  return Object.keys(dependencies)
-    .filter(dependency =>
-      !(ignoreBinPackage && hasBin(rootDir, dependency) ||
-        isIgnored(ignoreMatches, dependency)));
+  return lodash(dependencies)
+    .keys()
+    .reject(dep =>
+      isIgnored(ignoreMatches, dep) ||
+      ignoreBinPackage && hasBin(rootDir, dep))
+    .value();
 }
 
 function buildResult(result, deps, devDeps) {
-  const usingDepsLookup = Object.keys(result.using).reduce((obj, filename) =>
-    result.using[filename].reduce((object, dep) => ({
-      ...object,
-      [dep]: [filename].concat(object[dep] || []),
-    }), obj), {});
+  const usingDepsLookup = lodash(result.using)
+    // { f1:[d1,d2,d3], f2:[d2,d3,d4] }
+    .toPairs()
+    // [ [f1,[d1,d2,d3]], [f2,[d2,d3,d4]] ]
+    .map(([file, dep]) => [dep, lodash.times(dep.length, () => file)])
+    // [ [ [d1,d2,d3],[f1,f1,f1] ], [ [d2,d3,d4],[f2,f2,f2] ] ]
+    .map(pairs => lodash.zip(...pairs))
+    // [ [ [d1,f1],[d2,f1],[d3,f1] ], [ [d2,f2],[d3,f2],[d4,f2]] ]
+    .flatten()
+    // [ [d1,f1], [d2,f1], [d3,f1], [d2,f2], [d3,f2], [d4,f2] ]
+    .groupBy(([dep]) => dep)
+    // { d1:[ [d1,f1] ], d2:[ [d2,f1],[d2,f2] ], d3:[ [d3,f1],[d3,f2] ], d4:[ [d4,f2] ] }
+    .mapValues(pairs => pairs.map(lodash.last))
+    // { d1:[ f1 ], d2:[ f1,f2 ], d3:[ f1,f2 ], d4:[ f2 ] }
+    .value();
 
   const usingDeps = Object.keys(usingDepsLookup);
-  const missingDeps = minus(usingDeps, deps.concat(devDeps));
+  const missingDeps = lodash.difference(usingDeps, deps.concat(devDeps));
 
-  const missingDepsLookup = missingDeps.reduce((obj, missingDep) => ({
-    ...obj,
-    [missingDep]: usingDepsLookup[missingDep],
-  }), {});
+  const missingDepsLookup = lodash(missingDeps)
+    .map(missingDep => [missingDep, usingDepsLookup[missingDep]])
+    .fromPairs()
+    .value();
 
   return {
-    dependencies: minus(deps, usingDeps),
-    devDependencies: minus(devDeps, usingDeps),
+    dependencies: lodash.difference(deps, usingDeps),
+    devDependencies: lodash.difference(devDeps, usingDeps),
     missing: missingDepsLookup,
     using: usingDepsLookup,
     invalidFiles: result.invalidFiles,
@@ -245,22 +239,26 @@ function buildResult(result, deps, devDeps) {
 }
 
 export default function depcheck(rootDir, options, callback) {
-  const withoutDev = getOrDefault(options, 'withoutDev');
-  const ignoreBinPackage = getOrDefault(options, 'ignoreBinPackage');
-  const ignoreMatches = getOrDefault(options, 'ignoreMatches');
-  const ignoreDirs = defaultOptions.ignoreDirs.concat(options.ignoreDirs).reduce(unique, []);
+  const getOption = key =>
+    typeof options[key] !== 'undefined' ? options[key] : defaultOptions[key];
 
-  const detectors = getOrDefault(options, 'detectors');
-  const parsers = Object.assign(
-    { '*': getOrDefault(options, 'specials') },
-    unifyParser(getOrDefault(options, 'parsers')));
+  const withoutDev = getOption('withoutDev');
+  const ignoreBinPackage = getOption('ignoreBinPackage');
+  const ignoreMatches = getOption('ignoreMatches');
+  const ignoreDirs = lodash.union(defaultOptions.ignoreDirs, options.ignoreDirs);
+
+  const detectors = getOption('detectors');
+  const parsers = lodash(getOption('parsers'))
+    .mapValues(value => lodash.isArray(value) ? value : [value])
+    .merge({ '*': getOption('specials') })
+    .value();
 
   const metadata = options.package || require(path.join(rootDir, 'package.json'));
   const dependencies = metadata.dependencies || {};
   const devDependencies = !withoutDev && metadata.devDependencies ? metadata.devDependencies : {};
   const deps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies);
   const devDeps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, devDependencies);
-  const allDeps = deps.concat(devDeps).reduce(unique, []);
+  const allDeps = lodash.union(deps, devDeps);
 
   return checkDirectory(rootDir, rootDir, ignoreDirs, allDeps, parsers, detectors)
     .then(result => buildResult(result, deps, devDeps))

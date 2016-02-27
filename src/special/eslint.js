@@ -1,15 +1,8 @@
 import path from 'path';
 import yaml from 'js-yaml';
+import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
 import load from '../utils/load';
-
-function concat(array, item) {
-  return array.concat(item);
-}
-
-function unique(array, item) {
-  return array.indexOf(item) === -1 ? array.concat([item]) : array;
-}
 
 function parse(content) {
   try {
@@ -83,19 +76,20 @@ function checkConfig(config, rootDir) {
     .filter(preset => !path.isAbsolute(preset))
     .map(requirePackageName);
 
-  const presetDeps = presets
+  const presetDeps = lodash(presets)
     .map(preset => loadConfig(preset, rootDir))
     .map(presetConfig => checkConfig(presetConfig, rootDir))
-    .reduce(concat, []);
+    .flatten()
+    .value();
 
-  return parser.concat(plugins).concat(presetPackages).concat(presetDeps);
+  return lodash.union(parser, plugins, presetPackages, presetDeps);
 }
 
 export default (content, filename, deps, rootDir) => {
   const basename = path.basename(filename);
   if (basename === '.eslintrc') {
     const config = parse(content);
-    return checkConfig(config, rootDir).reduce(unique, []);
+    return checkConfig(config, rootDir);
   }
 
   return [];

@@ -28,10 +28,6 @@ const travisCommands = [
   'after_script',
 ];
 
-function concat(array, item) {
-  return array.concat(item);
-}
-
 export default function getScripts(filepath, content = null) {
   return getCacheOrFile(filepath, () => {
     const basename = path.basename(filepath);
@@ -41,7 +37,7 @@ export default function getScripts(filepath, content = null) {
       return lodash.values(JSON.parse(fileContent).scripts || {});
     } else if (basename === '.travis.yml') {
       const metadata = yaml.safeLoad(content) || {};
-      return travisCommands.map(cmd => metadata[cmd] || []).reduce(concat, []);
+      return lodash(travisCommands).map(cmd => metadata[cmd] || []).flatten().value();
     }
 
     return [];

@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import yargs from 'yargs';
+import lodash from 'lodash';
 import depcheck from './index';
 import output from './utils/output';
 import { version } from '../package.json';
@@ -13,10 +14,12 @@ function checkPathExist(dir) {
 function getParsers(parsers) {
   return typeof parsers === 'undefined'
     ? undefined
-    : Object.assign({}, ...parsers.split(',').map(keyValuePair => {
-      const [glob, value] = keyValuePair.split(':');
-      return { [glob]: value.split('&').map(name => depcheck.parser[name]) };
-    }));
+    : lodash(parsers)
+      .split(',')
+      .map(keyValuePair => keyValuePair.split(':'))
+      .fromPairs()
+      .mapValues(value => value.split('&').map(name => depcheck.parser[name]))
+      .value();
 }
 
 function getDetectors(detectors) {
@@ -77,9 +80,6 @@ export default function cli(args, log, error, exit) {
     specials: getSpecials(opt.argv.specials),
   }))
   .then(result => output(result, log, opt.argv.json))
-  .then(({ dependencies, devDependencies }) =>
-    exit(opt.argv.json
-      || dependencies.length === 0 && devDependencies.length === 0
-      ? 0
-      : -1));
+  .then(({ dependencies: deps, devDependencies: devDeps }) =>
+    exit(opt.argv.json || deps.length === 0 && devDeps.length === 0 ? 0 : -1));
 }
