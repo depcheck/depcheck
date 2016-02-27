@@ -82,9 +82,7 @@ describe('depcheck command line', () => {
         .and.containEql('not contain')
         .and.containEql('package.json');
 
-      log.should.startWith('Usage: ')
-        .and.containEql('--help');
-
+      log.should.be.empty();
       exitCode.should.equal(-1);
     }));
 
