@@ -2,7 +2,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
-import load from '../utils/load';
+import evaluate from '../utils/evaluate';
 
 function parse(content) {
   try {
@@ -18,7 +18,7 @@ function parse(content) {
   }
 
   try {
-    return load(`module.exports = ${content}`);
+    return evaluate(`module.exports = ${content}`);
   } catch (error) {
     // not valid JavaScript code
   }
@@ -30,7 +30,7 @@ function parse(content) {
 function wrapToArray(obj) {
   if (!obj) {
     return [];
-  } else if (obj instanceof Array) {
+  } else if (lodash.isArray(obj)) {
     return obj;
   }
 
@@ -85,7 +85,7 @@ function checkConfig(config, rootDir) {
   return lodash.union(parser, plugins, presetPackages, presetDeps);
 }
 
-export default (content, filename, deps, rootDir) => {
+export default function parseESLint(content, filename, deps, rootDir) {
   const basename = path.basename(filename);
   if (basename === '.eslintrc') {
     const config = parse(content);
@@ -93,4 +93,4 @@ export default (content, filename, deps, rootDir) => {
   }
 
   return [];
-};
+}

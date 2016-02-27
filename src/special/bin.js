@@ -47,7 +47,7 @@ function isBinaryInUse(dep, scripts, dir) {
         lodash.includes(` ${script} `, ` ${feature} `))));
 }
 
-export default (content, filepath, deps, dir) => {
+export default function parseBinary(content, filepath, deps, dir) {
   const scripts = getScripts(filepath, content);
   return deps.filter(dep => isBinaryInUse(dep, scripts, dir));
-};
+}

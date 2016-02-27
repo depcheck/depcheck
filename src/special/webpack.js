@@ -38,7 +38,7 @@ function getLoaders(deps, loaders) {
     .value();
 }
 
-export default (content, filepath, deps) => {
+export default function parseWebpack(content, filepath, deps) {
   const filename = path.basename(filepath);
   if (filename === 'webpack.config.js') {
     const module = require(filepath).module || {};
@@ -49,4 +49,4 @@ export default (content, filepath, deps) => {
   }
 
   return [];
-};
+}
