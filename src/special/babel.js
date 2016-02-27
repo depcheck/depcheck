@@ -10,7 +10,7 @@ function parse(content) {
 }
 
 function isPlugin(target, plugin) {
-  return typeof target === 'string'
+  return lodash.isString(target)
     ? target === plugin || target === `babel-plugin-${plugin}`
     : target[0] === plugin || target[0] === `babel-plugin-${plugin}`;
 }
@@ -21,7 +21,7 @@ function contain(array, dep, prefix) {
   }
 
   // extract name if wrapping with options
-  const names = array.map(item => typeof item === 'string' ? item : item[0]);
+  const names = array.map(item => lodash.isString(item) ? item : item[0]);
   if (names.indexOf(dep) !== -1) {
     return true;
   }

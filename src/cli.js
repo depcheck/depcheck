@@ -12,7 +12,7 @@ function checkPathExist(dir) {
 }
 
 function getParsers(parsers) {
-  return typeof parsers === 'undefined'
+  return lodash.isUndefined(parsers)
     ? undefined
     : lodash(parsers)
       .split(',')
@@ -23,13 +23,13 @@ function getParsers(parsers) {
 }
 
 function getDetectors(detectors) {
-  return typeof detectors === 'undefined'
+  return lodash.isUndefined(detectors)
     ? undefined
     : detectors.split(',').map(name => depcheck.detector[name]);
 }
 
 function getSpecials(specials) {
-  return typeof specials === 'undefined'
+  return lodash.isUndefined(specials)
     ? undefined
     : specials.split(',').map(name => depcheck.special[name]);
 }

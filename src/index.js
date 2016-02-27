@@ -240,7 +240,7 @@ function buildResult(result, deps, devDeps) {
 
 export default function depcheck(rootDir, options, callback) {
   const getOption = key =>
-    typeof options[key] !== 'undefined' ? options[key] : defaultOptions[key];
+    lodash.isUndefined(options[key]) ? defaultOptions[key] : options[key];
 
   const withoutDev = getOption('withoutDev');
   const ignoreBinPackage = getOption('ignoreBinPackage');
