@@ -33,18 +33,10 @@ function getSpecials(specials) {
     : specials.split(',').map(name => depcheck.special[name]);
 }
 
-function replacer(key, value) {
-  if (value instanceof Error) {
-    return value.stack;
-  }
-
-  return value;
-}
-
 function noIssue(result) {
-  return result.dependencies.length === 0
-      && result.devDependencies.length === 0
-      && Object.keys(result.missing).length === 0;
+  return lodash.isEmpty(result.dependencies)
+      && lodash.isEmpty(result.devDependencies)
+      && lodash.isEmpty(result.missing);
 }
 
 function prettify(caption, deps) {
@@ -53,22 +45,19 @@ function prettify(caption, deps) {
 }
 
 function print(result, log, json) {
-  return new Promise(resolve => {
-    if (json) {
-      log(JSON.stringify(result, replacer));
-    } else if (noIssue(result)) {
-      log('No depcheck issue');
-    } else {
-      const deps = prettify('Unused dependencies', result.dependencies);
-      const devDeps = prettify('Unused devDependencies', result.devDependencies);
-      const missing = prettify('Missing dependencies', Object.keys(result.missing));
-      const content = deps.concat(devDeps, missing).join('\n');
+  if (json) {
+    log(JSON.stringify(result, (key, value) => lodash.isError(value) ? value.stack : value));
+  } else if (noIssue(result)) {
+    log('No depcheck issue');
+  } else {
+    const deps = prettify('Unused dependencies', result.dependencies);
+    const devDeps = prettify('Unused devDependencies', result.devDependencies);
+    const missing = prettify('Missing dependencies', Object.keys(result.missing));
+    const content = deps.concat(devDeps, missing).join('\n');
+    log(content);
+  }
 
-      log(content);
-    }
-
-    resolve(result);
-  });
+  return result;
 }
 
 export default function cli(args, log, error, exit) {

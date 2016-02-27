@@ -30,7 +30,7 @@ function parse(content) {
 function wrapToArray(obj) {
   if (!obj) {
     return [];
-  } else if (obj instanceof Array) {
+  } else if (lodash.isArray(obj)) {
     return obj;
   }
 
