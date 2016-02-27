@@ -93,7 +93,6 @@ export default function cli(args, log, error, exit) {
   .then(() => checkPathExist(path.resolve(rootDir, 'package.json')))
   .catch(() => {
     error(`Path ${dir} does not contain a package.json file`);
-    log(opt.getUsageInstance().help());
     exit(-1);
   })
   .then(() => depcheck(rootDir, {
