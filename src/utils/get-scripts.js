@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
+import lodash from 'lodash';
 
 const scriptCache = {};
 
@@ -27,24 +28,16 @@ const travisCommands = [
   'after_script',
 ];
 
-function concat(array, item) {
-  return array.concat(item);
-}
-
-function getObjectValues(object) {
-  return Object.keys(object).map(key => object[key]);
-}
-
 export default function getScripts(filepath, content = null) {
   return getCacheOrFile(filepath, () => {
     const basename = path.basename(filepath);
     const fileContent = content !== null ? content : fs.readFileSync(filepath, 'utf-8');
 
     if (basename === 'package.json') {
-      return getObjectValues(JSON.parse(fileContent).scripts || {});
+      return lodash.values(JSON.parse(fileContent).scripts || {});
     } else if (basename === '.travis.yml') {
       const metadata = yaml.safeLoad(content) || {};
-      return travisCommands.map(cmd => metadata[cmd] || []).reduce(concat, []);
+      return lodash(travisCommands).map(cmd => metadata[cmd] || []).flatten().value();
     }
 
     return [];

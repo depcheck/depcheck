@@ -1,11 +1,12 @@
 import path from 'path';
+import lodash from 'lodash';
 
-export default function discover(depName, property, deps, rootDir) {
+export default function discover(rootDir, deps, property, depName) {
   try {
     const file = path.resolve(rootDir, 'node_modules', depName, 'package.json');
     const metadata = require(file);
     const propertyDeps = Object.keys(metadata[property] || {});
-    return deps.filter(dep => propertyDeps.indexOf(dep) !== -1);
+    return lodash.intersection(deps, propertyDeps);
   } catch (error) {
     return [];
   }

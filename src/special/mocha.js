@@ -1,11 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
 import getScripts from '../utils/get-scripts';
-
-function concat(result, array) {
-  return result.concat(array);
-}
 
 function getOpts(script) {
   const argvs = script.split(' ').filter(argv => argv);
@@ -30,14 +27,15 @@ export default (content, filepath, deps, rootDir) => {
   }
 
   // get mocha.opts from scripts
-  const requires = getScripts(filepath, content)
+  const requires = lodash(getScripts(filepath, content))
     .filter(script => script.indexOf('mocha') !== -1)
     .map(script => getOpts(script))
     .filter(opts => opts)
     .map(opts => path.resolve(filepath, '..', opts))
     .map(optPath => fs.readFileSync(optPath, 'utf-8')) // TODO async read file
     .map(optContent => getRequires(optContent, deps))
-    .reduce(concat, []);
+    .flatten()
+    .value();
 
   return requires;
 };

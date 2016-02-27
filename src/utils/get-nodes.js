@@ -1,20 +1,34 @@
+import lodash from 'lodash';
+
+// fix for node.js <= 3, it throws TypeError when value type invalid in weak set
+function has(ast, visited) {
+  try {
+    return visited.has(ast);
+  } catch (e) {
+    return false;
+  }
+}
+
 function recursive(ast, visited) {
-  const nodes = [];
-
-  if (ast && ast.type && !visited.has(ast)) {
+  if (!ast || has(ast, visited)) {
+    return [];
+  } else if (lodash.isArray(ast)) {
+    return lodash(ast)
+      .map(node => recursive(node, visited))
+      .flatten()
+      .value();
+  } else if (ast.type) {
     visited.add(ast);
-    nodes.push(ast);
-  }
-
-  if (Array.isArray(ast)) {
-    return nodes.concat(...ast.map(node => recursive(node, visited)));
-  } else if (ast && typeof ast === 'object') {
-    return nodes.concat(...Object.keys(ast)
+    return lodash(ast)
+      .keys()
       .filter(key => key !== 'tokens' && key !== 'comments')
-      .map(key => recursive(ast[key], visited)));
+      .map(key => recursive(ast[key], visited))
+      .flatten()
+      .concat(ast)
+      .value();
   }
 
-  return nodes;
+  return [];
 }
 
 export default function getNodes(ast) {

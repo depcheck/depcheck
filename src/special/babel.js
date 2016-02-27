@@ -1,4 +1,5 @@
 import path from 'path';
+import lodash from 'lodash';
 
 function parse(content) {
   try {
@@ -8,12 +9,8 @@ function parse(content) {
   }
 }
 
-function values(object) {
-  return Object.keys(object || {}).map(key => object[key]);
-}
-
 function isPlugin(target, plugin) {
-  return typeof target === 'string'
+  return lodash.isString(target)
     ? target === plugin || target === `babel-plugin-${plugin}`
     : target[0] === plugin || target[0] === `babel-plugin-${plugin}`;
 }
@@ -24,7 +21,7 @@ function contain(array, dep, prefix) {
   }
 
   // extract name if wrapping with options
-  const names = array.map(item => typeof item === 'string' ? item : item[0]);
+  const names = array.map(item => lodash.isString(item) ? item : item[0]);
   if (names.indexOf(dep) !== -1) {
     return true;
   }
@@ -37,19 +34,12 @@ function contain(array, dep, prefix) {
 }
 
 function getReactTransforms(deps, plugins) {
-  if (!plugins) {
-    return [];
-  }
-
-  const transforms = plugins
+  const transforms = lodash(plugins || [])
     .filter(plugin => isPlugin(plugin, 'react-transform'))
-    .map(plugin => plugin[1].transforms.map(transform => transform.transform))[0];
+    .map(([, plugin]) => plugin.transforms.map(({ transform }) => transform))
+    .first();
 
-  if (!transforms) {
-    return [];
-  }
-
-  return transforms.filter(transform => deps.indexOf(transform) !== -1);
+  return lodash.intersection(transforms, deps);
 }
 
 function filter(deps, options) {
@@ -61,13 +51,16 @@ function filter(deps, options) {
 
   const reactTransforms = getReactTransforms(deps, options.plugins);
 
-  return presets.concat(plugins).concat(reactTransforms);
+  return presets.concat(plugins, reactTransforms);
 }
 
 function checkOptions(deps, options = {}) {
   const optDeps = filter(deps, options);
-  const envDeps = values(options.env).map(env => filter(deps, env))
-    .reduce((array, item) => array.concat(item), []);
+  const envDeps = lodash(options.env)
+    .values()
+    .map(env => filter(deps, env))
+    .flatten()
+    .value();
 
   return optDeps.concat(envDeps);
 }
