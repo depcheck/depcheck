@@ -85,7 +85,7 @@ function checkConfig(config, rootDir) {
   return lodash.union(parser, plugins, presetPackages, presetDeps);
 }
 
-export default (content, filename, deps, rootDir) => {
+export default function parseESLint(content, filename, deps, rootDir) {
   const basename = path.basename(filename);
   if (basename === '.eslintrc') {
     const config = parse(content);
@@ -93,4 +93,4 @@ export default (content, filename, deps, rootDir) => {
   }
 
   return [];
-};
+}

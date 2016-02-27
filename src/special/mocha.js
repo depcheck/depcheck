@@ -20,7 +20,7 @@ function getRequires(content, deps) {
     .filter(name => deps.indexOf(name) !== -1);
 }
 
-export default (content, filepath, deps, rootDir) => {
+export default function parseMocha(content, filepath, deps, rootDir) {
   const defaultOptPath = path.resolve(rootDir, 'test/mocha.opts');
   if (filepath === defaultOptPath) {
     return getRequires(content, deps);
@@ -38,4 +38,4 @@ export default (content, filepath, deps, rootDir) => {
     .value();
 
   return requires;
-};
+}

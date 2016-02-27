@@ -65,7 +65,7 @@ function checkOptions(deps, options = {}) {
   return optDeps.concat(envDeps);
 }
 
-export default (content, filePath, deps) => {
+export default function parseBabel(content, filePath, deps) {
   const filename = path.basename(filePath);
 
   if (filename === '.babelrc') {
@@ -79,4 +79,4 @@ export default (content, filePath, deps) => {
   }
 
   return [];
-};
+}

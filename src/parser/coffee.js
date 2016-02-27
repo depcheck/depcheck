@@ -1,5 +1,6 @@
 import DepsRegex from 'deps-regex';
 const re = new DepsRegex({ matchES6: false });
 
-export default content =>
-  re.getDependencies(content);
+export default function parseCoffeeScript(content) {
+  return re.getDependencies(content);
+}
