@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
-/* eslint-disable no-console */
+/* eslint-disable no-console, prefer-arrow-callback */
 
 require('../dist/cli')(
   process.argv.slice(2),
   console.log,
   console.error,
-  function (code) {
+  function exit(code) {
     // ensure all data is flushed before terminating the process
-    process.stdout.on('finish', function () {
+    process.stdout.on('finish', function finish() {
       process.exit(code);
     });
   });

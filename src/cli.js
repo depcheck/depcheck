@@ -5,9 +5,9 @@ import lodash from 'lodash';
 import depcheck from './index';
 import { version } from '../package.json';
 
-function checkPathExist(dir) {
+function checkPathExist(dir, errorMessage) {
   return new Promise((resolve, reject) =>
-    fs.exists(dir, result => result ? resolve() : reject()));
+    fs.exists(dir, result => result ? resolve() : reject(errorMessage)));
 }
 
 function getParsers(parsers) {
@@ -85,27 +85,24 @@ export default function cli(args, log, error, exit) {
   const dir = opt.argv._[0] || '.';
   const rootDir = path.resolve(dir);
 
-  checkPathExist(rootDir)
-  .catch(() => {
-    error(`Path ${dir} does not exist`);
-    exit(-1);
-  })
-  .then(() => checkPathExist(path.resolve(rootDir, 'package.json')))
-  .catch(() => {
-    error(`Path ${dir} does not contain a package.json file`);
-    log(opt.getUsageInstance().help());
-    exit(-1);
-  })
-  .then(() => depcheck(rootDir, {
-    withoutDev: !opt.argv.dev,
-    ignoreBinPackage: opt.argv.ignoreBinPackage,
-    ignoreMatches: (opt.argv.ignores || '').split(','),
-    ignoreDirs: (opt.argv.ignoreDirs || '').split(','),
-    parsers: getParsers(opt.argv.parsers),
-    detectors: getDetectors(opt.argv.detectors),
-    specials: getSpecials(opt.argv.specials),
-  }))
-  .then(result => print(result, log, opt.argv.json))
-  .then(({ dependencies: deps, devDependencies: devDeps }) =>
-    exit(opt.argv.json || deps.length === 0 && devDeps.length === 0 ? 0 : -1));
+  checkPathExist(rootDir, `Path ${dir} does not exist`)
+    .then(() => checkPathExist(
+      path.resolve(rootDir, 'package.json'),
+      `Path ${dir} does not contain a package.json file`))
+    .then(() => depcheck(rootDir, {
+      withoutDev: !opt.argv.dev,
+      ignoreBinPackage: opt.argv.ignoreBinPackage,
+      ignoreMatches: (opt.argv.ignores || '').split(','),
+      ignoreDirs: (opt.argv.ignoreDirs || '').split(','),
+      parsers: getParsers(opt.argv.parsers),
+      detectors: getDetectors(opt.argv.detectors),
+      specials: getSpecials(opt.argv.specials),
+    }))
+    .then(result => print(result, log, opt.argv.json))
+    .then(({ dependencies: deps, devDependencies: devDeps }) =>
+      exit(opt.argv.json || deps.length === 0 && devDeps.length === 0 ? 0 : -1))
+    .catch(errorMessage => {
+      error(errorMessage);
+      exit(-1);
+    });
 }
