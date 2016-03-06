@@ -4,6 +4,7 @@
     "es6",
     "es7",
     "jsx",
+    "typescript",
     "coffee"
   ],
   "detector": [
