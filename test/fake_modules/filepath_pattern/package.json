@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "dont-find-me": "~0.0.1",
+    "find-me": "^0.1.0"
+  }
+}
