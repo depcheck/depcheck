@@ -60,7 +60,7 @@
     "babel-preset-stage-2": "^6.0.15",
     "codecov.io": "^0.1.6",
     "depcheck-web": "^0.1.0",
-    "eslint": "^2.2.0",
+    "eslint": "=2.2.0",
     "eslint-config-airbnb": "^6.0.1",
     "fs-promise": "^0.4.1",
     "isparta": "^4.0.0",
