@@ -121,10 +121,9 @@ function getDependencies(dir, filename, deps, parser, detectors) {
 }
 
 function checkFile(dir, filename, deps, parsers, detectors) {
-  const basename = path.basename(filename);
   const targets = lodash(parsers)
     .keys()
-    .filter(glob => minimatch(basename, glob, { dot: true }))
+    .filter(glob => minimatch(filename, glob, { dot: true }))
     .map(key => parsers[key])
     .flatten()
     .value();

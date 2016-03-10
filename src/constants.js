@@ -32,11 +32,11 @@ export const defaultOptions = {
     'bower_components',
   ],
   parsers: {
-    '*.js': availableParsers.jsx,
-    '*.jsx': availableParsers.jsx,
-    '*.coffee': availableParsers.coffee,
-    '*.litcoffee': availableParsers.coffee,
-    '*.coffee.md': availableParsers.coffee,
+    '**/*.js': availableParsers.jsx,
+    '**/*.jsx': availableParsers.jsx,
+    '**/*.coffee': availableParsers.coffee,
+    '**/*.litcoffee': availableParsers.coffee,
+    '**/*.coffee.md': availableParsers.coffee,
   },
   detectors: [
     availableDetectors.importDeclaration,

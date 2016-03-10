@@ -45,7 +45,7 @@ export default function depcheck(rootDir, options, callback) {
   const detectors = getOption('detectors');
   const parsers = lodash(getOption('parsers'))
     .mapValues(value => lodash.isArray(value) ? value : [value])
-    .merge({ '*': getOption('specials') })
+    .merge({ '**/*': getOption('specials') })
     .value();
 
   const metadata = options.package || require(path.join(rootDir, 'package.json'));
