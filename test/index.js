@@ -233,6 +233,6 @@ describe('depcheck', () => {
       unused.dependencies.should.deepEqual(['dont-find-me']);
       unused.devDependencies.should.deepEqual([]);
       unused.missing.should.deepEqual({});
-      Object.keys(unused.using).should.deepEqual(['find-me']);
+      Object.keys(unused.using).should.deepEqual(['find-me', 'find-me2']);
     }));
 });
