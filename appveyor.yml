@@ -13,6 +13,7 @@ install:
 test_script:
   - node --version
   - npm --version
+  - npm install typescript # peer dependencies
   - npm run depcheck
   - npm run depcheck-json
   - npm run lint

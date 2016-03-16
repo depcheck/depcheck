@@ -9,6 +9,7 @@ node_js:
   - 5
 
 script:
+  - npm install typescript # peer dependencies
   - npm run depcheck
   - npm run depcheck-json
   - npm run depcheck-web
