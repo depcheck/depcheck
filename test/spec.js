@@ -92,6 +92,22 @@ export default [
     },
   },
   {
+    name: 'support Typescript syntax',
+    module: 'typescript',
+    options: {
+    },
+    expected: {
+      dependencies: ['unused-dep'],
+      devDependencies: [],
+      missing: {},
+      using: {
+        react: ['component.tsx'],
+        'ts-dep-1': ['index.ts'],
+        'ts-dep-2': ['index.ts'],
+      },
+    },
+  },
+  {
     name: 'find dependencies used in code but not declared in package.json',
     module: 'missing',
     options: {
