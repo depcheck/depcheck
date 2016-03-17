@@ -1,12 +1,5 @@
 import { parse } from 'babylon';
-
-function tryRequire(module) {
-  try {
-    return require(module);
-  } catch (e) {
-    return null;
-  }
-}
+import tryRequire from '../utils/try-require';
 
 const typescript = tryRequire('typescript');
 

@@ -39,6 +39,8 @@ export const defaultOptions = {
     '*.coffee.md': availableParsers.coffee,
     '*.ts': availableParsers.typescript,
     '*.tsx': availableParsers.typescript,
+    '*.sass': availableParsers.sass,
+    '*.scss': availableParsers.sass,
   },
   detectors: [
     availableDetectors.importDeclaration,
