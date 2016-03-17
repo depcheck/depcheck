@@ -108,6 +108,21 @@ export default [
     },
   },
   {
+    name: 'support SASS/SCSS syntax',
+    module: 'sass',
+    options: {
+    },
+    expected: {
+      dependencies: ['unused-sass-dep'],
+      devDependencies: [],
+      missing: {},
+      using: {
+        'sass-dep': ['sass.sass'],
+        'scss-dep': ['scss.scss'],
+      },
+    },
+  },
+  {
     name: 'find dependencies used in code but not declared in package.json',
     module: 'missing',
     options: {
