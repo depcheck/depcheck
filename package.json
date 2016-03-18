@@ -69,6 +69,7 @@
     "should": "^8.0.0"
   },
   "peerDependencies": {
+    "node-sass": "^3.4.0",
     "typescript": "^1.8.0"
   }
 }
