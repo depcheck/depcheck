@@ -156,6 +156,24 @@ export default [
     },
   },
   {
+    name: 'not report peer and optional dependencies as missing',
+    module: 'missing_peer_deps',
+    options: {
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {
+        'missing-this-dep': ['index.js'],
+      },
+      using: {
+        'missing-this-dep': ['index.js'],
+        'peer-dep': ['index.js'],
+        'optional-dep': ['index.js'],
+      },
+    },
+  },
+  {
     name: 'find grunt dependencies',
     module: 'grunt',
     options: {
