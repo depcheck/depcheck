@@ -11,24 +11,45 @@ Depcheck is a tool to analysis the dependencies in a project, and figures out wh
 
 [![Dependency Status](https://david-dm.org/depcheck/depcheck.svg)](https://david-dm.org/depcheck/depcheck)
 [![devDependency Status](https://david-dm.org/depcheck/depcheck/dev-status.svg)](https://david-dm.org/depcheck/depcheck#info=devDependencies)
-
-## Features
-
-- Support ES5, ES6, ES7, JSX and CoffeeScript syntax.
-- Detect dependencies used as ESLint configuration preset, parser and plugins.
-- Detect dependencies used as Webpack loaders.
-- Detect dependencies used as Babel presets and plugins.
-- Recognize peerDependencies and optionalDependencies used by other dependencies.
-- Recognize dependencies used inside `grunt.tasks.loadNpmTasks` call.
-- Smart to identify dependencies used in commands.
+[![peerDependency Status](https://david-dm.org/depcheck/depcheck/peer-status.svg)](https://david-dm.org/depcheck/depcheck#info=peerDependencies)
 
 ## Installation
 
 ```
-npm install depcheck -g
+npm install -g depcheck
 ```
 
 *Notice:* depcheck needs node.js >= 0.12.
+
+## Syntax Support
+
+Depcheck not only recognizes the dependencies in JavaScript file, but also supports these syntaxes:
+
+- JavaScript (ES5, ES6 and ES7)
+- React JSX
+- CoffeeScript
+- Typescript (by `typescript` as peer dependency)
+- SASS and SCSS (by `node-sass` as peer dependency)
+
+To get the syntax support by peer dependency, please install the corresponding package explicitly. For example, for Typescript user, install depcheck with `typescript` package:
+
+```
+npm install -g depcheck typescript
+```
+
+## Special
+
+The *special* is a component used to recognize the dependencies not generally used in the above syntax files. The following scenarios are supported by specials:
+
+- Dependencies used in npm commands, Travis scripts or other CI scripts
+- ESLint configuration presets, parsers and plugins
+- Webpack loaders
+- Babel presets and plugins
+- Grunt plugins
+- Feross standard format parser
+- Mocha explicit required dependencies
+
+The logic of a special is not perfect. There might be [false alerts](#false-alert). If it happens, please open an issue for us.
 
 ## Usage
 
