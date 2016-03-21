@@ -140,7 +140,7 @@ var opts = {
 
 ### Implement Custom Detector
 
-Detector is a JavaScript function accepts an AST node and package dependencies (including devDependencies unless `withoutDev` option is `true`) and returns an array of dependency package names.
+Detector is a JavaScript function accepts an AST node and package dependencies (including devDependencies, optionalDependencies and peerDependencies) and returns an array of dependency package names.
 
 The following code snippet is the ES6 `import` declaration detector:
 
@@ -220,7 +220,7 @@ As seen from the code snippet, there are four parameters passed into the *specia
 
 - Content, same as normal parser, the file content.
 - FilePath, the file path, use `path.basename` to retrieve the file name.
-- Deps, an array containing the package dependencies (including devDependencies unless `withoutDev` option is `true`).
+- Deps, an array containing the package dependencies (including devDependencies, optionalDependencies and peerDependencies).
 - Dir, the checking root directory passed from API or CLI.
 
 Pay attention that, special parser will match **all** files, please do file path or file name matching **by yourself** and only parse content only when necessary. In regards to the returning value, both AST node or plain string array are OK as a normal parser.
