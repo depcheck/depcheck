@@ -61,8 +61,6 @@ The `directory` argument is the root directory of your project (where the `packa
 
 All the arguments are optional:
 
-`--dev=[true|false]`: A flag indicates if depcheck looks at `devDependencies`. By default, it is `true`. It means, depcheck looks at both `dependencies` and `devDependencies`.
-
 `--ignore-bin-package=[true|false]`: A flag indicates if depcheck ignores the packages containing bin entry. The default value is `true`.
 
 `--json`: Output results to JSON. When not specified, depcheck outputs in human friendly format.
@@ -75,6 +73,12 @@ All the arguments are optional:
 
 `--parsers`, `--detectors` and `--specials`: These arguments are for advanced usage. They provide an easy way to customize the file parser and dependency detection. Check [the pluggable design document](https://github.com/depcheck/depcheck/blob/master/doc/pluggable-design.md) for more information.
 
+### Deprecated arguments
+
+The following arguments are deprecated and will be removed in next major version:
+
+`--dev=[true|false]`: *[DEPRECATED]* It leads a wrong result for missing dependencies when it is `false`. This option will be enforced to `true` in next major version. The corresponding API option `withoutDev` is deprecated too.
+
 ## API
 
 Similar options are provided to `depcheck` function for programming.
@@ -83,7 +87,7 @@ Similar options are provided to `depcheck` function for programming.
 import depcheck from 'depcheck';
 
 const options = {
-  withoutDev: false, // check against devDependencies
+  withoutDev: false, // [DEPRECATED] check against devDependencies
   ignoreBinPackage: false, // ignore the packages with bin entry
   ignoreDirs: [ // folder with these names will be ignored
     'sandbox',
