@@ -51,10 +51,21 @@ export default function depcheck(rootDir, options, callback) {
   const metadata = options.package || require(path.join(rootDir, 'package.json'));
   const dependencies = metadata.dependencies || {};
   const devDependencies = !withoutDev && metadata.devDependencies ? metadata.devDependencies : {};
+  const peerDeps = Object.keys(metadata.peerDependencies || {});
+  const optionalDeps = Object.keys(metadata.optionalDependencies || {});
   const deps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies);
   const devDeps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, devDependencies);
 
-  return check(rootDir, ignoreDirs, deps, devDeps, parsers, detectors).then(callback);
+  return check({
+    rootDir,
+    ignoreDirs,
+    deps,
+    devDeps,
+    peerDeps,
+    optionalDeps,
+    parsers,
+    detectors,
+  }).then(callback);
 }
 
 depcheck.parser = availableParsers;

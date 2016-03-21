@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "sass-dep": "0.0.1",
+    "scss-dep": "0.0.1",
+    "unused-sass-dep": "0.0.1"
+  }
+}

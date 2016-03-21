@@ -92,6 +92,37 @@ export default [
     },
   },
   {
+    name: 'support Typescript syntax',
+    module: 'typescript',
+    options: {
+    },
+    expected: {
+      dependencies: ['unused-dep'],
+      devDependencies: [],
+      missing: {},
+      using: {
+        react: ['component.tsx'],
+        'ts-dep-1': ['index.ts'],
+        'ts-dep-2': ['index.ts'],
+      },
+    },
+  },
+  {
+    name: 'support SASS/SCSS syntax',
+    module: 'sass',
+    options: {
+    },
+    expected: {
+      dependencies: ['unused-sass-dep'],
+      devDependencies: [],
+      missing: {},
+      using: {
+        'sass-dep': ['sass.sass'],
+        'scss-dep': ['scss.scss'],
+      },
+    },
+  },
+  {
     name: 'find dependencies used in code but not declared in package.json',
     module: 'missing',
     options: {
@@ -121,6 +152,24 @@ export default [
       using: {
         'outer-missing-dep': ['index.js'],
         'used-dep': ['index.js'],
+      },
+    },
+  },
+  {
+    name: 'not report peer and optional dependencies as missing',
+    module: 'missing_peer_deps',
+    options: {
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {
+        'missing-this-dep': ['index.js'],
+      },
+      using: {
+        'missing-this-dep': ['index.js'],
+        'peer-dep': ['index.js'],
+        'optional-dep': ['index.js'],
       },
     },
   },

@@ -1,0 +1,8 @@
+{
+  "peerDependencies": {
+    "peer-dep": "0.0.1"
+  },
+  "optionalDependencies": {
+    "optional-dep": "0.0.1"
+  }
+}
