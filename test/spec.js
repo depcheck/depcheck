@@ -3,7 +3,6 @@ export default [
     name: 'find unused dependencies',
     module: 'bad',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: ['optimist'],
@@ -39,7 +38,6 @@ export default [
     name: 'find all dependencies',
     module: 'good',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: [],
@@ -56,7 +54,6 @@ export default [
     name: 'find all dependencies in ES6 files',
     module: 'good_es6',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: ['unsupported-syntax'],
@@ -80,7 +77,6 @@ export default [
     name: 'recognize experimental ES7 syntax enabled in Babel by default',
     module: 'good_es7',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: [],
@@ -177,7 +173,6 @@ export default [
     name: 'find grunt dependencies',
     module: 'grunt',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: [],
@@ -192,7 +187,6 @@ export default [
     name: 'find grunt task dependencies',
     module: 'grunt-tasks',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: [],
@@ -207,7 +201,6 @@ export default [
     name: 'find unused package in devDependencies',
     module: 'dev',
     options: {
-      withoutDev: false,
     },
     expected: {
       dependencies: [],
