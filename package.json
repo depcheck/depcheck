@@ -43,7 +43,6 @@
   "dependencies": {
     "babylon": "^6.1.21",
     "builtin-modules": "^1.1.1",
-    "deprecate": "^0.1.0",
     "deps-regex": "^0.1.4",
     "js-yaml": "^3.4.2",
     "lodash": "^4.5.1",
