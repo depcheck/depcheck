@@ -92,7 +92,7 @@ describe('depcheck', () => {
 
     after(done =>
       fs.chmod(unreadablePath, '0700', error =>
-        error ? done(error) : fs.rmdir(unreadablePath, done)));
+        (error ? done(error) : fs.rmdir(unreadablePath, done))));
   }
 
   describe('access unreadable directory', () =>
@@ -135,7 +135,7 @@ describe('depcheck', () => {
 
     after(done =>
       fs.chmod(unreadablePath, '0700', error =>
-        error ? done(error) : fs.unlink(unreadablePath, done)));
+        (error ? done(error) : fs.unlink(unreadablePath, done))));
   }
 
   describe('access unreadable file', () =>

@@ -152,9 +152,9 @@ function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
     const finder = walkdir(dir, { no_recurse: true });
 
     finder.on('directory', subdir =>
-      ignoreDirs.indexOf(path.basename(subdir)) === -1 && !isModule(subdir)
-      ? promises.push(checkDirectory(subdir, rootDir, ignoreDirs, deps, parsers, detectors))
-      : null);
+      (ignoreDirs.indexOf(path.basename(subdir)) === -1 && !isModule(subdir)
+        ? promises.push(checkDirectory(subdir, rootDir, ignoreDirs, deps, parsers, detectors))
+        : null));
 
     finder.on('file', filename =>
       promises.push(...checkFile(rootDir, filename, deps, parsers, detectors)));
