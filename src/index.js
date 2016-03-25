@@ -35,7 +35,7 @@ function filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependenci
 
 export default function depcheck(rootDir, options, callback) {
   const getOption = key =>
-    lodash.isUndefined(options[key]) ? defaultOptions[key] : options[key];
+    (lodash.isUndefined(options[key]) ? defaultOptions[key] : options[key]);
 
   const withoutDev = getOption('withoutDev');
   const ignoreBinPackage = getOption('ignoreBinPackage');
@@ -44,7 +44,7 @@ export default function depcheck(rootDir, options, callback) {
 
   const detectors = getOption('detectors');
   const parsers = lodash(getOption('parsers'))
-    .mapValues(value => lodash.isArray(value) ? value : [value])
+    .mapValues(value => (lodash.isArray(value) ? value : [value]))
     .merge({ '*': getOption('specials') })
     .value();
 
