@@ -41,16 +41,17 @@ describe('gulp-load-plugins special parser', () => {
     },
   };
 
-  Object.keys(testCases).forEach(name =>
-    it(`should recognize ${name}`, () => {
-      const testCase = testCases[name];
-      const result = parse(
-        testCase.code,
-        '/path/to/gulpfile.js',
-        [testCase.dependency, 'gulp-load-plugins'],
-        '/path/to'
-      );
+  ['gulpfile.js', 'gulpfile.babel.js'].forEach(gulpFileName =>
+    Object.keys(testCases).forEach(name =>
+      it(`should recognize ${name}`, () => {
+        const testCase = testCases[name];
+        const result = parse(
+          testCase.code,
+          `/path/to/${gulpFileName}`,
+          [testCase.dependency, 'gulp-load-plugins'],
+          '/path/to'
+        );
 
-      result.should.deepEqual([testCase.dependency]);
-    }));
+        result.should.deepEqual([testCase.dependency]);
+      })));
 });

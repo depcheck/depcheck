@@ -150,9 +150,11 @@ function check(content, deps, path) {
 }
 
 export default function parseGulpPlugins(content, filePath, deps, rootDir) {
-  const gulpfilePath = resolve(rootDir, 'gulpfile.js');
   const resolvedPath = resolve(filePath);
-  if (resolvedPath !== gulpfilePath) {
+  if (
+    resolvedPath !== resolve(rootDir, 'gulpfile.js') &&
+    resolvedPath !== resolve(rootDir, 'gulpfile.babel.js')
+  ) {
     return [];
   }
 
