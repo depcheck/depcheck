@@ -39,6 +39,13 @@ describe('gulp-load-plugins special parser', () => {
         $.scope.plugin();
       `,
     },
+    'dependency used in direct call': {
+      dependency: 'gulp-sourcemaps',
+      code: `
+        const $ = require('gulp-load-plugins')();
+        $.sourcemaps.init();
+      `,
+    },
   };
 
   ['gulpfile.js', 'gulpfile.babel.js'].forEach(gulpFileName =>

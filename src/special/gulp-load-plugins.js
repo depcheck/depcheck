@@ -1,10 +1,31 @@
 import { resolve } from 'path';
 import lodash from 'lodash';
+import minimatch from 'minimatch';
 import traverse from 'babel-traverse';
 
 import esParser from '../parser/es7';
 import importDetector from '../detector/importDeclaration';
 import requireDetector from '../detector/requireCallExpression';
+
+function getPluginLookup(deps) {
+  const patterns = ['gulp-*', 'gulp.*', '@*/gulp{-,.}*'];
+  const lookup = lodash(deps)
+    .filter(dep =>
+      patterns.some(pattern => minimatch(dep, pattern)))
+    .map(dep => {
+      const isScoped = dep[0] === '@';
+      const scopedParts = dep.substring(1).split('/');
+      const scope = isScoped ? scopedParts[0] : '';
+      const plugin = isScoped ? scopedParts[1] : dep;
+      const variableName = lodash.camelCase(plugin.substring('gulp-'.length));
+      const memberName = isScoped ? `.${scope}.${variableName}` : `.${variableName}`;
+      return [memberName, dep];
+    })
+    .fromPairs()
+    .value();
+
+  return lookup;
+}
 
 /**
  * Get the references to the variable in the path scope.
@@ -51,46 +72,22 @@ function getIdentifierReferences(path, loadPluginsVariableName) {
 }
 
 /**
- * Find the comprehensive member expression for the identifier variableName.
- * @example With code `$.call.a.function()`, returns `$.call.a.function` string.
- */
-function findMemberExpression(path) {
-  return !path.parentPath.isMemberExpression()
-    ? path
-    : findMemberExpression(path.parentPath);
-}
-
-/**
- * Convert the gulp plugin call to corresponding npm package names
- * @example With string `$.that.plugin`, returns `@that/gulp-plugin` as package name.
- */
-function convertToPackageName(deps, code) {
-  const parts = code.split('.');
-  if (parts.length === 2) { // $.jshint
-    const name = lodash.kebabCase(parts[1]);
-    const candidates = [`gulp-${name}`, `gulp.${name}`];
-    const dep = lodash.intersection(candidates, deps)[0];
-    return dep;
-  } else if (parts.length === 3) { // $.scope.plugin
-    const scope = parts[1];
-    const name = lodash.kebabCase(parts[2]);
-    const candidates = [`@${scope}/gulp-${name}`, `@${scope}/gulp.${name}`];
-    const dep = lodash.intersection(candidates, deps)[0];
-    return dep;
-  }
-
-  return '';
-}
-
-/**
  * Get the package name from the identifier call path.
  * @example With code `$.jshint()` and `$` as path, returns `gulp-jshint` string.
  */
-function getPackageName(content, deps, path) {
-  const memberExpression = findMemberExpression(path);
-  const code = content.slice(memberExpression.node.start, memberExpression.node.end);
-  const packageName = convertToPackageName(deps, code);
-  return packageName;
+function getPackageName(content, pluginLookup, identifierPath) {
+  let memberPath = identifierPath.parentPath;
+  while (memberPath.isMemberExpression()) {
+    const code = content.slice(identifierPath.node.end, memberPath.node.end);
+    const pluginName = pluginLookup[code];
+    if (pluginName) {
+      return pluginName;
+    }
+
+    memberPath = memberPath.parentPath;
+  }
+
+  return '';
 }
 
 /**
@@ -158,11 +155,12 @@ export default function parseGulpPlugins(content, filePath, deps, rootDir) {
     return [];
   }
 
+  const pluginLookup = getPluginLookup(deps);
   const ast = esParser(content);
   const results = [];
   traverse(ast, {
     enter(path) {
-      results.push(...check(content, deps, path));
+      results.push(...check(content, pluginLookup, path));
     },
   });
 
