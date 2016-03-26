@@ -41,6 +41,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
+    "babel-traverse": "^6.7.3",
     "babylon": "^6.1.21",
     "builtin-modules": "^1.1.1",
     "deprecate": "^0.1.0",
