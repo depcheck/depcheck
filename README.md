@@ -26,10 +26,10 @@ npm install -g depcheck
 Depcheck not only recognizes the dependencies in JavaScript file, but also supports these syntaxes:
 
 - JavaScript (ES5, ES6 and ES7)
-- React JSX
-- CoffeeScript
-- Typescript (by `typescript` as peer dependency)
-- SASS and SCSS (by `node-sass` as peer dependency)
+- [React JSX](http://facebook.github.io/react/docs/jsx-in-depth.html)
+- [CoffeeScript](http://coffeescript.org/)
+- [Typescript](http://www.typescriptlang.org/) (by `typescript` as peer dependency)
+- [SASS and SCSS](http://sass-lang.com/) (by `node-sass` as peer dependency)
 
 To get the syntax support by peer dependency, please install the corresponding package explicitly. For example, for Typescript user, install depcheck with `typescript` package:
 
@@ -42,12 +42,14 @@ npm install -g depcheck typescript
 The *special* is a component used to recognize the dependencies not generally used in the above syntax files. The following scenarios are supported by specials:
 
 - Dependencies used in npm commands, Travis scripts or other CI scripts
-- ESLint configuration presets, parsers and plugins
-- Webpack loaders
-- Babel presets and plugins
-- Grunt plugins
-- Feross standard format parser
-- Mocha explicit required dependencies
+- [ESLint](https://www.npmjs.com/package/eslint) configuration presets, parsers and plugins
+- [Webpack](https://www.npmjs.com/package/webpack) loaders
+- [Babel](https://www.npmjs.com/package/babel) presets and plugins
+- [Grunt](https://www.npmjs.com/package/grunt) plugins
+- [Feross standard](https://www.npmjs.com/package/standard) format parser
+- [Mocha](https://www.npmjs.com/package/mocha) explicit required dependencies
+- [Commitizen](https://www.npmjs.com/package/commitizen) configuration adaptor
+- [Gulp-load-plugins](https://www.npmjs.com/package/gulp-load-plugins) lazy loaded plugins
 
 The logic of a special is not perfect. There might be [false alerts](#false-alert). If it happens, please open an issue for us.
 
@@ -194,6 +196,10 @@ If you find that depcheck is reporting a false alert, please [open an issue](htt
 - The output from `depcheck --json` command. Beautified JSON is better.
 - Which dependencies are considered as false alert?
 - How are you using those dependencies, how do the files look like?
+
+## Changelog
+
+We use the [Github release page](https://github.com/depcheck/depcheck/releases) to manage changelog.
 
 ## License
 
