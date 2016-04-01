@@ -11,7 +11,6 @@ Depcheck is a tool to analysis the dependencies in a project, and figures out wh
 
 [![Dependency Status](https://david-dm.org/depcheck/depcheck.svg)](https://david-dm.org/depcheck/depcheck)
 [![devDependency Status](https://david-dm.org/depcheck/depcheck/dev-status.svg)](https://david-dm.org/depcheck/depcheck#info=devDependencies)
-[![peerDependency Status](https://david-dm.org/depcheck/depcheck/peer-status.svg)](https://david-dm.org/depcheck/depcheck#info=peerDependencies)
 
 ## Installation
 
@@ -28,10 +27,10 @@ Depcheck not only recognizes the dependencies in JavaScript file, but also suppo
 - JavaScript (ES5, ES6 and ES7)
 - [React JSX](http://facebook.github.io/react/docs/jsx-in-depth.html)
 - [CoffeeScript](http://coffeescript.org/)
-- [Typescript](http://www.typescriptlang.org/) (by `typescript` as peer dependency)
-- [SASS and SCSS](http://sass-lang.com/) (by `node-sass` as peer dependency)
+- [Typescript](http://www.typescriptlang.org/) (with `typescript` dependency)
+- [SASS and SCSS](http://sass-lang.com/) (with `node-sass` dependency)
 
-To get the syntax support by peer dependency, please install the corresponding package explicitly. For example, for Typescript user, install depcheck with `typescript` package:
+To get the syntax support by external dependency, please install the corresponding package explicitly. For example, for Typescript user, install depcheck with `typescript` package:
 
 ```
 npm install -g depcheck typescript
