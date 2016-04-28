@@ -1,6 +1,6 @@
 # depcheck
 
-Depcheck is a tool to analysis the dependencies in a project, and figures out which dependencies are useless, which dependencies are missing in `package.json`, how does each dependencies is used.
+Depcheck is a tool for analyzing the dependencies in a project to see: how each dependency is used, which dependencies are useless, and which dependencies are missing from `package.json`.
 
 ## Status
 
@@ -22,7 +22,7 @@ npm install -g depcheck
 
 ## Syntax Support
 
-Depcheck not only recognizes the dependencies in JavaScript file, but also supports these syntaxes:
+Depcheck not only recognizes the dependencies in JavaScript files, but also supports these syntaxes:
 
 - JavaScript (ES5, ES6 and ES7)
 - [React JSX](http://facebook.github.io/react/docs/jsx-in-depth.html)
@@ -38,7 +38,7 @@ npm install -g depcheck typescript
 
 ## Special
 
-The *special* is a component used to recognize the dependencies not generally used in the above syntax files. The following scenarios are supported by specials:
+The *special* component is used to recognize the dependencies that are not generally used in the above syntax files. The following scenarios are supported by specials:
 
 - Dependencies used in npm commands, Travis scripts or other CI scripts
 - [ESLint](https://www.npmjs.com/package/eslint) configuration presets, parsers and plugins
@@ -50,7 +50,7 @@ The *special* is a component used to recognize the dependencies not generally us
 - [Commitizen](https://www.npmjs.com/package/commitizen) configuration adaptor
 - [Gulp-load-plugins](https://www.npmjs.com/package/gulp-load-plugins) lazy loaded plugins
 
-The logic of a special is not perfect. There might be [false alerts](#false-alert). If it happens, please open an issue for us.
+The logic of a special is not perfect. There might be [false alerts](#false-alert). If this happens, please open an issue for us.
 
 ## Usage
 
@@ -58,13 +58,13 @@ The logic of a special is not perfect. There might be [false alerts](#false-aler
 depcheck [directory] [arguments]
 ```
 
-The `directory` argument is the root directory of your project (where the `package.json` file is). It will be the current directory when not specified.
+The `directory` argument is the root directory of your project (where the `package.json` file is). If unspecified, defaults to current directory.
 
-All the arguments are optional:
+All of the arguments are optional:
 
-`--ignore-bin-package=[true|false]`: A flag indicates if depcheck ignores the packages containing bin entry. The default value is `true`.
+`--ignore-bin-package=[true|false]`: A flag to indicate if depcheck ignores the packages containing bin entry. The default value is `true`.
 
-`--json`: Output results to JSON. When not specified, depcheck outputs in human friendly format.
+`--json`: Output results in JSON. When not specified, depcheck outputs in human friendly format.
 
 `--ignores`: A comma separated array containing package names to ignore. It can be glob expressions. Example, `--ignores=eslint,babel`.
 
@@ -186,15 +186,15 @@ $> depcheck /path/to/my/project --json | json
 
 ## False Alert
 
-Depcheck just walks through all files and try to figure out the dependencies according to some predefined rules. However, the predefined rules may not enough or even be wrong.
+Depcheck just walks through all files and tries to find the dependencies according to some predefined rules. However, the predefined rules may not enough or even be wrong.
 
-There may be some cases that, a dependency is using but reported as unused, or a dependency is not used but reported as missing. These are *false alert* situations.
+There may be some cases in which a dependency is being used but is reported as unused, or a dependency is not used but is reported as missing. These are *false alert* situations.
 
 If you find that depcheck is reporting a false alert, please [open an issue](https://github.com/depcheck/depcheck/issues/new) with the following information to let us know:
 
 - The output from `depcheck --json` command. Beautified JSON is better.
 - Which dependencies are considered as false alert?
-- How are you using those dependencies, how do the files look like?
+- How are you using those dependencies, what do the files look like?
 
 ## Changelog
 
