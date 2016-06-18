@@ -55,8 +55,8 @@
   },
   "devDependencies": {
     "babel-cli": "^6.1.1",
-    "babel-eslint": "6.0.0-beta.6",
-    "babel-plugin-add-module-exports": "^0.1.1",
+    "babel-eslint": "^6.0.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-object-assign": "^6.1.18",
     "babel-preset-es2015": "^6.0.15",
     "babel-preset-stage-2": "^6.0.15",
@@ -69,7 +69,7 @@
     "mocha": "^2.1.0",
     "node-sass": "^3.4.0",
     "patch-version": "^0.1.1",
-    "should": "^8.0.0",
+    "should": "^9.0.0",
     "typescript": "^1.8.0"
   }
 }
