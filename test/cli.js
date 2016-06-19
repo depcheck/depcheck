@@ -1,6 +1,6 @@
 /* global describe, it, before, after */
 
-import 'should';
+import should from 'should';
 import path from 'path';
 import childProcess from 'child_process';
 import cli from '../src/cli';
@@ -77,8 +77,11 @@ describe('depcheck command line', () => {
   });
 
   it('should output error exit code when spawned', () => {
-    const cp = childProcess.spawnSync(`${__dirname}/../bin/depcheck`, ['./not/exist/folder']);
+    const node = process.argv[0];
+    const depcheck = path.resolve(__dirname, '../bin/depcheck');
+    const cp = childProcess.spawnSync(node, [depcheck, './not/exist/folder']);
 
+    should(cp.error).be.undefined();
     cp.stderr.toString().should.containEql('/not/exist/folder').and.containEql('not exist');
     cp.status.should.not.equal(0);
   });
