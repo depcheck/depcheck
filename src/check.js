@@ -113,8 +113,14 @@ function getDependencies(dir, filename, deps, parser, detectors) {
     const discover = lodash.partial(discoverPropertyDep, dir, deps);
     const discoverPeerDeps = lodash.partial(discover, 'peerDependencies');
     const discoverOptionalDeps = lodash.partial(discover, 'optionalDependencies');
-    const peerDeps = lodash(dependencies).map(discoverPeerDeps).flatten().value();
-    const optionalDeps = lodash(dependencies).map(discoverOptionalDeps).flatten().value();
+    const peerDeps = lodash(dependencies)
+      .map(discoverPeerDeps)
+      .flatten()
+      .value();
+    const optionalDeps = lodash(dependencies)
+      .map(discoverOptionalDeps)
+      .flatten()
+      .value();
 
     return dependencies.concat(peerDeps).concat(optionalDeps);
   });

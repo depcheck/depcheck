@@ -1,4 +1,8 @@
 {
   "parser": "babel-eslint",
-  "extends": "airbnb/base"
+  "extends": "airbnb",
+  "rules": {
+    "global-require": ["off"],
+    "import/no-unresolved": ["off"]
+  }
 }
