@@ -41,7 +41,7 @@ function getLoaders(deps, loaders) {
 export default function parseWebpack(content, filepath, deps) {
   const filename = path.basename(filepath);
   if (filename === 'webpack.config.js') {
-    const module = require(filepath).module || {};
+    const module = require(filepath).module || {}; // eslint-disable-line global-require
     const loaders = getLoaders(deps, module.loaders);
     const preLoaders = getLoaders(deps, module.preLoaders);
     const postLoaders = getLoaders(deps, module.postLoaders);

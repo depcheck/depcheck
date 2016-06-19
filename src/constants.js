@@ -6,7 +6,7 @@ function constructComponent(source, name) {
   return lodash(source[name])
     .map(file => [
       file,
-      require(path.resolve(__dirname, name, file)),
+      require(path.resolve(__dirname, name, file)), // eslint-disable-line global-require
     ])
     .fromPairs()
     .value();

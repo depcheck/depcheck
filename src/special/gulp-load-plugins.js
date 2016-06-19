@@ -164,5 +164,8 @@ export default function parseGulpPlugins(content, filePath, deps, rootDir) {
     },
   });
 
-  return lodash(results).filter().uniq().value();
+  return lodash(results)
+    .filter()
+    .uniq()
+    .value();
 }
