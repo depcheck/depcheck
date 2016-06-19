@@ -2,7 +2,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
-import evaluate from '../utils/evaluate';
+import { evaluate } from '../utils';
 
 function parse(content) {
   try {
@@ -58,7 +58,7 @@ function loadConfig(preset, rootDir) {
     : path.resolve(rootDir, 'node_modules', preset);
 
   try {
-    return require(presetPath);
+    return require(presetPath); // eslint-disable-line global-require
   } catch (error) {
     return {}; // silently return nothing
   }

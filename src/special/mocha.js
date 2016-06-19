@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
-import getScripts from '../utils/get-scripts';
+import { getScripts } from '../utils';
 
 function getOpts(script) {
   const argvs = script.split(' ').filter(argv => argv);

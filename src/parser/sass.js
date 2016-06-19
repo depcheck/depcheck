@@ -1,7 +1,7 @@
 import path from 'path';
 import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
-import tryRequire from '../utils/try-require';
+import { tryRequire } from '../utils';
 
 const sass = tryRequire('node-sass');
 

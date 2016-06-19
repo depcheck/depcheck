@@ -1,6 +1,6 @@
 import path from 'path';
 import lodash from 'lodash';
-import getScripts from '../utils/get-scripts';
+import { readJSON, getScripts } from '../utils';
 
 const metadataCache = {};
 
@@ -9,7 +9,7 @@ function getCacheOrRequire(packagePath) {
     return metadataCache[packagePath];
   }
 
-  const metadata = require(packagePath);
+  const metadata = readJSON(packagePath);
   metadataCache[packagePath] = metadata;
   return metadata;
 }

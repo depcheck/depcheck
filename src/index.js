@@ -2,6 +2,7 @@ import path from 'path';
 import lodash from 'lodash';
 import minimatch from 'minimatch';
 import { check } from './check';
+import { readJSON } from './utils';
 
 import {
   defaultOptions,
@@ -17,7 +18,7 @@ function isIgnored(ignoreMatches, dependency) {
 
 function hasBin(rootDir, dependency) {
   try {
-    const metadata = require(path.join(rootDir, 'node_modules', dependency, 'package.json'));
+    const metadata = readJSON(path.join(rootDir, 'node_modules', dependency, 'package.json'));
     return metadata.hasOwnProperty('bin');
   } catch (error) {
     return false;
@@ -48,7 +49,7 @@ export default function depcheck(rootDir, options, callback) {
     .merge({ '*': getOption('specials') })
     .value();
 
-  const metadata = options.package || require(path.join(rootDir, 'package.json'));
+  const metadata = options.package || readJSON(path.join(rootDir, 'package.json'));
   const dependencies = metadata.dependencies || {};
   const devDependencies = !withoutDev && metadata.devDependencies ? metadata.devDependencies : {};
   const peerDeps = Object.keys(metadata.peerDependencies || {});

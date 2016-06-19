@@ -1,5 +1,5 @@
 import { parse } from 'babylon';
-import tryRequire from '../utils/try-require';
+import { tryRequire } from '../utils';
 
 const typescript = tryRequire('typescript');
 
