@@ -58,7 +58,7 @@ function loadConfig(preset, rootDir) {
     : path.resolve(rootDir, 'node_modules', preset);
 
   try {
-    return require(presetPath);
+    return require(presetPath); // eslint-disable-line global-require
   } catch (error) {
     return {}; // silently return nothing
   }

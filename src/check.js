@@ -5,10 +5,11 @@ import walkdir from 'walkdir';
 import minimatch from 'minimatch';
 import builtInModules from 'builtin-modules';
 import requirePackageName from 'require-package-name';
+import { readJSON } from './utils';
 
 function isModule(dir) {
   try {
-    require(path.resolve(dir, 'package.json'));
+    readJSON(path.resolve(dir, 'package.json'));
     return true;
   } catch (error) {
     return false;
@@ -76,7 +77,7 @@ function getNodes(ast) {
 function discoverPropertyDep(rootDir, deps, property, depName) {
   try {
     const file = path.resolve(rootDir, 'node_modules', depName, 'package.json');
-    const metadata = require(file);
+    const metadata = readJSON(file);
     const propertyDeps = Object.keys(metadata[property] || {});
     return lodash.intersection(deps, propertyDeps);
   } catch (error) {
