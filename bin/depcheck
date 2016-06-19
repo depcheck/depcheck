@@ -7,8 +7,6 @@ require('../dist/cli')(
   console.log,
   console.error,
   function exit(code) {
-    // ensure all data is flushed before terminating the process
-    process.stdout.on('finish', function finish() {
-      process.exit(code);
-    });
-  });
+    process.exitCode = code;
+  }
+);
