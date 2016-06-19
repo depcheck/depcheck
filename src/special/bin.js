@@ -1,7 +1,6 @@
 import path from 'path';
 import lodash from 'lodash';
-import getScripts from '../utils/get-scripts';
-import { readJSON } from '../utils';
+import { readJSON, getScripts } from '../utils';
 
 const metadataCache = {};
 

@@ -2,7 +2,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
-import evaluate from '../utils/evaluate';
+import { evaluate } from '../utils';
 
 function parse(content) {
   try {
