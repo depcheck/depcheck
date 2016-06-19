@@ -1,8 +1,8 @@
 /* global describe, it */
 
-import 'should';
+import should from 'should';
 import path from 'path';
-import { exec } from 'child_process';
+import { exec, spawnSync } from 'child_process';
 
 function testE2E(module, output) {
   return new Promise(resolve => {
@@ -29,4 +29,14 @@ describe('depcheck end-to-end', () => {
 
   it('should find missing dependencies', () =>
     testE2E('missing', ['Missing dependencies', '* missing-dep']));
+
+  it('should output error exit code when spawned', () => {
+    const node = process.argv[0];
+    const depcheck = path.resolve(__dirname, '../bin/depcheck');
+    const cp = spawnSync(node, [depcheck, './not/exist/folder']);
+
+    should(cp.error).be.undefined();
+    cp.stderr.toString().should.containEql('/not/exist/folder').and.containEql('not exist');
+    cp.status.should.not.equal(0);
+  });
 });

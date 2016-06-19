@@ -1,8 +1,7 @@
 /* global describe, it, before, after */
 
-import should from 'should';
+import 'should';
 import path from 'path';
-import childProcess from 'child_process';
 import cli from '../src/cli';
 import testCases from './spec';
 import { resolveShortPath } from './utils';
@@ -74,16 +73,6 @@ describe('depcheck command line', () => {
         error.should.be.empty();
         exitCode.should.equal(0); // JSON output always return 0
       }));
-  });
-
-  it('should output error exit code when spawned', () => {
-    const node = process.argv[0];
-    const depcheck = path.resolve(__dirname, '../bin/depcheck');
-    const cp = childProcess.spawnSync(node, [depcheck, './not/exist/folder']);
-
-    should(cp.error).be.undefined();
-    cp.stderr.toString().should.containEql('/not/exist/folder').and.containEql('not exist');
-    cp.status.should.not.equal(0);
   });
 
   it('should output error when folder is not a package', () =>
