@@ -1,0 +1,11 @@
+version:
+  - 4.x
+  - 6.x
+
+script:
+  - node --version
+  - npm --version
+  - npm run depcheck
+  - npm run depcheck-json
+  - npm run lint
+  - npm test

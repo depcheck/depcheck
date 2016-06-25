@@ -54,6 +54,7 @@
     "yargs": "^4.0.0"
   },
   "devDependencies": {
+    "appveyor-runner": "^0.1.0",
     "babel-cli": "^6.1.1",
     "babel-eslint": "^6.0.0",
     "babel-plugin-add-module-exports": "^0.2.1",
