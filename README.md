@@ -68,7 +68,7 @@ All of the arguments are optional:
 
 `--ignores`: A comma separated array containing package names to ignore. It can be glob expressions. Example, `--ignores=eslint,babel`.
 
-`--ignores-dirs`: A comma separated array containing directory names to ignore. Example, `--ignore-dirs=dist,coverage`.
+`--ignore-dirs`: A comma separated array containing directory names to ignore. Example, `--ignore-dirs=dist,coverage`.
 
 `--help`: Show the help message.
 
