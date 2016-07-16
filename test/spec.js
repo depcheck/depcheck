@@ -107,6 +107,7 @@ export default [
       },
     },
   },
+  /* disable the node-gyp based test case.
   {
     name: 'support SASS/SCSS syntax',
     module: 'sass',
@@ -122,6 +123,7 @@ export default [
       },
     },
   },
+  */
   {
     name: 'find dependencies used in code but not declared in package.json',
     module: 'missing',
