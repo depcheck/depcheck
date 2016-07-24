@@ -26,11 +26,11 @@ deploy:
       secure: dEwnWZyvE95Amn3Ivcftk9wlDnRrNS2roVXREamsEJI3Rdilim7iHsINeVW/hZIv6VGepETKdSZ+nbyY/Du4rFkMyimHFBM9KkHgw46J7cf3juwZChzna/qOY+DniwGgikFscL+XAuKNx6Rv8xX4dD28TNoYzL00AtDhHJKla3E=
     on:
       tags: true
-      node: 5
+      node: 6
   - provider: releases
     skip_cleanup: true
     api_key:
       secure: Uiilnj7sn8+KEgCMOByMdvCVARfAhvZGUvVrP1oijJBzrMr/YV5lPjH2Hph5IaJuvKKKagXXxqmcspkeiT/kaQA9TVg7VYh+B9DqhKiDxAkBYwMLgiPmnqDTh5ZGNOnnltVxhBI/qRDXpTj1i92VvloVlCcKQ3/M5mqlJi0j+8w=
     on:
       tags: true
-      node: 5
+      node: 6
