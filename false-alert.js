@@ -8,3 +8,4 @@
  */
 import 'node-sass';
 import 'typescript';
+import 'appveyor-runner';

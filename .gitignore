@@ -32,3 +32,7 @@ dist
 
 # Vim temporary file
 *.swp
+
+# AppVeyor runner output
+node_bin
+node_log
