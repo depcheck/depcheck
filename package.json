@@ -44,14 +44,14 @@
     "babel-traverse": "^6.7.3",
     "babylon": "^6.1.21",
     "builtin-modules": "^1.1.1",
-    "deprecate": "^0.1.0",
+    "deprecate": "^1.0.0",
     "deps-regex": "^0.1.4",
     "js-yaml": "^3.4.2",
     "lodash": "^4.5.1",
     "minimatch": "^3.0.2",
     "require-package-name": "^2.0.1",
     "walkdir": "0.0.11",
-    "yargs": "^4.0.0"
+    "yargs": "^5.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.1.1",
