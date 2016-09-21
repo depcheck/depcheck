@@ -40,8 +40,11 @@ export default function depcheck(rootDir, options, callback) {
 
   const withoutDev = getOption('withoutDev');
   const ignoreBinPackage = getOption('ignoreBinPackage');
-  const ignoreMatches = getOption('ignoreMatches');
   const ignoreDirs = lodash.union(defaultOptions.ignoreDirs, options.ignoreDirs);
+  // The "@types/" scope is reserved for type declarations used in TypeScript projects. They are only used
+  // during build and are never referenced in the application. We ignore them by default so that depcheck
+  // doesn't fail for TypeScript projects by default.
+  const ignoreMatches = getOption('ignoreMatches') || ['@types/*'];
 
   const detectors = getOption('detectors');
   const parsers = lodash(getOption('parsers'))
