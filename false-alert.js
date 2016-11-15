@@ -8,3 +8,9 @@
  */
 import 'node-sass';
 import 'typescript';
+
+/**
+ * Explicitly declare istanbul at version 0.4.4, otherwise isparta is not collecting coverage data.
+ * See https://github.com/douglasduteil/isparta/issues/126
+ */
+import 'istanbul';

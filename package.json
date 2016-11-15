@@ -69,6 +69,7 @@
     "eslint-plugin-react": "^5.2.2",
     "fs-promise": "^0.5.0",
     "isparta": "^4.0.0",
+    "istanbul": "0.4.4",
     "mocha": "^2.1.0",
     "node-sass": "^3.4.0",
     "patch-version": "^0.1.1",
