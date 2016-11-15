@@ -87,7 +87,7 @@ function checkConfig(config, rootDir) {
 
 export default function parseESLint(content, filename, deps, rootDir) {
   const basename = path.basename(filename);
-  if (basename === '.eslintrc') {
+  if (/^\.eslintrc(\.json|\.js|\.yml|\.yaml)?$/.test(basename)) {
     const config = parse(content);
     return checkConfig(config, rootDir);
   }
