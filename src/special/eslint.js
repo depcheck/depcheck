@@ -42,15 +42,15 @@ function isEslintConfigAnAbsolutePath(specifier) {
 }
 
 function isEslintConfigARelativePath(specifier) {
-  return specifier.startsWith('./') || specifier.startsWith('../');
+  return lodash.startsWith(specifier, './') || lodash.startsWith(specifier, '../');
 }
 
 function isEslintConfigAScopedModule(specifier) {
-  return specifier.startsWith('@');
+  return lodash.startsWith(specifier, '@');
 }
 
 function isEslintConfigAFullyQualifiedModuleName(specifier) {
-  return specifier.startsWith('eslint-config-');
+  return lodash.startsWith(specifier, 'eslint-config-');
 }
 
 function resolvePresetPackage(preset, rootDir) {
