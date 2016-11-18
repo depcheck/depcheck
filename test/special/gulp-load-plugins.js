@@ -56,7 +56,7 @@ describe('gulp-load-plugins special parser', () => {
           testCase.code,
           `/path/to/${gulpFileName}`,
           [testCase.dependency, 'gulp-load-plugins'],
-          '/path/to'
+          '/path/to',
         );
 
         result.should.deepEqual([testCase.dependency]);

@@ -1,12 +1,12 @@
 /* global describe, it, before, after */
 
 import 'should';
-import depcheck from '../src/index';
 import fs from 'fs';
 import path from 'path';
-import testCases from './spec';
-
 import { platform } from 'os';
+
+import testCases from './spec';
+import depcheck from '../src/index';
 import { resolveShortPath } from './utils';
 
 import {
@@ -29,10 +29,10 @@ function check(module, options) {
 }
 
 describe('depcheck', () => {
-  testCases.forEach(testCase => {
+  testCases.forEach((testCase) => {
     const run = testCase.only === 'index' ? it.only : it;
     run(`should ${testCase.name}`, () =>
-      check(testCase.module, testCase.options).then(result => {
+      check(testCase.module, testCase.options).then((result) => {
         const expected = testCase.expected;
         result.dependencies.should.eql(expected.dependencies);
         result.devDependencies.should.eql(expected.devDependencies);
@@ -42,7 +42,7 @@ describe('depcheck', () => {
   });
 
   it('should ignore bad javascript', () =>
-    check('bad_js', {}).then(unused => {
+    check('bad_js', {}).then((unused) => {
       unused.dependencies.should.deepEqual(['optimist']);
 
       const invalidFiles = Object.keys(unused.invalidFiles);
@@ -62,7 +62,7 @@ describe('depcheck', () => {
           express: '^4.0.0',
         },
       },
-    }).then(unused => {
+    }).then((unused) => {
       unused.dependencies.should.deepEqual(['optimist', 'express']);
     }));
 
@@ -78,7 +78,7 @@ describe('depcheck', () => {
     before(done => fs.mkdir(unreadablePath, '0000', done));
 
     it('should capture error', () =>
-      check(module, {}).then(unused => {
+      check(module, {}).then((unused) => {
         unused.dependencies.should.deepEqual(unusedDeps);
         unused.devDependencies.should.deepEqual(unusedDevDeps);
 
@@ -121,7 +121,7 @@ describe('depcheck', () => {
     before(done => fs.writeFile(unreadablePath, '', { mode: 0 }, done));
 
     it('should capture error', () =>
-      check(module, {}).then(unused => {
+      check(module, {}).then((unused) => {
         unused.dependencies.should.deepEqual(unusedDeps);
         unused.devDependencies.should.deepEqual(unusedDevDeps);
 
@@ -146,7 +146,7 @@ describe('depcheck', () => {
       []));
 
   function testCustomPluggableComponents(module, options) {
-    return check(module, options).then(unused => {
+    return check(module, options).then((unused) => {
       unused.dependencies.should.deepEqual([]);
       unused.devDependencies.should.deepEqual([]);
 
@@ -213,7 +213,7 @@ describe('depcheck', () => {
           exceptionParser,
         ],
       },
-    }).then(unused => {
+    }).then((unused) => {
       unused.dependencies.should.deepEqual([]);
       unused.devDependencies.should.deepEqual([]);
 

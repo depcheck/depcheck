@@ -1,7 +1,7 @@
 import path from 'path';
 import lodash from 'lodash';
 import minimatch from 'minimatch';
-import { check } from './check';
+import check from './check';
 import { readJSON } from './utils';
 
 import {
@@ -19,7 +19,7 @@ function isIgnored(ignoreMatches, dependency) {
 function hasBin(rootDir, dependency) {
   try {
     const metadata = readJSON(path.join(rootDir, 'node_modules', dependency, 'package.json'));
-    return metadata.hasOwnProperty('bin');
+    return {}.hasOwnProperty.call(metadata, 'bin');
   } catch (error) {
     return false;
   }
@@ -29,8 +29,8 @@ function filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependenci
   return lodash(dependencies)
     .keys()
     .reject(dep =>
-      isIgnored(ignoreMatches, dep) ||
-      ignoreBinPackage && hasBin(rootDir, dep))
+      (isIgnored(ignoreMatches, dep)) ||
+      (ignoreBinPackage && hasBin(rootDir, dep)))
     .value();
 }
 

@@ -1,6 +1,6 @@
 import path from 'path';
 import lodash from 'lodash';
-import component from './component';
+import component from './component.json';
 
 function constructComponent(source, name) {
   return lodash(source[name])
