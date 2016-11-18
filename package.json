@@ -24,9 +24,15 @@
     "test": "babel-node node_modules/mocha/bin/_mocha ./test ./test/special --timeout 10000",
     "test-coverage": "babel-node node_modules/isparta/bin/isparta cover node_modules/mocha/bin/_mocha -- ./test ./test/special --timeout 10000"
   },
-  "author": [
-    "Djordje Lukic <lukic.djordje@gmail.com>",
-    "Junle Li <lijunle@gmail.com>"
+  "author": {
+    "name": "Djordje Lukic",
+    "email": "lukic.djordje@gmail.com"
+  },
+  "contributors": [
+    {
+      "name": "Junle Li",
+      "email": "lijunle@gmail.com"
+    }
   ],
   "keywords": [
     "check",
@@ -44,14 +50,14 @@
     "babel-traverse": "^6.7.3",
     "babylon": "^6.1.21",
     "builtin-modules": "^1.1.1",
-    "deprecate": "^0.1.0",
+    "deprecate": "^1.0.0",
     "deps-regex": "^0.1.4",
     "js-yaml": "^3.4.2",
     "lodash": "^4.5.1",
     "minimatch": "^3.0.2",
     "require-package-name": "^2.0.1",
     "walkdir": "0.0.11",
-    "yargs": "^4.0.0"
+    "yargs": "^6.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.1.1",
@@ -67,13 +73,13 @@
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-jsx-a11y": "^1.5.3",
     "eslint-plugin-react": "^5.2.2",
-    "fs-promise": "^0.5.0",
+    "fs-promise": "^1.0.0",
     "isparta": "^4.0.0",
     "istanbul": "0.4.4",
-    "mocha": "^2.1.0",
+    "mocha": "^3.0.0",
     "node-sass": "^3.4.0",
     "patch-version": "^0.1.1",
-    "should": "^9.0.0",
+    "should": "^11.0.0",
     "typescript": "^1.8.0"
   }
 }
