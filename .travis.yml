@@ -10,7 +10,6 @@ node_js:
 script:
   - npm run depcheck
   - npm run depcheck-json
-  - npm run depcheck-web
   - npm run lint
   - npm run test-coverage
   - cat ./coverage/coverage.json | ./node_modules/codecov.io/bin/codecov.io.js

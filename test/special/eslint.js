@@ -117,10 +117,18 @@ const testCases = [
 ];
 
 function testEslint(deps, content) {
-  const result = eslintSpecialParser(
-    content, '/path/to/.eslintrc', deps, __dirname);
+  [
+    '/path/to/.eslintrc',
+    '/path/to/.eslintrc.js',
+    '/path/to/.eslintrc.json',
+    '/path/to/.eslintrc.yml',
+    '/path/to/.eslintrc.yaml',
+  ].forEach(pathToEslintrc => {
+    const result = eslintSpecialParser(
+      content, pathToEslintrc, deps, __dirname);
 
-  result.should.deepEqual(deps);
+    result.should.deepEqual(deps);
+  });
 }
 
 describe('eslint special parser', () => {
