@@ -56,7 +56,7 @@ function testCli(argv) {
 }
 
 describe('depcheck command line', () => {
-  testCases.forEach(testCase => {
+  testCases.forEach((testCase) => {
     const run = testCase.only === 'cli' ? it.only : it;
     const options = Object.assign({ json: true }, testCase.options);
     run(`should ${testCase.name}`, () =>

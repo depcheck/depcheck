@@ -12,7 +12,7 @@ function getPluginLookup(deps) {
   const lookup = lodash(deps)
     .filter(dep =>
       patterns.some(pattern => minimatch(dep, pattern)))
-    .map(dep => {
+    .map((dep) => {
       const isScoped = dep[0] === '@';
       const scopedParts = dep.substring(1).split('/');
       const scope = isScoped ? scopedParts[0] : '';

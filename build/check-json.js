@@ -2,7 +2,7 @@ import assert from 'assert';
 import metadata from '../package.json';
 
 function readStdin() {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const chunks = [];
 
     process.stdin.setEncoding('utf8');
@@ -43,7 +43,7 @@ async function main() {
 
   console.log(result); // eslint-disable-line no-console
 
-  check(result).catch(error => {
+  check(result).catch((error) => {
     console.error(error.stack); // eslint-disable-line no-console
     process.exit(-1);
   });

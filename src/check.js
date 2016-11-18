@@ -26,7 +26,7 @@ function mergeBuckets(object1, object2) {
 
 function detect(detectors, node) {
   return lodash(detectors)
-    .map(detector => {
+    .map((detector) => {
       try {
         return detector(node);
       } catch (error) {
@@ -98,7 +98,7 @@ function getDependencies(dir, filename, deps, parser, detectors) {
         reject(syntaxError);
       }
     });
-  }).then(ast => {
+  }).then((ast) => {
     // when parser returns string array, skip detector step and treat them as dependencies directly.
     if (lodash.isArray(ast) && ast.every(lodash.isString)) {
       return ast;
@@ -154,7 +154,7 @@ function checkFile(dir, filename, deps, parsers, detectors) {
 }
 
 function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const promises = [];
     const finder = walkdir(dir, { no_recurse: true });
 
@@ -223,7 +223,7 @@ function buildResult(result, deps, devDeps, peerDeps, optionalDeps) {
   };
 }
 
-export function check({
+export default function check({
   rootDir,
   ignoreDirs,
   deps,

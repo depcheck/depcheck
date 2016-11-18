@@ -68,7 +68,7 @@ function checkDeprecation(argv) {
     deprecate(
       'The option `dev` is deprecated. It leads a wrong result for missing dependencies' +
       ' when it is `false`. This option will be removed and enforced to `true` in next' +
-      ' major version.'
+      ' major version.',
     );
   }
 }
@@ -115,8 +115,8 @@ export default function cli(args, log, error, exit) {
     }))
     .then(result => print(result, log, opt.argv.json))
     .then(({ dependencies: deps, devDependencies: devDeps }) =>
-      exit(opt.argv.json || deps.length === 0 && devDeps.length === 0 ? 0 : -1))
-    .catch(errorMessage => {
+      exit(opt.argv.json || (deps.length === 0 && devDeps.length) === 0 ? 0 : -1))
+    .catch((errorMessage) => {
       error(errorMessage);
       exit(-1);
     });

@@ -123,7 +123,7 @@ function testEslint(deps, content) {
     '/path/to/.eslintrc.json',
     '/path/to/.eslintrc.yml',
     '/path/to/.eslintrc.yaml',
-  ].forEach(pathToEslintrc => {
+  ].forEach((pathToEslintrc) => {
     const result = eslintSpecialParser(
       content, pathToEslintrc, deps, __dirname);
 
