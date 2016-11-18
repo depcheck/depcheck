@@ -42,7 +42,6 @@ function isEslintConfigAnAbsolutePath(specifier) {
 }
 
 function isEslintConfigARelativePath(specifier) {
-  // return !/\w|@/.test(preset.charAt(0));
   return specifier.startsWith('./') || specifier.startsWith('../');
 }
 
