@@ -96,6 +96,24 @@ const testCases = [
     },
     expected: [],
   },
+  {
+    name: 'handle config of scoped module',
+    content: {
+      extends: '@my-org/customized',
+    },
+    expected: [
+      '@my-org/eslint-config-customized',
+    ],
+  },
+  {
+    name: 'handle config of scoped module with full name',
+    content: {
+      extends: '@my-org/eslint-config-customized',
+    },
+    expected: [
+      '@my-org/eslint-config-customized',
+    ],
+  },
 ];
 
 function testEslint(deps, content) {
