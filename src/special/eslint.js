@@ -37,19 +37,43 @@ function wrapToArray(obj) {
   return [obj];
 }
 
+function isEslintConfigAnAbsolutePath(specifier) {
+  return path.isAbsolute(specifier);
+}
+
+function isEslintConfigARelativePath(specifier) {
+  return lodash.startsWith(specifier, './') || lodash.startsWith(specifier, '../');
+}
+
+function isEslintConfigAScopedModule(specifier) {
+  return lodash.startsWith(specifier, '@');
+}
+
+function isEslintConfigAFullyQualifiedModuleName(specifier) {
+  return lodash.startsWith(specifier, 'eslint-config-');
+}
+
 function resolvePresetPackage(preset, rootDir) {
   // inspired from https://github.com/eslint/eslint/blob/5b4a94e26d0ef247fe222dacab5749805d9780dd/lib/config/config-file.js#L347
-  if (path.isAbsolute(preset)) {
+  if (isEslintConfigAnAbsolutePath(preset)) {
     return preset;
-  } else if (!/\w|@/.test(preset.charAt(0))) { // first letter is not letter or '@'
-    return path.resolve(rootDir, preset);
-  } else if (preset.charAt(0) === '@') {
-    throw new Error('Not support scoped package in ESLint config.'); // TODO implementation
-  } else if (preset.indexOf('eslint-config-') === 0) {
-    return preset;
-  } else { // eslint-disable-line no-else-return
-    return `eslint-config-${preset}`;
   }
+  if (isEslintConfigARelativePath(preset)) {
+    return path.resolve(rootDir, preset);
+  }
+  if (isEslintConfigAScopedModule(preset)) {
+    const scope = preset.substring(0, preset.indexOf('/'));
+    const module = preset.substring(preset.indexOf('/') + 1);
+
+    if (isEslintConfigAFullyQualifiedModuleName(module)) {
+      return preset;
+    }
+    return `${scope}/eslint-config-${module}`;
+  }
+  if (isEslintConfigAFullyQualifiedModuleName(preset)) {
+    return preset;
+  }
+  return `eslint-config-${preset}`;
 }
 
 function loadConfig(preset, rootDir) {
