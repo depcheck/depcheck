@@ -24,9 +24,15 @@
     "test": "babel-node node_modules/mocha/bin/_mocha ./test ./test/special --timeout 10000",
     "test-coverage": "babel-node node_modules/isparta/bin/isparta cover node_modules/mocha/bin/_mocha -- ./test ./test/special --timeout 10000"
   },
-  "author": [
-    "Djordje Lukic <lukic.djordje@gmail.com>",
-    "Junle Li <lijunle@gmail.com>"
+  "author": {
+    "name": "Djordje Lukic",
+    "email": "lukic.djordje@gmail.com"
+  },
+  "contributors": [
+    {
+      "name": "Junle Li",
+      "email": "lijunle@gmail.com"
+    }
   ],
   "keywords": [
     "check",
