@@ -5,6 +5,12 @@ import path from 'path';
 import fsp from 'fs-promise';
 import parse from '../../src/special/webpack';
 
+const configFileNames = [
+  'webpack.config.js',
+  'webpack.development.config.js',
+  'webpack.production.config.js',
+];
+
 const testCases = [
   {
     name: 'recognize single long-name webpack loader',
@@ -119,10 +125,11 @@ describe('webpack special parser', () => {
     return testWebpack('webpack.config.js', content, testCases[0].deps, testCases[0].deps);
   });
 
-  testCases.forEach(testCase =>
-    it(`should ${testCase.name} in configuration file`, () => {
-      const config = JSON.stringify({ module: testCase.module });
-      const content = `module.exports = ${config}`;
-      return testWebpack('webpack.config.js', content, testCase.deps, testCase.deps);
-    }));
+  configFileNames.forEach((fileName) =>
+    testCases.forEach(testCase =>
+      it(`should ${testCase.name} in configuration file ${fileName}`, () => {
+        const config = JSON.stringify({ module: testCase.module });
+        const content = `module.exports = ${config}`;
+        return testWebpack(fileName, content, testCase.deps, testCase.deps);
+      })));
 });
