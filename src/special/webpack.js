@@ -1,6 +1,7 @@
 import path from 'path';
 import lodash from 'lodash';
 
+const webpackConfigRegex = /webpack(\..+)?\.config.js/;
 const loaderTemplates = ['*-webpack-loader', '*-web-loader', '*-loader', '*'];
 
 function extractLoaders(item) {
@@ -40,7 +41,7 @@ function getLoaders(deps, loaders) {
 
 export default function parseWebpack(content, filepath, deps) {
   const filename = path.basename(filepath);
-  if (filename === 'webpack.config.js') {
+  if (webpackConfigRegex.test(filename)) {
     const module = require(filepath).module || {}; // eslint-disable-line global-require
     const loaders = getLoaders(deps, module.loaders);
     const preLoaders = getLoaders(deps, module.preLoaders);
