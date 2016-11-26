@@ -125,7 +125,7 @@ describe('webpack special parser', () => {
     return testWebpack('webpack.config.js', content, testCases[0].deps, testCases[0].deps);
   });
 
-  configFileNames.forEach((fileName) =>
+  configFileNames.forEach(fileName =>
     testCases.forEach(testCase =>
       it(`should ${testCase.name} in configuration file ${fileName}`, () => {
         const config = JSON.stringify({ module: testCase.module });
