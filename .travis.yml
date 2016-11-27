@@ -13,7 +13,7 @@ script:
   - npm run depcheck-json
   - npm run lint
   - npm run test-coverage
-  - cat ./coverage/coverage.json | ./node_modules/codecov.io/bin/codecov.io.js
+  - cat ./coverage/coverage.lcov | ./node_modules/.bin/codecov
 
 before_deploy:
   - ./node_modules/.bin/patch-version
