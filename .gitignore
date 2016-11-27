@@ -35,3 +35,6 @@ dist
 
 # Vim temporary file
 *.swp
+
+# Dependent-build
+dependent-build

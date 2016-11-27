@@ -1,0 +1,4 @@
+https://github.com/depcheck/depcheck-test-e2e:
+  - node ${HOST_DIR}/node_modules/dependent-build/patch-package.js
+  - npm install
+  - npm test
