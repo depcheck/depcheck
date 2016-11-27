@@ -8,3 +8,4 @@ src/
 test/
 build/
 coverage/
+.nyc_output

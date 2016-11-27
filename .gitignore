@@ -30,5 +30,8 @@ node_modules
 # Babel compiled code
 dist
 
+# Nyc output
+.nyc_output
+
 # Vim temporary file
 *.swp
