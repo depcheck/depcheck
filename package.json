@@ -22,7 +22,7 @@
     "prepublish": "npm run compile && npm run component",
     "lint": "node-version-gte-4 && eslint ./src ./test ./build || node-version-lt-4",
     "test": "babel-node node_modules/mocha/bin/_mocha ./test ./test/special --timeout 10000",
-    "test-coverage": "cross-env NODE_ENV=test nyc mocha ./test ./test/special --timeout 20000 && nyc report --reporter=text-lcov > ./coverage/coverage.lcov"
+    "test-coverage": "babel-node node_modules/cross-env/bin/cross-env.js NODE_ENV=test nyc mocha ./test ./test/special --timeout 20000 && nyc report --reporter=text-lcov > ./coverage/coverage.lcov"
   },
   "author": {
     "name": "Djordje Lukic",
