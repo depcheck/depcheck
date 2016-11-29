@@ -99,17 +99,15 @@ function getDependencies(dir, filename, deps, parser, detectors) {
       }
     });
   }).then((ast) => {
-    // when parser returns string array, skip detector step and treat them as dependencies directly.
-    if (lodash.isArray(ast) && ast.every(lodash.isString)) {
-      return ast;
-    }
-
-    const dependencies = lodash(getNodes(ast))
-      .map(node => detect(detectors, node))
-      .flatten()
-      .uniq()
-      .map(requirePackageName)
-      .value();
+    // when parser returns string array, skip detector step and treat them as dependencies.
+    const dependencies = lodash.isArray(ast) && ast.every(lodash.isString)
+      ? ast
+      : lodash(getNodes(ast))
+        .map(node => detect(detectors, node))
+        .flatten()
+        .uniq()
+        .map(requirePackageName)
+        .value();
 
     const discover = lodash.partial(discoverPropertyDep, dir, deps);
     const discoverPeerDeps = lodash.partial(discover, 'peerDependencies');

@@ -180,6 +180,16 @@ describe('depcheck', () => {
       ],
     }));
 
+  it('should discover peer dependencies for the parser returning string array case', () =>
+    testCustomPluggableComponents('import_list_peer', {
+      parsers: {
+        '*.txt': importListParserLite,
+      },
+      detectors: [
+        // the detector step is skipped because parser returns string array
+      ],
+    }));
+
   it('should support multiple parsers to generate ASTs', () =>
     testCustomPluggableComponents('multiple_parsers', {
       parsers: {

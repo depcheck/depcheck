@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "direct-dependency": "0.0.1",
+    "peer-dependency": "0.0.2"
+  }
+}
