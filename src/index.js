@@ -67,16 +67,12 @@ export default function depcheck(rootDir, options, callback) {
     parsers,
     detectors,
   })
-  .then((results) => {
-    const postProcessedResults = results;
-
-    postProcessedResults.missing = lodash.pick(
+  .then(results => Object.assign(results, {
+    missing: lodash.pick(
       results.missing,
       filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, results.missing),
-    );
-
-    return postProcessedResults;
-  })
+    ),
+  }))
   .then(callback);
 }
 
