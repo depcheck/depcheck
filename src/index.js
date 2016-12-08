@@ -66,7 +66,14 @@ export default function depcheck(rootDir, options, callback) {
     optionalDeps,
     parsers,
     detectors,
-  }).then(callback);
+  })
+  .then(results => Object.assign(results, {
+    missing: lodash.pick(
+      results.missing,
+      filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, results.missing),
+    ),
+  }))
+  .then(callback);
 }
 
 depcheck.parser = availableParsers;

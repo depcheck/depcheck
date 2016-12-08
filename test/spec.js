@@ -422,6 +422,24 @@ export default [
     },
   },
   {
+    name: 'ignore ignoreMatches for missing',
+    module: 'missing_ignore',
+    options: {
+      ignoreMatches: ['missing-ignore-*'],
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {
+        'missing-dep': ['index.js'],
+      },
+      using: {
+        'missing-dep': ['index.js'],
+        'missing-ignore-dep': ['index.js'],
+      },
+    },
+  },
+  {
     name: 'support jsx syntax',
     module: 'jsx',
     options: {
