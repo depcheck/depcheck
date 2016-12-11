@@ -45,6 +45,10 @@ function isEslintConfigARelativePath(specifier) {
   return lodash.startsWith(specifier, './') || lodash.startsWith(specifier, '../');
 }
 
+function isEslintPluginAScopedModule(specifier) {
+  return lodash.startsWith(specifier, 'plugin:@');
+}
+
 function isEslintConfigAScopedModule(specifier) {
   return lodash.startsWith(specifier, '@');
 }
@@ -60,6 +64,15 @@ function resolvePresetPackage(preset, rootDir) {
   }
   if (isEslintConfigARelativePath(preset)) {
     return path.resolve(rootDir, preset);
+  }
+  if (isEslintPluginAScopedModule(preset)) {
+    const scope = preset.substring(0, preset.indexOf('/')).replace('plugin:', '');
+    const module = preset.substring(preset.indexOf('/') + 1);
+
+    if (isEslintConfigAFullyQualifiedModuleName(module)) {
+      return preset;
+    }
+    return `${scope}/eslint-plugin-${module}`;
   }
   if (isEslintConfigAScopedModule(preset)) {
     const scope = preset.substring(0, preset.indexOf('/'));
@@ -90,7 +103,15 @@ function loadConfig(preset, rootDir) {
 
 function checkConfig(config, rootDir) {
   const parser = wrapToArray(config.parser);
-  const plugins = wrapToArray(config.plugins).map(plugin => `eslint-plugin-${plugin}`);
+  const plugins = wrapToArray(config.plugins).map((plugin) => {
+    if (isEslintConfigAScopedModule(plugin)) {
+      const pluginSplit = plugin.split('/');
+
+      return `${pluginSplit[0]}/eslint-plugin-${pluginSplit[1]}`;
+    }
+
+    return `eslint-plugin-${plugin}`;
+  });
 
   const presets = wrapToArray(config.extends)
     .filter(preset => preset !== 'eslint:recommended')
