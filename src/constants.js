@@ -45,7 +45,8 @@ export const defaultOptions = {
   detectors: [
     availableDetectors.importDeclaration,
     availableDetectors.requireCallExpression,
-    availableDetectors.gruntLoadTaskCallExpression,
+    availableDetectors.requireResolveCallExpression,
+    availableDetectors.gruntLoadTaskCallExpression
   ],
   specials: lodash.values(availableSpecials),
 };

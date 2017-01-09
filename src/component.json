@@ -11,7 +11,8 @@
   "detector": [
     "gruntLoadTaskCallExpression",
     "importDeclaration",
-    "requireCallExpression"
+    "requireCallExpression",
+    "requireResolveCallExpression"
   ],
   "special": [
     "eslint",
