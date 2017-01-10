@@ -1,5 +1,37 @@
 export default [
   {
+    name: 'missing module for require.resolve when missing in package.json',
+    module: 'require_resolve_missing',
+    options: {
+      withoutDev: true,
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {
+        anyone: ['index.js'],
+      },
+      using: {
+        anyone: ['index.js'],
+      },
+    },
+  },
+  {
+    name: 'find module for require.resolve when present',
+    module: 'require_resolve',
+    options: {
+      withoutDev: true,
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        optimist: ['index.js'],
+      },
+    },
+  },
+  {
     name: 'find unused dependencies',
     module: 'bad',
     options: {
