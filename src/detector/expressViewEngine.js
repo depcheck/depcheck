@@ -1,6 +1,6 @@
 import lodash from 'lodash';
 
-export default function detectExpressViewEngine(node) {
+export default function expressViewEngine(node) {
   return node.type === 'CallExpression' &&
     node.callee &&
     node.callee.property &&
