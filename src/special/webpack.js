@@ -1,7 +1,7 @@
 import path from 'path';
 import lodash from 'lodash';
 
-const webpackConfigRegex = /webpack(\..+)?\.config.js/;
+const webpackConfigRegex = /webpack(\..+)?\.config\.(babel\.)?js/;
 const loaderTemplates = ['*-webpack-loader', '*-web-loader', '*-loader', '*'];
 
 function extractLoaders(item) {

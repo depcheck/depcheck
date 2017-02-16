@@ -9,6 +9,8 @@ const configFileNames = [
   'webpack.config.js',
   'webpack.development.config.js',
   'webpack.production.config.js',
+  'webpack.config.babel.js',
+  'webpack.prod.config.babel.js',
 ];
 
 const testCases = [
