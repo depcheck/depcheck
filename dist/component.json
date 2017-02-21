@@ -1,0 +1,27 @@
+{
+  "parser": [
+    "coffee",
+    "es6",
+    "es7",
+    "jsx",
+    "sass",
+    "typescript"
+  ],
+  "detector": [
+    "gruntLoadTaskCallExpression",
+    "importCallExpression",
+    "importDeclaration",
+    "requireCallExpression",
+    "requireResolveCallExpression"
+  ],
+  "special": [
+    "babel",
+    "bin",
+    "commitizen",
+    "eslint",
+    "feross-standard",
+    "gulp-load-plugins",
+    "mocha",
+    "webpack"
+  ]
+}
