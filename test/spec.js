@@ -1,5 +1,3 @@
-import depcheck from '../src/index';
-
 export default [
   {
     name: 'detect missing module for System.import when missing in package.json',

@@ -19,5 +19,5 @@ export default function importCallExpression(node) {
       lodash.isString(node.arguments[0].value)
         ? [node.arguments[0].value]
         : []
-    );
+  );
 }
