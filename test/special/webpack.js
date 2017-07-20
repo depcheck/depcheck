@@ -2,7 +2,7 @@
 
 import 'should';
 import path from 'path';
-import fsp from 'fs-promise';
+import fse from 'fs-extra';
 import parse from '../../src/special/webpack';
 
 const configFileNames = [
@@ -90,15 +90,15 @@ function random() {
 async function getTempPath(filename, content) {
   const tempFolder = path.resolve(__dirname, `temp-${random()}`);
   const tempPath = path.resolve(tempFolder, filename);
-  await fsp.mkdir(tempFolder);
-  await fsp.writeFile(tempPath, content);
+  await fse.ensureDir(tempFolder);
+  await fse.outputFile(tempPath, content);
   return tempPath;
 }
 
 async function removeTempFile(filepath) {
   const fileFolder = path.dirname(filepath);
-  await fsp.unlink(filepath);
-  await fsp.rmdir(fileFolder);
+  await fse.remove(filepath);
+  await fse.remove(fileFolder);
 }
 
 async function testWebpack(filename, content, deps, expectedDeps) {

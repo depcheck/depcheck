@@ -79,7 +79,7 @@
     "eslint-plugin-import": "^2.6.1",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.1.0",
-    "fs-promise": "^1.0.0",
+    "fs-extra": "^4.0.0",
     "mocha": "^3.0.0",
     "node-sass": "^4.5.3",
     "node-version-check": "^2.1.1",
