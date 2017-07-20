@@ -4,7 +4,7 @@
   "description": "Check dependencies in your node module",
   "main": "dist/index.js",
   "engines": {
-    "node": ">=0.12"
+    "node": ">=4"
   },
   "bin": {
     "depcheck": "bin/depcheck"
@@ -20,9 +20,9 @@
     "depcheck-web": "node ./bin/depcheck --json | depcheck-web",
     "depcheck-json": "node ./bin/depcheck --json | babel-node ./build/check-json",
     "prepublish": "npm run compile && npm run component",
-    "lint": "node-version-gte-4 && eslint ./src ./test ./build || node-version-lt-4",
+    "lint": "eslint ./src ./test ./build",
     "test": "babel-node node_modules/mocha/bin/_mocha ./test ./test/special --timeout 10000",
-    "test-dependent": "node-version-gte-4 && dependent-build || node-version-lt-4",
+    "test-dependent": "dependent-build",
     "test-coverage": "babel-node node_modules/cross-env/bin/cross-env.js NODE_ENV=test nyc mocha ./test ./test/special --timeout 20000 && nyc report --reporter=text-lcov > ./coverage/coverage.lcov"
   },
   "author": {
