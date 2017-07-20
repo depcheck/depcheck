@@ -82,7 +82,6 @@
     "fs-extra": "^4.0.0",
     "mocha": "^3.0.0",
     "node-sass": "^4.5.3",
-    "node-version-check": "^2.1.1",
     "nyc": "^11.0.3",
     "patch-version": "^0.1.1",
     "should": "^11.0.0",
