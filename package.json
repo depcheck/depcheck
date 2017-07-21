@@ -4,7 +4,7 @@
   "description": "Check dependencies in your node module",
   "main": "dist/index.js",
   "engines": {
-    "node": ">=0.12"
+    "node": ">=4"
   },
   "bin": {
     "depcheck": "bin/depcheck"
@@ -20,10 +20,10 @@
     "depcheck-web": "node ./bin/depcheck --json | depcheck-web",
     "depcheck-json": "node ./bin/depcheck --json | babel-node ./build/check-json",
     "prepublish": "npm run compile && npm run component",
-    "lint": "node-version-gte-4 && eslint ./src ./test ./build || node-version-lt-4",
+    "lint": "eslint ./src ./test ./build",
     "test": "babel-node node_modules/mocha/bin/_mocha ./test ./test/special --timeout 10000",
-    "test-dependent": "node-version-gte-4 && dependent-build || node-version-lt-4",
-    "test-coverage": "babel-node node_modules/cross-env/bin/cross-env.js NODE_ENV=test nyc mocha ./test ./test/special --timeout 20000 && nyc report --reporter=text-lcov > ./coverage/coverage.lcov"
+    "test-dependent": "dependent-build",
+    "test-coverage": "babel-node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=test nyc mocha ./test ./test/special --timeout 20000 && nyc report --reporter=text-lcov > ./coverage/coverage.lcov"
   },
   "author": {
     "name": "Djordje Lukic",
@@ -58,35 +58,34 @@
     "minimatch": "^3.0.2",
     "require-package-name": "^2.0.1",
     "walkdir": "0.0.11",
-    "yargs": "^6.0.0"
+    "yargs": "^8.0.2"
   },
   "devDependencies": {
     "babel-cli": "^6.1.1",
     "babel-eslint": "^7.0.0",
     "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-plugin-istanbul": "^3.0.0",
+    "babel-plugin-istanbul": "^4.1.4",
     "babel-plugin-transform-object-assign": "^6.1.18",
     "babel-polyfill": "^6.16.0",
     "babel-preset-es2015": "^6.0.15",
     "babel-preset-stage-2": "^6.0.15",
     "babel-register": "^6.18.0",
     "codecov.io": "^0.1.6",
-    "cross-env": "^3.1.3",
+    "cross-env": "^5.0.1",
     "depcheck-web": "^0.1.0",
     "dependent-build": "^0.1.2",
     "eslint": "^3.10.1",
-    "eslint-config-airbnb": "^13.0.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^2.2.3",
-    "eslint-plugin-react": "^6.7.0",
-    "fs-promise": "^1.0.0",
+    "eslint-config-airbnb": "^15.0.2",
+    "eslint-plugin-import": "^2.6.1",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.1.0",
+    "fs-extra": "^4.0.0",
     "mocha": "^3.0.0",
-    "node-sass": "^3.4.0",
-    "node-version-check": "^2.1.1",
-    "nyc": "^10.0.0",
+    "node-sass": "^4.5.3",
+    "nyc": "^11.0.3",
     "patch-version": "^0.1.1",
     "should": "^11.0.0",
-    "typescript": "^1.8.0"
+    "typescript": "^2.4.1"
   },
   "nyc": {
     "sourceMap": false,
