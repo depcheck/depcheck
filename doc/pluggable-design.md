@@ -97,7 +97,12 @@ On the parse error case, throw `SyntaxError` exception and depcheck will capture
 
 After the file content is converted into an AST, the detectors are responsible to walk on each AST nodes to report dependency packages.
 
-Depcheck ships the detector for `require` function as `requireCallExpreesion` detector, for ES6 `import` declaration as `importDeclaration` detector, and for `grunt.tasks.loadNpmTasks` function as `gruntLoadTaskCallExpression` detector.
+Depcheck ships these detectors:
+
+- `requireCallExpreesion` detector for `require` function
+- `importDeclaration` detector for ES6 `import` declaration
+- `gruntLoadTaskCallExpression` detector for `grunt.tasks.loadNpmTasks` function
+- `expressViewEngine` detector for Express [view engine](https://expressjs.com/en/guide/using-template-engines.html)
 
 ### Use Detector From API
 

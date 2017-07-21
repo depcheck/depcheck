@@ -30,6 +30,10 @@ function makeArgv(module, options) {
     argv.push(`--ignore-dirs=${options.ignoreDirs.join(',')}`);
   }
 
+  if (options.detectors) {
+    argv.push(`--detectors=${options.detectors.map(f => f.name).join(',')}`);
+  }
+
   if (options.argv && options.argv.length) {
     argv.push(...options.argv);
   }

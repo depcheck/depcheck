@@ -9,6 +9,7 @@
     "typescript"
   ],
   "detector": [
+    "expressViewEngine",
     "gruntLoadTaskCallExpression",
     "importDeclaration",
     "requireCallExpression",
