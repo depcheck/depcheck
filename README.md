@@ -17,7 +17,7 @@ Depcheck is a tool for analyzing the dependencies in a project to see: how each 
 npm install -g depcheck
 ```
 
-*Notice:* depcheck needs node.js >= 0.12.
+*Notice:* depcheck needs node.js >= 4.
 
 ## Syntax Support
 
