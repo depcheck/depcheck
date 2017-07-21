@@ -39,15 +39,15 @@ npm install -g depcheck typescript
 
 The *special* component is used to recognize the dependencies that are not generally used in the above syntax files. The following scenarios are supported by specials:
 
-- Dependencies used in npm commands, Travis scripts or other CI scripts
-- [ESLint](https://www.npmjs.com/package/eslint) configuration presets, parsers and plugins
-- [Webpack](https://www.npmjs.com/package/webpack) loaders
-- [Babel](https://www.npmjs.com/package/babel) presets and plugins
+- `bin` - Dependencies used in npm commands, Travis scripts or other CI scripts
+- `eslint` - [ESLint](https://www.npmjs.com/package/eslint) configuration presets, parsers and plugins
+- `webpack` - [Webpack](https://www.npmjs.com/package/webpack) loaders
+- `babel` - [Babel](https://www.npmjs.com/package/babel) presets and plugins
 - [Grunt](https://www.npmjs.com/package/grunt) plugins
-- [Feross standard](https://www.npmjs.com/package/standard) format parser
-- [Mocha](https://www.npmjs.com/package/mocha) explicit required dependencies
-- [Commitizen](https://www.npmjs.com/package/commitizen) configuration adaptor
-- [Gulp-load-plugins](https://www.npmjs.com/package/gulp-load-plugins) lazy loaded plugins
+- `feross-standard` - [Feross standard](https://www.npmjs.com/package/standard) format parser
+- `mocha` - [Mocha](https://www.npmjs.com/package/mocha) explicit required dependencies
+- `commitizen` - [Commitizen](https://www.npmjs.com/package/commitizen) configuration adaptor
+- `gulp-load-plugins` - [Gulp-load-plugins](https://www.npmjs.com/package/gulp-load-plugins) lazy loaded plugins
 
 The logic of a special is not perfect. There might be [false alerts](#false-alert). If this happens, please open an issue for us.
 
