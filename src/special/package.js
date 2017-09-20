@@ -5,7 +5,7 @@ export default function parsePackageJson(content, filepath, deps) {
     const scriptsText = JSON.stringify(JSON.parse(content).scripts);
     if (scriptsText) {
       const depsInScripts = [];
-      for (let i = 0, len = deps.length; i < len; i + 1) {
+      for (let i = 0; i < deps.length; i += 1) {
         if (scriptsText.indexOf(deps[i]) !== -1) {
           depsInScripts.push(deps[i]);
         }
