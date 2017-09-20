@@ -582,4 +582,16 @@ export default [
       },
     },
   },
+  // TODO: How to enable the 'package' special parser for this test?
+  {
+    name: 'discover dependencies from package.json scripts',
+    module: 'package_json_scripts',
+    options: {},
+    expected: {
+      dependencies: ['ts-node', 'some-module'],
+      devDependencies: [],
+      missing: {},
+      using: {},
+    },
+  },
 ];
