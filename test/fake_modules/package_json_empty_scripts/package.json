@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "ts-node": "1.0.0",
+    "some-module": "1.0.0"
+  },
+  "scripts": {}
+}

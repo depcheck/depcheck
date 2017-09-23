@@ -11,7 +11,7 @@ describe('package.json special parser', () => {
     result.should.deepEqual([]);
   });
 
-  it('should recognize mocha options specified from scripts', () => {
+  it('should find dependencies used in scripts', () => {
     const rootDir = path.resolve(__dirname, '../fake_modules/package_json_scripts');
     const packagePath = path.resolve(rootDir, 'package.json');
     const packageContent = fs.readFileSync(packagePath, 'utf-8');
@@ -20,7 +20,16 @@ describe('package.json special parser', () => {
     result.should.deepEqual(['ts-node']);
   });
 
-  it('should not fail to parse package.json when the scripts key is missing', () => {
+  it('should not fail to check package.json when the scripts value is empty', () => {
+    const rootDir = path.resolve(__dirname, '../fake_modules/package_json_empty_scripts');
+    const packagePath = path.resolve(rootDir, 'package.json');
+    const packageContent = fs.readFileSync(packagePath, 'utf-8');
+    const dependencies = Object.keys(JSON.parse(packageContent).dependencies);
+    const result = parse(packageContent, packagePath, dependencies, rootDir);
+    result.should.deepEqual([]);
+  });
+
+  it('should not fail to check package.json when the scripts key is missing', () => {
     const rootDir = path.resolve(__dirname, '../fake_modules/package_json_no_scripts');
     const packagePath = path.resolve(rootDir, 'package.json');
     const packageContent = fs.readFileSync(packagePath, 'utf-8');
