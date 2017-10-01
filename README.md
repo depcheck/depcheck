@@ -65,7 +65,7 @@ All of the arguments are optional:
 
 `--json`: Output results in JSON. When not specified, depcheck outputs in human friendly format.
 
-`--ignores`: A comma separated array containing package names to ignore. It can be glob expressions. Example, `--ignores=eslint,babel`.
+`--ignores`: A comma separated array containing package names to ignore. It can be glob expressions. Example, `--ignores=eslint,babel-*`.
 
 `--ignore-dirs`: A comma separated array containing directory names to ignore. Example, `--ignore-dirs=dist,coverage`.
 
