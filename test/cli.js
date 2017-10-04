@@ -48,8 +48,8 @@ function testCli(argv) {
   return new Promise(resolve =>
     cli(
       argv,
-      data => (log = data),
-      data => (error = data),
+      data => (log = data), // eslint-disable-line no-return-assign
+      data => (error = data), // eslint-disable-line no-return-assign
       exitCode => resolve({
         log,
         error,
@@ -216,6 +216,6 @@ describe('depcheck command line', () => {
         exitCode.should.equal(-1);
       }));
 
-    after(() => (process.cwd = originalCwd));
+    after(() => (process.cwd = originalCwd)); // eslint-disable-line no-return-assign
   });
 });
