@@ -39,6 +39,6 @@ dist
 # Dependent-build
 dependent-build
 
-# IDE files
+# Jetbrains IDE files
 .idea/
 *.iml
