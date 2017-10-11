@@ -51,18 +51,12 @@ function parseWebpack1(module, deps) {
   return [...loaders, ...preLoaders, ...postLoaders];
 }
 
-function mapRuleLoaders(module) {
-  return module.rules
-    .filter(rule => rule.loaders)
-    .map(rule => rule.loaders.map(loader => loader));
-}
-
 function mapRuleUse(module) {
   return module.rules
     // filter use or loader because 'loader' is a shortcut to 'use'
     .filter(rule => rule.use || rule.loader)
     // return coerced array, using the relevant key
-    .map(rule => [].concat(rule[rule.use ? 'use' : 'loader']));
+    .map(rule => [].concat(rule.use || rule.loader));
 }
 
 function parseWebpack2(module, deps) {
@@ -70,7 +64,7 @@ function parseWebpack2(module, deps) {
     return [];
   }
 
-  const mappedLoaders = mapRuleLoaders(module);
+  const mappedLoaders = module.rules.filter(rule => rule.loaders);
   const mappedUses = mapRuleUse(module);
   const loaders = getLoaders(deps, lodash.flatten([...mappedLoaders, ...mappedUses]));
   return loaders;
