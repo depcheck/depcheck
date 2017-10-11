@@ -81,6 +81,101 @@ const testCases = [
       ],
     },
   },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.loaders',
+    deps: ['style-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, loaders: ['style-loader'] },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.loader',
+    deps: ['style-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, loader: 'style-loader' },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.loader (string array)',
+    deps: ['style-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, loader: 'style-loader' },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.use',
+    deps: ['style-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, use: 'style-loader' },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.use (string array)',
+    deps: ['style-loader', 'css-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.use (object)',
+    deps: ['style-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, use: { loader: 'style-loader' } },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.use (object array)',
+    deps: ['style-loader', 'css-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, use: [{ loader: 'style-loader' }, { loader: 'css-loader' }] },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.use (mixed array)',
+    deps: ['style-loader', 'css-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, use: [{ loader: 'style-loader' }, 'css-loader'] },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.loader (object array)',
+    deps: ['style-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, loader: [{ loader: 'style-loader' }] },
+      ],
+    },
+  },
+  {
+    name: 'handle invalid/unrecognised webpack v2 loaders',
+    deps: [],
+    module: {
+      rules: [
+        { test: /\.css$/, loader: [{ loader: null }, 1] },
+      ],
+    },
+  },
+  {
+    name: 'handle invalid webpack config',
+    deps: [],
+    nomodule: true,
+  },
 ];
 
 function random() {
