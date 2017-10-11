@@ -19,7 +19,7 @@
     "depcheck": "node ./bin/depcheck",
     "depcheck-web": "node ./bin/depcheck --json | depcheck-web",
     "depcheck-json": "node ./bin/depcheck --json | babel-node ./build/check-json",
-    "prepublish": "npm run compile && npm run component",
+    "prepublishOnly": "npm run compile && npm run component",
     "lint": "eslint ./src ./test ./build",
     "test": "babel-node node_modules/mocha/bin/_mocha ./test ./test/special --timeout 10000",
     "test-dependent": "dependent-build",
