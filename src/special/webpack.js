@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import path from 'path';
 import lodash from 'lodash';
 
@@ -7,11 +5,15 @@ const webpackConfigRegex = /webpack(\..+)?\.config\.(babel\.)?js/;
 const loaderTemplates = ['*-webpack-loader', '*-web-loader', '*-loader', '*'];
 
 function extractLoaders(item) {
+  if (typeof item === 'string') {
+    return item;
+  }
+
   if (item.loader && typeof item.loader === 'string') {
     return item.loader.split('!');
-  } else if (item.loader && typeof item.loader === 'object') {
-    return item.loader;
-  } else if (item.loaders) {
+  }
+
+  if (item.loaders) {
     return item.loaders;
   }
 
@@ -52,30 +54,15 @@ function parseWebpack1(module, deps) {
 function mapRuleLoaders(module) {
   return module.rules
     .filter(rule => rule.loaders)
-    .map(rule => rule.loaders.map(loader => ({
-      loader,
-    })));
+    .map(rule => rule.loaders.map(loader => loader));
 }
 
 function mapRuleUse(module) {
   return module.rules
-    // filter use or loader (loader is a shortcut to use)
+    // filter use or loader because 'loader' is a shortcut to 'use'
     .filter(rule => rule.use || rule.loader)
-    .map((rule) => {
-      const key = rule.use ? 'use' : 'loader';
-      const coercedArray = [].concat(rule[key]);
-
-      // if it's an array, apply the two rules above for each element
-      return coercedArray.map((value) => {
-        if (typeof value === 'object') {
-          return value;
-        }
-
-        return {
-          loader: value,
-        };
-      });
-    });
+    // return coerced array, using the relevant key
+    .map(rule => [].concat(rule[rule.use ? 'use' : 'loader']));
 }
 
 function parseWebpack2(module, deps) {
@@ -83,7 +70,10 @@ function parseWebpack2(module, deps) {
     return [];
   }
 
-  return getLoaders(deps, lodash.flatten([...mapRuleLoaders(module), ...mapRuleUse(module)]));
+  const mappedLoaders = mapRuleLoaders(module);
+  const mappedUses = mapRuleUse(module);
+  const loaders = getLoaders(deps, lodash.flatten([...mappedLoaders, ...mappedUses]));
+  return loaders;
 }
 
 export default function parseWebpack(content, filepath, deps) {

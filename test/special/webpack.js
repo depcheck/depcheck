@@ -162,6 +162,20 @@ const testCases = [
       ],
     },
   },
+  {
+    name: 'handle invalid/unrecognised webpack v2 loaders',
+    deps: [],
+    module: {
+      rules: [
+        { test: /\.css$/, loader: [{ loader: null }, 1] },
+      ],
+    },
+  },
+  {
+    name: 'handle invalid webpack config',
+    deps: [],
+    nomodule: true,
+  },
 ];
 
 function random() {
