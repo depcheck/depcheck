@@ -54,6 +54,18 @@ describe('depcheck', () => {
       error.should.be.instanceof(SyntaxError);
     }));
 
+  it('should ignore typescript `@types` packages', () =>
+    check('ignore_npm_@types', {}).then(unused => {
+      unused.should.deepEqual({
+        dependencies: [ 'optimist' ],
+        devDependencies: [],
+        missing: {},
+        using: {},
+        invalidFiles: {},
+        invalidDirs: {}
+      });
+    }));
+
   it('should allow dynamic package metadata', () =>
     check('bad', {
       package: {

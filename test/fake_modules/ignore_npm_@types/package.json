@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@types/a": "^0.0.1",
+    "@types/b": "^0.1.0",
+    "@types/c": "^1.0.0",
+    "optimist": "~0.6.0"
+  }
+}
