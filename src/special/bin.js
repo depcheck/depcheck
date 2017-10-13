@@ -28,6 +28,8 @@ function getBinaryFeatures(dep, [key, value]) {
 
   const features = [
     key,
+    `--require ${key}`,
+    `--require ${key}/register`,
     `$(npm bin)/${key}`,
     `node_modules/.bin/${key}`,
     `./node_modules/.bin/${key}`,

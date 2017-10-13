@@ -38,3 +38,7 @@ dist
 
 # Dependent-build
 dependent-build
+
+# IDE files
+.idea/
+*.iml
