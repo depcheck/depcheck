@@ -2,3 +2,4 @@ parser: babel-eslint
 extends: airbnb
 rules:
   import/no-dynamic-require: off
+  linebreak-style: off
