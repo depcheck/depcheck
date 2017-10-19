@@ -64,6 +64,21 @@ export default [
     },
   },
   {
+    name: 'find module for dynamic import() with magic Webpack comment',
+    module: 'import_function_webpack',
+    options: {
+      withoutDev: true,
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        optimist: ['index.js'],
+      },
+    },
+  },
+  {
     name: 'missing module for require.resolve when missing in package.json',
     module: 'require_resolve_missing',
     options: {
