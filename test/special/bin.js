@@ -70,6 +70,18 @@ const testCases = [
     dependencies: ['binary-no-package'],
     expected: [],
   },
+  {
+    name: 'detect packages used with --require and /register',
+    script: 'module --require binary-entry/register',
+    dependencies: ['binary-package'],
+    expected: ['binary-package'],
+  },
+  {
+    name: 'detect packages used with --require',
+    script: 'module --require binary-entry',
+    dependencies: ['binary-package'],
+    expected: ['binary-package'],
+  },
 ];
 
 function testParser(testCase, content, filename) {

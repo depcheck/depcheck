@@ -30,6 +30,10 @@ function makeArgv(module, options) {
     argv.push(`--ignore-dirs=${options.ignoreDirs.join(',')}`);
   }
 
+  if (options.detectors) {
+    argv.push(`--detectors=${options.detectors.map(f => f.name).join(',')}`);
+  }
+
   if (options.argv && options.argv.length) {
     argv.push(...options.argv);
   }
@@ -44,8 +48,8 @@ function testCli(argv) {
   return new Promise(resolve =>
     cli(
       argv,
-      data => (log = data),
-      data => (error = data),
+      (data) => { log = data; },
+      (data) => { error = data; },
       exitCode => resolve({
         log,
         error,
@@ -212,6 +216,6 @@ describe('depcheck command line', () => {
         exitCode.should.equal(-1);
       }));
 
-    after(() => (process.cwd = originalCwd));
+    after(() => { process.cwd = originalCwd; });
   });
 });

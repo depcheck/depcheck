@@ -3,12 +3,13 @@ sudo: false
 language: node_js
 
 node_js:
-  - 0.12
   - 4
   - 6
-  - 7
+  - 8
 
 script:
+  - npm run compile
+  - npm run component
   - npm run depcheck
   - npm run depcheck-json
   - npm run lint

@@ -1,6 +1,6 @@
 import lodash from 'lodash';
 
-export default function detectRequireCallExpression(node) {
+export default function requireCallExpression(node) {
   return node.type === 'CallExpression' &&
     node.callee &&
     node.callee.type === 'Identifier' &&

@@ -1,3 +1,5 @@
+import depcheck from '../src/index';
+
 export default [
   {
     name: 'detect missing module for System.import when missing in package.json',
@@ -622,6 +624,25 @@ export default [
       using: {
         babel: ['package.json'],
         chai: ['package.json'],
+      },
+    },
+  },
+  {
+    name: 'discover dependency from express view engine setting',
+    module: 'express_view_engine',
+    options: {
+      detectors: [
+        depcheck.detector.requireCallExpression,
+        depcheck.detector.expressViewEngine,
+      ],
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        ejs: ['index.js'],
+        express: ['index.js'],
       },
     },
   },

@@ -1,9 +1,8 @@
 environment:
   matrix:
-  - nodejs_version: 0.12
   - nodejs_version: 4
   - nodejs_version: 6
-  - nodejs_version: 7
+  - nodejs_version: 8
 
 install:
   - ps: Install-Product node $env:nodejs_version
@@ -13,6 +12,8 @@ install:
 test_script:
   - node --version
   - npm --version
+  - npm run compile
+  - npm run component
   - npm run depcheck
   - npm run depcheck-json
   - npm run lint

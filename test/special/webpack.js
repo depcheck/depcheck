@@ -2,7 +2,7 @@
 
 import 'should';
 import path from 'path';
-import fsp from 'fs-promise';
+import fse from 'fs-extra';
 import parse from '../../src/special/webpack';
 
 const configFileNames = [
@@ -81,6 +81,101 @@ const testCases = [
       ],
     },
   },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.loaders',
+    deps: ['style-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, loaders: ['style-loader'] },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.loader',
+    deps: ['style-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, loader: 'style-loader' },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.loader (string array)',
+    deps: ['style-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, loader: 'style-loader' },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.use',
+    deps: ['style-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, use: 'style-loader' },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.use (string array)',
+    deps: ['style-loader', 'css-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.use (object)',
+    deps: ['style-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, use: { loader: 'style-loader' } },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.use (object array)',
+    deps: ['style-loader', 'css-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, use: [{ loader: 'style-loader' }, { loader: 'css-loader' }] },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.use (mixed array)',
+    deps: ['style-loader', 'css-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, use: [{ loader: 'style-loader' }, 'css-loader'] },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.loader (object array)',
+    deps: ['style-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, loader: [{ loader: 'style-loader' }] },
+      ],
+    },
+  },
+  {
+    name: 'handle invalid/unrecognised webpack v2 loaders',
+    deps: [],
+    module: {
+      rules: [
+        { test: /\.css$/, loader: [{ loader: null }, 1] },
+      ],
+    },
+  },
+  {
+    name: 'handle invalid webpack config',
+    deps: [],
+    nomodule: true,
+  },
 ];
 
 function random() {
@@ -90,15 +185,15 @@ function random() {
 async function getTempPath(filename, content) {
   const tempFolder = path.resolve(__dirname, `temp-${random()}`);
   const tempPath = path.resolve(tempFolder, filename);
-  await fsp.mkdir(tempFolder);
-  await fsp.writeFile(tempPath, content);
+  await fse.ensureDir(tempFolder);
+  await fse.outputFile(tempPath, content);
   return tempPath;
 }
 
 async function removeTempFile(filepath) {
   const fileFolder = path.dirname(filepath);
-  await fsp.unlink(filepath);
-  await fsp.rmdir(fileFolder);
+  await fse.remove(filepath);
+  await fse.remove(fileFolder);
 }
 
 async function testWebpack(filename, content, deps, expectedDeps) {
