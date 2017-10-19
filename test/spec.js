@@ -1,38 +1,4 @@
-import depcheck from '../src/index';
-
 export default [
-  {
-    name: 'detect missing module for System.import when missing in package.json',
-    module: 'system_import_missing',
-    options: {
-      withoutDev: true,
-    },
-    expected: {
-      dependencies: [],
-      devDependencies: [],
-      missing: {
-        anyone: ['index.js'],
-      },
-      using: {
-        anyone: ['index.js'],
-      },
-    },
-  },
-  {
-    name: 'find module for System.import when present',
-    module: 'system_import',
-    options: {
-      withoutDev: true,
-    },
-    expected: {
-      dependencies: [],
-      devDependencies: [],
-      missing: {},
-      using: {
-        optimist: ['index.js'],
-      },
-    },
-  },
   {
     name: 'detect missing module for dynamic import() when missing in package.json',
     module: 'import_function_missing',
@@ -53,6 +19,21 @@ export default [
   {
     name: 'find module for dynamic import() when present',
     module: 'import_function',
+    options: {
+      withoutDev: true,
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        optimist: ['index.js'],
+      },
+    },
+  },
+  {
+    name: 'find module for dynamic import() with magic Webpack comment',
+    module: 'import_function_webpack',
     options: {
       withoutDev: true,
     },

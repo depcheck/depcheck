@@ -28,7 +28,8 @@ build/Release
 node_modules
 
 # Babel compiled code
-dist
+#@TODO: Restore; this is for git install of npm pkg, temporary
+#dist
 
 # Nyc output
 .nyc_output
