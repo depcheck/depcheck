@@ -97,21 +97,30 @@ const testCases = [
     expected: [],
   },
   {
-    name: 'handle config of scoped module',
-    content: {
-      extends: '@my-org/short-customized',
-    },
-    expected: [
-      '@my-org/eslint-config-short-customized',
-    ],
-  },
-  {
     name: 'handle config of scoped module with full name',
     content: {
       extends: '@my-org/eslint-config-long-customized',
     },
     expected: [
       '@my-org/eslint-config-long-customized',
+    ],
+  },
+  {
+    name: 'handle config of scoped module called eslint-config',
+    content: {
+      extends: '@my-org/eslint-config',
+    },
+    expected: [
+      '@my-org/eslint-config',
+    ],
+  },
+  {
+    name: 'handle config of scoped module with just the scope',
+    content: {
+      extends: '@my-org',
+    },
+    expected: [
+      '@my-org/eslint-config',
     ],
   },
 ];

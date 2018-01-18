@@ -53,6 +53,10 @@ function isEslintConfigAFullyQualifiedModuleName(specifier) {
   return lodash.startsWith(specifier, 'eslint-config-');
 }
 
+function isEslintConfigModuleJustAScope(specifier) {
+  return !lodash.includes(specifier, '/');
+}
+
 function resolvePresetPackage(preset, rootDir) {
   // inspired from https://github.com/eslint/eslint/blob/5b4a94e26d0ef247fe222dacab5749805d9780dd/lib/config/config-file.js#L347
   if (isEslintConfigAnAbsolutePath(preset)) {
@@ -62,13 +66,12 @@ function resolvePresetPackage(preset, rootDir) {
     return path.resolve(rootDir, preset);
   }
   if (isEslintConfigAScopedModule(preset)) {
-    const scope = preset.substring(0, preset.indexOf('/'));
-    const module = preset.substring(preset.indexOf('/') + 1);
-
-    if (isEslintConfigAFullyQualifiedModuleName(module)) {
-      return preset;
+    // Based on documentation for ESLint:
+    // https://eslint.org/docs/developer-guide/shareable-configs#npm-scoped-modules
+    if (isEslintConfigModuleJustAScope(preset)) {
+      return `${preset}/eslint-config`;
     }
-    return `${scope}/eslint-config-${module}`;
+    return preset;
   }
   if (isEslintConfigAFullyQualifiedModuleName(preset)) {
     return preset;
