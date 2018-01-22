@@ -118,8 +118,7 @@ export default function cli(args, log, error, exit) {
       skipMissing: opt.argv.skipMissing,
     }))
     .then(result => print(result, log, opt.argv.json))
-    .then(({ dependencies: deps, devDependencies: devDeps }) =>
-      exit(opt.argv.json || (deps.length === 0 && devDeps.length) === 0 ? 0 : -1))
+    .then(result => exit((opt.argv.json || noIssue(result)) ? 0 : -1))
     .catch((errorMessage) => {
       error(errorMessage);
       exit(-1);
