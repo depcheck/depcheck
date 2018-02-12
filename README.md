@@ -63,9 +63,11 @@ All of the arguments are optional:
 
 `--ignore-bin-package=[true|false]`: A flag to indicate if depcheck ignores the packages containing bin entry. The default value is `true`.
 
+`--skip-missing=[true|false]`: A flag to indicate if depcheck skips calculation of missing dependencies. The default value is `false`.
+
 `--json`: Output results in JSON. When not specified, depcheck outputs in human friendly format.
 
-`--ignores`: A comma separated array containing package names to ignore. It can be glob expressions. Example, `--ignores=eslint,babel-*`.
+`--ignores`: A comma separated array containing package names to ignore. It can be glob expressions. Example, `--ignores="eslint,babel-*"`.
 
 `--ignore-dirs`: A comma separated array containing directory names to ignore. Example, `--ignore-dirs=dist,coverage`.
 
@@ -89,6 +91,7 @@ import depcheck from 'depcheck';
 const options = {
   withoutDev: false, // [DEPRECATED] check against devDependencies
   ignoreBinPackage: false, // ignore the packages with bin entry
+  skipMissing: false, // skip calculation of missing dependencies
   ignoreDirs: [ // folder with these names will be ignored
     'sandbox',
     'dist',

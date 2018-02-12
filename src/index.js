@@ -42,6 +42,7 @@ export default function depcheck(rootDir, options, callback) {
   const ignoreBinPackage = getOption('ignoreBinPackage');
   const ignoreMatches = getOption('ignoreMatches');
   const ignoreDirs = lodash.union(defaultOptions.ignoreDirs, options.ignoreDirs);
+  const skipMissing = getOption('skipMissing');
 
   const detectors = getOption('detectors');
   const parsers = lodash(getOption('parsers'))
@@ -60,6 +61,7 @@ export default function depcheck(rootDir, options, callback) {
   return check({
     rootDir,
     ignoreDirs,
+    skipMissing,
     deps,
     devDeps,
     peerDeps,

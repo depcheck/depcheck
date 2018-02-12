@@ -79,13 +79,16 @@ export default function cli(args, log, error, exit) {
     .boolean([
       'dev',
       'ignore-bin-package',
+      'skip-missing',
     ])
     .default({
       dev: true,
       'ignore-bin-package': false,
+      'skip-missing': false,
     })
     .describe('dev', '[DEPRECATED] Check on devDependecies')
     .describe('ignore-bin-package', 'Ignore package with bin entry')
+    .describe('skip-missing', 'Skip calculation of missing dependencies')
     .describe('json', 'Output results to JSON')
     .describe('ignores', 'Comma separated package list to ignore')
     .describe('ignore-dirs', 'Comma separated folder names to ignore')
@@ -112,6 +115,7 @@ export default function cli(args, log, error, exit) {
       parsers: getParsers(opt.argv.parsers),
       detectors: getDetectors(opt.argv.detectors),
       specials: getSpecials(opt.argv.specials),
+      skipMissing: opt.argv.skipMissing,
     }))
     .then(result => print(result, log, opt.argv.json))
     .then(({ dependencies: deps, devDependencies: devDeps }) =>
