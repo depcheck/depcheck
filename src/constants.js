@@ -31,6 +31,7 @@ export const defaultOptions = {
     'node_modules',
     'bower_components',
   ],
+  skipMissing: false,
   parsers: {
     '*.js': availableParsers.jsx,
     '*.jsx': availableParsers.jsx,

@@ -185,7 +185,7 @@ function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
   });
 }
 
-function buildResult(result, deps, devDeps, peerDeps, optionalDeps) {
+function buildResult(result, deps, devDeps, peerDeps, optionalDeps, skipMissing) {
   const usingDepsLookup = lodash(result.using)
     // { f1:[d1,d2,d3], f2:[d2,d3,d4] }
     .toPairs()
@@ -206,10 +206,12 @@ function buildResult(result, deps, devDeps, peerDeps, optionalDeps) {
   const allDeps = deps.concat(devDeps).concat(peerDeps).concat(optionalDeps);
   const missingDeps = lodash.difference(usingDeps, allDeps);
 
-  const missingDepsLookup = lodash(missingDeps)
-    .map(missingDep => [missingDep, usingDepsLookup[missingDep]])
-    .fromPairs()
-    .value();
+  const missingDepsLookup = skipMissing
+    ? []
+    : lodash(missingDeps)
+      .map(missingDep => [missingDep, usingDepsLookup[missingDep]])
+      .fromPairs()
+      .value();
 
   return {
     dependencies: lodash.difference(deps, usingDeps),
@@ -224,6 +226,7 @@ function buildResult(result, deps, devDeps, peerDeps, optionalDeps) {
 export default function check({
   rootDir,
   ignoreDirs,
+  skipMissing,
   deps,
   devDeps,
   peerDeps,
@@ -233,5 +236,5 @@ export default function check({
 }) {
   const allDeps = lodash.union(deps, devDeps);
   return checkDirectory(rootDir, rootDir, ignoreDirs, allDeps, parsers, detectors)
-    .then(result => buildResult(result, deps, devDeps, peerDeps, optionalDeps));
+    .then(result => buildResult(result, deps, devDeps, peerDeps, optionalDeps, skipMissing));
 }
