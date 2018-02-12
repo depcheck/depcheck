@@ -404,6 +404,38 @@ export default [
     },
   },
   {
+    name: 'output empty missing dependencies when skipMissing is true',
+    module: 'missing',
+    options: {
+      skipMissing: true,
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        'missing-dep': ['index.js'],
+      },
+    },
+  },
+  {
+    name: 'output missing dependencies when skipMissing is false',
+    module: 'missing',
+    options: {
+      skipMissing: false,
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {
+        'missing-dep': ['index.js'],
+      },
+      using: {
+        'missing-dep': ['index.js'],
+      },
+    },
+  },
+  {
     name: 'handle require call without parameters',
     module: 'require_nothing',
     options: {

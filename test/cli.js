@@ -38,6 +38,10 @@ function makeArgv(module, options) {
     argv.push(...options.argv);
   }
 
+  if (options.skipMissing !== undefined) {
+    argv.push(`--skip-missing=${options.skipMissing}`);
+  }
+
   return argv;
 }
 
