@@ -114,6 +114,42 @@ const testCases = [
       '@my-org/eslint-config-long-customized',
     ],
   },
+  {
+    name: 'handle config with plugin',
+    content: {
+      extends: 'plugin:security/recommended',
+    },
+    expected: [
+      'eslint-plugin-security',
+    ],
+  },
+  {
+    name: 'handle config with full plugin name',
+    content: {
+      extends: 'plugin:eslint-plugin-security/recommended',
+    },
+    expected: [
+      'eslint-plugin-security',
+    ],
+  },
+  {
+    name: 'handle config with scoped plugin',
+    content: {
+      extends: 'plugin:@my-org/security/recommended',
+    },
+    expected: [
+      '@my-org/eslint-plugin-security',
+    ],
+  },
+  {
+    name: 'handle config with full scoped plugin name',
+    content: {
+      extends: 'plugin:@my-org/eslint-plugin-security/recommended',
+    },
+    expected: [
+      '@my-org/eslint-plugin-security',
+    ],
+  },
 ];
 
 function testEslint(deps, content) {
