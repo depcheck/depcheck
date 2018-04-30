@@ -85,7 +85,8 @@
     "nyc": "^11.0.3",
     "patch-version": "^0.1.1",
     "should": "^11.0.0",
-    "typescript": "^2.4.1"
+    "typescript": "^2.4.1",
+    "vue-template-compiler": "^2.5.16"
   },
   "nyc": {
     "sourceMap": false,
