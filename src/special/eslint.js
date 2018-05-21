@@ -45,12 +45,16 @@ function isEslintConfigARelativePath(specifier) {
   return lodash.startsWith(specifier, './') || lodash.startsWith(specifier, '../');
 }
 
-function isEslintConfigAScopedModule(specifier) {
+function isEslintConfigFromAPlugin(specifier) {
+  return lodash.startsWith(specifier, 'plugin:');
+}
+
+function isEslintConfigFromAScopedModule(specifier) {
   return lodash.startsWith(specifier, '@');
 }
 
-function isEslintConfigAFullyQualifiedModuleName(specifier) {
-  return lodash.startsWith(specifier, 'eslint-config-');
+function isEslintConfigFromAFullyQualifiedModuleName(specifier, prefix) {
+  return lodash.startsWith(specifier, prefix);
 }
 
 function resolvePresetPackage(preset, rootDir) {
@@ -61,19 +65,26 @@ function resolvePresetPackage(preset, rootDir) {
   if (isEslintConfigARelativePath(preset)) {
     return path.resolve(rootDir, preset);
   }
-  if (isEslintConfigAScopedModule(preset)) {
-    const scope = preset.substring(0, preset.indexOf('/'));
-    const module = preset.substring(preset.indexOf('/') + 1);
 
-    if (isEslintConfigAFullyQualifiedModuleName(module)) {
-      return preset;
+  const { prefix, specifier } = (
+    isEslintConfigFromAPlugin(preset)
+    ? { prefix: 'eslint-plugin-', specifier: preset.substring(preset.indexOf(':') + 1) }
+    : { prefix: 'eslint-config-', specifier: preset }
+  );
+
+  if (isEslintConfigFromAScopedModule(specifier)) {
+    const scope = specifier.substring(0, specifier.indexOf('/'));
+    const module = specifier.substring(specifier.indexOf('/') + 1);
+
+    if (isEslintConfigFromAFullyQualifiedModuleName(module, prefix)) {
+      return specifier;
     }
-    return `${scope}/eslint-config-${module}`;
+    return `${scope}/${prefix}${module}`;
   }
-  if (isEslintConfigAFullyQualifiedModuleName(preset)) {
-    return preset;
+  if (isEslintConfigFromAFullyQualifiedModuleName(specifier, prefix)) {
+    return specifier;
   }
-  return `eslint-config-${preset}`;
+  return `${prefix}${specifier}`;
 }
 
 function loadConfig(preset, rootDir) {
