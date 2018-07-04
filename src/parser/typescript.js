@@ -22,5 +22,6 @@ export default function parseTypescript(content, filePath) {
   // Reference: https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API#traversing-the-ast-with-a-little-linter
   return parse(result, {
     sourceType: 'module',
+    plugins: ['*']
   });
 }
