@@ -8,6 +8,7 @@
  */
 import 'node-sass';
 import 'typescript';
+import 'vue-template-compiler';
 
 /**
  * Recongnize the required module by nyc. See depcheck/depcheck#183

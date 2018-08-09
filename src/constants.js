@@ -42,6 +42,7 @@ export const defaultOptions = {
     '*.tsx': availableParsers.typescript,
     '*.sass': availableParsers.sass,
     '*.scss': availableParsers.sass,
+    '*.vue': availableParsers.vue,
   },
   detectors: [
     availableDetectors.importDeclaration,

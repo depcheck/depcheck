@@ -6,7 +6,8 @@
     "es7",
     "jsx",
     "sass",
-    "typescript"
+    "typescript",
+    "vue"
   ],
   "detector": [
     "expressViewEngine",
