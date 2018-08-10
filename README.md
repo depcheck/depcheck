@@ -42,6 +42,7 @@ The *special* component is used to recognize the dependencies that are not gener
 
 - `bin` - Dependencies used in npm commands, Travis scripts or other CI scripts
 - `eslint` - [ESLint](https://www.npmjs.com/package/eslint) configuration presets, parsers and plugins
+- `tslint` - [TSLint](https://www.npmjs.com/package/tslint) configuration presets, parsers and plugins
 - `webpack` - [Webpack](https://www.npmjs.com/package/webpack) loaders
 - `babel` - [Babel](https://www.npmjs.com/package/babel) presets and plugins
 - [Grunt](https://www.npmjs.com/package/grunt) plugins
