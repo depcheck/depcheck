@@ -27,4 +27,4 @@ please include the section name (e.g. devDependencies, dependencies)
 ### Extra info
 Any extra info you want to include. Thank you for the bug report!
 
-BONUS POINTS: If you wish to help us debug further, the `depcheck --json` option will show more information (such as errors that prevented parsing a file, in the `invalidFiles` part of the output)
+BONUS POINTS: If you wish to help us debug further, the `depcheck --json` option will show more information. Check [here in the README](https://github.com/depcheck/depcheck#example) for documentation on json output.
