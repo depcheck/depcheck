@@ -9,11 +9,13 @@ A description of the bug
 
 ### Code snippets
 Where the dependency is used:
+
 ```
 code snippet here
 ```
 
 Where the dependency is listed in package.json:
+
 ```
 package.json snippet here
 please include the section name (e.g. devDependencies, dependencies)
