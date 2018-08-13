@@ -6,11 +6,13 @@
     "es7",
     "jsx",
     "sass",
-    "typescript"
+    "typescript",
+    "vue"
   ],
   "detector": [
     "expressViewEngine",
     "gruntLoadTaskCallExpression",
+    "importCallExpression",
     "importDeclaration",
     "requireCallExpression",
     "requireResolveCallExpression"

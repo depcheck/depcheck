@@ -2,6 +2,53 @@ import depcheck from '../src/index';
 
 export default [
   {
+    name: 'detect missing module for dynamic import() when missing in package.json',
+    module: 'import_function_missing',
+    options: {
+      withoutDev: true,
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {
+        anyone: ['index.js'],
+      },
+      using: {
+        anyone: ['index.js'],
+      },
+    },
+  },
+  {
+    name: 'find module for dynamic import() when present',
+    module: 'import_function',
+    options: {
+      withoutDev: true,
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        optimist: ['index.js'],
+      },
+    },
+  },
+  {
+    name: 'find module for dynamic import() with magic Webpack comment',
+    module: 'import_function_webpack',
+    options: {
+      withoutDev: true,
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        optimist: ['index.js'],
+      },
+    },
+  },
+  {
     name: 'missing module for require.resolve when missing in package.json',
     module: 'require_resolve_missing',
     options: {
@@ -153,6 +200,22 @@ export default [
       using: {
         'sass-dep': ['sass.sass'],
         'scss-dep': ['scss.scss'],
+      },
+    },
+  },
+  {
+    name: 'support Vue syntax',
+    module: 'vue',
+    options: {
+    },
+    expected: {
+      dependencies: ['unused-dep'],
+      devDependencies: [],
+      missing: {},
+      using: {
+        vue: ['index.js'],
+        'vue-dep-1': ['component.vue'],
+        'vue-dep-2': ['component.vue'],
       },
     },
   },
@@ -401,6 +464,38 @@ export default [
       devDependencies: [],
       missing: {},
       using: {},
+    },
+  },
+  {
+    name: 'output empty missing dependencies when skipMissing is true',
+    module: 'missing',
+    options: {
+      skipMissing: true,
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        'missing-dep': ['index.js'],
+      },
+    },
+  },
+  {
+    name: 'output missing dependencies when skipMissing is false',
+    module: 'missing',
+    options: {
+      skipMissing: false,
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {
+        'missing-dep': ['index.js'],
+      },
+      using: {
+        'missing-dep': ['index.js'],
+      },
     },
   },
   {

@@ -80,12 +80,13 @@
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.1.0",
     "fs-extra": "^4.0.0",
-    "mocha": "^3.0.0",
+    "mocha": "^5.2.0",
     "node-sass": "^4.5.3",
     "nyc": "^11.0.3",
     "patch-version": "^0.1.1",
     "should": "^11.0.0",
-    "typescript": "^2.4.1"
+    "typescript": "^2.4.1",
+    "vue-template-compiler": "^2.5.16"
   },
   "nyc": {
     "sourceMap": false,

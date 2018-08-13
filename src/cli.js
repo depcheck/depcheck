@@ -79,17 +79,20 @@ export default function cli(args, log, error, exit) {
     .boolean([
       'dev',
       'ignore-bin-package',
+      'skip-missing',
     ])
     .default({
       dev: true,
       'ignore-bin-package': false,
+      'skip-missing': false,
     })
     .describe('dev', '[DEPRECATED] Check on devDependecies')
     .describe('ignore-bin-package', 'Ignore package with bin entry')
+    .describe('skip-missing', 'Skip calculation of missing dependencies')
     .describe('json', 'Output results to JSON')
     .describe('ignores', 'Comma separated package list to ignore')
     .describe('ignore-dirs', 'Comma separated folder names to ignore')
-    .describe('parsers', 'Comma separated glob:pasers pair list')
+    .describe('parsers', 'Comma separated glob:parser pair list')
     .describe('detectors', 'Comma separated detector list')
     .describe('specials', 'Comma separated special parser list')
     .version('version', 'Show version number', version)
@@ -112,10 +115,10 @@ export default function cli(args, log, error, exit) {
       parsers: getParsers(opt.argv.parsers),
       detectors: getDetectors(opt.argv.detectors),
       specials: getSpecials(opt.argv.specials),
+      skipMissing: opt.argv.skipMissing,
     }))
     .then(result => print(result, log, opt.argv.json))
-    .then(({ dependencies: deps, devDependencies: devDeps }) =>
-      exit(opt.argv.json || (deps.length === 0 && devDeps.length) === 0 ? 0 : -1))
+    .then(result => exit((opt.argv.json || noIssue(result)) ? 0 : -1))
     .catch((errorMessage) => {
       error(errorMessage);
       exit(-1);
