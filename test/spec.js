@@ -157,6 +157,22 @@ export default [
     },
   },
   {
+    name: 'support Vue syntax',
+    module: 'vue',
+    options: {
+    },
+    expected: {
+      dependencies: ['unused-dep'],
+      devDependencies: [],
+      missing: {},
+      using: {
+        vue: ['index.js'],
+        'vue-dep-1': ['component.vue'],
+        'vue-dep-2': ['component.vue'],
+      },
+    },
+  },
+  {
     name: 'find dependencies used in code but not declared in package.json',
     module: 'missing',
     options: {
