@@ -12,6 +12,7 @@
   "detector": [
     "expressViewEngine",
     "gruntLoadTaskCallExpression",
+    "importCallExpression",
     "importDeclaration",
     "requireCallExpression",
     "requireResolveCallExpression"
