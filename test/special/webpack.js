@@ -82,11 +82,20 @@ const testCases = [
     },
   },
   {
-    name: 'recognize webpack v2 loaders in module.rules.loaders',
-    deps: ['style-loader'],
+    name: 'recognize webpack v2 loaders in module.rules.loaders (string array)',
+    deps: ['style-loader', 'css-loader'],
     module: {
       rules: [
-        { test: /\.css$/, loaders: ['style-loader'] },
+        { test: /\.css$/, loaders: ['style-loader', 'css-loader'] },
+      ],
+    },
+  },
+  {
+    name: 'recognize webpack v2 loaders in module.rules.loaders (object array)',
+    deps: ['style-loader', 'css-loader'],
+    module: {
+      rules: [
+        { test: /\.css$/, loaders: [{ loader: 'style-loader' }, { loader: 'css-loader' }] },
       ],
     },
   },
@@ -104,7 +113,7 @@ const testCases = [
     deps: ['style-loader'],
     module: {
       rules: [
-        { test: /\.css$/, loader: 'style-loader' },
+        { test: /\.css$/, loader: ['style-loader'] },
       ],
     },
   },
