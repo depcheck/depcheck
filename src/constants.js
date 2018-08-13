@@ -31,6 +31,7 @@ export const defaultOptions = {
     'node_modules',
     'bower_components',
   ],
+  skipMissing: false,
   parsers: {
     '*.js': availableParsers.jsx,
     '*.jsx': availableParsers.jsx,
@@ -41,6 +42,7 @@ export const defaultOptions = {
     '*.tsx': availableParsers.typescript,
     '*.sass': availableParsers.sass,
     '*.scss': availableParsers.sass,
+    '*.vue': availableParsers.vue,
   },
   detectors: [
     availableDetectors.importDeclaration,

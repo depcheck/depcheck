@@ -204,6 +204,22 @@ export default [
     },
   },
   {
+    name: 'support Vue syntax',
+    module: 'vue',
+    options: {
+    },
+    expected: {
+      dependencies: ['unused-dep'],
+      devDependencies: [],
+      missing: {},
+      using: {
+        vue: ['index.js'],
+        'vue-dep-1': ['component.vue'],
+        'vue-dep-2': ['component.vue'],
+      },
+    },
+  },
+  {
     name: 'find dependencies used in code but not declared in package.json',
     module: 'missing',
     options: {
@@ -448,6 +464,38 @@ export default [
       devDependencies: [],
       missing: {},
       using: {},
+    },
+  },
+  {
+    name: 'output empty missing dependencies when skipMissing is true',
+    module: 'missing',
+    options: {
+      skipMissing: true,
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        'missing-dep': ['index.js'],
+      },
+    },
+  },
+  {
+    name: 'output missing dependencies when skipMissing is false',
+    module: 'missing',
+    options: {
+      skipMissing: false,
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {
+        'missing-dep': ['index.js'],
+      },
+      using: {
+        'missing-dep': ['index.js'],
+      },
     },
   },
   {
