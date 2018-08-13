@@ -28,6 +28,7 @@ Depcheck not only recognizes the dependencies in JavaScript files, but also supp
 - [CoffeeScript](http://coffeescript.org/)
 - [Typescript](http://www.typescriptlang.org/) (with `typescript` dependency)
 - [SASS and SCSS](http://sass-lang.com/) (with `node-sass` dependency)
+- [Vue.js](https://vuejs.org/) (with `vue-template-compiler` dependency)
 
 To get the syntax support by external dependency, please install the corresponding package explicitly. For example, for Typescript user, install depcheck with `typescript` package:
 
@@ -41,6 +42,7 @@ The *special* component is used to recognize the dependencies that are not gener
 
 - `bin` - Dependencies used in npm commands, Travis scripts or other CI scripts
 - `eslint` - [ESLint](https://www.npmjs.com/package/eslint) configuration presets, parsers and plugins
+- `tslint` - [TSLint](https://www.npmjs.com/package/tslint) configuration presets, parsers and plugins
 - `webpack` - [Webpack](https://www.npmjs.com/package/webpack) loaders
 - `babel` - [Babel](https://www.npmjs.com/package/babel) presets and plugins
 - [Grunt](https://www.npmjs.com/package/grunt) plugins
@@ -61,7 +63,7 @@ The `directory` argument is the root directory of your project (where the `packa
 
 All of the arguments are optional:
 
-`--ignore-bin-package=[true|false]`: A flag to indicate if depcheck ignores the packages containing bin entry. The default value is `true`.
+`--ignore-bin-package=[true|false]`: A flag to indicate if depcheck ignores the packages containing bin entry. The default value is `false`.
 
 `--skip-missing=[true|false]`: A flag to indicate if depcheck skips calculation of missing dependencies. The default value is `false`.
 

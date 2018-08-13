@@ -3,19 +3,20 @@ import { tryRequire } from '../utils';
 
 const typescript = tryRequire('typescript');
 
+const defaultCompileOptions = {
+  module: typescript.ModuleKind.CommonJS,
+  target: typescript.ScriptTarget.Latest,
+  jsx: typescript.JsxEmit.React,
+};
+
 export default function parseTypescript(content, filePath) {
   if (!typescript) {
     return [];
   }
 
-  const compileOptions = {
-    module: typescript.ModuleKind.CommonJS,
-    target: typescript.ScriptTarget.Latest,
-  };
-
   const result = typescript.transpile(
     content,
-    compileOptions,
+    defaultCompileOptions,
     filePath);
 
   // TODO avoid parse source file twice, use Typescript native traverser to find out dependencies.
