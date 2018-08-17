@@ -4,7 +4,7 @@
   "description": "Check dependencies in your node module",
   "main": "dist/index.js",
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   },
   "bin": {
     "depcheck": "bin/depcheck"
