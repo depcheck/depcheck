@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import lodash from 'lodash';
 import minimatch from 'minimatch';
-import traverse from 'babel-traverse';
+import traverse from '@babel/traverse';
 
 import esParser from '../parser/es7';
 import importDetector from '../detector/importDeclaration';
