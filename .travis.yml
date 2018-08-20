@@ -23,9 +23,9 @@ before_deploy:
 deploy:
   - provider: npm
     skip_cleanup: true
-    email: lijunle@gmail.com
+    email: npm@khouri.ca
     api_key:
-      secure: dEwnWZyvE95Amn3Ivcftk9wlDnRrNS2roVXREamsEJI3Rdilim7iHsINeVW/hZIv6VGepETKdSZ+nbyY/Du4rFkMyimHFBM9KkHgw46J7cf3juwZChzna/qOY+DniwGgikFscL+XAuKNx6Rv8xX4dD28TNoYzL00AtDhHJKla3E=
+      secure: SlI8U43IpEctxgzP1H+GhxdxPE2VNNuSfA85YZdnlQ/gMQ2hifZQYP1q9k3z2H4RRdo+ooEkmcsXE0a/s6XGrTIO98p4zI2LapOsEgedNsYwBWmLSwq0r2LCXDc5btvr043NdPFkhhfhNcmCtYFuWrAMLjg4ypttBcbMdMPj+Jw=
     on:
       tags: true
       node: 6
