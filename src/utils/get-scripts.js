@@ -35,7 +35,8 @@ export default function getScripts(filepath, content = null) {
 
     if (basename === 'package.json') {
       return lodash.values(JSON.parse(fileContent).scripts || {});
-    } else if (basename === '.travis.yml') {
+    }
+    if (basename === '.travis.yml') {
       const metadata = yaml.safeLoad(content) || {};
       return lodash(travisCommands)
         .map(cmd => metadata[cmd] || [])

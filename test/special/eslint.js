@@ -161,7 +161,8 @@ function testEslint(deps, content) {
     '/path/to/.eslintrc.yaml',
   ].forEach((pathToEslintrc) => {
     const result = eslintSpecialParser(
-      content, pathToEslintrc, deps, __dirname);
+      content, pathToEslintrc, deps, __dirname,
+    );
 
     result.should.deepEqual(deps);
   });
@@ -179,7 +180,8 @@ describe('eslint special parser', () => {
   it('should handle non-standard JSON content', () =>
     testEslint(
       testCases[1].expected,
-      `${JSON.stringify(testCases[1].content)}\n// this is ignored`));
+      `${JSON.stringify(testCases[1].content)}\n// this is ignored`,
+    ));
 
   describe('with JSON format', () =>
     testCases.forEach(testCase =>
