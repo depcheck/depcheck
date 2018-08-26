@@ -185,6 +185,7 @@ export default [
         react: ['component.tsx'],
         'ts-dep-1': ['index.ts'],
         'ts-dep-2': ['index.ts'],
+        'ts-dep-esnext': ['esnext.ts'],
       },
     },
   },
