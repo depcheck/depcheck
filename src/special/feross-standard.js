@@ -6,7 +6,7 @@ export default function parseFerossStandard(content, filePath, deps, rootDir) {
   if (resolvedFilePath === packageJsonPath && deps.indexOf('standard') !== -1) {
     const metadata = JSON.parse(content);
     const config = metadata.standard || {};
-    const parser = config.parser;
+    const { parser } = config;
     return parser ? [parser] : [];
   }
 

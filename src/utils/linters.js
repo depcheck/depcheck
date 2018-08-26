@@ -2,7 +2,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
-import { evaluate } from '../utils';
+import { evaluate } from '.';
 
 function parse(content) {
   try {
@@ -30,7 +30,8 @@ function parse(content) {
 function wrapToArray(obj) {
   if (!obj) {
     return [];
-  } else if (lodash.isArray(obj)) {
+  }
+  if (lodash.isArray(obj)) {
     return obj;
   }
 
@@ -68,8 +69,8 @@ function resolvePresetPackage(flavour, preset, rootDir) {
 
   const { prefix, specifier } = (
     isLinterConfigFromAPlugin(preset)
-    ? { prefix: `${flavour}-plugin-`, specifier: preset.substring(preset.indexOf(':') + 1) }
-    : { prefix: `${flavour}-config-`, specifier: preset }
+      ? { prefix: `${flavour}-plugin-`, specifier: preset.substring(preset.indexOf(':') + 1) }
+      : { prefix: `${flavour}-config-`, specifier: preset }
   );
 
   if (isLinterConfigFromAScopedModule(specifier)) {

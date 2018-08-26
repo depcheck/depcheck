@@ -17,7 +17,8 @@ export default function parseTypescript(content, filePath) {
   const result = typescript.transpile(
     content,
     defaultCompileOptions,
-    filePath);
+    filePath,
+  );
 
   // TODO avoid parse source file twice, use Typescript native traverser to find out dependencies.
   // Reference: https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API#traversing-the-ast-with-a-little-linter
