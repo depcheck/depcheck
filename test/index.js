@@ -25,7 +25,8 @@ function check(module, options) {
     depcheck(
       path.resolve(__dirname, 'fake_modules', module),
       options,
-      resolve));
+      resolve,
+    ));
 }
 
 describe('depcheck', () => {
@@ -33,7 +34,7 @@ describe('depcheck', () => {
     const run = testCase.only === 'index' ? it.only : it;
     run(`should ${testCase.name}`, () =>
       check(testCase.module, testCase.options).then((result) => {
-        const expected = testCase.expected;
+        const { expected } = testCase;
         result.dependencies.should.eql(expected.dependencies);
         result.devDependencies.should.eql(expected.devDependencies);
         result.missing.should.eql(resolveShortPath(expected.missing, testCase.module));
@@ -48,7 +49,8 @@ describe('depcheck', () => {
       const invalidFiles = Object.keys(unused.invalidFiles);
       invalidFiles.should.have.length(1);
       invalidFiles[0].should.endWith(
-        path.join('/test/fake_modules/bad_js/index.js'));
+        path.join('/test/fake_modules/bad_js/index.js'),
+      );
 
       const error = unused.invalidFiles[invalidFiles[0]];
       error.should.be.instanceof(SyntaxError);
@@ -67,13 +69,13 @@ describe('depcheck', () => {
     }));
 
   function testAccessUnreadableDirectory(
-    module, unreadable, unusedDeps, unusedDevDeps) {
+    module, unreadable, unusedDeps, unusedDevDeps,
+  ) {
     if (platform() === 'win32') {
       return; // cannot test permission cases in Windows
     }
 
-    const unreadablePath =
-      path.resolve(__dirname, 'fake_modules', module, unreadable);
+    const unreadablePath = path.resolve(__dirname, 'fake_modules', module, unreadable);
 
     before(done => fs.mkdir(unreadablePath, '0000', done));
 
@@ -100,23 +102,25 @@ describe('depcheck', () => {
       'unreadable',
       'unreadable',
       ['unreadable'],
-      []));
+      [],
+    ));
 
   describe('access deep unreadable directory', () =>
     testAccessUnreadableDirectory(
       'unreadable_deep',
       'deep/nested/unreadable',
       [],
-      []));
+      [],
+    ));
 
   function testAccessUnreadableFile(
-    module, unreadable, unusedDeps, unusedDevDeps) {
+    module, unreadable, unusedDeps, unusedDevDeps,
+  ) {
     if (platform() === 'win32') {
       return; // cannot test permission cases in Windows
     }
 
-    const unreadablePath =
-      path.resolve(__dirname, 'fake_modules', module, unreadable);
+    const unreadablePath = path.resolve(__dirname, 'fake_modules', module, unreadable);
 
     before(done => fs.writeFile(unreadablePath, '', { mode: 0 }, done));
 
@@ -143,7 +147,8 @@ describe('depcheck', () => {
       'unreadable',
       'unreadable.js',
       ['unreadable'],
-      []));
+      [],
+    ));
 
   function testCustomPluggableComponents(module, options) {
     return check(module, options).then((unused) => {
@@ -231,6 +236,7 @@ describe('depcheck', () => {
 
       Object.keys(unused.invalidFiles).should.have.length(1);
       Object.keys(unused.invalidFiles)[0].should.endWith(
-        path.join('/test/fake_modules/import_list/index.txt'));
+        path.join('/test/fake_modules/import_list/index.txt'),
+      );
     }));
 });

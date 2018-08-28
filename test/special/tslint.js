@@ -123,7 +123,8 @@ function testTslint(deps, content) {
     '/path/to/.tslintrc.yaml',
   ].forEach((pathToTslintrc) => {
     const result = tslintSpecialParser(
-      content, pathToTslintrc, deps, __dirname);
+      content, pathToTslintrc, deps, __dirname,
+    );
 
     result.should.deepEqual(deps);
   });
@@ -141,7 +142,8 @@ describe('tslint special parser', () => {
   it('should handle non-standard JSON content', () =>
     testTslint(
       testCases[1].expected,
-      `${JSON.stringify(testCases[1].content)}\n// this is ignored`));
+      `${JSON.stringify(testCases[1].content)}\n// this is ignored`,
+    ));
 
   describe('with JSON format', () =>
     testCases.forEach(testCase =>
