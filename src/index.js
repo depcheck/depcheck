@@ -29,8 +29,8 @@ function filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependenci
   return lodash(dependencies)
     .keys()
     .reject(dep =>
-      (isIgnored(ignoreMatches, dep)) ||
-      (ignoreBinPackage && hasBin(rootDir, dep)))
+      (isIgnored(ignoreMatches, dep))
+      || (ignoreBinPackage && hasBin(rootDir, dep)))
     .value();
 }
 
@@ -69,13 +69,13 @@ export default function depcheck(rootDir, options, callback) {
     parsers,
     detectors,
   })
-  .then(results => Object.assign(results, {
-    missing: lodash.pick(
-      results.missing,
-      filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, results.missing),
-    ),
-  }))
-  .then(callback);
+    .then(results => Object.assign(results, {
+      missing: lodash.pick(
+        results.missing,
+        filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, results.missing),
+      ),
+    }))
+    .then(callback);
 }
 
 depcheck.parser = availableParsers;

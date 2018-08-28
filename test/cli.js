@@ -60,7 +60,8 @@ function testCli(argv) {
         exitCode,
         logs: log.split('\n').filter(line => line),
         errors: error.split('\n').filter(line => line),
-      })));
+      }),
+    ));
 }
 
 describe('depcheck command line', () => {
@@ -69,140 +70,140 @@ describe('depcheck command line', () => {
     const options = Object.assign({ json: true }, testCase.options);
     run(`should ${testCase.name}`, () =>
       testCli(makeArgv(testCase.module, options))
-      .then(({ log, error, exitCode }) => {
-        const actual = JSON.parse(log);
-        const expected = testCase.expected;
+        .then(({ log, error, exitCode }) => {
+          const actual = JSON.parse(log);
+          const { expected } = testCase;
 
-        actual.dependencies.should.eql(expected.dependencies);
-        actual.devDependencies.should.eql(expected.devDependencies);
-        actual.missing.should.eql(resolveShortPath(expected.missing, testCase.module));
-        actual.using.should.eql(resolveShortPath(expected.using, testCase.module));
+          actual.dependencies.should.eql(expected.dependencies);
+          actual.devDependencies.should.eql(expected.devDependencies);
+          actual.missing.should.eql(resolveShortPath(expected.missing, testCase.module));
+          actual.using.should.eql(resolveShortPath(expected.using, testCase.module));
 
-        error.should.be.empty();
-        exitCode.should.equal(0); // JSON output always return 0
-      }));
+          error.should.be.empty();
+          exitCode.should.equal(0); // JSON output always return 0
+        }));
   });
 
   it('should output error when folder is not a package', () =>
     testCli([__dirname])
-    .then(({ log, error, exitCode }) => {
-      error.should.containEql(__dirname)
-        .and.containEql('not contain')
-        .and.containEql('package.json');
+      .then(({ log, error, exitCode }) => {
+        error.should.containEql(__dirname)
+          .and.containEql('not contain')
+          .and.containEql('package.json');
 
-      log.should.be.empty();
-      exitCode.should.equal(-1);
-    }));
+        log.should.be.empty();
+        exitCode.should.equal(-1);
+      }));
 
   it('should output error when folder not exists', () =>
     testCli(['./not/exist/folder'])
-    .then(({ log, error, exitCode }) => {
-      error.should.containEql('/not/exist/folder').and.containEql('not exist');
-      log.should.be.empty();
-      exitCode.should.equal(-1);
-    }));
+      .then(({ log, error, exitCode }) => {
+        error.should.containEql('/not/exist/folder').and.containEql('not exist');
+        log.should.be.empty();
+        exitCode.should.equal(-1);
+      }));
 
   it('should output call stack for invalid files in JSON view', () =>
     testCli(makeArgv('bad_js', { json: true }))
-    .then(({ log, error, exitCode }) => {
-      const json = JSON.parse(log);
-      json.should.have.properties([
-        'dependencies',
-        'devDependencies',
-        'invalidFiles',
-        'invalidDirs',
-      ]);
+      .then(({ log, error, exitCode }) => {
+        const json = JSON.parse(log);
+        json.should.have.properties([
+          'dependencies',
+          'devDependencies',
+          'invalidFiles',
+          'invalidDirs',
+        ]);
 
-      const badJsPath = path.resolve(__dirname, './fake_modules/bad_js/index.js');
-      json.invalidFiles.should.have.property(badJsPath)
-        .startWith('SyntaxError: Unexpected token')
-        .and.containEql('\n    at '); // call stack information
+        const badJsPath = path.resolve(__dirname, './fake_modules/bad_js/index.js');
+        json.invalidFiles.should.have.property(badJsPath)
+          .startWith('SyntaxError: Unexpected token')
+          .and.containEql('\n    at '); // call stack information
 
-      error.should.be.empty();
-      exitCode.should.equal(0);
-    }));
+        error.should.be.empty();
+        exitCode.should.equal(0);
+      }));
 
   it('should output no depcheck issue when happen', () =>
     testCli([path.resolve(__dirname, './fake_modules/good')])
-    .then(({ log, error, exitCode }) => {
-      log.should.equal('No depcheck issue');
-      error.should.be.empty();
-      exitCode.should.equal(0);
-    }));
+      .then(({ log, error, exitCode }) => {
+        log.should.equal('No depcheck issue');
+        error.should.be.empty();
+        exitCode.should.equal(0);
+      }));
 
   it('should output unused dependencies when happen', () =>
     testCli(makeArgv('bad', {}))
-    .then(({ logs, error, exitCode }) => {
-      logs.should.have.length(2);
-      logs[0].should.equal('Unused dependencies');
-      logs[1].should.containEql('optimist');
+      .then(({ logs, error, exitCode }) => {
+        logs.should.have.length(2);
+        logs[0].should.equal('Unused dependencies');
+        logs[1].should.containEql('optimist');
 
-      error.should.be.empty();
-      exitCode.should.equal(-1);
-    }));
+        error.should.be.empty();
+        exitCode.should.equal(-1);
+      }));
 
   it('should output unused devDependencies when happen', () =>
     testCli(makeArgv('dev', {}))
-    .then(({ logs, error, exitCode }) => {
-      logs.should.have.length(2);
-      logs[0].should.equal('Unused devDependencies');
-      logs[1].should.containEql('unused-dev-dep');
+      .then(({ logs, error, exitCode }) => {
+        logs.should.have.length(2);
+        logs[0].should.equal('Unused devDependencies');
+        logs[1].should.containEql('unused-dev-dep');
 
-      error.should.be.empty();
-      exitCode.should.equal(-1);
-    }));
+        error.should.be.empty();
+        exitCode.should.equal(-1);
+      }));
 
   it('should recognize JSX file even only pass jsx parser and require detector', () =>
     testCli(makeArgv('jsx', {
       argv: ['--parsers="*.jsx:jsx"', '--dectors=requireCallExpression'],
     }))
-    .then(({ logs, error, exitCode }) => {
-      logs.should.have.length(2);
-      logs[0].should.equal('Unused dependencies');
-      logs[1].should.containEql('react');
+      .then(({ logs, error, exitCode }) => {
+        logs.should.have.length(2);
+        logs[0].should.equal('Unused dependencies');
+        logs[1].should.containEql('react');
 
-      error.should.be.empty();
-      exitCode.should.equal(-1);
-    }));
+        error.should.be.empty();
+        exitCode.should.equal(-1);
+      }));
 
   it('should not recognize JSX file when not pass jsx parser', () =>
     testCli(makeArgv('jsx', {
       argv: ['--parsers="*.jsx:es6"'],
     }))
-    .then(({ logs, error, exitCode }) => {
-      logs.should.have.length(2);
-      logs[0].should.equal('Unused dependencies');
-      logs[1].should.containEql('react');
+      .then(({ logs, error, exitCode }) => {
+        logs.should.have.length(2);
+        logs[0].should.equal('Unused dependencies');
+        logs[1].should.containEql('react');
 
-      error.should.be.empty();
-      exitCode.should.equal(-1);
-    }));
+        error.should.be.empty();
+        exitCode.should.equal(-1);
+      }));
 
   it('should not recognize JSX file when not enable require detector', () =>
     testCli(makeArgv('jsx', {
       argv: ['--detectors=importDeclaration'],
     }))
-    .then(({ logs, error, exitCode }) => {
-      logs.should.have.length(2);
-      logs[0].should.equal('Unused dependencies');
-      logs[1].should.containEql('react');
+      .then(({ logs, error, exitCode }) => {
+        logs.should.have.length(2);
+        logs[0].should.equal('Unused dependencies');
+        logs[1].should.containEql('react');
 
-      error.should.be.empty();
-      exitCode.should.equal(-1);
-    }));
+        error.should.be.empty();
+        exitCode.should.equal(-1);
+      }));
 
   it('should find dependencies with special parser', () =>
     testCli(makeArgv('eslint_config', {
       argv: ['--specials=eslint'],
     }))
-    .then(({ logs, error, exitCode }) => {
-      logs.should.have.length(2);
-      logs[0].should.equal('Unused devDependencies');
-      logs[1].should.containEql('eslint-config-unused');
+      .then(({ logs, error, exitCode }) => {
+        logs.should.have.length(2);
+        logs[0].should.equal('Unused devDependencies');
+        logs[1].should.containEql('eslint-config-unused');
 
-      error.should.be.empty();
-      exitCode.should.equal(-1);
-    }));
+        error.should.be.empty();
+        exitCode.should.equal(-1);
+      }));
 
   describe('without specified directory', () => {
     let originalCwd;
@@ -214,11 +215,11 @@ describe('depcheck command line', () => {
 
     it('should default to the current directory', () =>
       testCli([])
-      .then(({ log, error, exitCode }) => {
-        error.should.containEql('not exist');
-        log.should.be.empty();
-        exitCode.should.equal(-1);
-      }));
+        .then(({ log, error, exitCode }) => {
+          error.should.containEql('not exist');
+          log.should.be.empty();
+          exitCode.should.equal(-1);
+        }));
 
     after(() => { process.cwd = originalCwd; });
   });

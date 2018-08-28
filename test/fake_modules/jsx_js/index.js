@@ -1,10 +1,18 @@
+/* eslint-disable react/jsx-one-expression-per-line,
+                  react/jsx-one-expression-per-line,
+                  react/prefer-stateless-function,
+                  react/jsx-filename-extension,
+                  react/no-deprecated
+*/
 const React = require('react');
 const jsx = require('jsx-as-js');
 
-// eslint-disable-next-line react/prefer-es6-class, react/prefer-stateless-function
 export default React.createClass({
   render() {
-    // eslint-disable-next-line react/jsx-filename-extension
-    return <div>Enable {jsx} syntax in js file by default.</div>;
+    return (
+      <div>
+        Enable {jsx} {' '} syntax in js file by default.
+      </div>
+    );
   },
 });

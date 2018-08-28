@@ -49,12 +49,14 @@ function hasVisited(ast, visited) {
 function recursive(ast, visited) {
   if (!ast || hasVisited(ast, visited)) {
     return [];
-  } else if (lodash.isArray(ast)) {
+  }
+  if (lodash.isArray(ast)) {
     return lodash(ast)
       .map(node => recursive(node, visited))
       .flatten()
       .value();
-  } else if (ast.type) {
+  }
+  if (ast.type) {
     visited.add(ast);
     return lodash(ast)
       .keys()

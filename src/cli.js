@@ -66,9 +66,9 @@ function print(result, log, json) {
 function checkDeprecation(argv) {
   if (argv.dev === false) {
     deprecate(
-      'The option `dev` is deprecated. It leads a wrong result for missing dependencies' +
-      ' when it is `false`. This option will be removed and enforced to `true` in next' +
-      ' major version.',
+      'The option `dev` is deprecated. It leads a wrong result for missing dependencies'
+      + ' when it is `false`. This option will be removed and enforced to `true` in next'
+      + ' major version.',
     );
   }
 }
@@ -106,7 +106,8 @@ export default function cli(args, log, error, exit) {
   checkPathExist(rootDir, `Path ${dir} does not exist`)
     .then(() => checkPathExist(
       path.resolve(rootDir, 'package.json'),
-      `Path ${dir} does not contain a package.json file`))
+      `Path ${dir} does not contain a package.json file`,
+    ))
     .then(() => depcheck(rootDir, {
       withoutDev: !opt.argv.dev,
       ignoreBinPackage: opt.argv.ignoreBinPackage,
