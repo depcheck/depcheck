@@ -14,7 +14,7 @@ function extractLoaders(item) {
   }
 
   if (item.loaders) {
-    return item.loaders;
+    return item.loaders.map(extractLoaders);
   }
 
   return [];

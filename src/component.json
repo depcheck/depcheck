@@ -13,6 +13,7 @@
     "exportDeclaration",
     "expressViewEngine",
     "gruntLoadTaskCallExpression",
+    "importCallExpression",
     "importDeclaration",
     "requireCallExpression",
     "requireResolveCallExpression"

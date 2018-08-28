@@ -66,9 +66,9 @@ function print(result, log, json) {
 function checkDeprecation(argv) {
   if (argv.dev === false) {
     deprecate(
-      'The option `dev` is deprecated. It leads a wrong result for missing dependencies' +
-      ' when it is `false`. This option will be removed and enforced to `true` in next' +
-      ' major version.',
+      'The option `dev` is deprecated. It leads a wrong result for missing dependencies'
+      + ' when it is `false`. This option will be removed and enforced to `true` in next'
+      + ' major version.',
     );
   }
 }
@@ -92,7 +92,7 @@ export default function cli(args, log, error, exit) {
     .describe('json', 'Output results to JSON')
     .describe('ignores', 'Comma separated package list to ignore')
     .describe('ignore-dirs', 'Comma separated folder names to ignore')
-    .describe('parsers', 'Comma separated glob:pasers pair list')
+    .describe('parsers', 'Comma separated glob:parser pair list')
     .describe('detectors', 'Comma separated detector list')
     .describe('specials', 'Comma separated special parser list')
     .version('version', 'Show version number', version)
@@ -106,7 +106,8 @@ export default function cli(args, log, error, exit) {
   checkPathExist(rootDir, `Path ${dir} does not exist`)
     .then(() => checkPathExist(
       path.resolve(rootDir, 'package.json'),
-      `Path ${dir} does not contain a package.json file`))
+      `Path ${dir} does not contain a package.json file`,
+    ))
     .then(() => depcheck(rootDir, {
       withoutDev: !opt.argv.dev,
       ignoreBinPackage: opt.argv.ignoreBinPackage,

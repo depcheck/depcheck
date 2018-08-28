@@ -17,7 +17,7 @@ Depcheck is a tool for analyzing the dependencies in a project to see: how each 
 npm install -g depcheck
 ```
 
-*Notice:* depcheck needs node.js >= 4.
+*Notice:* depcheck needs node.js >= 6.
 
 ## Syntax Support
 
@@ -63,7 +63,7 @@ The `directory` argument is the root directory of your project (where the `packa
 
 All of the arguments are optional:
 
-`--ignore-bin-package=[true|false]`: A flag to indicate if depcheck ignores the packages containing bin entry. The default value is `true`.
+`--ignore-bin-package=[true|false]`: A flag to indicate if depcheck ignores the packages containing bin entry. The default value is `false`.
 
 `--skip-missing=[true|false]`: A flag to indicate if depcheck skips calculation of missing dependencies. The default value is `false`.
 

@@ -1,16 +1,19 @@
 {
   "plugins": [
-    "add-module-exports",
-    "transform-object-assign"
+    "babel-plugin-add-module-exports",
+    "@babel/plugin-transform-object-assign"
   ],
   "presets": [
-    "es2015",
-    "stage-2"
+    ["@babel/preset-env", {
+      "targets": {
+        "node": "6"
+      }
+    }]
   ],
   "env": {
     "test": {
       "plugins": [
-        "istanbul"
+        "babel-plugin-istanbul"
       ]
     }
   }
