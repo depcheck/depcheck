@@ -3,6 +3,7 @@
     "react": "0.0.1",
     "ts-dep-1": "0.0.1",
     "ts-dep-2": "0.0.1",
+    "ts-dep-esnext": "0.0.1",
     "unused-dep": "0.0.1"
   }
 }
