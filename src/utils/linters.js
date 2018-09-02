@@ -123,7 +123,7 @@ function checkConfig(flavour, config, rootDir) {
 
 export default function parseLinter(flavour, content, filename, deps, rootDir) {
   const basename = path.basename(filename);
-  const filenameRegex = new RegExp('^\\.?' + flavour + '(rc)?(\\.json|\\.js|\\.yml|\\.yaml)?$');
+  const filenameRegex = new RegExp(`^\\.?${flavour}(rc)?(\\.json|\\.js|\\.yml|\\.yaml)?$`);
   if (filenameRegex.test(basename)) {
     const config = parse(content);
     return checkConfig(flavour, config, rootDir);
