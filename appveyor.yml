@@ -7,7 +7,7 @@ environment:
 install:
   - ps: Install-Product node $env:nodejs_version
   - npm -g install npm@6 && set PATH=%APPDATA%\npm;%PATH%
-  - npm install
+  - npm ci
 
 test_script:
   - node --version

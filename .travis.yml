@@ -7,7 +7,11 @@ node_js:
   - 8
   - 10
 
-before_install: dpkg --compare-versions `npm -v` ge 6 || npm i -g npm@^6
+before_install:
+  - dpkg --compare-versions `npm -v` ge 6 || npm i -g npm@^6
+
+install:
+  - npm ci
 
 script:
   - npm run compile
