@@ -10,9 +10,6 @@ node_js:
 before_install:
   - dpkg --compare-versions `npm -v` ge 6 || npm i -g npm@^6
 
-install:
-  - npm ci
-
 script:
   - npm run compile
   - npm run component
