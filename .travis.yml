@@ -28,7 +28,7 @@ deploy:
     skip_cleanup: true
     email: npm@khouri.ca
     api_key:
-      secure: SlI8U43IpEctxgzP1H+GhxdxPE2VNNuSfA85YZdnlQ/gMQ2hifZQYP1q9k3z2H4RRdo+ooEkmcsXE0a/s6XGrTIO98p4zI2LapOsEgedNsYwBWmLSwq0r2LCXDc5btvr043NdPFkhhfhNcmCtYFuWrAMLjg4ypttBcbMdMPj+Jw=
+      secure: EuVF1Ji3RIO6JF91ww4GIx5qUY2xiaPUfYA92uvqiGwJam7taL/v3OLy6Y5khjnXxFKgfkjd+x2tQ9n2hS56t9Ky7ud8Zw439an/PqEWGE3olTv4n7ZdVaAHzcIydlNL5qmezdlTDM+tmggD7gWWsjatYc9QY4fSnGUtdRZ4HzM=
     on:
       tags: true
       node: 6
