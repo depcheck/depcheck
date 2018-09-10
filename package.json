@@ -7,7 +7,7 @@
     "node": ">=6"
   },
   "bin": {
-    "depcheck": "bin/depcheck"
+    "depcheck": "bin/depcheck.js"
   },
   "repository": {
     "type": "git",
@@ -16,9 +16,9 @@
   "scripts": {
     "component": "node -r @babel/register ./build/component.js > ./dist/component.json",
     "compile": "babel src/ -d dist/",
-    "depcheck": "node ./bin/depcheck",
-    "depcheck-web": "node ./bin/depcheck --json | depcheck-web",
-    "depcheck-json": "node ./bin/depcheck --json | node -r @babel/register ./build/check-json",
+    "depcheck": "node ./bin/depcheck.js",
+    "depcheck-web": "node ./bin/depcheck.js --json | depcheck-web",
+    "depcheck-json": "node ./bin/depcheck.js --json | node -r @babel/register ./build/check-json",
     "prepublishOnly": "npm run compile && npm run component",
     "lint": "eslint ./src ./test ./build",
     "test": "node -r @babel/register node_modules/mocha/bin/_mocha ./test ./test/special --timeout 10000",
@@ -56,6 +56,7 @@
     "js-yaml": "^3.4.2",
     "lodash": "^4.5.1",
     "minimatch": "^3.0.2",
+    "please-upgrade-node": "^3.1.1",
     "require-package-name": "^2.0.1",
     "walkdir": "0.0.12",
     "yargs": "^12.0.1"
