@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
-/* eslint-disable no-console, prefer-arrow-callback */
+require('please-upgrade-node')(require('../package.json'));
+
+/* eslint-disable no-console, prefer-arrow-callback, comma-dangle */
 
 require('../dist/cli')(
   process.argv.slice(2),
