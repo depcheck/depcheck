@@ -50,7 +50,6 @@
   "dependencies": {
     "@babel/traverse": "^7.0.0-rc.1",
     "babylon": "^6.1.21",
-    "builtin-modules": "^3.0.0",
     "deprecate": "^1.0.0",
     "deps-regex": "^0.1.4",
     "js-yaml": "^3.4.2",

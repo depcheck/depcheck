@@ -3,7 +3,7 @@ import path from 'path';
 import lodash from 'lodash';
 import walkdir from 'walkdir';
 import minimatch from 'minimatch';
-import builtInModules from 'builtin-modules';
+import { builtinModules } from 'module';
 import requirePackageName from 'require-package-name';
 import { readJSON } from './utils';
 
@@ -142,7 +142,7 @@ function checkFile(dir, filename, deps, parsers, detectors) {
         using: {
           [filename]: lodash(using)
             .filter(dep => dep && dep !== '.' && dep !== '..') // TODO why need check?
-            .filter(dep => !lodash.includes(builtInModules, dep))
+            .filter(dep => !lodash.includes(builtinModules, dep))
             .uniq()
             .value(),
         },
