@@ -15,3 +15,13 @@ import { a, b as c } from 'mixed-member-alias-import';
 import d, { e } from 'mixed-name-memeber-import';
 import h, * as i from 'mixed-default-star-import';
 import j from 'default-member-import';
+
+/**
+ * This should cover all styles of "re-exporting"
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export
+ */
+
+export * from 'star-export';
+export { name1, name2 } from 'named-export';
+export { importA as nameA, importB as nameB } from 'member-alias-export';
+export { default } from 'default-export';

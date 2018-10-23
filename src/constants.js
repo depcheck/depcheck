@@ -46,6 +46,7 @@ export const defaultOptions = {
   },
   detectors: [
     availableDetectors.importDeclaration,
+    availableDetectors.exportDeclaration,
     availableDetectors.requireCallExpression,
     availableDetectors.requireResolveCallExpression,
     availableDetectors.importCallExpression,
