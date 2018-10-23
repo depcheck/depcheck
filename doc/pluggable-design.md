@@ -101,6 +101,7 @@ Depcheck ships these detectors:
 
 - `requireCallExpreesion` detector for `require` function
 - `importDeclaration` detector for ES6 `import` declaration
+- `exportDeclaration` detector for ES6 `export ... from` declaration
 - `gruntLoadTaskCallExpression` detector for `grunt.tasks.loadNpmTasks` function
 - `expressViewEngine` detector for Express [view engine](https://expressjs.com/en/guide/using-template-engines.html)
 
@@ -114,7 +115,9 @@ Here is the default `detectors` option value:
 const opts = {
   detectors: [
     depcheck.detector.requireCallExpression,
+    depcheck.detector.requireResolveCallExpression,
     depcheck.detector.importDeclaration,
+    depcheck.detector.exportNamedDeclaration,
     depcheck.detector.gruntLoadTaskCallExpression // for backward compatible
   ]
 };

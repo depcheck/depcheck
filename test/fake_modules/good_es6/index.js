@@ -30,3 +30,13 @@ import j from 'default-member-import';
  *
  * https://github.com/lijunle/depcheck-es6/pull/7
  */
+
+/**
+ * This should cover all styles of "re-exporting"
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export
+ */
+
+export * from 'star-export';
+export { name1, name2 } from 'named-export';
+export { importA as nameA, importB as nameB } from 'member-alias-export';
+export { default } from 'default-export';

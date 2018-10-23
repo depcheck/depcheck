@@ -10,6 +10,10 @@
     "mixed-name-memeber-import": "1.2.3",
     "mixed-default-star-import": "1.2.3",
     "default-member-import": "1.2.3",
-    "unsupported-syntax": "1.2.3"
+    "unsupported-syntax": "1.2.3",
+    "star-export": "1.2.3",
+    "named-export": "1.2.3",
+    "member-alias-export": "1.2.3",
+    "default-export": "1.2.3"
   }
 }
