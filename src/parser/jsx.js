@@ -32,7 +32,7 @@ export default function parseJSX(content, filename, deps, dir, parserOpts) {
   // Because the guys using React always want the newest syntax.
   let plugins = defaultPlugins;
   if (parserOpts && parserOpts.jsx && parserOpts.jsx.plugins) {
-    plugins = parserOpts.jsx.plugins;
+    ({ plugins } = parserOpts.jsx);
   }
   return parse(content, {
     sourceType: 'module',

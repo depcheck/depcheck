@@ -160,7 +160,9 @@ function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors, pars
 
     finder.on('directory', subdir =>
       (ignoreDirs.indexOf(path.basename(subdir)) === -1 && !isModule(subdir)
-        ? promises.push(checkDirectory(subdir, rootDir, ignoreDirs, deps, parsers, detectors, parserOpts))
+        ? promises.push(
+          checkDirectory(subdir, rootDir, ignoreDirs, deps, parsers, detectors, parserOpts),
+        )
         : null));
 
     finder.on('file', filename =>
