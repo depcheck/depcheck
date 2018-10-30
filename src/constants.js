@@ -44,6 +44,7 @@ export const defaultOptions = {
     '*.scss': availableParsers.sass,
     '*.vue': availableParsers.vue,
   },
+  parserOpts: {},
   detectors: [
     availableDetectors.importDeclaration,
     availableDetectors.exportDeclaration,

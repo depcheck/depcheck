@@ -87,7 +87,7 @@ function discoverPropertyDep(rootDir, deps, property, depName) {
   }
 }
 
-function getDependencies(dir, filename, deps, parser, detectors) {
+function getDependencies(dir, filename, deps, parser, detectors, parserOpts) {
   return new Promise((resolve, reject) => {
     fs.readFile(filename, 'utf8', (error, content) => {
       if (error) {
@@ -95,7 +95,7 @@ function getDependencies(dir, filename, deps, parser, detectors) {
       }
 
       try {
-        resolve(parser(content, filename, deps, dir));
+        resolve(parser(content, filename, deps, dir, parserOpts));
       } catch (syntaxError) {
         reject(syntaxError);
       }
@@ -127,7 +127,7 @@ function getDependencies(dir, filename, deps, parser, detectors) {
   });
 }
 
-function checkFile(dir, filename, deps, parsers, detectors) {
+function checkFile(dir, filename, deps, parsers, detectors, parserOpts) {
   const basename = path.basename(filename);
   const targets = lodash(parsers)
     .keys()
@@ -137,7 +137,7 @@ function checkFile(dir, filename, deps, parsers, detectors) {
     .value();
 
   return targets.map(parser =>
-    getDependencies(dir, filename, deps, parser, detectors)
+    getDependencies(dir, filename, deps, parser, detectors, parserOpts)
       .then(using => ({
         using: {
           [filename]: lodash(using)
@@ -153,18 +153,18 @@ function checkFile(dir, filename, deps, parsers, detectors) {
       })));
 }
 
-function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
+function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors, parserOpts) {
   return new Promise((resolve) => {
     const promises = [];
     const finder = walkdir(dir, { no_recurse: true });
 
     finder.on('directory', subdir =>
       (ignoreDirs.indexOf(path.basename(subdir)) === -1 && !isModule(subdir)
-        ? promises.push(checkDirectory(subdir, rootDir, ignoreDirs, deps, parsers, detectors))
+        ? promises.push(checkDirectory(subdir, rootDir, ignoreDirs, deps, parsers, detectors, parserOpts))
         : null));
 
     finder.on('file', filename =>
-      promises.push(...checkFile(rootDir, filename, deps, parsers, detectors)));
+      promises.push(...checkFile(rootDir, filename, deps, parsers, detectors, parserOpts)));
 
     finder.on('error', (dirPath, error) =>
       promises.push(Promise.resolve({
@@ -235,8 +235,9 @@ export default function check({
   optionalDeps,
   parsers,
   detectors,
+  parserOpts,
 }) {
   const allDeps = lodash.union(deps, devDeps);
-  return checkDirectory(rootDir, rootDir, ignoreDirs, allDeps, parsers, detectors)
+  return checkDirectory(rootDir, rootDir, ignoreDirs, allDeps, parsers, detectors, parserOpts || {})
     .then(result => buildResult(result, deps, devDeps, peerDeps, optionalDeps, skipMissing));
 }

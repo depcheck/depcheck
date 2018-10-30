@@ -43,6 +43,7 @@ export default function depcheck(rootDir, options, callback) {
   const ignoreMatches = getOption('ignoreMatches');
   const ignoreDirs = lodash.union(defaultOptions.ignoreDirs, options.ignoreDirs);
   const skipMissing = getOption('skipMissing');
+  const parserOpts = getOption('parserOpts');
 
   const detectors = getOption('detectors');
   const parsers = lodash(getOption('parsers'))
@@ -68,6 +69,7 @@ export default function depcheck(rootDir, options, callback) {
     optionalDeps,
     parsers,
     detectors,
+    parserOpts,
   })
     .then(results => Object.assign(results, {
       missing: lodash.pick(
