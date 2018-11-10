@@ -53,7 +53,7 @@
     "deprecate": "^1.0.0",
     "deps-regex": "^0.1.4",
     "js-yaml": "^3.4.2",
-    "lodash": "^4.5.1",
+    "lodash": "^4.17.11",
     "minimatch": "^3.0.2",
     "please-upgrade-node": "^3.1.1",
     "require-package-name": "^2.0.1",
