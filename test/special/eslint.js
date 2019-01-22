@@ -22,10 +22,24 @@ const testCases = [
   {
     name: 'detect specific plugins',
     content: {
-      plugins: ['mocha'],
+      plugins: [
+        'mocha',
+        '@foo',
+        '@bar/eslint-plugin',
+        'baz',
+        'eslint-plugin-boo',
+        '@foo/bar',
+        '@baz\\eslint-plugin',
+      ],
     },
     expected: [
       'eslint-plugin-mocha',
+      '@foo/eslint-plugin',
+      '@bar/eslint-plugin',
+      'eslint-plugin-baz',
+      'eslint-plugin-boo',
+      '@foo/eslint-plugin-bar',
+      '@baz/eslint-plugin',
     ],
   },
   {

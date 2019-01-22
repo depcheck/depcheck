@@ -100,9 +100,57 @@ function loadConfig(preset, rootDir) {
   }
 }
 
+/**
+ * Brings package name to correct format based on prefix
+ * @param {string} name The name of the package.
+ * @param {string} prefix Can be either "eslint-plugin", "eslint-config" or "eslint-formatter"
+ * @returns {string} Normalized name of the package
+ * @private
+ * @see {@link https://github.com/eslint/eslint/blob/faf3c4eda0d27323630d0bc103a99dd0ecffe842/lib/util/naming.js#L25 ESLint}
+ */
+function normalizePackageName(name, prefix) {
+  let normalizedName = name;
+  const convertPathToPosix = p => path.normalize(p).replace(/\\/g, '/');
+
+  /**
+   * On Windows, name can come in with Windows slashes instead of Unix slashes.
+   * Normalize to Unix first to avoid errors later on.
+   * https://github.com/eslint/eslint/issues/5644
+   */
+  if (normalizedName.indexOf('\\') > -1) {
+    normalizedName = convertPathToPosix(normalizedName);
+  }
+
+  if (normalizedName.charAt(0) === '@') {
+    /**
+     * it's a scoped package
+     * package name is the prefix, or just a username
+     */
+    const scopedPackageShortcutRegex = new RegExp(`^(@[^/]+)(?:/(?:${prefix})?)?$`);
+    const scopedPackageNameRegex = new RegExp(`^${prefix}(-|$)`);
+
+    if (scopedPackageShortcutRegex.test(normalizedName)) {
+      normalizedName = normalizedName
+        .replace(scopedPackageShortcutRegex, `$1/${prefix}`);
+    } else if (!scopedPackageNameRegex.test(normalizedName.split('/')[1])) {
+      /**
+       * for scoped packages, insert the prefix after the first / unless
+       * the path is already @scope/eslint or @scope/eslint-xxx-yyy
+       */
+      normalizedName = normalizedName
+        .replace(/^@([^/]+)\/(.*)$/, `@$1/${prefix}-$2`);
+    }
+  } else if (normalizedName.indexOf(`${prefix}-`) !== 0) {
+    normalizedName = `${prefix}-${normalizedName}`;
+  }
+
+  return normalizedName;
+}
+
 function checkConfig(flavour, config, rootDir) {
   const parser = wrapToArray(config.parser);
-  const plugins = wrapToArray(config.plugins).map(plugin => `${flavour}-plugin-${plugin}`);
+  const plugins = wrapToArray(config.plugins)
+    .map(plugin => normalizePackageName(plugin, `${flavour}-plugin`));
 
   const presets = wrapToArray(config.extends)
     .filter(preset => preset !== `${flavour}:recommended`)
