@@ -1,8 +1,37 @@
 /* global describe, it */
 
 import path from 'path';
+import proxyquire from 'proxyquire';
 import 'should';
-import karmaSpecialParser from '../../src/special/karma';
+const proxyquireStrict = proxyquire.noCallThru();
+const karmaSpecialParser = proxyquireStrict('../../src/special/karma', {
+  'karma-qunit': {
+    'framework:qunit': [],
+    '@global': true
+  },
+  'karma-sinon': {
+    'framework:sinon': [],
+    '@global': true
+  },
+  'karma-junit-reporter': {
+    'reporter:junit': [],
+    '@global': true
+  },
+  'karma-phantomjs-launcher': {
+    'launcher:PhantomJS': [],
+    '@global': true
+  },
+  'karma-chrome-launcher': {
+    'launcher:Chrome': [],
+    'launcher:ChromeHeadless': [],
+    '@global': true
+  },
+  'karma-coverage': {
+    'preprocessor:coverage': [],
+    'reporter:coverage': [],
+    '@global': true
+  }
+});
 
 describe('karma special parser', () => {
   const configPath = path.resolve('/a', '/a/karma.conf.js');
@@ -27,15 +56,10 @@ describe('karma special parser', () => {
 
     const result = karmaSpecialParser('module.exports = function(config) {' +
       '  config.set({' +
-      '    reporters: ["junit"]' +
+      '    reporters: ["coverage", "junit"]' +
       '  });' +
-      '};', configPath, ['karma-junit-reporter', 'another-dep'], '/a');
-    result.should.deepEqual(['karma-junit-reporter']);
-  });
-
-  it('should translate middleware to plugins', () => {
-    // includes middleware, beforeMiddleware
-    // ???
+      '};', configPath, ['karma-coverage', 'karma-junit-reporter', 'another-dep'], '/a');
+    result.should.deepEqual(['karma-coverage', 'karma-junit-reporter']);
   });
 
   it('should translate browsers into launchers', () => {

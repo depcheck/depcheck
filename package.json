@@ -83,6 +83,7 @@
     "node-sass": "^4.9.3",
     "nyc": "^13.1.0",
     "patch-version": "^0.1.1",
+    "proxyquire": "^2.1.0",
     "should": "^13.2.3",
     "typescript": "^3.0.1",
     "vue-template-compiler": "^2.5.16"
