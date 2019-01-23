@@ -32,6 +32,10 @@ const karmaSpecialParser = proxyquireStrict('../../src/special/karma', {
     'reporter:coverage': [],
     '@global': true,
   },
+  'strange-plugin': {
+    'framework:strange': [],
+    '@global': true,
+  },
 });
 
 describe('karma special parser', () => {
@@ -83,5 +87,18 @@ describe('karma special parser', () => {
       + '  });'
       + '};', configPath, ['karma-coverage', 'another-dep'], '/a');
     result.should.deepEqual(['karma-coverage']);
+  });
+
+  it('should load explict plugins', () => {
+    // plugins: ['strange-plugin'], frameworks: ['strange'] --> ['strange-plugin']
+    const result = karmaSpecialParser(
+      'module.exports = function(config) {'
+      + '  config.set({'
+      + '    frameworks: ["strange"],'
+      + '    plugins: ["strange-plugin"]'
+      + '  });'
+      + '};', configPath, ['strange-plugin', 'another-dep'], '/a',
+    );
+    result.should.deepEqual(['strange-plugin']);
   });
 });
