@@ -5,36 +5,74 @@ import proxyquire from 'proxyquire';
 import 'should';
 
 const proxyquireStrict = proxyquire.noCallThru();
-const karmaSpecialParser = proxyquireStrict('../../src/special/karma', {
+const karmaPlugins = {
   'karma-qunit': {
-    'framework:qunit': [],
-    '@global': true,
+    fileName: 'node_modules/karma-qunit/index.js',
+    src: {
+      'framework:qunit': [],
+    },
   },
   'karma-sinon': {
-    'framework:sinon': [],
-    '@global': true,
+    fileName: 'node_modules/karma-sinon/index.js',
+    src: {
+      'framework:sinon': [],
+    },
   },
   'karma-junit-reporter': {
-    'reporter:junit': [],
-    '@global': true,
+    fileName: 'node_modules/karma-junit-reporter/index.js',
+    src: {
+      'reporter:junit': [],
+    },
   },
   'karma-phantomjs-launcher': {
-    'launcher:PhantomJS': [],
-    '@global': true,
+    fileName: 'node_modules/karma-phantomjs-launcher/index.js',
+    src: {
+      'launcher:PhantomJS': [],
+    },
   },
   'karma-chrome-launcher': {
-    'launcher:Chrome': [],
-    'launcher:ChromeHeadless': [],
-    '@global': true,
+    fileName: 'node_modules/karma-chrome-launcher/index.js',
+    src: {
+      'launcher:Chrome': [],
+      'launcher:ChromeHeadless': [],
+    },
   },
   'karma-coverage': {
-    'preprocessor:coverage': [],
-    'reporter:coverage': [],
-    '@global': true,
+    fileName: 'node_modules/karma-coverage/index.js',
+    src: {
+      'preprocessor:coverage': [],
+      'reporter:coverage': [],
+    },
   },
   'strange-plugin': {
-    'framework:strange': [],
-    '@global': true,
+    fileName: 'node_modules/strange-plugin/index.js',
+    src: {
+      'framework:strange': [],
+    },
+  },
+};
+const sourceMap = {};
+Object.entries(karmaPlugins).forEach(([, plugin]) => {
+  sourceMap[plugin.fileName] = plugin.src;
+});
+const karmaSpecialParser = proxyquireStrict('../../src/special/karma', {
+  resolve: {
+    sync(module) {
+      const plugin = karmaPlugins[module];
+      if (plugin) {
+        return plugin.fileName;
+      }
+      return null;
+    },
+  },
+  fs: {
+    readFileSync(filePath) {
+      const src = sourceMap[filePath];
+      if (src) {
+        return `module.exports = ${JSON.stringify(src)}`;
+      }
+      return null;
+    },
   },
 });
 
