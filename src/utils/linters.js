@@ -2,7 +2,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
-import { evaluate } from '.';
+import { evaluate, wrapToArray } from '.';
 
 function parse(content) {
   try {
@@ -25,17 +25,6 @@ function parse(content) {
 
   // parse fail, return nothing
   return {};
-}
-
-function wrapToArray(obj) {
-  if (!obj) {
-    return [];
-  }
-  if (lodash.isArray(obj)) {
-    return obj;
-  }
-
-  return [obj];
 }
 
 function isLinterConfigAnAbsolutePath(specifier) {

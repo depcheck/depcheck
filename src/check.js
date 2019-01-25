@@ -6,6 +6,7 @@ import minimatch from 'minimatch';
 import builtInModules from 'builtin-modules';
 import requirePackageName from 'require-package-name';
 import { readJSON } from './utils';
+import getNodes from './utils/parser';
 
 function isModule(dir) {
   try {
@@ -35,45 +36,6 @@ function detect(detectors, node) {
     })
     .flatten()
     .value();
-}
-
-// fix for node.js <= 3, it throws TypeError when value type invalid in weak set
-function hasVisited(ast, visited) {
-  try {
-    return visited.has(ast);
-  } catch (e) {
-    return false;
-  }
-}
-
-function recursive(ast, visited) {
-  if (!ast || hasVisited(ast, visited)) {
-    return [];
-  }
-  if (lodash.isArray(ast)) {
-    return lodash(ast)
-      .map(node => recursive(node, visited))
-      .flatten()
-      .value();
-  }
-  if (ast.type) {
-    visited.add(ast);
-    return lodash(ast)
-      .keys()
-      .filter(key => key !== 'tokens' && key !== 'comments')
-      .map(key => recursive(ast[key], visited))
-      .flatten()
-      .concat(ast)
-      .value();
-  }
-
-  return [];
-}
-
-function getNodes(ast) {
-  const visited = new WeakSet();
-  const nodes = recursive(ast, visited);
-  return nodes;
 }
 
 function discoverPropertyDep(rootDir, deps, property, depName) {

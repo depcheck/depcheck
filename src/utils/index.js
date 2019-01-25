@@ -25,3 +25,21 @@ export function tryRequire(module) {
     return null;
   }
 }
+
+export function wrapToArray(obj) {
+  if (!obj) {
+    return [];
+  }
+  if (Array.isArray(obj)) {
+    return obj;
+  }
+
+  return [obj];
+}
+
+export function wrapToMap(obj) {
+  if (!obj) {
+    return {};
+  }
+  return obj;
+}
