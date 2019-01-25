@@ -52,7 +52,7 @@ const karmaPlugins = {
   },
 };
 const sourceMap = {};
-Object.entries(karmaPlugins).forEach(([, plugin]) => {
+Object.keys(karmaPlugins).map(k => karmaPlugins[k]).forEach((plugin) => {
   sourceMap[plugin.fileName] = plugin.src;
 });
 const karmaSpecialParser = proxyquireStrict('../../src/special/karma', {
