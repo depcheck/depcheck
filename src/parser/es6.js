@@ -1,4 +1,4 @@
-import { parse } from 'babylon';
+import { parse } from '@babel/parser';
 
 export default function parseES6(content) {
   return parse(content, {
