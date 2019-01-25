@@ -1,7 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import resolve from 'resolve';
-import { evaluate } from '../utils';
+import lodash from 'lodash';
+import parseES7 from '../parser/es7';
+import getNodes from '../utils/parser';
+import { wrapToArray, wrapToMap } from '../utils';
 
 // TODO support karma.conf.coffee
 const supportedConfNames = [
@@ -11,48 +14,102 @@ const supportedConfNames = [
   '.config/karma.conf.ts',
 ];
 
+function parsePluginModuleExports(node) {
+  // node.left must be assigning to module.export and node.right must be an object literal
+  if (node && node.type === 'AssignmentExpression' && node.left.type === 'MemberExpression'
+    && node.left.object && node.left.object.type === 'Identifier' && node.left.object.name === 'module'
+    && node.left.property && node.left.property.type === 'Identifier' && node.left.property.name === 'exports'
+    && node.right.type === 'ObjectExpression') {
+    // only need to return the object keys
+    return node.right.properties.map(p => p.key.value);
+  }
+  return [];
+}
+
+function parseConfigModuleExports(node) {
+  const supportedConfigProperties = [
+    'frameworks',
+    'browsers',
+    'preprocessors',
+    'reporters',
+    'plugins',
+  ];
+  // node.left must be assigning to module.exports
+  if (node && node.type === 'AssignmentExpression' && node.left.type === 'MemberExpression'
+    && node.left.object && node.left.object.type === 'Identifier' && node.left.object.name === 'module'
+    && node.left.property && node.left.property.type === 'Identifier' && node.left.property.name === 'exports') {
+    // module.exports = function(config) {...};
+    if (node.right.type === 'FunctionExpression' && node.right.params.length === 1
+      && node.right.body && node.right.body.type === 'BlockStatement' && node.right.body.body.length === 1
+      && node.right.body.body[0].type === 'ExpressionStatement') {
+      const functionExprNode = node.right;
+      const configParam = functionExprNode.params[0].name;
+      const bodyExprNode = functionExprNode.body.body[0].expression;
+      // config.set(...)
+      if (bodyExprNode.type === 'CallExpression' && bodyExprNode.callee.type === 'MemberExpression'
+        && bodyExprNode.callee.object.name === configParam && bodyExprNode.callee.property.name === 'set') {
+        // assume the call to the function will pass an object literal too
+        const arg = bodyExprNode.arguments[0];
+        if (arg.type === 'ObjectExpression') {
+          // collect literal keys and values for:
+          // - frameworks {String[]}
+          // - browsers {String[]}
+          // - preprocessors {Object} - string (glob expressions) to {string|string[]}
+          // - reporters {String[]}
+          // - plugins {Object[]} - possible strings or inline plugin definitions
+          const config = {};
+          arg.properties
+            .filter(prop => supportedConfigProperties.includes(prop.key.name))
+            .forEach((prop) => {
+              if (prop.value.type === 'ArrayExpression') {
+                const vals = [];
+                prop.value.elements
+                  .filter(e => e.type === 'StringLiteral')
+                  .forEach(e => vals.push(e.value));
+                config[prop.key.name] = vals;
+              } else if (prop.value.type === 'ObjectExpression') {
+                const map = {};
+                prop.value.properties
+                  .filter(p => p.value.type === 'StringLiteral')
+                  .forEach((p) => {
+                    map[p.key.name] = p.value.value;
+                  });
+                config[prop.key.name] = map;
+              }
+            });
+          return config;
+        }
+        // TODO handle other expression types
+      }
+      // TODO handle CallExpression
+    }
+  }
+  return null;
+}
+
 function parseConfig(content) {
-  try {
-    const confSetter = evaluate(content);
-    let conf = {};
-    confSetter({
-      set(c) {
-        conf = c;
-      },
-    });
-    return conf;
-  } catch (error) {
-    // not valid JavaScript code
-  }
-
-  // parse fail, return nothing
-  return {};
+  const ast = parseES7(content);
+  return lodash(getNodes(ast))
+    .map(node => parseConfigModuleExports(node))
+    .flatten()
+    .filter(val => val != null)
+    .uniq()
+    .first();
 }
 
-function wrapToArray(obj) {
-  if (!obj) {
-    return [];
-  }
-  if (Array.isArray(obj)) {
-    return obj;
-  }
-
-  return [obj];
-}
-
-function wrapToMap(obj) {
-  if (!obj) {
-    return {};
-  }
-  return obj;
-}
 function collectInstalledPluginInfo(karmaPluginsInstalled, rootDir) {
   const pluginInfo = {};
   karmaPluginsInstalled.forEach((plugin) => {
     const packageMain = resolve.sync(plugin, { basedir: rootDir });
-    const packageContents = fs.readFileSync(packageMain, { encoding: 'utf-8' });
-    const p = evaluate(packageContents);
-    Object.keys(p).forEach((k) => {
+    const packageContents = fs.readFileSync(packageMain, { encoding: 'utf8' });
+    // don't evaluate the contents, since it probably has module requirements we can't load
+    const ast = parseES7(packageContents);
+    const p = lodash(getNodes(ast))
+      .map(node => parsePluginModuleExports(node))
+      .flatten()
+      .uniq()
+      .value();
+    p.forEach((k) => {
       pluginInfo[k] = plugin;
     });
   });
