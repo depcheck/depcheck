@@ -155,7 +155,7 @@ function collectReporters(config, pluginInfo) {
   const reporterMapping = collectInstalledPluginOfType('reporter', pluginInfo);
   const installedReporters = Object.keys(reporterMapping);
   // config defines a property reporters: ['<name>', ...]
-  return Object.values(wrapToMap(config.reporters))
+  return wrapToArray(config.reporters)
     .filter(name => installedReporters.includes(name))
     .map(name => reporterMapping[name]);
 }
@@ -167,7 +167,9 @@ function collectPreprocessors(config, pluginInfo) {
   const preprocessorMapping = collectInstalledPluginOfType('preprocessor', pluginInfo);
   const installedPreprocessors = Object.keys(preprocessorMapping);
   // config defines a property preprocessors: {'<file-glob>': '<name>'}, ... }
-  return [...new Set(Object.values(wrapToMap(config.preprocessors))
+  const preprocessors = wrapToMap(config.preprocessors);
+  return [...new Set(Object.keys(preprocessors)
+    .map(k => preprocessors[k])
     .filter(name => installedPreprocessors.includes(name))
     .map(name => preprocessorMapping[name]))];
 }
