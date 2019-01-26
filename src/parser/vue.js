@@ -1,4 +1,4 @@
-import { parse } from 'babylon';
+import { parse } from '@babel/parser';
 import { tryRequire } from '../utils';
 
 const compiler = tryRequire('vue-template-compiler');
