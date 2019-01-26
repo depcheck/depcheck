@@ -24,7 +24,7 @@ please include the section name (e.g. devDependencies, dependencies)
 ### Versions
  - `node -v`:
  - `npm -v`:
- - `depcheck -v`:
+ - `depcheck --version`:
 
 ### Extra info
 Any extra info you want to include. Thank you for the bug report!
