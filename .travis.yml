@@ -26,9 +26,9 @@ before_deploy:
 deploy:
   - provider: npm
     skip_cleanup: true
-    email: npm@khouri.ca
+    email: lukic.djordje@gmail.com
     api_key:
-      secure: EuVF1Ji3RIO6JF91ww4GIx5qUY2xiaPUfYA92uvqiGwJam7taL/v3OLy6Y5khjnXxFKgfkjd+x2tQ9n2hS56t9Ky7ud8Zw439an/PqEWGE3olTv4n7ZdVaAHzcIydlNL5qmezdlTDM+tmggD7gWWsjatYc9QY4fSnGUtdRZ4HzM=
+      secure: PwEt5+Vgf1Klas8rB1arAF/5zjIGMkP6NekNHkKhJXDwQkY3g19p3ORXnwOk4oRg3ggf3FO1CI7uh/fJb7nnfVMYc+X1Db1MoYgVQAWBS5L723VgLQ8I2BRHNie7CRmXywMUIV4E/8RYGeH/4b6jlY6gKNx3gnjeSeSjKyKl+OQ=
     on:
       tags: true
       node: 6
