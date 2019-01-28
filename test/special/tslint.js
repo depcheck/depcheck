@@ -59,57 +59,12 @@ const testCases = [
     expected: [],
   },
   {
-    name: 'handle config of scoped module',
-    content: {
-      extends: '@my-org/short-customized',
-    },
-    expected: [
-      '@my-org/tslint-config-short-customized',
-    ],
-  },
-  {
     name: 'handle config of scoped module with full name',
     content: {
       extends: '@my-org/tslint-config-long-customized',
     },
     expected: [
       '@my-org/tslint-config-long-customized',
-    ],
-  },
-  {
-    name: 'handle config from plugin with short name',
-    content: {
-      extends: 'plugin:node/recommended',
-    },
-    expected: [
-      'tslint-plugin-node',
-    ],
-  },
-  {
-    name: 'handle config from plugin with full name',
-    content: {
-      extends: 'plugin:tslint-plugin-node/recommended',
-    },
-    expected: [
-      'tslint-plugin-node',
-    ],
-  },
-  {
-    name: 'handle config from scoped plugin with short name',
-    content: {
-      extends: 'plugin:@my-org/short-customized/recommended',
-    },
-    expected: [
-      '@my-org/tslint-plugin-short-customized',
-    ],
-  },
-  {
-    name: 'handle config from scoped plugin with full name',
-    content: {
-      extends: 'plugin:@my-org/tslint-plugin-long-customized/recommended',
-    },
-    expected: [
-      '@my-org/tslint-plugin-long-customized',
     ],
   },
 ];

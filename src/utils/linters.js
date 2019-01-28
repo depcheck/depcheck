@@ -56,25 +56,12 @@ function resolvePresetPackage(flavour, preset, rootDir) {
     return path.resolve(rootDir, preset);
   }
 
-  const { prefix, specifier } = (
-    isLinterConfigFromAPlugin(preset)
-      ? { prefix: `${flavour}-plugin-`, specifier: preset.substring(preset.indexOf(':') + 1) }
-      : { prefix: `${flavour}-config-`, specifier: preset }
-  );
-
-  if (isLinterConfigFromAScopedModule(specifier)) {
-    const scope = specifier.substring(0, specifier.indexOf('/'));
-    const module = specifier.substring(specifier.indexOf('/') + 1);
-
-    if (isLinterConfigFromAFullyQualifiedModuleName(module, prefix)) {
-      return specifier;
-    }
-    return `${scope}/${prefix}${module}`;
+  if (isLinterConfigFromAPlugin(preset)) {
+    const pluginName = preset.slice(7, preset.lastIndexOf('/'));
+    return normalizePackageName(pluginName, `${flavour}-plugin`);
   }
-  if (isLinterConfigFromAFullyQualifiedModuleName(specifier, prefix)) {
-    return specifier;
-  }
-  return `${prefix}${specifier}`;
+
+  return normalizePackageName(preset, `${flavour}-config`);
 }
 
 function loadConfig(preset, rootDir) {
