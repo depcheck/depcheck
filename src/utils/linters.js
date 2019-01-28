@@ -48,6 +48,10 @@ function isLinterConfigFromAFullyQualifiedModuleName(specifier, prefix) {
 }
 
 function resolvePresetPackage(flavour, preset, rootDir) {
+  if (flavour === 'tslint') {
+    return preset;
+  }
+
   // inspired from https://github.com/eslint/eslint/blob/5b4a94e26d0ef247fe222dacab5749805d9780dd/lib/config/config-file.js#L347
   if (isLinterConfigAnAbsolutePath(preset)) {
     return preset;

@@ -20,24 +20,6 @@ const testCases = [
     ],
   },
   {
-    name: 'handle tslint config with short name',
-    content: {
-      extends: 'preset',
-    },
-    expected: [
-      'tslint-config-preset',
-    ],
-  },
-  {
-    name: 'handle tslint config with full name',
-    content: {
-      extends: 'tslint-config-preset',
-    },
-    expected: [
-      'tslint-config-preset',
-    ],
-  },
-  {
     name: 'skip tslint recommended config',
     content: {
       extends: 'tslint:recommended',
