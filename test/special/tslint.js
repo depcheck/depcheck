@@ -11,18 +11,20 @@ const testCases = [
     expected: [],
   },
   {
-    name: 'detect specific plugins',
-    content: {
-      plugins: ['mocha'],
-    },
-    expected: [
-      'tslint-plugin-mocha',
-    ],
-  },
-  {
-    name: 'skip tslint recommended config',
+    name: 'skip single built-in config',
     content: {
       extends: 'tslint:recommended',
+    },
+    expected: [],
+  },
+  {
+    name: 'skip built-in configs',
+    content: {
+      extends: [
+        'tslint:recommended',
+        'tslint:latest',
+        'tslint:foo',
+      ],
     },
     expected: [],
   },
@@ -41,12 +43,25 @@ const testCases = [
     expected: [],
   },
   {
-    name: 'handle config of scoped module with full name',
+    name: 'handle config of module',
     content: {
-      extends: '@my-org/tslint-config-long-customized',
+      extends: 'some-module',
     },
     expected: [
-      '@my-org/tslint-config-long-customized',
+      'some-module',
+    ],
+  },
+  {
+    name: 'handle config of multiple modules',
+    content: {
+      extends: [
+        'some-module',
+        '@another/module',
+      ],
+    },
+    expected: [
+      'some-module',
+      '@another/module',
     ],
   },
 ];
