@@ -5,6 +5,12 @@ import lodash from 'lodash';
 
 const scriptCache = {};
 
+export function clearCache() {
+  Object.keys(scriptCache).forEach((key) => {
+    scriptCache[key] = undefined;
+  });
+}
+
 function getCacheOrFile(key, fn) {
   if (scriptCache[key]) {
     return scriptCache[key];

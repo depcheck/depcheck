@@ -1,41 +1,82 @@
 import fs from 'fs';
 import path from 'path';
-import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
 import { getScripts } from '../utils';
 
-function getOpts(script) {
-  const argvs = script.split(' ').filter(argv => argv);
+const knownReporters = [
+  'dot', 'doc', 'tap', 'json', 'html', 'list',
+  'min', 'spec', 'nyan', 'xunit', 'markdown', 'progress',
+  'landing', 'json-stream',
+];
+
+function getOptsConfig(root, config) {
+  const argvs = config.split(/\s+/);
   const optsIndex = argvs.indexOf('--opts');
-  return optsIndex !== -1 ? argvs[optsIndex + 1] : null;
+
+  if (optsIndex === -1) {
+    return null;
+  }
+
+  const optsPath = argvs[optsIndex + 1];
+
+  if (!optsPath) {
+    return null;
+  }
+
+  return fs.readFileSync(path.resolve(root, '..', optsPath), 'utf-8');
 }
 
-function getRequires(content, deps) {
-  return content
-    .split('\n')
-    .map(line => line.trim())
-    .filter(line => line.indexOf('--require ') === 0)
-    .map(line => line.substring('--require '.length).trim())
+function getDependencies(content, deps) {
+  const lines = content.split(/\s+/);
+  const result = [];
+
+  lines.forEach((line, idx) => {
+    if (line === '--require') {
+      const val = lines[idx + 1];
+      if (val && !val.startsWith('--')) {
+        result.push(val);
+      }
+    }
+    if (line === '--reporter') {
+      const val = lines[idx + 1];
+      if (val && !val.startsWith('--') && !knownReporters.includes(val)) {
+        result.push(val);
+      }
+    }
+  });
+
+  return result
     .map(requirePackageName)
-    .filter(name => deps.indexOf(name) !== -1);
+    .filter((v, k, arr) => arr.indexOf(v) === k)
+    .filter(name => deps.includes(name));
 }
 
 export default function parseMocha(content, filepath, deps, rootDir) {
   const defaultOptPath = path.resolve(rootDir, 'test/mocha.opts');
+  let config;
+
   if (filepath === defaultOptPath) {
-    return getRequires(content, deps);
+    config = content;
+  } else {
+    const scripts = getScripts(filepath, content);
+    const mochaScript = scripts.find(s => s.indexOf('mocha') !== -1);
+    if (mochaScript) {
+      config = mochaScript.slice(mochaScript.indexOf('mocha'));
+    }
   }
 
-  // get mocha.opts from scripts
-  const requires = lodash(getScripts(filepath, content))
-    .filter(script => script.indexOf('mocha') !== -1)
-    .map(script => getOpts(script))
-    .filter(opts => opts)
-    .map(opts => path.resolve(filepath, '..', opts))
-    .map(optPath => fs.readFileSync(optPath, 'utf-8')) // TODO async read file
-    .map(optContent => getRequires(optContent, deps))
-    .flatten()
-    .value();
+  if (!config) {
+    return [];
+  }
+
+  const requires = [];
+  const optsConfig = getOptsConfig(filepath, config);
+
+  if (optsConfig) {
+    requires.push(...getDependencies(optsConfig, deps));
+  }
+
+  requires.push(...getDependencies(config, deps));
 
   return requires;
 }
