@@ -99,7 +99,7 @@ After the file content is converted into an AST, the detectors are responsible t
 
 Depcheck ships these detectors:
 
-- `requireCallExpreesion` detector for `require` function
+- `requireCallExpression` detector for `require` function
 - `importDeclaration` detector for ES6 `import` declaration
 - `exportDeclaration` detector for ES6 `export ... from` declaration
 - `gruntLoadTaskCallExpression` detector for `grunt.tasks.loadNpmTasks` function
@@ -127,7 +127,7 @@ The `detectors` option accepts an array of detectors. **All** successful convert
 
 ### Use Detector From CLI
 
-Depcheck CLI provdes `--detectors` argument to specify out-of-box detectors. The syntax looks like:
+Depcheck CLI provides `--detectors` argument to specify out-of-box detectors. The syntax looks like:
 
 ```
 --detectors=requireCallExpression,anotherDetector
