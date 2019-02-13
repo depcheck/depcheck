@@ -18,6 +18,13 @@ function checkConfig(config, rootDir) {
     .map(requirePackageName);
 }
 
+/**
+ * Parses TSLint configuration for dependencies.
+ *
+ * TSLint uses node resolution to load inherited configurations.
+ * More info on this can be found
+ * [here](https://palantir.github.io/tslint/usage/configuration/).
+ */
 export default function parseTSLint(content, filename, deps, rootDir) {
   const config = loadConfig('tslint', filename, content);
   if (config) {
