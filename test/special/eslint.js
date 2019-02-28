@@ -149,6 +149,15 @@ const testCases = [
   {
     name: 'handle config from scoped plugin with short name',
     content: {
+      extends: 'plugin:@my-org/recommended',
+    },
+    expected: [
+      '@my-org/eslint-plugin',
+    ],
+  },
+  {
+    name: 'handle config from scoped plugin with short name & config',
+    content: {
       extends: 'plugin:@my-org/short-customized/recommended',
     },
     expected: [

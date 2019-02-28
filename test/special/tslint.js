@@ -11,36 +11,20 @@ const testCases = [
     expected: [],
   },
   {
-    name: 'detect specific plugins',
-    content: {
-      plugins: ['mocha'],
-    },
-    expected: [
-      'tslint-plugin-mocha',
-    ],
-  },
-  {
-    name: 'handle tslint config with short name',
-    content: {
-      extends: 'preset',
-    },
-    expected: [
-      'tslint-config-preset',
-    ],
-  },
-  {
-    name: 'handle tslint config with full name',
-    content: {
-      extends: 'tslint-config-preset',
-    },
-    expected: [
-      'tslint-config-preset',
-    ],
-  },
-  {
-    name: 'skip tslint recommended config',
+    name: 'skip single built-in config',
     content: {
       extends: 'tslint:recommended',
+    },
+    expected: [],
+  },
+  {
+    name: 'skip built-in configs',
+    content: {
+      extends: [
+        'tslint:recommended',
+        'tslint:latest',
+        'tslint:foo',
+      ],
     },
     expected: [],
   },
@@ -59,57 +43,25 @@ const testCases = [
     expected: [],
   },
   {
-    name: 'handle config of scoped module',
+    name: 'handle config of module',
     content: {
-      extends: '@my-org/short-customized',
+      extends: 'some-module',
     },
     expected: [
-      '@my-org/tslint-config-short-customized',
+      'some-module',
     ],
   },
   {
-    name: 'handle config of scoped module with full name',
+    name: 'handle config of multiple modules',
     content: {
-      extends: '@my-org/tslint-config-long-customized',
+      extends: [
+        'some-module',
+        '@another/module',
+      ],
     },
     expected: [
-      '@my-org/tslint-config-long-customized',
-    ],
-  },
-  {
-    name: 'handle config from plugin with short name',
-    content: {
-      extends: 'plugin:node/recommended',
-    },
-    expected: [
-      'tslint-plugin-node',
-    ],
-  },
-  {
-    name: 'handle config from plugin with full name',
-    content: {
-      extends: 'plugin:tslint-plugin-node/recommended',
-    },
-    expected: [
-      'tslint-plugin-node',
-    ],
-  },
-  {
-    name: 'handle config from scoped plugin with short name',
-    content: {
-      extends: 'plugin:@my-org/short-customized/recommended',
-    },
-    expected: [
-      '@my-org/tslint-plugin-short-customized',
-    ],
-  },
-  {
-    name: 'handle config from scoped plugin with full name',
-    content: {
-      extends: 'plugin:@my-org/tslint-plugin-long-customized/recommended',
-    },
-    expected: [
-      '@my-org/tslint-plugin-long-customized',
+      'some-module',
+      '@another/module',
     ],
   },
 ];
