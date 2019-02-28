@@ -10,7 +10,7 @@ export default function parseSASS(content, filePath, deps, rootDir) {
   const { stats } = sass.renderSync({
     data: content,
     includePaths: [path.dirname(filePath)],
-    importer: tildeImporter
+    importer: tildeImporter,
   });
 
   const result = lodash(stats.includedFiles)
