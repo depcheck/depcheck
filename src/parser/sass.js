@@ -8,7 +8,7 @@ const sass = tryRequire('node-sass');
 
 export default function parseSASS(content, filePath, deps, rootDir) {
   const { stats } = sass.renderSync({
-    data: content,
+    file: filePath,
     includePaths: [path.dirname(filePath)],
     importer: tildeImporter,
   });
