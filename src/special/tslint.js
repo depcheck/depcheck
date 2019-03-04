@@ -28,7 +28,7 @@ function checkConfig(config, rootDir) {
 export default function parseTSLint(content, filename, deps, rootDir) {
   const config = loadConfig('tslint', filename, content);
   if (config) {
-    return checkConfig(config, rootDir);
+    return ['tslint', ...checkConfig(config, rootDir)];
   }
 
   return [];

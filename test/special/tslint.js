@@ -8,14 +8,14 @@ const testCases = [
   {
     name: 'ignore when user not extends any config in `.tslintrc`',
     content: {},
-    expected: [],
+    expected: ['tslint'],
   },
   {
     name: 'skip single built-in config',
     content: {
       extends: 'tslint:recommended',
     },
-    expected: [],
+    expected: ['tslint'],
   },
   {
     name: 'skip built-in configs',
@@ -26,21 +26,21 @@ const testCases = [
         'tslint:foo',
       ],
     },
-    expected: [],
+    expected: ['tslint'],
   },
   {
     name: 'handle config of absolute local path',
     content: {
       extends: '/path/to/config',
     },
-    expected: [],
+    expected: ['tslint'],
   },
   {
     name: 'handle config of relative local path',
     content: {
       extends: './config',
     },
-    expected: [],
+    expected: ['tslint'],
   },
   {
     name: 'handle config of module',
@@ -48,6 +48,7 @@ const testCases = [
       extends: 'some-module',
     },
     expected: [
+      'tslint',
       'some-module',
     ],
   },
@@ -60,6 +61,7 @@ const testCases = [
       ],
     },
     expected: [
+      'tslint',
       'some-module',
       '@another/module',
     ],
@@ -89,7 +91,7 @@ describe('tslint special parser', () => {
   });
 
   it('should handle parse error', () =>
-    testTslint([], '{ this is an invalid JSON string'));
+    testTslint(['tslint'], '{ this is an invalid JSON string'));
 
   it('should handle non-standard JSON content', () =>
     testTslint(
