@@ -26,9 +26,8 @@ export function parse(content) {
 }
 
 
-export function loadConfig(flavour, filename, content) {
+export function loadConfig(filenameRegex, filename, content) {
   const basename = path.basename(filename);
-  const filenameRegex = new RegExp(`^\\.?${flavour}(rc)?(\\.json|\\.js|\\.yml|\\.yaml)?$`);
   if (filenameRegex.test(basename)) {
     const config = parse(content);
     return config;

@@ -6,7 +6,7 @@ import tslintSpecialParser from '../../src/special/tslint';
 
 const testCases = [
   {
-    name: 'ignore when user not extends any config in `.tslintrc`',
+    name: 'ignore when user not extends any config in `tslint.json`',
     content: {},
     expected: ['tslint'],
   },
@@ -70,11 +70,9 @@ const testCases = [
 
 function testTslint(deps, content) {
   [
-    '/path/to/.tslintrc',
-    '/path/to/.tslintrc.js',
-    '/path/to/.tslintrc.json',
-    '/path/to/.tslintrc.yml',
-    '/path/to/.tslintrc.yaml',
+    '/path/to/tslint.json',
+    '/path/to/tslint.yml',
+    '/path/to/tslint.yaml',
   ].forEach((pathToTslintrc) => {
     const result = tslintSpecialParser(
       content, pathToTslintrc, deps, __dirname,
@@ -85,7 +83,7 @@ function testTslint(deps, content) {
 }
 
 describe('tslint special parser', () => {
-  it('should ignore when filename is not `.tslintrc`', () => {
+  it('should ignore when filename is not `tslint.json`', () => {
     const result = tslintSpecialParser('content', '/a/file');
     result.should.deepEqual([]);
   });
