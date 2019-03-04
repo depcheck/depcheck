@@ -108,5 +108,15 @@ export default function parseESLint(content, filename, deps, rootDir) {
     return checkConfig(config, rootDir);
   }
 
+  const packageJsonPath = path.resolve(rootDir, 'package.json');
+  const resolvedFilePath = path.resolve(rootDir, filename);
+
+  if (resolvedFilePath === packageJsonPath) {
+    const parsed = JSON.parse(content);
+    if (parsed.eslintConfig) {
+      return checkConfig(parsed.eslintConfig, rootDir);
+    }
+  }
+
   return [];
 }
