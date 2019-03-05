@@ -105,7 +105,14 @@ function checkConfig(config, rootDir) {
 const configNameRegex = /^\.eslintrc(\.(json|js|yml|yaml))?$/;
 
 export default function parseESLint(content, filename, deps, rootDir) {
-  const config = loadConfig(configNameRegex, filename, content);
+  const config = loadConfig(
+    'eslint',
+    configNameRegex,
+    filename,
+    content,
+    rootDir,
+  );
+
   if (config) {
     return checkConfig(config, rootDir);
   }
