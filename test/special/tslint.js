@@ -113,6 +113,23 @@ describe('tslint special parser', () => {
       );
       result.should.deepEqual(['tslint', 'foo-bar']);
     });
+
+    it('should skip invalid custom configs from scripts', () => {
+      const rootDir = path.resolve(
+        __dirname,
+        '../fake_modules/tslint_config_custom_invalid',
+      );
+      const packagePath = path.resolve(rootDir, 'package.json');
+      const packageContent = fs.readFileSync(packagePath, 'utf-8');
+      const dependencies = Object.keys(JSON.parse(packageContent).devDependencies);
+      const result = tslintSpecialParser(
+        packageContent,
+        packagePath,
+        dependencies,
+        rootDir,
+      );
+      result.should.deepEqual([]);
+    });
   });
 
   describe('with JSON format', () =>
