@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 import requirePackageName from 'require-package-name';
 import { loadConfig } from '../utils/linters';
 import { wrapToArray } from '../utils/index';
@@ -28,7 +28,14 @@ const configNameRegex = /^tslint\.(json|yaml|yml)$/;
  * [here](https://palantir.github.io/tslint/usage/configuration/).
  */
 export default function parseTSLint(content, filename, deps, rootDir) {
-  const config = loadConfig(configNameRegex, filename, content);
+  const config = loadConfig(
+    'tslint',
+    configNameRegex,
+    filename,
+    content,
+    rootDir,
+  );
+
   if (config) {
     return ['tslint', ...checkConfig(config, rootDir)];
   }

@@ -3,6 +3,7 @@
 import 'should';
 import yaml from 'js-yaml';
 import * as path from 'path';
+import * as fs from 'fs';
 import eslintSpecialParser from '../../src/special/eslint';
 
 const testCases = [
@@ -199,13 +200,34 @@ describe('eslint special parser', () => {
   });
 
   it('should handle parse error', () =>
-    testEslint([], '{ this is an invalid JSON string'));
+    testEslint([], '{ this is an invalid JSON string', [], __dirname));
 
   it('should handle non-standard JSON content', () =>
     testEslint(
       testCases[1].expected,
       `${JSON.stringify(testCases[1].content)}\n// this is ignored`,
     ));
+
+  describe('with custom config', () => {
+    it('should parse custom configs from scripts', () => {
+      const rootDir = path.resolve(
+        __dirname,
+        '../fake_modules/eslint_config_custom',
+      );
+      const packagePath = path.resolve(rootDir, 'package.json');
+      const packageContent = fs.readFileSync(packagePath, 'utf-8');
+      const dependencies = Object.keys(
+        JSON.parse(packageContent).devDependencies,
+      );
+      const result = eslintSpecialParser(
+        packageContent,
+        packagePath,
+        dependencies,
+        rootDir,
+      );
+      result.should.deepEqual(['eslint-config-foo-bar']);
+    });
+  });
 
   describe('with JSON format', () =>
     testCases.forEach(testCase =>
