@@ -18,6 +18,8 @@ function checkConfig(config, rootDir) {
     .map(requirePackageName);
 }
 
+const configNameRegex = /^tslint\.(json|yaml|yml)$/;
+
 /**
  * Parses TSLint configuration for dependencies.
  *
@@ -26,9 +28,9 @@ function checkConfig(config, rootDir) {
  * [here](https://palantir.github.io/tslint/usage/configuration/).
  */
 export default function parseTSLint(content, filename, deps, rootDir) {
-  const config = loadConfig('tslint', filename, content);
+  const config = loadConfig(configNameRegex, filename, content);
   if (config) {
-    return checkConfig(config, rootDir);
+    return ['tslint', ...checkConfig(config, rootDir)];
   }
 
   return [];

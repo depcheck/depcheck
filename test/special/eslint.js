@@ -2,6 +2,7 @@
 
 import 'should';
 import yaml from 'js-yaml';
+import * as path from 'path';
 import eslintSpecialParser from '../../src/special/eslint';
 
 const testCases = [
@@ -193,7 +194,7 @@ function testEslint(deps, content) {
 
 describe('eslint special parser', () => {
   it('should ignore when filename is not `.eslintrc`', () => {
-    const result = eslintSpecialParser('content', '/a/file');
+    const result = eslintSpecialParser('content', '/a/file', [], __dirname);
     result.should.deepEqual([]);
   });
 
@@ -210,6 +211,20 @@ describe('eslint special parser', () => {
     testCases.forEach(testCase =>
       it(`should ${testCase.name}`, () =>
         testEslint(testCase.expected, JSON.stringify(testCase.content)))));
+
+  describe('with package.json config', () =>
+    testCases.forEach((testCase) => {
+      it(`should ${testCase.name}`, () => {
+        const packageResult = eslintSpecialParser(
+          JSON.stringify({ eslintConfig: testCase.content }),
+          path.resolve(__dirname, 'package.json'),
+          testCase.expected,
+          __dirname,
+        );
+
+        packageResult.should.deepEqual(testCase.expected);
+      });
+    }));
 
   describe('with YAML format', () =>
     testCases.forEach(testCase =>
