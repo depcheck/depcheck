@@ -41,11 +41,10 @@ function loadConfig(filename, content) {
     const config = parseConfig(content);
     return config.plugins || [];
   }
-
   return [];
 }
 
 
-export default function parseGatsbyConfig(content, filename, deps) {
+export default function parseGatsbyConfig(content, filename) {
   return loadConfig(filename, content);
 }
