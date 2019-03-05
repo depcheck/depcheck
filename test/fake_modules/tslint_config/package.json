@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "foo-bar": "^1.1.1",
+    "tslint": "^1.0.0"
+  },
+  "scripts": {
+    "lint": "tslint --config ./config.json",
+    "unused": "does something else"
+  }
+}
