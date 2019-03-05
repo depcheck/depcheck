@@ -17,7 +17,7 @@ describe('gatsby special parser', () => {
   it('should recognize the parser used by gatsby', () => {
     const content = `module.exports = { plugins : ${JSON.stringify(plugins)} }`;
 
-    const result = gatsbySpecialParser(content, '/a/gatsby-config.js';
+    const result = gatsbySpecialParser(content, '/a/gatsby-config.js');
     result.should.deepEqual(['gatsby-plugin-sass', 'gatsby-plugin-react-helmet']);
   });
 });
