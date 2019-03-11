@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "eslint-config-foo-bar": "^1.1.1",
+    "eslint": "^1.0.0"
+  },
+  "scripts": {
+    "lint": "eslint --config ./config.json",
+    "unused": "does something else"
+  }
+}

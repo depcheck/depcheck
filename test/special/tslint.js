@@ -2,20 +2,22 @@
 
 import 'should';
 import yaml from 'js-yaml';
+import * as fs from 'fs';
+import * as path from 'path';
 import tslintSpecialParser from '../../src/special/tslint';
 
 const testCases = [
   {
-    name: 'ignore when user not extends any config in `.tslintrc`',
+    name: 'ignore when user not extends any config in `tslint.json`',
     content: {},
-    expected: [],
+    expected: ['tslint'],
   },
   {
     name: 'skip single built-in config',
     content: {
       extends: 'tslint:recommended',
     },
-    expected: [],
+    expected: ['tslint'],
   },
   {
     name: 'skip built-in configs',
@@ -26,21 +28,21 @@ const testCases = [
         'tslint:foo',
       ],
     },
-    expected: [],
+    expected: ['tslint'],
   },
   {
     name: 'handle config of absolute local path',
     content: {
       extends: '/path/to/config',
     },
-    expected: [],
+    expected: ['tslint'],
   },
   {
     name: 'handle config of relative local path',
     content: {
       extends: './config',
     },
-    expected: [],
+    expected: ['tslint'],
   },
   {
     name: 'handle config of module',
@@ -48,6 +50,7 @@ const testCases = [
       extends: 'some-module',
     },
     expected: [
+      'tslint',
       'some-module',
     ],
   },
@@ -60,6 +63,7 @@ const testCases = [
       ],
     },
     expected: [
+      'tslint',
       'some-module',
       '@another/module',
     ],
@@ -68,11 +72,9 @@ const testCases = [
 
 function testTslint(deps, content) {
   [
-    '/path/to/.tslintrc',
-    '/path/to/.tslintrc.js',
-    '/path/to/.tslintrc.json',
-    '/path/to/.tslintrc.yml',
-    '/path/to/.tslintrc.yaml',
+    '/path/to/tslint.json',
+    '/path/to/tslint.yml',
+    '/path/to/tslint.yaml',
   ].forEach((pathToTslintrc) => {
     const result = tslintSpecialParser(
       content, pathToTslintrc, deps, __dirname,
@@ -83,19 +85,52 @@ function testTslint(deps, content) {
 }
 
 describe('tslint special parser', () => {
-  it('should ignore when filename is not `.tslintrc`', () => {
+  it('should ignore when filename is not `tslint.json`', () => {
     const result = tslintSpecialParser('content', '/a/file');
     result.should.deepEqual([]);
   });
 
   it('should handle parse error', () =>
-    testTslint([], '{ this is an invalid JSON string'));
+    testTslint(['tslint'], '{ this is an invalid JSON string'));
 
   it('should handle non-standard JSON content', () =>
     testTslint(
       testCases[1].expected,
       `${JSON.stringify(testCases[1].content)}\n// this is ignored`,
     ));
+
+  describe('with custom config', () => {
+    it('should parse custom configs from scripts', () => {
+      const rootDir = path.resolve(__dirname, '../fake_modules/tslint_config');
+      const packagePath = path.resolve(rootDir, 'package.json');
+      const packageContent = fs.readFileSync(packagePath, 'utf-8');
+      const dependencies = Object.keys(JSON.parse(packageContent).devDependencies);
+      const result = tslintSpecialParser(
+        packageContent,
+        packagePath,
+        dependencies,
+        rootDir,
+      );
+      result.should.deepEqual(['tslint', 'foo-bar']);
+    });
+
+    it('should skip invalid custom configs from scripts', () => {
+      const rootDir = path.resolve(
+        __dirname,
+        '../fake_modules/tslint_config_custom_invalid',
+      );
+      const packagePath = path.resolve(rootDir, 'package.json');
+      const packageContent = fs.readFileSync(packagePath, 'utf-8');
+      const dependencies = Object.keys(JSON.parse(packageContent).devDependencies);
+      const result = tslintSpecialParser(
+        packageContent,
+        packagePath,
+        dependencies,
+        rootDir,
+      );
+      result.should.deepEqual([]);
+    });
+  });
 
   describe('with JSON format', () =>
     testCases.forEach(testCase =>

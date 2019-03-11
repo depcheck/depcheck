@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "tslint": "^1.0.0"
+  },
+  "scripts": {
+    "lint": "tslint --config ./invalid.json",
+    "unused": "does something else"
+  }
+}

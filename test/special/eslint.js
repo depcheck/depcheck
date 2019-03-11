@@ -2,6 +2,8 @@
 
 import 'should';
 import yaml from 'js-yaml';
+import * as path from 'path';
+import * as fs from 'fs';
 import eslintSpecialParser from '../../src/special/eslint';
 
 const testCases = [
@@ -193,12 +195,12 @@ function testEslint(deps, content) {
 
 describe('eslint special parser', () => {
   it('should ignore when filename is not `.eslintrc`', () => {
-    const result = eslintSpecialParser('content', '/a/file');
+    const result = eslintSpecialParser('content', '/a/file', [], __dirname);
     result.should.deepEqual([]);
   });
 
   it('should handle parse error', () =>
-    testEslint([], '{ this is an invalid JSON string'));
+    testEslint([], '{ this is an invalid JSON string', [], __dirname));
 
   it('should handle non-standard JSON content', () =>
     testEslint(
@@ -206,10 +208,45 @@ describe('eslint special parser', () => {
       `${JSON.stringify(testCases[1].content)}\n// this is ignored`,
     ));
 
+  describe('with custom config', () => {
+    it('should parse custom configs from scripts', () => {
+      const rootDir = path.resolve(
+        __dirname,
+        '../fake_modules/eslint_config_custom',
+      );
+      const packagePath = path.resolve(rootDir, 'package.json');
+      const packageContent = fs.readFileSync(packagePath, 'utf-8');
+      const dependencies = Object.keys(
+        JSON.parse(packageContent).devDependencies,
+      );
+      const result = eslintSpecialParser(
+        packageContent,
+        packagePath,
+        dependencies,
+        rootDir,
+      );
+      result.should.deepEqual(['eslint-config-foo-bar']);
+    });
+  });
+
   describe('with JSON format', () =>
     testCases.forEach(testCase =>
       it(`should ${testCase.name}`, () =>
         testEslint(testCase.expected, JSON.stringify(testCase.content)))));
+
+  describe('with package.json config', () =>
+    testCases.forEach((testCase) => {
+      it(`should ${testCase.name}`, () => {
+        const packageResult = eslintSpecialParser(
+          JSON.stringify({ eslintConfig: testCase.content }),
+          path.resolve(__dirname, 'package.json'),
+          testCase.expected,
+          __dirname,
+        );
+
+        packageResult.should.deepEqual(testCase.expected);
+      });
+    }));
 
   describe('with YAML format', () =>
     testCases.forEach(testCase =>
