@@ -1,12 +1,20 @@
-import lodash from 'lodash';
-
 export default function requireCallExpression(node) {
-  return node.type === 'CallExpression'
+  if (node.type === 'CallExpression'
     && node.callee
     && node.callee.type === 'Identifier'
     && node.callee.name === 'require'
-    && node.arguments[0]
-    && lodash.isString(node.arguments[0].value)
-    ? [node.arguments[0].value]
-    : [];
+    && node.arguments.length === 1) {
+    if (node.arguments[0].type === 'Literal'
+      || node.arguments[0].type === 'StringLiteral') {
+      return typeof node.arguments[0].value === 'string'
+        ? [node.arguments[0].value] : [];
+    }
+
+    if (node.arguments[0].type === 'TemplateLiteral'
+      && node.arguments[0].quasis.length === 1
+      && node.arguments[0].expressions.length === 0) {
+      return [node.arguments[0].quasis[0].value.raw];
+    }
+  }
+  return [];
 }
