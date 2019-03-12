@@ -205,6 +205,19 @@ describe('depcheck command line', () => {
         exitCode.should.equal(-1);
       }));
 
+  it('should find dependencies with special parser', () =>
+    testCli(makeArgv('gatsby', {
+      argv: ['--specials=gatsby'],
+    }))
+      .then(({ logs, error, exitCode }) => {
+        logs.should.have.length(3);
+        logs[0].should.equal('Unused dependencies');
+        logs[1].should.containEql('gatsby-plugin-react-helmet');
+
+        error.should.be.empty();
+        exitCode.should.equal(-1);
+      }));
+
   describe('without specified directory', () => {
     let originalCwd;
 

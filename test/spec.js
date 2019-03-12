@@ -166,6 +166,20 @@ export default [
     },
   },
   {
+    name: 'find all dependencies gatsby',
+    module: 'gatsby',
+    options: {
+      withoutDev: true,
+    },
+    expected: {
+      dependencies: ['gatsby-plugin-react-helmet', 'gatsby-plugin-sass'],
+      devDependencies: [],
+      missing: {},
+      using: {
+      },
+    },
+  },
+  {
     name: 'recognize experimental ES7 syntax enabled in Babel by default',
     module: 'good_es7',
     options: {
