@@ -132,6 +132,7 @@ export default [
       missing: {},
       using: {
         optimist: ['index.js'],
+        foo: ['index.js'],
       },
     },
   },
@@ -473,6 +474,7 @@ export default [
       missing: {},
       using: {
         optimist: ['index.js'],
+        foo: ['index.js'],
       },
     },
   },
