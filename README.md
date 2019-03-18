@@ -50,6 +50,7 @@ The *special* component is used to recognize the dependencies that are not gener
 - `mocha` - [Mocha](https://www.npmjs.com/package/mocha) explicit required dependencies
 - `commitizen` - [Commitizen](https://www.npmjs.com/package/commitizen) configuration adaptor
 - `gulp-load-plugins` - [Gulp-load-plugins](https://www.npmjs.com/package/gulp-load-plugins) lazy loaded plugins
+- `gatsby` - [Gatsby](https://www.npmjs.com/package/gatsby) configuration parser
 
 The logic of a special is not perfect. There might be [false alerts](#false-alert). If this happens, please open an issue for us.
 
