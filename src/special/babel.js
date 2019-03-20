@@ -1,5 +1,6 @@
 import path from 'path';
 import lodash from 'lodash';
+import _eval from 'eval';
 
 function parse(content) {
   try {
@@ -74,7 +75,7 @@ export default function parseBabel(content, filePath, deps) {
   }
 
   if (filename === 'babel.config.js') {
-    const options = eval(content);
+    const options = _eval(content);
     return checkOptions(deps, options);
   }
 
