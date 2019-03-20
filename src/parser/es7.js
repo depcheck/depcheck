@@ -13,7 +13,7 @@ export default function parseES7(content) {
       'classProperties',
       'classPrivateProperties',
       'classPrivateMethods',
-      { decorators: { decoratorsBeforeExport: true } },
+      ['decorators', { decoratorsBeforeExport: true }],
       // not decorators-legacy
       'doExpressions',
       'dynamicImport',
@@ -28,7 +28,7 @@ export default function parseES7(content) {
       'objectRestSpread',
       'optionalCatchBinding',
       'optionalChaining',
-      { pipelineOperator: { proposal: 'minimal' } },
+      ['pipelineOperator', { proposal: 'minimal' }],
       'throwExpressions',
     ],
   });
