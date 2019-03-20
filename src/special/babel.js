@@ -73,6 +73,11 @@ export default function parseBabel(content, filePath, deps) {
     return checkOptions(deps, options);
   }
 
+  if (filename === 'babel.config.js') {
+    const options = eval(content);
+    return checkOptions(deps, options);
+  }
+
   if (filename === 'package.json') {
     const metadata = parse(content);
     return checkOptions(deps, metadata.babel);

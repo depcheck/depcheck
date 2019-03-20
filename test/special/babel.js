@@ -98,6 +98,13 @@ describe('babel special parser', () => {
     result.should.deepEqual(['babel-preset-es2015']);
   });
 
+  it('should detect babel.config.js', () => {
+    const content = 'module.exports = { presets: [\'es2015\' ] }'
+
+    const result = parse(content, '/path/to/babel.config.js', ['babel-preset-es2015', 'dep']);
+    result.should.deepEqual(['babel-preset-es2015']);
+  });
+
   testCases.forEach(testCase =>
     it(`should ${testCase.name} in .babelrc file`, () =>
       testBabel('.babelrc', testCase.deps, testCase.options)));
