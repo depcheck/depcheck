@@ -14,7 +14,7 @@ export default function parseJSX(content) {
       'classProperties',
       'classPrivateProperties',
       'classPrivateMethods',
-      { decorators: { decoratorsBeforeExport: true } },
+      ['decorators', { decoratorsBeforeExport: true }],
       // not decorators-legacy
       'doExpressions',
       'dynamicImport',
@@ -29,7 +29,7 @@ export default function parseJSX(content) {
       'objectRestSpread',
       'optionalCatchBinding',
       'optionalChaining',
-      { pipelineOperator: { proposal: 'minimal' } },
+      ['pipelineOperator', { proposal: 'minimal' }],
       'throwExpressions',
       // and finally, jsx
       'jsx'],
