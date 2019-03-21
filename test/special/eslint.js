@@ -208,6 +208,15 @@ describe('eslint special parser', () => {
       `${JSON.stringify(testCases[1].content)}\n// this is ignored`,
     ));
 
+  it('should work with process variable', () => {
+    const result = eslintSpecialParser(
+      'module.exports = { parser: \'babel-eslint\', rules: { \'no-console\': process.env.NODE_ENV == \'production\' ? 0 : 2 } }',
+      '/path/to/.eslintrc.js', ['babel-eslint'], __dirname,
+    );
+
+    result.should.deepEqual(['babel-eslint']);
+  })
+
   describe('with custom config', () => {
     it('should parse custom configs from scripts', () => {
       const rootDir = path.resolve(

@@ -1,7 +1,7 @@
 import yaml from 'js-yaml';
 import * as path from 'path';
 import * as fs from 'fs';
-import { evaluate } from '.';
+import requireFromString from 'require-from-string';
 import getScripts from './get-scripts';
 
 export function parse(content) {
@@ -18,7 +18,7 @@ export function parse(content) {
   }
 
   try {
-    return evaluate(`module.exports = ${content}`);
+    return requireFromString(`module.exports = ${content}`);
   } catch (error) {
     // not valid JavaScript code
   }

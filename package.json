@@ -57,6 +57,7 @@
     "minimatch": "^3.0.2",
     "node-sass-tilde-importer": "^1.0.2",
     "please-upgrade-node": "^3.1.1",
+    "require-from-string": "^2.0.2",
     "require-package-name": "^2.0.1",
     "resolve": "^1.10.0",
     "walkdir": "0.0.12",
