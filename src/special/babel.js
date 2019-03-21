@@ -1,6 +1,6 @@
 import path from 'path';
 import lodash from 'lodash';
-import _eval from 'eval';
+import requireFromString from 'require-from-string';
 
 function parse(content) {
   try {
@@ -75,7 +75,7 @@ export default function parseBabel(content, filePath, deps) {
   }
 
   if (filename === 'babel.config.js') {
-    const options = _eval(content);
+    const options = requireFromString(content);
     return checkOptions(deps, options);
   }
 
