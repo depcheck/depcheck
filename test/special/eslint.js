@@ -215,7 +215,7 @@ describe('eslint special parser', () => {
     );
 
     result.should.deepEqual(['babel-eslint']);
-  })
+  });
 
   describe('with custom config', () => {
     it('should parse custom configs from scripts', () => {
