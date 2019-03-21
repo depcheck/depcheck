@@ -210,7 +210,7 @@ describe('eslint special parser', () => {
 
   it('should work with process variable', () => {
     const result = eslintSpecialParser(
-      'module.exports = { parser: \'babel-eslint\', rules: { \'no-console\': process.env.NODE_ENV == \'production\' ? 0 : 2 } }',
+      'module.exports = { parser: \'babel-eslint\', rules: { \'no-console\': process.env.NODE_ENV == \'production\' ? 2 : 0 } }',
       '/path/to/.eslintrc.js', ['babel-eslint'], __dirname,
     );
 
