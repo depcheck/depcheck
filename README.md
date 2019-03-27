@@ -191,7 +191,7 @@ $> depcheck /path/to/my/project --json | json
 
 ## False Alert
 
-Depcheck just walks through all files and tries to find the dependencies according to some predefined rules. However, the predefined rules may not enough or even be wrong.
+Depcheck just walks through all files and tries to find the dependencies according to some predefined rules. However, the predefined rules may not be enough or may even be wrong.
 
 There may be some cases in which a dependency is being used but is reported as unused, or a dependency is not used but is reported as missing. These are *false alert* situations.
 
