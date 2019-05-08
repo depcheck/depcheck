@@ -3,9 +3,9 @@ sudo: false
 language: node_js
 
 node_js:
-  - 6
   - 8
   - 10
+  - 12
 
 before_install:
   - dpkg --compare-versions `npm -v` ge 6 || npm i -g npm@^6
@@ -31,7 +31,7 @@ deploy:
       secure: PwEt5+Vgf1Klas8rB1arAF/5zjIGMkP6NekNHkKhJXDwQkY3g19p3ORXnwOk4oRg3ggf3FO1CI7uh/fJb7nnfVMYc+X1Db1MoYgVQAWBS5L723VgLQ8I2BRHNie7CRmXywMUIV4E/8RYGeH/4b6jlY6gKNx3gnjeSeSjKyKl+OQ=
     on:
       tags: true
-      node: 6
+      node: 8
   - provider: releases
     skip_cleanup: true
     api_key:
@@ -39,4 +39,4 @@ deploy:
     draft: true
     on:
       tags: true
-      node: 6
+      node: 8

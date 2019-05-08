@@ -4,11 +4,14 @@
     "@babel/plugin-transform-object-assign"
   ],
   "presets": [
-    ["@babel/preset-env", {
-      "targets": {
-        "node": "6"
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "8"
+        }
       }
-    }]
+    ]
   ],
   "env": {
     "test": {
