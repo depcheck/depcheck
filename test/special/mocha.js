@@ -1,11 +1,16 @@
-/* global describe, it */
+/* global describe, it, beforeEach */
 
 import 'should';
 import fs from 'fs';
 import path from 'path';
 import parse from '../../src/special/mocha';
+import { clearCache } from '../../src/utils/get-scripts';
 
 describe('mocha special parser', () => {
+  beforeEach(() => {
+    clearCache();
+  });
+
   it('should ignore when filename is not supported', () => {
     const result = parse('content', 'not-supported.txt', [], __dirname);
     result.should.deepEqual([]);
@@ -32,5 +37,68 @@ describe('mocha special parser', () => {
     const dependencies = Object.keys(JSON.parse(packageContent).devDependencies);
     const result = parse(packageContent, packagePath, dependencies, rootDir);
     result.should.deepEqual(['babel', 'chai']);
+  });
+
+  it('should recognise requires from scripts', () => {
+    const result = parse(`{
+      "scripts": {
+        "test": "mocha --require chai --require chai/index *"
+      }
+    }`, path.resolve(__dirname, 'package.json'), [
+      'chai',
+    ], __dirname);
+    result.should.deepEqual(['chai']);
+  });
+
+  it('should recognise reporters from scripts', () => {
+    const result = parse(`{
+      "scripts": {
+        "test": "mocha --reporter custom-reporter *"
+      }
+    }`, path.resolve(__dirname, 'package.json'), [
+      'custom-reporter',
+    ], __dirname);
+    result.should.deepEqual(['custom-reporter']);
+  });
+
+  it('should recognise requires from complex scripts', () => {
+    const result = parse(`{
+      "scripts": {
+        "test": "someci command --require ignoreme && mocha --require chai *"
+      }
+    }`, path.resolve(__dirname, 'package.json'), [
+      'chai',
+    ], __dirname);
+    result.should.deepEqual(['chai']);
+  });
+
+  it('should recognise reporters from opts', () => {
+    const optPath = path.resolve(__dirname, 'test/mocha.opts');
+    const result = parse('--reporter foo-bar', optPath, ['foo-bar'], __dirname);
+    result.should.deepEqual(['foo-bar']);
+  });
+
+  it('should ignore invalid flags', () => {
+    const optPath = path.resolve(__dirname, 'test/mocha.opts');
+    const result = parse('--reporter --require --reporter', optPath, [], __dirname);
+    result.should.deepEqual([]);
+  });
+
+  it('should ignore opts flag', () => {
+    const optPath = path.resolve(__dirname, 'test/mocha.opts');
+    const result = parse('--opts', optPath, [], __dirname);
+    result.should.deepEqual([]);
+  });
+
+  [
+    'dot', 'doc', 'tap', 'json', 'html', 'list',
+    'min', 'spec', 'nyan', 'xunit', 'markdown', 'progress',
+    'landing', 'json-stream',
+  ].forEach((reporter) => {
+    it(`should ignore built-in reporters (${reporter})`, () => {
+      const optPath = path.resolve(__dirname, 'test/mocha.opts');
+      const result = parse(`--reporter ${reporter}`, optPath, [], __dirname);
+      result.should.deepEqual([]);
+    });
   });
 });
