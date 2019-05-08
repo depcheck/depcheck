@@ -35,7 +35,8 @@ deploy:
   - provider: releases
     skip_cleanup: true
     api_key:
-      secure: Uiilnj7sn8+KEgCMOByMdvCVARfAhvZGUvVrP1oijJBzrMr/YV5lPjH2Hph5IaJuvKKKagXXxqmcspkeiT/kaQA9TVg7VYh+B9DqhKiDxAkBYwMLgiPmnqDTh5ZGNOnnltVxhBI/qRDXpTj1i92VvloVlCcKQ3/M5mqlJi0j+8w=
+      secure: KSDU8zjWT7h0lE92ww+4GXAP4RMMXAqZ3fpq4F1C2tHCdK4udXBLPYhRead70FkHMXbRvAHL84KO5018Jnx4QNGvWjSYQxDH2mgMj7FxempSS/Vll30LlDym62F1v6zLvgICYfb+0phJJ2JCCk7gdKnhF+++Kq71DQDarLsUJXw=
+    draft: true
     on:
       tags: true
       node: 6
