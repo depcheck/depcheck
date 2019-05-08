@@ -66,6 +66,7 @@ function print(result, log, json) {
 function checkDeprecation(argv) {
   if (argv.dev === false) {
     deprecate(
+      'depcheck',
       'The option `dev` is deprecated. It leads a wrong result for missing dependencies'
       + ' when it is `false`. This option will be removed and enforced to `true` in next'
       + ' major version.',
