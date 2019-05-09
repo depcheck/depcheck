@@ -118,7 +118,7 @@ function checkFile(dir, filename, deps, parsers, detectors) {
 function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
   return new Promise((resolve) => {
     const promises = [];
-    const finder = walkdir(dir, { no_recurse: true });
+    const finder = walkdir(dir, { no_recurse: true, follow_symlinks: true });
 
     finder.on('directory', subdir =>
       (ignoreDirs.indexOf(path.basename(subdir)) === -1 && !isModule(subdir)
