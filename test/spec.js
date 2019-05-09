@@ -1,3 +1,4 @@
+import path from 'path';
 import depcheck from '../src/index';
 
 export default [
@@ -699,6 +700,24 @@ export default [
       using: {
         ejs: ['index.js'],
         express: ['index.js'],
+      },
+    },
+  },
+  {
+    name: 'follow simlinks',
+    module: path.join('simlink', 'package'),
+    options: {
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {
+        lodash: ['index.js'],
+        react: ['lib/lib.js'],
+      },
+      using: {
+        lodash: ['index.js'],
+        react: ['lib/lib.js'],
       },
     },
   },
