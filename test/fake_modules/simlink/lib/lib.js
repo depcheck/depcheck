@@ -1,1 +1,1 @@
-require('minimatch');
+require('react');

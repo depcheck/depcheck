@@ -713,11 +713,11 @@ export default [
       devDependencies: [],
       missing: {
         lodash: ['index.js'],
-        minimatch: ['lib/lib.js'],
+        react: ['lib/lib.js'],
       },
       using: {
         lodash: ['index.js'],
-        minimatch: ['lib/lib.js'],
+        react: ['lib/lib.js'],
       },
     },
   },
