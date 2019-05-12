@@ -356,6 +356,21 @@ export default [
     },
   },
   {
+    name: 'recognize jsdom peer dependencies',
+    module: 'peer_jsdom',
+    options: {
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        jsdom: ['index.js'],
+        'jsdom-global': ['index.js'],
+      },
+    },
+  },
+  {
     name: 'recognize nested peer dependencies',
     module: 'peer_dep_nested',
     options: {
