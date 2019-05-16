@@ -12,7 +12,7 @@ const configFileNames = [
   'webpack.config.babel.js',
   'webpack.prod.config.babel.js',
   'webpack.prod.conf.js',
-  'webpack.base.conf.babel.js
+  'webpack.base.conf.babel.js',
 ];
 
 const testCases = [
