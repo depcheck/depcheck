@@ -17,7 +17,7 @@ const testCases = [
     deps: [],
   },
   {
-    name: 'recognize specific preset',
+    name: 'recognize single short-name vue runner',
     content: { runner: 'mocha' },
     deps: ['jest-runner-mocha'],
   },
@@ -54,7 +54,7 @@ async function testJest(content, deps, expectedDeps, filename) {
   }
 }
 
-describe('jest special parser', () => {
+describe.only('jest special parser', () => {
   it('should ignore when filename is not supported', () => {
     const result = jestSpecialParser('content', 'jest.js', [], __dirname);
     result.should.deepEqual([]);
@@ -88,4 +88,16 @@ describe('jest special parser', () => {
       module.exports = ${config}`;
     return testJest(content, testCases[1].deps, testCases[1].deps);
   });
+
+  configFileNames.forEach(fileName => (
+    testCases.forEach(testCase => (
+      it(`should ${testCase.name} in config file ${fileName}`, () => {
+        const config = JSON.stringify(testCase.content);
+        let content = config;
+        if (fileName.split('.').pop() === 'js')
+          content = `module.exports = ${config}`;
+        return testJest(content, testCase.deps, testCase.deps, fileName);
+      })
+    ))
+  ));
 });
