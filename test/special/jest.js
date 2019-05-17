@@ -1,3 +1,5 @@
+/* global describe, it */
+
 import 'should';
 import path from 'path';
 import fse from 'fs-extra';
@@ -13,13 +15,32 @@ const configFileNames = [
 const testCases = [
   {
     name: 'ignore when the config is the empty object',
-    content: {},
     deps: [],
+    content: {},
   },
   {
-    name: 'recognize single short-name vue runner',
-    content: { runner: 'mocha' },
+    name: 'recognize single short-name jest-runner',
     deps: ['jest-runner-mocha'],
+    content: { runner: 'mocha' },
+  },
+  {
+    name: 'recognize transform path with node_modules',
+    deps: ['babel-jest'],
+    content: {
+      transform: {
+        '^.+\\.js$': '<rootDir>/node_modules/babel-jest',
+      },
+    },
+  },
+  {
+    name: 'recognize duplicated transformer',
+    deps: ['babel-jest'],
+    content: {
+      transform: {
+        '^.+\\.js?$': 'babel-jest',
+        '^.+\\.jsx?$': 'babel-jest',
+      },
+    },
   },
 ];
 
@@ -54,7 +75,7 @@ async function testJest(content, deps, expectedDeps, filename) {
   }
 }
 
-describe.only('jest special parser', () => {
+describe('jest special parser', () => {
   it('should ignore when filename is not supported', () => {
     const result = jestSpecialParser('content', 'jest.js', [], __dirname);
     result.should.deepEqual([]);
@@ -94,8 +115,9 @@ describe.only('jest special parser', () => {
       it(`should ${testCase.name} in config file ${fileName}`, () => {
         const config = JSON.stringify(testCase.content);
         let content = config;
-        if (fileName.split('.').pop() === 'js')
+        if (fileName.split('.').pop() === 'js') {
           content = `module.exports = ${config}`;
+        }
         return testJest(content, testCase.deps, testCase.deps, fileName);
       })
     ))

@@ -1,6 +1,6 @@
 import path from 'path';
 import lodash from 'lodash';
-import { evaluate } from '../utils';
+
 const _ = lodash;
 
 const jestConfigRegex = /jest.conf(ig|).js(on|)$/;
@@ -34,8 +34,9 @@ function contain(array, dep, prefix) {
     return false;
   }
 
-  if (typeof array === 'string')
+  if (typeof array === 'string') {
     return contain([array], dep, prefix);
+  }
 
   // extract name if wrapping with options
   const names = array.map(item => (lodash.isString(item) ? item : item[0]));
@@ -50,6 +51,12 @@ function contain(array, dep, prefix) {
   return false;
 }
 
+function removeNodeModuleRelativePaths(filepath) {
+  if (typeof filepath !== 'string') return filepath;
+  const shouldRemove = /^.*node_modules\//.test(filepath);
+  return shouldRemove ? filepath.replace(/^.*node_modules\//, '') : filepath;
+}
+
 function filter(deps, options) {
   const runner = deps.filter(dep => (
     contain(options.runner || [], dep, 'jest-runner-')
@@ -59,7 +66,19 @@ function filter(deps, options) {
     contain(options.watchPlugins || [], dep, 'jest-watch-')
   ));
 
-  return _.union(runner, watchPlugins);
+  const otherProps = lodash(options)
+    .entries()
+    .map(([prop, value]) => {
+      if (prop === 'transform') {
+        return _.values(value).map(removeNodeModuleRelativePaths);
+      }
+      return value;
+    })
+    .flatten()
+    .intersection(deps)
+    .value();
+
+  return _.uniq(runner.concat(watchPlugins).concat(otherProps));
 }
 
 function checkOptions(deps, options = {}) {
@@ -76,12 +95,15 @@ export default function parseJest(content, filePath, deps, rootDir) {
       // eslint-disable-next-line global-require
       const options = require(filePath) || {};
       return checkOptions(deps, options);
-    } catch(error) {
+    } catch (error) {
       return [];
     }
   }
-  
-  if (filename === 'package.json') {
+
+  const packageJsonPath = path.resolve(rootDir, 'package.json');
+  const resolvedFilePath = path.resolve(rootDir, filename);
+
+  if (resolvedFilePath === packageJsonPath) {
     const metadata = parse(content);
     return checkOptions(deps, metadata.jest);
   }
