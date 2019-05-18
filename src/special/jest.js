@@ -55,19 +55,16 @@ function removeNodeModuleRelativePaths(filepath) {
   if (Array.isArray(filepath)) {
     return removeNodeModuleRelativePaths(filepath[0]);
   }
-  if (typeof filepath !== 'string') {
-    return filepath;
-  }
   return filepath.replace(/^.*node_modules\//, '').replace(/\/.*/, '');
 }
 
 function filter(deps, options) {
   const runner = deps.filter(dep => (
-    contain(options.runner || [], dep, 'jest-runner-')
+    contain(options.runner, dep, 'jest-runner-')
   ));
 
   const watchPlugins = deps.filter(dep => (
-    contain(options.watchPlugins || [], dep, 'jest-watch-')
+    contain(options.watchPlugins, dep, 'jest-watch-')
   ));
 
   const otherProps = lodash(options)
@@ -76,13 +73,10 @@ function filter(deps, options) {
       if (prop === 'transform') {
         return _.values(value).map(removeNodeModuleRelativePaths);
       }
-      if (typeof value === 'string') {
-        return removeNodeModuleRelativePaths(value);
-      }
       if (Array.isArray(value)) {
         return value.map(removeNodeModuleRelativePaths);
       }
-      return value;
+      return removeNodeModuleRelativePaths(value);
     })
     .flatten()
     .intersection(deps)
