@@ -52,9 +52,13 @@ function contain(array, dep, prefix) {
 }
 
 function removeNodeModuleRelativePaths(filepath) {
-  if (typeof filepath !== 'string') return filepath;
-  const shouldRemove = /^.*node_modules\//.test(filepath);
-  return shouldRemove ? filepath.replace(/^.*node_modules\//, '') : filepath;
+  if (Array.isArray(filepath)) {
+    return removeNodeModuleRelativePaths(filepath[0]);
+  }
+  if (typeof filepath !== 'string') {
+    return filepath;
+  }
+  return filepath.replace(/^.*node_modules\//, '').replace(/\/.*/, '');
 }
 
 function filter(deps, options) {
