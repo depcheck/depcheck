@@ -72,6 +72,12 @@ function filter(deps, options) {
       if (prop === 'transform') {
         return _.values(value).map(removeNodeModuleRelativePaths);
       }
+      if (typeof value === 'string') {
+        return removeNodeModuleRelativePaths(value);
+      }
+      if (Array.isArray(value)) {
+        return value.map(removeNodeModuleRelativePaths);
+      }
       return value;
     })
     .flatten()
