@@ -69,7 +69,8 @@ async function testJest(content, deps, expectedDeps, filename) {
   );
   try {
     const result = jestSpecialParser(content, tempPath, deps, __dirname);
-    Array.from(result).should.deepEqual(expectedDeps);
+    // sort() allows us to ignore order
+    Array.from(result).sort().should.deepEqual(expectedDeps.sort());
   } finally {
     await removeTempFile(tempPath);
   }
