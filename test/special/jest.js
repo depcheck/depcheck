@@ -197,7 +197,7 @@ describe('jest special parser', () => {
       'module.exports = { automock: true }',
       'jest.config.js',
       [],
-      __dirname
+      __dirname,
     );
     result.should.deepEqual([]);
   });
