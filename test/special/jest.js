@@ -118,7 +118,7 @@ const testCases = [
     content: {
       transform: {
         '^.+\\.js$': '<rootDir>/node_modules/babel-jest',
-        '^.+\\.vue$': '<rootDir>/node_modules/vue-jest',
+        '^.+\\.vue$': 'vue-jest',
       },
       snapshotSerializers: ['jest-serializer-vue'],
     },
@@ -190,6 +190,42 @@ describe('jest special parser', () => {
     const content = `const fs = require('fs');
       module.exports = ${config}`;
     return testJest(content, testCases[1].deps, testCases[1].deps);
+  });
+
+  it('should handle options which are not supported', () => {
+    const result = jestSpecialParser(
+      'module.exports = { automock: true }',
+      'jest.config.js',
+      [],
+      __dirname
+    );
+    result.should.deepEqual([]);
+  });
+
+  it('should handle JSON parse error when using package.json', () => {
+    const content = '{ this is an invalid JSON string';
+    const result = jestSpecialParser(
+      content,
+      path.resolve(__dirname, 'package.json'),
+      [],
+      __dirname,
+    );
+    result.should.deepEqual([]);
+  });
+
+  it('should handle package.json config', () => {
+    const result = jestSpecialParser(
+      JSON.stringify({ jest: [...testCases].pop().content }),
+      path.resolve(__dirname, 'package.json'),
+      [...testCases].pop().deps,
+      __dirname,
+    );
+    result.sort().should.deepEqual([...testCases].pop().deps.sort());
+  });
+
+  it('should handle if module.exports evaluates to undefined', () => {
+    const content = 'module.exports = undefined';
+    return testJest(content, [], []);
   });
 
   configFileNames.forEach(fileName => (
