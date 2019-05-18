@@ -48,6 +48,7 @@ The *special* component is used to recognize the dependencies that are not gener
 - [Grunt](https://www.npmjs.com/package/grunt) plugins
 - `feross-standard` - [Feross standard](https://www.npmjs.com/package/standard) format parser
 - `mocha` - [Mocha](https://www.npmjs.com/package/mocha) explicit required dependencies
+- `jest` - [Jest](https://www.npmjs.com/package/jest) properties in [Jest Configuration](https://jestjs.io/docs/en/configuration)
 - `commitizen` - [Commitizen](https://www.npmjs.com/package/commitizen) configuration adaptor
 - `gulp-load-plugins` - [Gulp-load-plugins](https://www.npmjs.com/package/gulp-load-plugins) lazy loaded plugins
 - `gatsby` - [Gatsby](https://www.npmjs.com/package/gatsby) configuration parser
