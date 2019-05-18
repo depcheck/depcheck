@@ -24,6 +24,41 @@ const testCases = [
     content: { runner: 'mocha' },
   },
   {
+    name: 'recognize single long-name jest-runner',
+    deps: ['jest-runner-mocha'],
+    content: { runner: 'jest-runner-mocha' },
+  },
+  {
+    name: 'recognize single short-name jest-watch plugin',
+    deps: ['jest-watch-master'],
+    content: { watchPlugins: ['master'] },
+  },
+  {
+    name: 'recognize single long-name jest-watch plugin',
+    deps: ['jest-watch-master'],
+    content: { watchPlugins: ['jest-watch-master'] },
+  },
+  {
+    name: 'recognize multiple short-name jest-watch plugin',
+    deps: ['jest-watch-master', 'jest-watch-select-projects'],
+    content: { watchPlugins: ['master', 'select-projects'] },
+  },
+  {
+    name: 'recognize module with options',
+    deps: ['jest-watch-master'],
+    content: {
+      watchPlugins: [
+        [
+          'master',
+          {
+            key: 'k',
+            prompt: 'show a custom prompt',
+          },
+        ],
+      ],
+    },
+  },
+  {
     name: 'recognize transform path with node_modules',
     deps: ['babel-jest'],
     content: {
@@ -40,6 +75,52 @@ const testCases = [
         '^.+\\.js?$': 'babel-jest',
         '^.+\\.jsx?$': 'babel-jest',
       },
+    },
+  },
+  {
+    name: 'recognize module when preset is referenced',
+    deps: ['foo-bar'],
+    content: {
+      preset: './node_modules/foo-bar/jest-preset.js',
+    },
+  },
+  {
+    name: 'recognize reporter when defined with options',
+    deps: ['jest-custom-reporter', 'jest-reporter'],
+    content: {
+      reporters: [
+        [
+          'jest-custom-reporter',
+          { foo: 'bar' },
+        ],
+        [
+          '<rootDir>/node_modules/jest-reporter',
+          { jest: 'reporter' },
+        ],
+      ],
+    },
+  },
+  {
+    name: 'recognize array of strings of modules',
+    deps: ['foo', 'bar', 'jest', 'babel-jest'],
+    content: {
+      setupFiles: [
+        '<rootDir>/node_modules/foo',
+        '../node_modules/bar',
+        'jest',
+        './node_modules/babel-jest/custom-setup.js',
+      ],
+    },
+  },
+  {
+    name: 'recognize multiple options',
+    deps: ['babel-jest', 'vue-jest', 'jest-serializer-vue'],
+    content: {
+      transform: {
+        '^.+\\.js$': '<rootDir>/node_modules/babel-jest',
+        '^.+\\.vue$': '<rootDir>/node_modules/vue-jest',
+      },
+      snapshotSerializers: ['jest-serializer-vue'],
     },
   },
 ];
