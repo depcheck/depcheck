@@ -1,16 +1,17 @@
 import path from 'path';
 import lodash from 'lodash';
+import requirePackageName from 'require-package-name'
 
 const webpackConfigRegex = /webpack(\..+)?\.config\.(babel\.)?js/;
 const loaderTemplates = ['*-webpack-loader', '*-web-loader', '*-loader', '*'];
 
 function extractLoaders(item) {
   if (typeof item === 'string') {
-    return item;
+    return requirePackageName(item) || item;
   }
 
   if (item.loader && typeof item.loader === 'string') {
-    return item.loader.split('!');
+    return item.loader.split('!').map(extractLoaders);
   }
 
   if (item.loaders) {
