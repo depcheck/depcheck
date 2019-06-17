@@ -40,9 +40,18 @@ function getBinaryFeatures(dep, [key, value]) {
   return features;
 }
 
-function isBinaryInUse(dep, scripts, dir) {
+function getBinaries(dep, dir) {
   const metadata = loadMetadata(dep, dir);
-  const binaries = lodash.toPairs(metadata.bin || {});
+
+  if (typeof metadata.bin === 'string') {
+    return [[dep, metadata.bin]];
+  }
+
+  return lodash.toPairs(metadata.bin || {});
+}
+
+function isBinaryInUse(dep, scripts, dir) {
+  const binaries = getBinaries(dep, dir);
   return binaries.some(bin =>
     getBinaryFeatures(dep, bin).some(feature =>
       scripts.some(script =>

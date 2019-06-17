@@ -82,6 +82,12 @@ const testCases = [
     dependencies: ['binary-package'],
     expected: ['binary-package'],
   },
+  {
+    name: 'detect packages with single binary',
+    script: 'single-binary-package --argument',
+    dependencies: ['single-binary-package'],
+    expected: ['single-binary-package'],
+  },
 ];
 
 function testParser(testCase, content, filename) {
