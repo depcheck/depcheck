@@ -59,6 +59,7 @@
     "please-upgrade-node": "^3.1.1",
     "require-package-name": "^2.0.1",
     "resolve": "^1.10.0",
+    "vue-template-compiler": "^2.6.10",
     "walkdir": "^0.3.2",
     "yargs": "^13.2.2"
   },
@@ -87,8 +88,7 @@
     "patch-version": "^0.1.1",
     "proxyquire": "^2.1.0",
     "should": "^13.2.3",
-    "typescript": "^3.0.1",
-    "vue-template-compiler": "^2.5.16"
+    "typescript": "^3.0.1"
   },
   "nyc": {
     "sourceMap": false,
