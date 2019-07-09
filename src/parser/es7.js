@@ -19,6 +19,8 @@ export default function parseES7(content) {
       'dynamicImport',
       'exportDefaultFrom',
       'exportNamespaceFrom',
+      'flow',
+      'flowComments',
       'functionBind',
       'functionSent',
       'importMeta',

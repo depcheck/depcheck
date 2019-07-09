@@ -20,6 +20,8 @@ export default function parseJSX(content) {
       'dynamicImport',
       'exportDefaultFrom',
       'exportNamespaceFrom',
+      'flow',
+      'flowComments',
       'functionBind',
       'functionSent',
       'importMeta',
