@@ -197,6 +197,21 @@ export default [
     },
   },
   {
+    name: 'support flow syntax in ES7 modules',
+    module: 'good_es7_flow',
+    options: {
+      withoutDev: true,
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        'ecmascript-rest-spread': ['index.js'],
+      },
+    },
+  },
+  {
     name: 'support Typescript syntax',
     module: 'typescript',
     options: {
@@ -597,6 +612,20 @@ export default [
   {
     name: 'support jsx syntax',
     module: 'jsx',
+    options: {
+    },
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        react: ['index.jsx'],
+      },
+    },
+  },
+  {
+    name: 'support flow syntax in jsx modules',
+    module: 'jsx_flow',
     options: {
     },
     expected: {
