@@ -1,13 +1,8 @@
 import { parse } from '@babel/parser';
-import { tryRequire } from '../utils';
-
-const compiler = tryRequire('vue-template-compiler');
+import { parseComponent } from 'vue-template-compiler';
 
 export default function parseVue(content) {
-  if (!compiler) {
-    return [];
-  }
-  const parsed = compiler.parseComponent(content);
+  const parsed = parseComponent(content);
   if (!parsed.script) {
     return [];
   }
