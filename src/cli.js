@@ -4,6 +4,7 @@ import yargs from 'yargs';
 import lodash from 'lodash';
 
 import depcheck from './index';
+import readLinesSeparatedFile from './utils/read-lines-separated-file';
 import { version } from '../package.json';
 
 function checkPathExist(dir, errorMessage) {
@@ -81,6 +82,30 @@ function print(result, log, json, rootDir) {
   return result;
 }
 
+function checkDeprecation(argv) {
+  if (argv.dev === false) {
+    deprecate(
+      'depcheck',
+      'The option `dev` is deprecated. It leads a wrong result for missing dependencies'
+      + ' when it is `false`. This option will be removed and enforced to `true` in next'
+      + ' major version.',
+    );
+  }
+}
+
+function getIgnores(ignoresString, ignoresFilePath) {
+  const ignoresFromPathPromise = ignoresFilePath
+    ? readLinesSeparatedFile(ignoresFilePath).catch(err =>
+      Promise.reject(new Error(`An issue has happened reading the ignores file: ${err.stack}`)))
+    : Promise.resolve([]);
+  const ignores = ignoresString.split(',');
+  return Promise.all([ignoresFromPathPromise, Promise.resolve(ignores)])
+    .then(([resolvedIgnoresFromPath, resolvedIgnores]) => {
+      const uniqueResolves = new Set(resolvedIgnores.concat(resolvedIgnoresFromPath));
+      return [...uniqueResolves];
+    });
+}
+
 export default function cli(args, log, error, exit) {
   const opt = yargs(args)
     .usage('Usage: $0 [DIRECTORY]')
@@ -93,6 +118,7 @@ export default function cli(args, log, error, exit) {
     .describe('skip-missing', 'Skip calculation of missing dependencies')
     .describe('json', 'Output results to JSON')
     .describe('ignores', 'Comma separated package list to ignore')
+    .describe('ignores-file', 'Path of a lines separated package list file to ignore')
     .describe('ignore-dirs', 'Comma separated folder names to ignore')
     .describe('parsers', 'Comma separated glob:parser pair list')
     .describe('detectors', 'Comma separated detector list')
@@ -104,24 +130,21 @@ export default function cli(args, log, error, exit) {
   const rootDir = path.resolve(dir);
 
   checkPathExist(rootDir, `Path ${dir} does not exist`)
-    .then(() =>
-      checkPathExist(
-        path.resolve(rootDir, 'package.json'),
-        `Path ${dir} does not contain a package.json file`,
-      ),
-    )
-    .then(() =>
-      depcheck(rootDir, {
-        ignoreBinPackage: opt.argv.ignoreBinPackage,
-        ignoreMatches: (opt.argv.ignores || '').split(','),
-        ignoreDirs: (opt.argv.ignoreDirs || '').split(','),
-        parsers: getParsers(opt.argv.parsers),
-        detectors: getDetectors(opt.argv.detectors),
-        specials: getSpecials(opt.argv.specials),
-        skipMissing: opt.argv.skipMissing,
-      }),
-    )
-    .then((result) => print(result, log, opt.argv.json, rootDir))
+    .then(() => checkPathExist(
+      path.resolve(rootDir, 'package.json'),
+      `Path ${dir} does not contain a package.json file`,
+    ))
+    .then(() => getIgnores((opt.argv.ignores || ''), opt.argv.ignoresFile))
+    .then(ignores => depcheck(rootDir, {
+      ignoreBinPackage: opt.argv.ignoreBinPackage,
+      ignoreMatches: ignores,
+      ignoreDirs: (opt.argv.ignoreDirs || '').split(','),
+      parsers: getParsers(opt.argv.parsers),
+      detectors: getDetectors(opt.argv.detectors),
+      specials: getSpecials(opt.argv.specials),
+      skipMissing: opt.argv.skipMissing,
+    }))
+    .then(result => print(result, log, opt.argv.json, rootDir))
     .then((result) => exit(noIssue(result) ? 0 : -1))
     .catch((errorMessage) => {
       error(errorMessage);
