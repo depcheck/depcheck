@@ -86,7 +86,7 @@ function checkConfig(config, rootDir) {
     .map(plugin => normalizePackageName(plugin, 'eslint-plugin'));
 
   const presets = wrapToArray(config.extends)
-    .filter(preset => preset !== 'eslint:recommended')
+    .filter(preset => !['eslint:recommended', 'eslint:all'].includes(preset))
     .map(preset => resolvePresetPackage(preset, rootDir));
 
   const presetPackages = presets

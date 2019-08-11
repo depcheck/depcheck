@@ -99,6 +99,13 @@ const testCases = [
     expected: [],
   },
   {
+    name: 'skip eslint all config',
+    content: {
+      extends: 'eslint:all',
+    },
+    expected: [],
+  },
+  {
     name: 'handle config of absolute local path',
     content: {
       extends: '/path/to/config',
