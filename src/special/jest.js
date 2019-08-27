@@ -3,7 +3,7 @@ import lodash from 'lodash';
 
 const _ = lodash;
 
-const jestConfigRegex = /^jest.([^\.]+\.)?conf(ig|).js(on|)$/;
+const jestConfigRegex = /^jest.([^.]+\.)?conf(ig|).js(on|)$/;
 const supportedProperties = [
   'dependencyExtractor',
   'preset',
