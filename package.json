@@ -56,9 +56,11 @@
     "lodash": "^4.17.11",
     "minimatch": "^3.0.2",
     "node-sass-tilde-importer": "^1.0.2",
+    "pkg-up": "^3.1.0",
     "please-upgrade-node": "^3.1.1",
     "require-package-name": "^2.0.1",
     "resolve": "^1.10.0",
+    "resolve-from": "^5.0.0",
     "vue-template-compiler": "^2.6.10",
     "walkdir": "^0.3.2",
     "yargs": "^13.2.2"

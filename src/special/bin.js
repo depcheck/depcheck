@@ -1,5 +1,7 @@
 import path from 'path';
 import lodash from 'lodash';
+import pkgUp from 'pkg-up';
+import resolveFrom from 'resolve-from';
 import { readJSON, getScripts } from '../utils';
 
 const metadataCache = {};
@@ -16,7 +18,7 @@ function getCacheOrRequire(packagePath) {
 
 function loadMetadata(dep, dir) {
   try {
-    const packagePath = path.resolve(dir, 'node_modules', dep, 'package.json');
+    const packagePath = pkgUp.sync({ cwd: resolveFrom(dir, dep) });
     return getCacheOrRequire(packagePath);
   } catch (error) {
     return {}; // ignore silently
