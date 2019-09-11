@@ -4,7 +4,12 @@ import 'should';
 import gatsbySpecialParser from '../../src/special/gatsby';
 
 const plugins = [
-  'gatsby-plugin-sass',
+  {
+    resolve: 'gatsby-plugin-sass',
+    options: {
+        includePaths: ['absolute/path/a', 'absolute/path/b']
+    }
+  },
   'gatsby-plugin-react-helmet',
 ];
 
