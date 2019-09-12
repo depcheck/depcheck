@@ -14,8 +14,30 @@ function parseConfigModuleExports(node) {
         if (prop.value.type === 'ArrayExpression' && prop.key.name === 'plugins') {
           const vals = [];
           prop.value.elements
-            .filter(e => e.type === 'StringLiteral')
-            .forEach(e => vals.push(e.value));
+            .forEach((e) => {
+              let val;
+              switch (e.type) {
+                case 'StringLiteral':
+                  val = e.value;
+                  break;
+                case 'ObjectExpression':
+                  val = e.properties.reduce((f, g) => {
+                    if (f) {
+                      return f;
+                    }
+                    if (g.type === 'ObjectProperty' && g.key.type === 'StringLiteral' && g.key.value === 'resolve' && g.value.type === 'StringLiteral') {
+                      return g.value.value;
+                    }
+                    return false;
+                  }, false);
+                  break;
+                default:
+                  val = false;
+              }
+              if (val) {
+                vals.push(val);
+              }
+            });
           config[prop.key.name] = vals;
         }
       });
