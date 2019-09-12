@@ -4,11 +4,19 @@ import 'should';
 import gatsbySpecialParser from '../../src/special/gatsby';
 
 const plugins = [
+  'gatsby-transformer-sharp',
+  {
+    resolve: 'gatsby-source-filesystem',
+    options: {
+      path: `${__dirname}/src/img`,
+      name: 'images',
+    },
+  },
   {
     resolve: 'gatsby-plugin-sass',
     options: {
-        includePaths: ['absolute/path/a', 'absolute/path/b']
-    }
+      includePaths: ['absolute/path/a', 'absolute/path/b'],
+    },
   },
   'gatsby-plugin-react-helmet',
 ];
@@ -23,6 +31,6 @@ describe('gatsby special parser', () => {
     const content = `module.exports = { plugins : ${JSON.stringify(plugins)} }`;
 
     const result = gatsbySpecialParser(content, '/a/gatsby-config.js');
-    result.should.deepEqual(['gatsby-plugin-sass', 'gatsby-plugin-react-helmet']);
+    result.should.deepEqual(['gatsby-transformer-sharp', 'gatsby-source-filesystem', 'gatsby-plugin-sass', 'gatsby-plugin-react-helmet']);
   });
 });
