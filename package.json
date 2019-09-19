@@ -87,8 +87,7 @@
     "nyc": "^14.1.0",
     "patch-version": "^0.1.1",
     "proxyquire": "^2.1.0",
-    "should": "^13.2.3",
-    "typescript": "^3.0.1"
+    "should": "^13.2.3"
   },
   "nyc": {
     "sourceMap": false,
