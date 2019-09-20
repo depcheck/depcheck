@@ -7,6 +7,8 @@ import builtInModules from 'builtin-modules';
 import requirePackageName from 'require-package-name';
 import { readJSON } from './utils';
 import getNodes from './utils/parser';
+import { getAtTypesName } from './utils/typescript';
+import { availableParsers } from './constants';
 
 function isModule(dir) {
   try {
@@ -71,6 +73,19 @@ function getDependencies(dir, filename, deps, parser, detectors) {
         .flatten()
         .uniq()
         .map(requirePackageName)
+        .thru(_dependencies => (
+          parser === availableParsers.typescript
+            // If this is a typescript file, importing foo would also use @types/foo, but
+            // only if @types/foo is already a specified dependency.
+            ? lodash(_dependencies)
+              .map((dependency) => {
+                const atTypesName = getAtTypesName(dependency);
+                return deps.includes(atTypesName) ? [dependency, atTypesName] : [dependency];
+              })
+              .flatten()
+              .value()
+            : _dependencies
+        ))
         .value();
 
     const discover = lodash.partial(discoverPropertyDep, dir, deps);
