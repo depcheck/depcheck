@@ -89,7 +89,7 @@ For example, the CLI arguments `--ignores="eslint,babel-*" --skip-missing=true` 
 
 ***.depcheckrc***
 ```
-ignores: eslint,babel-*
+ignores: ["eslint", "babel-*"]
 skip-missing: true
 ```
 

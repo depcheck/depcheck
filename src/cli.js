@@ -16,25 +16,24 @@ function getParsers(parsers) {
   return lodash.isUndefined(parsers)
     ? undefined
     : lodash(parsers)
-        .split(',')
-        .map((keyValuePair) => keyValuePair.split(':'))
-        .fromPairs()
-        .mapValues((value) =>
-          value.split('&').map((name) => depcheck.parser[name]),
-        )
-        .value();
+      .map((keyValuePair) => keyValuePair.split(':'))
+      .fromPairs()
+      .mapValues((value) =>
+        value.split('&').map(parserName => depcheck.parser[parserName]),
+      )
+      .value();
 }
 
 function getDetectors(detectors) {
   return lodash.isUndefined(detectors)
     ? undefined
-    : detectors.split(',').map((name) => depcheck.detector[name]);
+    : detectors.map((detectorName) => depcheck.detector[detectorName]);
 }
 
 function getSpecials(specials) {
   return lodash.isUndefined(specials)
     ? undefined
-    : specials.split(',').map((name) => depcheck.special[name]);
+    : specials.map((specialName) => depcheck.special[specialName]);
 }
 
 function noIssue(result) {
@@ -94,8 +93,8 @@ export default async function cli(args, log, error, exit) {
     const depcheckResult = await depcheck(rootDir, {
       withoutDev: !opt.dev,
       ignoreBinPackage: opt.ignoreBinPackage,
-      ignoreMatches: (opt.ignores || '').split(','),
-      ignoreDirs: (opt.ignoreDirs || '').split(','),
+      ignoreMatches: (opt.ignores || []),
+      ignoreDirs: (opt.ignoreDirs || []),
       parsers: getParsers(opt.parsers),
       detectors: getDetectors(opt.detectors),
       specials: getSpecials(opt.specials),
