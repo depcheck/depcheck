@@ -87,7 +87,7 @@ The following arguments are deprecated and will be removed in next major version
 
 ## API
 
-Similar options are provided to `depcheck` function for programming.
+Similar options are provided to `depcheck` function for programming:
 
 ```js
 import depcheck from 'depcheck';
@@ -130,7 +130,7 @@ depcheck('/path/to/your/project', options, (unused) => {
 
 ## Example
 
-The following example checks the dependencies under `/path/to/my/project` folder.
+The following example checks the dependencies under `/path/to/my/project` folder:
 
 ```sh
 $> depcheck /path/to/my/project
@@ -204,7 +204,7 @@ If you find that depcheck is reporting a false alert, please [open an issue](htt
 
 ## Changelog
 
-We use the [Github release page](https://github.com/depcheck/depcheck/releases) to manage changelog.
+We use the [GitHub release page](https://github.com/depcheck/depcheck/releases) to manage changelog.
 
 ## License
 
