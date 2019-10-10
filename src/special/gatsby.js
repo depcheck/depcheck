@@ -25,8 +25,13 @@ function parseConfigModuleExports(node) {
                     if (f) {
                       return f;
                     }
-                    if (g.type === 'ObjectProperty' && g.key.type === 'StringLiteral' && g.key.value === 'resolve' && g.value.type === 'StringLiteral') {
-                      return g.value.value;
+                    if (g.type === 'ObjectProperty' && g.value.type === 'StringLiteral') {
+                      if (
+                        (g.key.type === 'StringLiteral' && g.key.value === 'resolve')
+                        || (g.key.type === 'Identifier' && g.key.name === 'resolve')
+                      ) {
+                        return g.value.value;
+                      }
                     }
                     return false;
                   }, false);
