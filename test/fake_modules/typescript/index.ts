@@ -1,4 +1,4 @@
-import DepType = require('ts-dep-1');
+const DepType = require('ts-dep-1');
 import DepClass from 'ts-dep-2';
 
 export interface Interface {
