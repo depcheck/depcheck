@@ -222,9 +222,13 @@ export default [
       missing: {},
       using: {
         react: ['component.tsx'],
+        '@types/react': ['component.tsx'],
+        '@types/org__org-pkg': ['esnext.ts'],
+        '@org/org-pkg': ['esnext.ts'],
         'ts-dep-1': ['index.ts'],
         'ts-dep-2': ['index.ts'],
         'ts-dep-esnext': ['esnext.ts'],
+        'ts-dep-typedef': ['typedef.d.ts'],
       },
     },
   },

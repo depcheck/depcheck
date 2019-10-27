@@ -49,6 +49,7 @@ export const defaultOptions = {
     availableDetectors.exportDeclaration,
     availableDetectors.requireCallExpression,
     availableDetectors.requireResolveCallExpression,
+    availableDetectors.typescriptImportEqualsDeclaration,
     availableDetectors.importCallExpression,
     availableDetectors.gruntLoadTaskCallExpression,
   ],

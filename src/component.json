@@ -16,7 +16,8 @@
     "importCallExpression",
     "importDeclaration",
     "requireCallExpression",
-    "requireResolveCallExpression"
+    "requireResolveCallExpression",
+    "typescriptImportEqualsDeclaration"
   ],
   "special": [
     "eslint",
