@@ -1,9 +1,13 @@
 {
   "dependencies": {
+    "@org/org-pkg": "0.0.1",
+    "@types/org__org-pkg": "0.0.1",
+    "@types/react": "0.0.1",
     "react": "0.0.1",
     "ts-dep-1": "0.0.1",
     "ts-dep-2": "0.0.1",
     "ts-dep-esnext": "0.0.1",
+    "ts-dep-typedef": "0.0.1",
     "unused-dep": "0.0.1"
   }
 }
