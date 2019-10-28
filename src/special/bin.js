@@ -52,13 +52,13 @@ function getBinaries(dep, dir) {
 
 function isBinaryInUse(dep, scripts, dir) {
   const binaries = getBinaries(dep, dir);
-  return binaries.some(bin =>
-    getBinaryFeatures(dep, bin).some(feature =>
-      scripts.some(script =>
+  return binaries.some((bin) =>
+    getBinaryFeatures(dep, bin).some((feature) =>
+      scripts.some((script) =>
         lodash.includes(` ${script} `, ` ${feature} `))));
 }
 
 export default function parseBinary(content, filepath, deps, dir) {
   const scripts = getScripts(filepath, content);
-  return deps.filter(dep => isBinaryInUse(dep, scripts, dir));
+  return deps.filter((dep) => isBinaryInUse(dep, scripts, dir));
 }

@@ -9,7 +9,7 @@ import { version } from '../package.json';
 
 function checkPathExist(dir, errorMessage) {
   return new Promise((resolve, reject) =>
-    fs.exists(dir, result =>
+    fs.exists(dir, (result) =>
       (result ? resolve() : reject(errorMessage))));
 }
 
@@ -18,22 +18,22 @@ function getParsers(parsers) {
     ? undefined
     : lodash(parsers)
       .split(',')
-      .map(keyValuePair => keyValuePair.split(':'))
+      .map((keyValuePair) => keyValuePair.split(':'))
       .fromPairs()
-      .mapValues(value => value.split('&').map(name => depcheck.parser[name]))
+      .mapValues((value) => value.split('&').map((name) => depcheck.parser[name]))
       .value();
 }
 
 function getDetectors(detectors) {
   return lodash.isUndefined(detectors)
     ? undefined
-    : detectors.split(',').map(name => depcheck.detector[name]);
+    : detectors.split(',').map((name) => depcheck.detector[name]);
 }
 
 function getSpecials(specials) {
   return lodash.isUndefined(specials)
     ? undefined
-    : specials.split(',').map(name => depcheck.special[name]);
+    : specials.split(',').map((name) => depcheck.special[name]);
 }
 
 function noIssue(result) {
@@ -43,7 +43,7 @@ function noIssue(result) {
 }
 
 function prettify(caption, deps) {
-  const list = deps.map(dep => `* ${dep}`);
+  const list = deps.map((dep) => `* ${dep}`);
   return list.length ? [caption].concat(list) : [];
 }
 
@@ -119,8 +119,8 @@ export default function cli(args, log, error, exit) {
       specials: getSpecials(opt.argv.specials),
       skipMissing: opt.argv.skipMissing,
     }))
-    .then(result => print(result, log, opt.argv.json))
-    .then(result => exit((opt.argv.json || noIssue(result)) ? 0 : -1))
+    .then((result) => print(result, log, opt.argv.json))
+    .then((result) => exit((opt.argv.json || noIssue(result)) ? 0 : -1))
     .catch((errorMessage) => {
       error(errorMessage);
       exit(-1);

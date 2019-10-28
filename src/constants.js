@@ -4,7 +4,7 @@ import component from './component.json';
 
 function constructComponent(source, name) {
   return lodash(source[name])
-    .map(file => [
+    .map((file) => [
       file,
       require(path.resolve(__dirname, name, file)), // eslint-disable-line global-require
     ])

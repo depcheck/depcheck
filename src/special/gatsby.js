@@ -14,8 +14,8 @@ function parseConfigModuleExports(node) {
         if (prop.value.type === 'ArrayExpression' && prop.key.name === 'plugins') {
           const vals = [];
           prop.value.elements
-            .filter(e => e.type === 'StringLiteral')
-            .forEach(e => vals.push(e.value));
+            .filter((e) => e.type === 'StringLiteral')
+            .forEach((e) => vals.push(e.value));
           config[prop.key.name] = vals;
         }
       });
@@ -26,9 +26,9 @@ function parseConfigModuleExports(node) {
 function parseConfig(content) {
   const ast = parseES7(content);
   return lodash(getNodes(ast))
-    .map(node => parseConfigModuleExports(node))
+    .map((node) => parseConfigModuleExports(node))
     .flatten()
-    .filter(val => val != null)
+    .filter((val) => val != null)
     .uniq()
     .first();
 }

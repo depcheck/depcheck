@@ -19,7 +19,7 @@
     "depcheck": "node ./bin/depcheck.js --ignore-dirs=fake_modules",
     "depcheck-json": "node ./bin/depcheck.js --ignore-dirs=fake_modules --json | node -r @babel/register ./build/check-json",
     "prepublishOnly": "npm run compile && npm run component",
-    "lint": "eslint ./src ./test ./build",
+    "lint": "eslint ./src ./build",
     "test": "node -r @babel/register node_modules/mocha/bin/_mocha ./test ./test/special --timeout 10000",
     "test-dependent": "dependent-build",
     "test-coverage": "node -r @babel/register node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=test nyc mocha ./test ./test/special --timeout 20000 && nyc report --reporter=text-lcov > ./coverage/coverage.lcov"

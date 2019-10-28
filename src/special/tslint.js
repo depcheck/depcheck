@@ -12,9 +12,9 @@ function resolvePresetPackage(preset, rootDir) {
 
 function checkConfig(config, rootDir) {
   return wrapToArray(config.extends)
-    .filter(preset => !preset.startsWith('tslint:'))
-    .map(preset => resolvePresetPackage(preset, rootDir))
-    .filter(preset => !path.isAbsolute(preset))
+    .filter((preset) => !preset.startsWith('tslint:'))
+    .map((preset) => resolvePresetPackage(preset, rootDir))
+    .filter((preset) => !path.isAbsolute(preset))
     .map(requirePackageName);
 }
 

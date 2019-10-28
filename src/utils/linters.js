@@ -34,15 +34,15 @@ export function getCustomConfig(kind, filename, content, rootDir) {
     return null;
   }
 
-  const script = scripts.find(s => s.split(/\s+/).includes(kind));
+  const script = scripts.find((s) => s.split(/\s+/).includes(kind));
 
   if (script) {
     const commands = script.split('&&');
-    const command = commands.find(c => c.startsWith(kind));
+    const command = commands.find((c) => c.startsWith(kind));
 
     if (command) {
       const args = command.split(/\s+/);
-      const configIdx = args.findIndex(arg =>
+      const configIdx = args.findIndex((arg) =>
         ['--config', '-c'].includes(arg));
 
       if (configIdx !== -1 && args[configIdx + 1]) {

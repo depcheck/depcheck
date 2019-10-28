@@ -28,14 +28,14 @@ function hasBin(rootDir, dependency) {
 function filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies) {
   return lodash(dependencies)
     .keys()
-    .reject(dep =>
+    .reject((dep) =>
       (isIgnored(ignoreMatches, dep))
       || (ignoreBinPackage && hasBin(rootDir, dep)))
     .value();
 }
 
 export default function depcheck(rootDir, options, callback) {
-  const getOption = key =>
+  const getOption = (key) =>
     (lodash.isUndefined(options[key]) ? defaultOptions[key] : options[key]);
 
   const withoutDev = getOption('withoutDev');
@@ -46,7 +46,7 @@ export default function depcheck(rootDir, options, callback) {
 
   const detectors = getOption('detectors');
   const parsers = lodash(getOption('parsers'))
-    .mapValues(value => (lodash.isArray(value) ? value : [value]))
+    .mapValues((value) => (lodash.isArray(value) ? value : [value]))
     .merge({ '*': getOption('specials') })
     .value();
 
@@ -69,7 +69,7 @@ export default function depcheck(rootDir, options, callback) {
     parsers,
     detectors,
   })
-    .then(results => Object.assign(results, {
+    .then((results) => Object.assign(results, {
       missing: lodash.pick(
         results.missing,
         filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, results.missing),
