@@ -21,7 +21,7 @@ function parsePluginModuleExports(node) {
     && node.left.property && node.left.property.type === 'Identifier' && node.left.property.name === 'exports'
     && node.right.type === 'ObjectExpression') {
     // only need to return the object keys
-    return node.right.properties.map(p => p.key.value);
+    return node.right.properties.map((p) => p.key.value);
   }
   return [];
 }
@@ -59,18 +59,18 @@ function parseConfigModuleExports(node) {
           // - plugins {Object[]} - possible strings or inline plugin definitions
           const config = {};
           arg.properties
-            .filter(prop => supportedConfigProperties.includes(prop.key.name))
+            .filter((prop) => supportedConfigProperties.includes(prop.key.name))
             .forEach((prop) => {
               if (prop.value.type === 'ArrayExpression') {
                 const vals = [];
                 prop.value.elements
-                  .filter(e => e.type === 'StringLiteral')
-                  .forEach(e => vals.push(e.value));
+                  .filter((e) => e.type === 'StringLiteral')
+                  .forEach((e) => vals.push(e.value));
                 config[prop.key.name] = vals;
               } else if (prop.value.type === 'ObjectExpression') {
                 const map = {};
                 prop.value.properties
-                  .filter(p => p.value.type === 'StringLiteral')
+                  .filter((p) => p.value.type === 'StringLiteral')
                   .forEach((p) => {
                     map[p.key.name] = p.value.value;
                   });
@@ -90,9 +90,9 @@ function parseConfigModuleExports(node) {
 function parseConfig(content) {
   const ast = parseES7(content);
   return lodash(getNodes(ast))
-    .map(node => parseConfigModuleExports(node))
+    .map((node) => parseConfigModuleExports(node))
     .flatten()
-    .filter(val => val != null)
+    .filter((val) => val != null)
     .uniq()
     .first();
 }
@@ -105,7 +105,7 @@ function collectInstalledPluginInfo(karmaPluginsInstalled, rootDir) {
     // don't evaluate the contents, since it probably has module requirements we can't load
     const ast = parseES7(packageContents);
     const p = lodash(getNodes(ast))
-      .map(node => parsePluginModuleExports(node))
+      .map((node) => parsePluginModuleExports(node))
       .flatten()
       .uniq()
       .value();
@@ -119,7 +119,7 @@ function collectInstalledPluginInfo(karmaPluginsInstalled, rootDir) {
 function collectInstalledPluginOfType(type, pluginInfo) {
   const pluginMapping = {};
   const prefix = `${type}:`;
-  Object.keys(pluginInfo).filter(k => k.startsWith(prefix)).forEach((k) => {
+  Object.keys(pluginInfo).filter((k) => k.startsWith(prefix)).forEach((k) => {
     const pluginName = k.replace(prefix, '');
     pluginMapping[pluginName] = pluginInfo[k];
   });
@@ -133,8 +133,8 @@ function collectFrameworks(config, pluginInfo) {
   const installedFrameworks = Object.keys(frameworkMapping);
   // config defines a property frameworks: ['<name>',...]
   return wrapToArray(config.frameworks)
-    .filter(name => installedFrameworks.includes(name))
-    .map(name => frameworkMapping[name]);
+    .filter((name) => installedFrameworks.includes(name))
+    .map((name) => frameworkMapping[name]);
 }
 
 function collectBrowsers(config, pluginInfo) {
@@ -145,8 +145,8 @@ function collectBrowsers(config, pluginInfo) {
   const installedBrowsers = Object.keys(launcherMapping);
   // config defines a property browsers: ['<name>',...]
   return [...new Set(wrapToArray(config.browsers)
-    .filter(name => installedBrowsers.includes(name))
-    .map(name => launcherMapping[name]))];
+    .filter((name) => installedBrowsers.includes(name))
+    .map((name) => launcherMapping[name]))];
 }
 
 function collectReporters(config, pluginInfo) {
@@ -156,8 +156,8 @@ function collectReporters(config, pluginInfo) {
   const installedReporters = Object.keys(reporterMapping);
   // config defines a property reporters: ['<name>', ...]
   return wrapToArray(config.reporters)
-    .filter(name => installedReporters.includes(name))
-    .map(name => reporterMapping[name]);
+    .filter((name) => installedReporters.includes(name))
+    .map((name) => reporterMapping[name]);
 }
 
 function collectPreprocessors(config, pluginInfo) {
@@ -169,9 +169,9 @@ function collectPreprocessors(config, pluginInfo) {
   // config defines a property preprocessors: {'<file-glob>': '<name>'}, ... }
   const preprocessors = wrapToMap(config.preprocessors);
   return [...new Set(Object.keys(preprocessors)
-    .map(k => preprocessors[k])
-    .filter(name => installedPreprocessors.includes(name))
-    .map(name => preprocessorMapping[name]))];
+    .map((k) => preprocessors[k])
+    .filter((name) => installedPreprocessors.includes(name))
+    .map((name) => preprocessorMapping[name]))];
 }
 
 function collectExplicitPlugins(config) {
@@ -180,7 +180,7 @@ function collectExplicitPlugins(config) {
   // any inline plugin definitions don't matter here - their require/
   // import statements will be handled through other code
   return wrapToArray(config.plugins)
-    .filter(pluginDef => typeof pluginDef === 'string');
+    .filter((pluginDef) => typeof pluginDef === 'string');
 }
 
 function collectUsages(config, karmaPluginsInstalled, rootDir) {
@@ -194,12 +194,12 @@ function collectUsages(config, karmaPluginsInstalled, rootDir) {
 }
 
 export default function parseKarma(content, filePath, deps, rootDir) {
-  const resolvedConfigPaths = supportedConfNames.map(name => path.resolve(rootDir, name));
+  const resolvedConfigPaths = supportedConfNames.map((name) => path.resolve(rootDir, name));
   if (!resolvedConfigPaths.includes(filePath)) {
     return [];
   }
   const config = parseConfig(content);
   // possibly unused plugins
-  const karmaPluginsInstalled = deps.filter(dep => dep.startsWith('karma-')).concat(collectExplicitPlugins(config));
+  const karmaPluginsInstalled = deps.filter((dep) => dep.startsWith('karma-')).concat(collectExplicitPlugins(config));
   return collectUsages(config, karmaPluginsInstalled, rootDir);
 }

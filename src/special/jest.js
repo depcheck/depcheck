@@ -39,7 +39,7 @@ function contain(array, dep, prefix) {
   }
 
   // extract name if wrapping with options
-  const names = array.map(item => (lodash.isString(item) ? item : item[0]));
+  const names = array.map((item) => (lodash.isString(item) ? item : item[0]));
   if (names.indexOf(dep) !== -1) {
     return true;
   }
@@ -59,11 +59,11 @@ function removeNodeModuleRelativePaths(filepath) {
 }
 
 function filter(deps, options) {
-  const runner = deps.filter(dep => (
+  const runner = deps.filter((dep) => (
     contain(options.runner, dep, 'jest-runner-')
   ));
 
-  const watchPlugins = deps.filter(dep => (
+  const watchPlugins = deps.filter((dep) => (
     contain(options.watchPlugins, dep, 'jest-watch-')
   ));
 

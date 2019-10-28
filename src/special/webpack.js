@@ -27,7 +27,7 @@ function stripQueryParameter(loader) {
 
 function normalizeLoader(deps, loader) {
   const name = lodash(loaderTemplates)
-    .map(template => template.replace('*', loader))
+    .map((template) => template.replace('*', loader))
     .intersection(deps)
     .first();
   return name;
@@ -37,9 +37,9 @@ function getLoaders(deps, loaders) {
   return lodash(loaders || [])
     .map(extractLoaders)
     .flatten()
-    .map(loader => stripQueryParameter(loader))
-    .map(loader => normalizeLoader(deps, loader))
-    .filter(loader => loader)
+    .map((loader) => stripQueryParameter(loader))
+    .map((loader) => normalizeLoader(deps, loader))
+    .filter((loader) => loader)
     .uniq()
     .value();
 }
@@ -54,9 +54,9 @@ function parseWebpack1(module, deps) {
 function mapRuleUse(module) {
   return module.rules
     // filter use or loader because 'loader' is a shortcut to 'use'
-    .filter(rule => rule.use || rule.loader)
+    .filter((rule) => rule.use || rule.loader)
     // return coerced array, using the relevant key
-    .map(rule => [].concat(rule.use || rule.loader));
+    .map((rule) => [].concat(rule.use || rule.loader));
 }
 
 function parseWebpack2(module, deps) {
@@ -64,7 +64,7 @@ function parseWebpack2(module, deps) {
     return [];
   }
 
-  const mappedLoaders = module.rules.filter(rule => rule.loaders);
+  const mappedLoaders = module.rules.filter((rule) => rule.loaders);
   const mappedUses = mapRuleUse(module);
   const loaders = getLoaders(deps, lodash.flatten([...mappedLoaders, ...mappedUses]));
   return loaders;

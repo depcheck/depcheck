@@ -48,7 +48,7 @@ function getDependencies(content, deps) {
   return result
     .map(requirePackageName)
     .filter((v, k, arr) => arr.indexOf(v) === k)
-    .filter(name => deps.includes(name));
+    .filter((name) => deps.includes(name));
 }
 
 export default function parseMocha(content, filepath, deps, rootDir) {
@@ -59,7 +59,7 @@ export default function parseMocha(content, filepath, deps, rootDir) {
     config = content;
   } else {
     const scripts = getScripts(filepath, content);
-    const mochaScript = scripts.find(s => s.indexOf('mocha') !== -1);
+    const mochaScript = scripts.find((s) => s.indexOf('mocha') !== -1);
     if (mochaScript) {
       config = mochaScript.slice(mochaScript.indexOf('mocha'));
     }

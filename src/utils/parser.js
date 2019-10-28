@@ -15,7 +15,7 @@ function recursive(ast, visited) {
   }
   if (Array.isArray(ast)) {
     return lodash(ast)
-      .map(node => recursive(node, visited))
+      .map((node) => recursive(node, visited))
       .flatten()
       .value();
   }
@@ -23,8 +23,8 @@ function recursive(ast, visited) {
     visited.add(ast);
     return lodash(ast)
       .keys()
-      .filter(key => key !== 'tokens' && key !== 'comments')
-      .map(key => recursive(ast[key], visited))
+      .filter((key) => key !== 'tokens' && key !== 'comments')
+      .map((key) => recursive(ast[key], visited))
       .flatten()
       .concat(ast)
       .value();
