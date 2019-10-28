@@ -10,6 +10,7 @@ const configFileNames = [
   'jest.conf.js',
   'jest.config.json',
   'jest.conf.json',
+  'jest.it.config.js',
 ];
 
 const testCases = [
