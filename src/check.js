@@ -143,10 +143,10 @@ function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
     finder.on('file', (filename) =>
       promises.push(...checkFile(rootDir, filename, deps, parsers, detectors)));
 
-    finder.on('error', (dirPath, error) =>
+    finder.on('error', (_, error) =>
       promises.push(Promise.resolve({
         invalidDirs: {
-          [dirPath]: error,
+          [error.path]: error,
         },
       })));
 
