@@ -26,7 +26,7 @@ function requireConfig(preset, rootDir) {
  */
 function normalizePackageName(name, prefix) {
   let normalizedName = name;
-  const convertPathToPosix = p => path.normalize(p).replace(/\\/g, '/');
+  const convertPathToPosix = (p) => path.normalize(p).replace(/\\/g, '/');
 
   /**
    * On Windows, name can come in with Windows slashes instead of Unix slashes.
@@ -83,19 +83,19 @@ function resolvePresetPackage(preset, rootDir) {
 function checkConfig(config, rootDir) {
   const parser = wrapToArray(config.parser);
   const plugins = wrapToArray(config.plugins)
-    .map(plugin => normalizePackageName(plugin, 'eslint-plugin'));
+    .map((plugin) => normalizePackageName(plugin, 'eslint-plugin'));
 
   const presets = wrapToArray(config.extends)
-    .filter(preset => !['eslint:recommended', 'eslint:all'].includes(preset))
-    .map(preset => resolvePresetPackage(preset, rootDir));
+    .filter((preset) => !['eslint:recommended', 'eslint:all'].includes(preset))
+    .map((preset) => resolvePresetPackage(preset, rootDir));
 
   const presetPackages = presets
-    .filter(preset => !path.isAbsolute(preset))
+    .filter((preset) => !path.isAbsolute(preset))
     .map(requirePackageName);
 
   const presetDeps = lodash(presets)
-    .map(preset => requireConfig(preset, rootDir))
-    .map(presetConfig => checkConfig(presetConfig, rootDir))
+    .map((preset) => requireConfig(preset, rootDir))
+    .map((presetConfig) => checkConfig(presetConfig, rootDir))
     .flatten()
     .value();
 

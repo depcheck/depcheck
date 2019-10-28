@@ -10,8 +10,8 @@ import requireDetector from '../detector/requireCallExpression';
 function getPluginLookup(deps) {
   const patterns = ['gulp-*', 'gulp.*', '@*/gulp{-,.}*'];
   const lookup = lodash(deps)
-    .filter(dep =>
-      patterns.some(pattern => minimatch(dep, pattern)))
+    .filter((dep) =>
+      patterns.some((pattern) => minimatch(dep, pattern)))
     .map((dep) => {
       const isScoped = dep[0] === '@';
       const scopedParts = dep.substring(1).split('/');
@@ -64,7 +64,7 @@ function getIdentifierReferences(path, loadPluginsVariableName) {
   const identifierReferences = lodash(requireReferences)
     .map(getIdentifierVariableName)
     .filter()
-    .map(identifierVariableName => getReferences(path, identifierVariableName))
+    .map((identifierVariableName) => getReferences(path, identifierVariableName))
     .flatten()
     .value();
 
@@ -104,7 +104,7 @@ function check(content, deps, path) {
   ) {
     const importVariableName = path.get('specifiers')[0].get('local').node.name;
     const identifierReferences = getIdentifierReferences(path, importVariableName);
-    const packageNames = identifierReferences.map(r => getPackageName(content, deps, r));
+    const packageNames = identifierReferences.map((r) => getPackageName(content, deps, r));
     return packageNames;
   }
   if (
@@ -117,7 +117,7 @@ function check(content, deps, path) {
   ) {
     const requireVariableName = path.parentPath.get('id').node.name;
     const identifierReferences = getIdentifierReferences(path, requireVariableName);
-    const packageNames = identifierReferences.map(r => getPackageName(content, deps, r));
+    const packageNames = identifierReferences.map((r) => getPackageName(content, deps, r));
     return packageNames;
   }
   if (
@@ -131,7 +131,7 @@ function check(content, deps, path) {
   ) {
     const requireVariableName = path.parentPath.parentPath.get('id').node.name;
     const identifierReferences = getReferences(path, requireVariableName);
-    const packageNames = identifierReferences.map(r => getPackageName(content, deps, r));
+    const packageNames = identifierReferences.map((r) => getPackageName(content, deps, r));
     return packageNames;
   }
   if (

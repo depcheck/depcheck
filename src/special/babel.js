@@ -21,7 +21,7 @@ function contain(array, dep, prefix) {
   }
 
   // extract name if wrapping with options
-  const names = array.map(item => (lodash.isString(item) ? item : item[0]));
+  const names = array.map((item) => (lodash.isString(item) ? item : item[0]));
   if (names.indexOf(dep) !== -1) {
     return true;
   }
@@ -35,7 +35,7 @@ function contain(array, dep, prefix) {
 
 function getReactTransforms(deps, plugins) {
   const transforms = lodash(plugins || [])
-    .filter(plugin => isPlugin(plugin, 'react-transform'))
+    .filter((plugin) => isPlugin(plugin, 'react-transform'))
     .map(([, plugin]) => plugin.transforms.map(({ transform }) => transform))
     .first();
 
@@ -43,10 +43,10 @@ function getReactTransforms(deps, plugins) {
 }
 
 function filter(deps, options) {
-  const presets = deps.filter(dep =>
+  const presets = deps.filter((dep) =>
     contain(options.presets, dep, 'babel-preset-'));
 
-  const plugins = deps.filter(dep =>
+  const plugins = deps.filter((dep) =>
     contain(options.plugins, dep, 'babel-plugin-'));
 
   const reactTransforms = getReactTransforms(deps, options.plugins);
@@ -58,7 +58,7 @@ function checkOptions(deps, options = {}) {
   const optDeps = filter(deps, options);
   const envDeps = lodash(options.env)
     .values()
-    .map(env => filter(deps, env))
+    .map((env) => filter(deps, env))
     .flatten()
     .value();
 

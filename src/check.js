@@ -69,11 +69,11 @@ function getDependencies(dir, filename, deps, parser, detectors) {
     const dependencies = lodash.isArray(ast) && ast.every(lodash.isString)
       ? ast
       : lodash(getNodes(ast))
-        .map(node => detect(detectors, node))
+        .map((node) => detect(detectors, node))
         .flatten()
         .uniq()
         .map(requirePackageName)
-        .thru(_dependencies => (
+        .thru((_dependencies) => (
           parser === availableParsers.typescript
             // If this is a typescript file, importing foo would also use @types/foo, but
             // only if @types/foo is already a specified dependency.
@@ -108,22 +108,22 @@ function checkFile(dir, filename, deps, parsers, detectors) {
   const basename = path.basename(filename);
   const targets = lodash(parsers)
     .keys()
-    .filter(glob => minimatch(basename, glob, { dot: true }))
-    .map(key => parsers[key])
+    .filter((glob) => minimatch(basename, glob, { dot: true }))
+    .map((key) => parsers[key])
     .flatten()
     .value();
 
-  return targets.map(parser =>
+  return targets.map((parser) =>
     getDependencies(dir, filename, deps, parser, detectors)
-      .then(using => ({
+      .then((using) => ({
         using: {
           [filename]: lodash(using)
-            .filter(dep => dep && dep !== '.' && dep !== '..') // TODO why need check?
-            .filter(dep => !lodash.includes(builtInModules, dep))
+            .filter((dep) => dep && dep !== '.' && dep !== '..') // TODO why need check?
+            .filter((dep) => !lodash.includes(builtInModules, dep))
             .uniq()
             .value(),
         },
-      }), error => ({
+      }), (error) => ({
         invalidFiles: {
           [filename]: error,
         },
@@ -135,23 +135,23 @@ function checkDirectory(dir, rootDir, ignoreDirs, deps, parsers, detectors) {
     const promises = [];
     const finder = walkdir(dir, { no_recurse: true, follow_symlinks: true });
 
-    finder.on('directory', subdir =>
+    finder.on('directory', (subdir) =>
       (ignoreDirs.indexOf(path.basename(subdir)) === -1 && !isModule(subdir)
         ? promises.push(checkDirectory(subdir, rootDir, ignoreDirs, deps, parsers, detectors))
         : null));
 
-    finder.on('file', filename =>
+    finder.on('file', (filename) =>
       promises.push(...checkFile(rootDir, filename, deps, parsers, detectors)));
 
-    finder.on('error', (dirPath, error) =>
+    finder.on('error', (_, error) =>
       promises.push(Promise.resolve({
         invalidDirs: {
-          [dirPath]: error,
+          [error.path]: error,
         },
       })));
 
     finder.on('end', () =>
-      resolve(Promise.all(promises).then(results =>
+      resolve(Promise.all(promises).then((results) =>
         results.reduce((obj, current) => ({
           using: mergeBuckets(obj.using, current.using || {}),
           invalidFiles: Object.assign(obj.invalidFiles, current.invalidFiles),
@@ -171,13 +171,13 @@ function buildResult(result, deps, devDeps, peerDeps, optionalDeps, skipMissing)
     // [ [f1,[d1,d2,d3]], [f2,[d2,d3,d4]] ]
     .map(([file, dep]) => [dep, lodash.times(dep.length, () => file)])
     // [ [ [d1,d2,d3],[f1,f1,f1] ], [ [d2,d3,d4],[f2,f2,f2] ] ]
-    .map(pairs => lodash.zip(...pairs))
+    .map((pairs) => lodash.zip(...pairs))
     // [ [ [d1,f1],[d2,f1],[d3,f1] ], [ [d2,f2],[d3,f2],[d4,f2]] ]
     .flatten()
     // [ [d1,f1], [d2,f1], [d3,f1], [d2,f2], [d3,f2], [d4,f2] ]
     .groupBy(([dep]) => dep)
     // { d1:[ [d1,f1] ], d2:[ [d2,f1],[d2,f2] ], d3:[ [d3,f1],[d3,f2] ], d4:[ [d4,f2] ] }
-    .mapValues(pairs => pairs.map(lodash.last))
+    .mapValues((pairs) => pairs.map(lodash.last))
     // { d1:[ f1 ], d2:[ f1,f2 ], d3:[ f1,f2 ], d4:[ f2 ] }
     .value();
 
@@ -188,7 +188,7 @@ function buildResult(result, deps, devDeps, peerDeps, optionalDeps, skipMissing)
   const missingDepsLookup = skipMissing
     ? []
     : lodash(missingDeps)
-      .map(missingDep => [missingDep, usingDepsLookup[missingDep]])
+      .map((missingDep) => [missingDep, usingDepsLookup[missingDep]])
       .fromPairs()
       .value();
 
@@ -215,5 +215,5 @@ export default function check({
 }) {
   const allDeps = lodash.union(deps, devDeps);
   return checkDirectory(rootDir, rootDir, ignoreDirs, allDeps, parsers, detectors)
-    .then(result => buildResult(result, deps, devDeps, peerDeps, optionalDeps, skipMissing));
+    .then((result) => buildResult(result, deps, devDeps, peerDeps, optionalDeps, skipMissing));
 }
