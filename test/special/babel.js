@@ -38,6 +38,34 @@ const testCases = [
     },
   },
   {
+    name: 'recognize the scoped short-name plugin',
+    deps: ['@babel/plugin-syntax-jsx'],
+    options: {
+      plugins: ['@babel/syntax-jsx'],
+    },
+  },
+  {
+    name: 'recognize the scoped long-name plugin',
+    deps: ['@babel/plugin-syntax-jsx'],
+    options: {
+      plugins: ['@babel/plugin-syntax-jsx'],
+    },
+  },
+  {
+    name: 'recognize the scoped short-name preset',
+    deps: ['@babel/preset-es2015'],
+    options: {
+      presets: ['@babel/es2015'],
+    },
+  },
+  {
+    name: 'recognize the scoped long-name preset',
+    deps: ['@babel/preset-es2015'],
+    options: {
+      presets: ['@babel/preset-es2015'],
+    },
+  },
+  {
     name: 'recognize plugin specified with options',
     deps: ['babel-plugin-transform-async-to-module-method'],
     options: {
@@ -98,11 +126,11 @@ describe('babel special parser', () => {
     result.should.deepEqual(['babel-preset-es2015']);
   });
 
-  testCases.forEach(testCase =>
+  testCases.forEach((testCase) =>
     it(`should ${testCase.name} in .babelrc file`, () =>
       testBabel('.babelrc', testCase.deps, testCase.options)));
 
-  testCases.forEach(testCase =>
+  testCases.forEach((testCase) =>
     it(`should ${testCase.name} inside .babelrc file env section`, () =>
       testBabel('.babelrc', testCase.deps, {
         env: {
@@ -110,7 +138,7 @@ describe('babel special parser', () => {
         },
       })));
 
-  testCases.forEach(testCase =>
+  testCases.forEach((testCase) =>
     it(`should ${testCase.name} in package.json file`, () =>
       testBabel('package.json', testCase.deps, {
         name: 'my-package',
@@ -118,7 +146,7 @@ describe('babel special parser', () => {
         babel: testCase.options,
       })));
 
-  testCases.forEach(testCase =>
+  testCases.forEach((testCase) =>
     it(`should ${testCase.name} inside package.json file env section`, () =>
       testBabel('package.json', testCase.deps, {
         name: 'my-package',

@@ -60,7 +60,7 @@ function filter(deps, options) {
 
   const reactTransforms = getReactTransforms(deps, options.plugins);
 
-  return presets.concat(presets7, plugins, plugins7, reactTransforms);
+  return lodash.uniq(presets.concat(presets7, plugins, plugins7, reactTransforms));
 }
 
 function checkOptions(deps, options = {}) {
