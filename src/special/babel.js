@@ -15,7 +15,7 @@ function isPlugin(target, plugin) {
     : target[0] === plugin || target[0] === `babel-plugin-${plugin}`;
 }
 
-function contain(array, dep, prefix) {
+function contain(array, dep, prefix, scope) {
   if (!array) {
     return false;
   }
@@ -26,8 +26,11 @@ function contain(array, dep, prefix) {
     return true;
   }
 
-  if (prefix && dep.indexOf(prefix) === 0) {
-    return contain(array, dep.substring(prefix.length), false);
+  const fullPrefix = scope ? `${scope}/${prefix}` : prefix;
+
+  if (prefix && dep.indexOf(fullPrefix) === 0) {
+    const identifier = dep.substring(fullPrefix.length);
+    return contain(array, scope ? `${scope}/${identifier}` : identifier, false);
   }
 
   return false;
@@ -46,12 +49,18 @@ function filter(deps, options) {
   const presets = deps.filter((dep) =>
     contain(options.presets, dep, 'babel-preset-'));
 
+  const presets7 = deps.filter((dep) =>
+    contain(options.presets, dep, 'preset-', '@babel'));
+
   const plugins = deps.filter((dep) =>
     contain(options.plugins, dep, 'babel-plugin-'));
 
+  const plugins7 = deps.filter((dep) =>
+    contain(options.plugins, dep, 'plugin-', '@babel'));
+
   const reactTransforms = getReactTransforms(deps, options.plugins);
 
-  return presets.concat(plugins, reactTransforms);
+  return presets.concat(presets7, plugins, plugins7, reactTransforms);
 }
 
 function checkOptions(deps, options = {}) {
