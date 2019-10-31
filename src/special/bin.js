@@ -19,7 +19,9 @@ function loadMetadata(dep, dir) {
     const packagePath = path.resolve(dir, 'node_modules', dep, 'package.json');
     return getCacheOrRequire(packagePath);
   } catch (error) {
-    return {}; // ignore silently
+    return dir === path.parse(dir).root
+      ? {} // ignore silently
+      : loadMetadata(dep, path.dirname(dir));
   }
 }
 

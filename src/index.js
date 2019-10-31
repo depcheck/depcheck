@@ -21,7 +21,9 @@ function hasBin(rootDir, dependency) {
     const metadata = readJSON(path.join(rootDir, 'node_modules', dependency, 'package.json'));
     return {}.hasOwnProperty.call(metadata, 'bin');
   } catch (error) {
-    return false;
+    return rootDir === path.parse(rootDir).root
+      ? false
+      : hasBin(path.dirname(rootDir), dependency);
   }
 }
 
