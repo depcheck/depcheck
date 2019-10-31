@@ -500,19 +500,6 @@ export default [
     },
   },
   {
-    name: 'not ignore bin dependencies when ignoreBinPackage is false',
-    module: 'bin_js',
-    options: {
-      ignoreBinPackage: false,
-    },
-    expected: {
-      dependencies: ['anybin'],
-      devDependencies: [],
-      missing: {},
-      using: {},
-    },
-  },
-  {
     name: 'output empty missing dependencies when skipMissing is true',
     module: 'missing',
     options: {
