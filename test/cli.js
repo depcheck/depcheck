@@ -131,7 +131,7 @@ describe('depcheck command line', () => {
         exitCode.should.equal(0);
       }));
 
-  it('should output unused dependencies when happen', () =>
+  it('should output unused dependencies', () =>
     testCli(makeArgv('bad', {}))
       .then(({ logs, error, exitCode }) => {
         logs.should.have.length(2);
@@ -142,12 +142,23 @@ describe('depcheck command line', () => {
         exitCode.should.equal(-1);
       }));
 
-  it('should output unused devDependencies when happen', () =>
+  it('should output unused devDependencies', () =>
     testCli(makeArgv('dev', {}))
       .then(({ logs, error, exitCode }) => {
         logs.should.have.length(2);
         logs[0].should.equal('Unused devDependencies');
         logs[1].should.containEql('unused-dev-dep');
+
+        error.should.be.empty();
+        exitCode.should.equal(-1);
+      }));
+
+  it('should output missing dependencies', () =>
+    testCli(makeArgv('missing', {}))
+      .then(({ logs, error, exitCode }) => {
+        logs.should.have.length(2);
+        logs[0].should.equal('Missing dependencies');
+        logs[1].should.containEql('missing-dep');
 
         error.should.be.empty();
         exitCode.should.equal(-1);
