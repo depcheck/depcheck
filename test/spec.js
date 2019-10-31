@@ -477,7 +477,7 @@ export default [
       ignoreBinPackage: false,
     },
     expected: {
-      dependencies: ['anybin'],
+      dependencies: ['anybin', 'upperbin'],
       devDependencies: [],
       missing: {},
       using: {},
