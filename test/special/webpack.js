@@ -13,6 +13,8 @@ const configFileNames = [
   'webpack.prod.config.babel.js',
   'webpack.prod.conf.js',
   'webpack.base.conf.babel.js',
+  'webpack.config.ts',
+  'webpack.base.conf.babel.ts',
 ];
 
 const testCases = [
@@ -183,6 +185,49 @@ const testCases = [
     },
   },
   {
+    name: 'recognize dependency in simple entry',
+    deps: ['polyfill'],
+    entry: 'polyfill',
+  },
+  {
+    name: 'recognize dependency in array-type entry',
+    deps: ['polyfill', 'font'],
+    entry: ['polyfill', 'font', './src/app'],
+  },
+  {
+    name: 'recognize dependency in object-type simple entry',
+    deps: ['polyfill'],
+    entry: {
+      polyfill: 'polyfill',
+      app: './src/app'
+    },
+  },
+  {
+    name: 'recognize dependency in object-type array entry',
+    deps: ['polyfill', 'font'],
+    entry: {
+      polyfill: ['polyfill', 'font'],
+      app: './src/app'
+    },
+  },
+  {
+    name: 'recognize dependency in babel loader presets',
+    deps: ['babel-loader', '@babel/preset1', '@babel/preset2'],
+    module: {
+      rules: [
+        {
+          test: /\.js$/, use: {
+            loader: 'babel-loader',
+            options: { presets: [
+              ['@babel/preset1', { option: 'option' }],
+              '@babel/preset2'
+            ]},
+          }
+        },
+      ],
+    },
+  },
+  {
     name: 'handle invalid webpack config',
     deps: [],
     nomodule: true,
@@ -236,7 +281,7 @@ describe('webpack special parser', () => {
   configFileNames.forEach(fileName =>
     testCases.forEach(testCase =>
       it(`should ${testCase.name} in configuration file ${fileName}`, () => {
-        const config = JSON.stringify({ module: testCase.module });
+        const config = JSON.stringify({ entry: testCase.entry, module: testCase.module });
         const content = `module.exports = ${config}`;
         return testWebpack(fileName, content, testCase.deps, testCase.deps);
       })));

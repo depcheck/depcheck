@@ -47,7 +47,12 @@ function prettify(caption, deps) {
   return list.length ? [caption].concat(list) : [];
 }
 
-function print(result, log, json) {
+function mapMissing(missing, rootDir) {
+  return lodash.map(missing, (foundInFiles, key) =>
+    `${key}: ${lodash.replace(lodash.first(foundInFiles), rootDir, '.')}`);
+}
+
+function print(result, log, json, rootDir) {
   if (json) {
     log(JSON.stringify(result, (key, value) => (lodash.isError(value) ? value.stack : value)));
   } else if (noIssue(result)) {
@@ -55,7 +60,7 @@ function print(result, log, json) {
   } else {
     const deps = prettify('Unused dependencies', result.dependencies);
     const devDeps = prettify('Unused devDependencies', result.devDependencies);
-    const missing = prettify('Missing dependencies', Object.keys(result.missing));
+    const missing = prettify('Missing dependencies', mapMissing(result.missing, rootDir));
     const content = deps.concat(devDeps, missing).join('\n');
     log(content);
   }
@@ -119,7 +124,7 @@ export default function cli(args, log, error, exit) {
       specials: getSpecials(opt.argv.specials),
       skipMissing: opt.argv.skipMissing,
     }))
-    .then((result) => print(result, log, opt.argv.json))
+    .then((result) => print(result, log, opt.argv.json, rootDir))
     .then((result) => exit((opt.argv.json || noIssue(result)) ? 0 : -1))
     .catch((errorMessage) => {
       error(errorMessage);
