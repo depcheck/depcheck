@@ -14,10 +14,6 @@ function makeArgv(module, options) {
     argv.push('--json');
   }
 
-  if (options.withoutDev) {
-    argv.push('--dev=false');
-  }
-
   if (typeof options.ignoreBinPackage !== 'undefined') {
     argv.push(`--ignore-bin-package=${options.ignoreBinPackage}`);
   }

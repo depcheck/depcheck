@@ -50,7 +50,6 @@
     "@babel/parser": "^7.6.4",
     "@babel/traverse": "^7.6.3",
     "builtin-modules": "^3.0.0",
-    "deprecate": "^1.1.1",
     "deps-regex": "^0.1.4",
     "js-yaml": "^3.4.2",
     "lodash": "^4.17.15",

@@ -79,12 +79,6 @@ All of the arguments are optional:
 
 `--parsers`, `--detectors` and `--specials`: These arguments are for advanced usage. They provide an easy way to customize the file parser and dependency detection. Check [the pluggable design document](https://github.com/depcheck/depcheck/blob/master/doc/pluggable-design.md) for more information.
 
-### Deprecated arguments
-
-The following arguments are deprecated and will be removed in next major version:
-
-`--dev=[true|false]`: *[DEPRECATED]* It leads a wrong result for missing dependencies when it is `false`. This option will be enforced to `true` in next major version. The corresponding API option `withoutDev` is deprecated too.
-
 ## API
 
 Similar options are provided to `depcheck` function for programming:
@@ -93,7 +87,6 @@ Similar options are provided to `depcheck` function for programming:
 import depcheck from 'depcheck';
 
 const options = {
-  withoutDev: false, // [DEPRECATED] check against devDependencies
   ignoreBinPackage: false, // ignore the packages with bin entry
   skipMissing: false, // skip calculation of missing dependencies
   ignoreDirs: [ // folder with these names will be ignored

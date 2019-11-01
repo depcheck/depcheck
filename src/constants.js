@@ -19,7 +19,6 @@ export const availableDetectors = constructComponent(component, 'detector');
 export const availableSpecials = constructComponent(component, 'special');
 
 export const defaultOptions = {
-  withoutDev: false,
   ignoreBinPackage: false,
   ignoreMatches: [
   ],
