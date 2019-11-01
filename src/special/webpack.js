@@ -1,5 +1,6 @@
 import path from 'path';
 import lodash from 'lodash';
+import { tryRequire } from '../utils';
 
 const webpackConfigRegex = /webpack(\..+)?\.conf(?:ig|)\.(babel\.)?[jt]s/;
 const loaderTemplates = ['*-webpack-loader', '*-web-loader', '*-loader', '*'];
@@ -115,14 +116,16 @@ function parseEntries(entries, deps) {
 export default function parseWebpack(content, filepath, deps) {
   const filename = path.basename(filepath);
   if (webpackConfigRegex.test(filename)) {
-    const wpConfig = require(filepath); // eslint-disable-line global-require
-    const module = wpConfig.module || {};
-    const entry = wpConfig.entry || [];
+    const wpConfig = tryRequire(filepath);
+    if (wpConfig) {
+      const module = wpConfig.module || {};
+      const entry = wpConfig.entry || [];
 
-    const webpack1Loaders = parseWebpack1(module, deps);
-    const webpack2Loaders = parseWebpack2(module, deps);
-    const webpackEntries = parseEntries(entry, deps);
-    return [...webpack1Loaders, ...webpack2Loaders, ...webpackEntries];
+      const webpack1Loaders = parseWebpack1(module, deps);
+      const webpack2Loaders = parseWebpack2(module, deps);
+      const webpackEntries = parseEntries(entry, deps);
+      return [...webpack1Loaders, ...webpack2Loaders, ...webpackEntries];
+    }
   }
 
   return [];
