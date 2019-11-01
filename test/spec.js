@@ -223,6 +223,7 @@ export default [
       using: {
         react: ['component.tsx'],
         '@types/react': ['component.tsx'],
+        '@types/node': ['esnext.ts'],
         '@types/org__org-pkg': ['esnext.ts'],
         '@org/org-pkg': ['esnext.ts'],
         'ts-dep-1': ['index.ts'],
