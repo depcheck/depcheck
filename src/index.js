@@ -40,7 +40,6 @@ export default function depcheck(rootDir, options, callback) {
   const getOption = (key) =>
     (lodash.isUndefined(options[key]) ? defaultOptions[key] : options[key]);
 
-  const withoutDev = getOption('withoutDev');
   const ignoreBinPackage = getOption('ignoreBinPackage');
   const ignoreMatches = getOption('ignoreMatches');
   const ignoreDirs = lodash.union(defaultOptions.ignoreDirs, options.ignoreDirs);
@@ -54,7 +53,7 @@ export default function depcheck(rootDir, options, callback) {
 
   const metadata = options.package || readJSON(path.join(rootDir, 'package.json'));
   const dependencies = metadata.dependencies || {};
-  const devDependencies = !withoutDev && metadata.devDependencies ? metadata.devDependencies : {};
+  const devDependencies = metadata.devDependencies ? metadata.devDependencies : {};
   const peerDeps = Object.keys(metadata.peerDependencies || {});
   const optionalDeps = Object.keys(metadata.optionalDependencies || {});
   const deps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies);

@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import yargs from 'yargs';
 import lodash from 'lodash';
-import deprecate from 'deprecate';
 
 import depcheck from './index';
 import { version } from '../package.json';
@@ -68,17 +67,6 @@ function print(result, log, json, rootDir) {
   return result;
 }
 
-function checkDeprecation(argv) {
-  if (argv.dev === false) {
-    deprecate(
-      'depcheck',
-      'The option `dev` is deprecated. It leads a wrong result for missing dependencies'
-      + ' when it is `false`. This option will be removed and enforced to `true` in next'
-      + ' major version.',
-    );
-  }
-}
-
 export default function cli(args, log, error, exit) {
   const opt = yargs(args)
     .usage('Usage: $0 [DIRECTORY]')
@@ -92,7 +80,6 @@ export default function cli(args, log, error, exit) {
       'ignore-bin-package': false,
       'skip-missing': false,
     })
-    .describe('dev', '[DEPRECATED] Check on devDependecies')
     .describe('ignore-bin-package', 'Ignore package with bin entry')
     .describe('skip-missing', 'Skip calculation of missing dependencies')
     .describe('json', 'Output results to JSON')
@@ -104,8 +91,6 @@ export default function cli(args, log, error, exit) {
     .version('version', 'Show version number', version)
     .help('help', 'Show this help message');
 
-  checkDeprecation(opt.argv);
-
   const dir = opt.argv._[0] || '.';
   const rootDir = path.resolve(dir);
 
@@ -115,7 +100,6 @@ export default function cli(args, log, error, exit) {
       `Path ${dir} does not contain a package.json file`,
     ))
     .then(() => depcheck(rootDir, {
-      withoutDev: !opt.argv.dev,
       ignoreBinPackage: opt.argv.ignoreBinPackage,
       ignoreMatches: (opt.argv.ignores || '').split(','),
       ignoreDirs: (opt.argv.ignoreDirs || '').split(','),

@@ -6,7 +6,6 @@ export default [
     name: 'detect missing module for dynamic import() when missing in package.json',
     module: 'import_function_missing',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: [],
@@ -23,7 +22,6 @@ export default [
     name: 'find module for dynamic import() when present',
     module: 'import_function',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: [],
@@ -38,7 +36,6 @@ export default [
     name: 'find module for dynamic import() with magic Webpack comment',
     module: 'import_function_webpack',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: [],
@@ -53,7 +50,6 @@ export default [
     name: 'missing module for require.resolve when missing in package.json',
     module: 'require_resolve_missing',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: [],
@@ -70,7 +66,6 @@ export default [
     name: 'find module for require.resolve when present',
     module: 'require_resolve',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: [],
@@ -85,7 +80,6 @@ export default [
     name: 'find unused dependencies',
     module: 'bad',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: ['optimist'],
@@ -125,7 +119,6 @@ export default [
     name: 'find all dependencies',
     module: 'good',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: [],
@@ -143,7 +136,6 @@ export default [
     name: 'find all dependencies in ES6 files',
     module: 'good_es6',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: ['unsupported-syntax'],
@@ -171,7 +163,6 @@ export default [
     name: 'find all dependencies gatsby',
     module: 'gatsby',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: ['gatsby-plugin-react-helmet', 'gatsby-plugin-sass'],
@@ -185,7 +176,6 @@ export default [
     name: 'recognize experimental ES7 syntax enabled in Babel by default',
     module: 'good_es7',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: [],
@@ -200,7 +190,6 @@ export default [
     name: 'support flow syntax in ES7 modules',
     module: 'good_es7_flow',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: [],
@@ -319,7 +308,6 @@ export default [
     name: 'find grunt dependencies',
     module: 'grunt',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: [],
@@ -334,7 +322,6 @@ export default [
     name: 'find grunt task dependencies',
     module: 'grunt-tasks',
     options: {
-      withoutDev: true,
     },
     expected: {
       dependencies: [],
@@ -349,7 +336,6 @@ export default [
     name: 'find unused package in devDependencies',
     module: 'dev',
     options: {
-      withoutDev: false,
     },
     expected: {
       dependencies: [],
