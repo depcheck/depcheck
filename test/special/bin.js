@@ -5,10 +5,22 @@ import parse from '../../src/special/bin';
 
 const testCases = [
   {
-    name: 'detect packages used in scripts',
+    name: 'detect packages used in scripts in local directory',
     script: 'binary-entry --argument',
     dependencies: ['binary-package'],
     expected: ['binary-package'],
+  },
+  {
+    name: 'detect packages used in scripts in parent directory',
+    script: 'binupper --upperarg',
+    dependencies: ['upperbin'],
+    expected: ['upperbin'],
+  },
+  {
+    name: 'detect packages used in scripts (anywhere)',
+    script: 'binary-entry --argument || binupper --upperarg',
+    dependencies: ['binary-package', 'upperbin'],
+    expected: ['binary-package', 'upperbin'],
   },
   {
     name: 'detect packages used as `.bin` path',
@@ -49,13 +61,13 @@ const testCases = [
   {
     name: 'not report it when it is not used',
     script: 'other-binary-entry',
-    dependencies: ['binary-package'],
+    dependencies: ['binary-package', 'upperbin'],
     expected: [],
   },
   {
     name: 'ignore detection when no scripts section',
     script: false,
-    dependencies: ['binary-package'],
+    dependencies: ['binary-package', 'upperbin'],
     expected: [],
   },
   {

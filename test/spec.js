@@ -463,7 +463,7 @@ export default [
       ignoreBinPackage: false,
     },
     expected: {
-      dependencies: ['anybin'],
+      dependencies: ['anybin', 'upperbin'],
       devDependencies: [],
       missing: {},
       using: {},
@@ -483,19 +483,6 @@ export default [
         optimist: ['index.js'],
         foo: ['index.js'],
       },
-    },
-  },
-  {
-    name: 'not ignore bin dependencies when ignoreBinPackage is false',
-    module: 'bin_js',
-    options: {
-      ignoreBinPackage: false,
-    },
-    expected: {
-      dependencies: ['anybin'],
-      devDependencies: [],
-      missing: {},
-      using: {},
     },
   },
   {
