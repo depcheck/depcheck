@@ -70,14 +70,39 @@ function parseWebpack2(module, deps) {
   return loaders;
 }
 
+function extractEntries(entries) {
+  if (typeof entries === 'string') {
+    return [entries];
+  }
+
+  if (Array.isArray(entries)) {
+    return entries.filter((entry) => typeof entry === 'string');
+  }
+
+  return Object.values(entries)
+    .filter((entry) => entry)
+    .map(extractEntries);
+}
+
+function parseEntries(entries, deps) {
+  return lodash(extractEntries(entries))
+    .flatten()
+    .intersection(deps)
+    .uniq()
+    .value();
+}
+
 export default function parseWebpack(content, filepath, deps) {
   const filename = path.basename(filepath);
   if (webpackConfigRegex.test(filename)) {
-    const module = require(filepath).module || {}; // eslint-disable-line global-require
+    const wpConfig = require(filepath); // eslint-disable-line global-require
+    const module = wpConfig.module || {};
+    const entry = wpConfig.entry || [];
 
     const webpack1Loaders = parseWebpack1(module, deps);
     const webpack2Loaders = parseWebpack2(module, deps);
-    return [...webpack1Loaders, ...webpack2Loaders];
+    const webpackEntries = parseEntries(entry, deps);
+    return [...webpack1Loaders, ...webpack2Loaders, ...webpackEntries];
   }
 
   return [];
