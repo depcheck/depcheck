@@ -211,6 +211,23 @@ const testCases = [
     },
   },
   {
+    name: 'recognize dependency in babel loader presets',
+    deps: ['babel-loader', '@babel/preset1', '@babel/preset2'],
+    module: {
+      rules: [
+        {
+          test: /\.js$/, use: {
+            loader: 'babel-loader',
+            options: { presets: [
+              ['@babel/preset1', { option: 'option' }],
+              '@babel/preset2'
+            ]},
+          }
+        },
+      ],
+    },
+  },
+  {
     name: 'handle invalid webpack config',
     deps: [],
     nomodule: true,

@@ -44,6 +44,24 @@ function getLoaders(deps, loaders) {
     .value();
 }
 
+function getBabelPresets(deps, loaders) {
+  return lodash(loaders || [])
+    .filter((item) =>
+      typeof item !== 'string'
+      && item.loader
+      && item.loader === 'babel-loader'
+      && item.options
+      && item.options.presets
+      && Array.isArray(item.options.presets))
+    .map((item) => item.options.presets)
+    .flatten()
+    .map((preset) => (Array.isArray(preset) && preset.length > 0 ? preset[0] : preset))
+    .filter((preset) => typeof preset === 'string')
+    .intersection(deps)
+    .uniq()
+    .value();
+}
+
 function parseWebpack1(module, deps) {
   const loaders = getLoaders(deps, module.loaders);
   const preLoaders = getLoaders(deps, module.preLoaders);
@@ -66,8 +84,10 @@ function parseWebpack2(module, deps) {
 
   const mappedLoaders = module.rules.filter((rule) => rule.loaders);
   const mappedUses = mapRuleUse(module);
-  const loaders = getLoaders(deps, lodash.flatten([...mappedLoaders, ...mappedUses]));
-  return loaders;
+  const mapped = lodash.flatten([...mappedLoaders, ...mappedUses]);
+  const loaders = getLoaders(deps, mapped);
+  const presets = getBabelPresets(deps, mapped);
+  return [...loaders, ...presets];
 }
 
 function extractEntries(entries) {
