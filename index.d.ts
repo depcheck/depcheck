@@ -16,7 +16,6 @@ declare namespace depcheck {
   type Detector = (node: Node) => ReadonlyArray<string> | string;
 
   interface Options {
-    withoutDev?: boolean;
     ignoreBinPackage?: boolean;
     skipMissing?: boolean;
     ignoreDirs?: ReadonlyArray<string>;
@@ -64,6 +63,7 @@ declare namespace depcheck {
     requireCallExpression: Detector;
     requireResolveCallExpression: Detector;
     typescriptImportEqualsDeclaration: Detector;
+    detectTypescriptImportType: Detector;
   };
 
   const special: {
