@@ -53,6 +53,7 @@ The *special* component is used to recognize the dependencies that are not gener
 - `gulp-load-plugins` - [Gulp-load-plugins](https://www.npmjs.com/package/gulp-load-plugins) lazy loaded plugins
 - `gatsby` - [Gatsby](https://www.npmjs.com/package/gatsby) configuration parser
 - `husky` - [Husky](https://www.npmjs.com/package/husky) configuration parser
+- `lint-staged` - [Lint-staged](https://www.npmjs.com/package/lint-staged) configuration parser
 
 The logic of a special is not perfect. There might be [false alerts](#false-alert). If this happens, please open an issue for us.
 
