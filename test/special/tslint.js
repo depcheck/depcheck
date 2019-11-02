@@ -68,6 +68,31 @@ const testCases = [
       '@another/module',
     ],
   },
+  {
+    name: 'handle tslint-plugin-prettier',
+    content: {
+      rulesDirectory: ['tslint-plugin-prettier'],
+      rules: {
+        prettier: true,
+      },
+    },
+    expected: [
+      'tslint',
+      'tslint-plugin-prettier',
+    ],
+  },
+  {
+    name: 'handle deactivated tslint-plugin-prettier',
+    content: {
+      rulesDirectory: ['tslint-plugin-prettier'],
+      rules: {
+        prettier: false,
+      },
+    },
+    expected: [
+      'tslint',
+    ],
+  },
 ];
 
 function testTslint(deps, content) {

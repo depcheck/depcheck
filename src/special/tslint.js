@@ -11,11 +11,23 @@ function resolvePresetPackage(preset, rootDir) {
 }
 
 function checkConfig(config, rootDir) {
+  let rules = wrapToArray(config.rulesDirectory)
+    .filter((ruleDir) => !path.isAbsolute(ruleDir));
+
+  const prettierPlugin = 'tslint-plugin-prettier';
+  // If tslint-plugin-prettier is in tslint file
+  // then it should also be activated, if not,
+  // remove it from the list of used dependencies.
+  if (rules.includes(prettierPlugin)
+    && config.rules.prettier !== true) {
+    rules = rules.filter((rule) => rule !== prettierPlugin);
+  }
   return wrapToArray(config.extends)
     .filter((preset) => !preset.startsWith('tslint:'))
     .map((preset) => resolvePresetPackage(preset, rootDir))
     .filter((preset) => !path.isAbsolute(preset))
-    .map(requirePackageName);
+    .map(requirePackageName)
+    .concat(rules);
 }
 
 const configNameRegex = /^tslint\.(json|yaml|yml)$/;
