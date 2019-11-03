@@ -1,5 +1,6 @@
 import path from 'path';
 import lodash from 'lodash';
+import requireFromString from 'require-from-string';
 
 function parse(content) {
   try {
@@ -85,6 +86,11 @@ export default function parseBabel(content, filePath, deps) {
 
   if (filename === '.babelrc') {
     const options = parse(content);
+    return checkOptions(deps, options);
+  }
+
+  if (filename === 'babel.config.js') {
+    const options = requireFromString(content);
     return checkOptions(deps, options);
   }
 
