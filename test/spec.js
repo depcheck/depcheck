@@ -3,10 +3,10 @@ import depcheck from '../src/index';
 
 export default [
   {
-    name: 'detect missing module for dynamic import() when missing in package.json',
+    name:
+      'detect missing module for dynamic import() when missing in package.json',
     module: 'import_function_missing',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -17,12 +17,12 @@ export default [
         anyone: ['index.js'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'find module for dynamic import() when present',
     module: 'import_function',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -31,12 +31,12 @@ export default [
         optimist: ['index.js'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'find module for dynamic import() with magic Webpack comment',
     module: 'import_function_webpack',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -45,12 +45,12 @@ export default [
         optimist: ['index.js'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'missing module for require.resolve when missing in package.json',
     module: 'require_resolve_missing',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -61,12 +61,12 @@ export default [
         anyone: ['index.js'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'find module for require.resolve when present',
     module: 'require_resolve',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -75,24 +75,24 @@ export default [
         optimist: ['index.js'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'find unused dependencies',
     module: 'bad',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['optimist'],
       devDependencies: [],
       missing: {},
       using: {},
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'find unused dependencies in ES6 files',
     module: 'bad_es6',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['dont-find-me'],
       devDependencies: [],
@@ -114,12 +114,12 @@ export default [
         'star-import': ['index.js'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'find all dependencies',
     module: 'good',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -129,14 +129,14 @@ export default [
         foo: ['index.js'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     // See `good_es6/index.js` file for more information about the unsupported
     // ES6 import syntax, which we assert here as the expected missing import.
     name: 'find all dependencies in ES6 files',
     module: 'good_es6',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['unsupported-syntax'],
       devDependencies: [],
@@ -158,25 +158,24 @@ export default [
         'star-import': ['index.js'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'find all dependencies gatsby',
     module: 'gatsby',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['gatsby-plugin-react-helmet', 'gatsby-plugin-sass'],
       devDependencies: [],
       missing: {},
-      using: {
-      },
+      using: {},
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'recognize experimental ES7 syntax enabled in Babel by default',
     module: 'good_es7',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -185,12 +184,12 @@ export default [
         'ecmascript-rest-spread': ['index.js'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'support flow syntax in ES7 modules',
     module: 'good_es7_flow',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -199,12 +198,12 @@ export default [
         'ecmascript-rest-spread': ['index.js'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'support Typescript syntax',
     module: 'typescript',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['unused-dep'],
       devDependencies: [],
@@ -221,12 +220,12 @@ export default [
         'ts-dep-typedef': ['typedef.d.ts'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'support SASS/SCSS syntax',
     module: 'sass',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['unused-sass-dep'],
       devDependencies: [],
@@ -236,12 +235,12 @@ export default [
         'scss-dep': ['scss.scss'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'support Vue syntax',
     module: 'vue',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['unused-dep'],
       devDependencies: [],
@@ -252,12 +251,12 @@ export default [
         'vue-dep-2': ['component.vue'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'find dependencies used in code but not declared in package.json',
     module: 'missing',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -268,12 +267,12 @@ export default [
         'missing-dep': ['index.js'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'ignore the missing dependencies in nested module',
     module: 'missing_nested',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -285,12 +284,12 @@ export default [
         'used-dep': ['index.js'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'not report peer and optional dependencies as missing',
     module: 'missing_peer_deps',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -303,12 +302,12 @@ export default [
         'optional-dep': ['index.js'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'find grunt dependencies',
     module: 'grunt',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -317,12 +316,12 @@ export default [
         'grunt-contrib-jshint': ['index.js'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'find grunt task dependencies',
     module: 'grunt-tasks',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -331,12 +330,12 @@ export default [
         'grunt-contrib-jshint': ['index.js'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'find unused package in devDependencies',
     module: 'dev',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: ['unused-dev-dep'],
@@ -345,12 +344,12 @@ export default [
         'used-dep': ['index.js'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'recognize peer dependencies',
     module: 'peer_dep',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['unused-dep'],
       devDependencies: [],
@@ -360,12 +359,12 @@ export default [
         peer: ['index.js'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'recognize nested peer dependencies',
     module: 'peer_dep_nested',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['unused-nested-dep'],
       devDependencies: [],
@@ -375,12 +374,12 @@ export default [
         peer: ['nested/index.js'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'recognize optional dependencies',
     module: 'optional_dep',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['unused-dep'],
       devDependencies: [],
@@ -390,12 +389,12 @@ export default [
         optional: ['index.js'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'recognize nested requires',
     module: 'nested',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -404,24 +403,24 @@ export default [
         optimist: ['index.js'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'handle empty JavaScript file',
     module: 'empty_file',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['empty-package'],
       devDependencies: [],
       missing: {},
       using: {},
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'handle script file with node shebang',
     module: 'shebang',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['shebang'],
       devDependencies: [],
@@ -430,18 +429,19 @@ export default [
         'shebang-script': ['index.js'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'handle a package without any dependencies',
     module: 'empty_dep',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
       missing: {},
       using: {},
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'exclude bin dependencies if ignoreBinPackage equal true',
@@ -455,6 +455,7 @@ export default [
       missing: {},
       using: {},
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'report unused bin dependencies if ignoreBinPackage equal false',
@@ -468,6 +469,7 @@ export default [
       missing: {},
       using: {},
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'handle dependencies without bin if ignoreBinPackage equal true',
@@ -484,6 +486,7 @@ export default [
         foo: ['index.js'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'output empty missing dependencies when skipMissing is true',
@@ -499,6 +502,7 @@ export default [
         'missing-dep': ['index.js'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'output missing dependencies when skipMissing is false',
@@ -516,24 +520,24 @@ export default [
         'missing-dep': ['index.js'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'handle require call without parameters',
     module: 'require_nothing',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['require-nothing'],
       devDependencies: [],
       missing: {},
       using: {},
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'handle require call with dynamic expression',
     module: 'require_dynamic',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -542,6 +546,7 @@ export default [
         dynamic: ['index.js'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'ignore ignoreDirs',
@@ -555,6 +560,7 @@ export default [
       missing: {},
       using: {},
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'ignore ignoreMatches',
@@ -568,6 +574,7 @@ export default [
       missing: {},
       using: {},
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'ignore ignoreMatches for missing',
@@ -586,12 +593,12 @@ export default [
         'missing-ignore-dep': ['index.js'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'support jsx syntax',
     module: 'jsx',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -600,12 +607,12 @@ export default [
         react: ['index.jsx'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'support flow syntax in jsx modules',
     module: 'jsx_flow',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -614,12 +621,12 @@ export default [
         react: ['index.jsx'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'parser jsx syntax in JavaScript file by default',
     module: 'jsx_js',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -629,12 +636,12 @@ export default [
         'jsx-as-js': ['index.js'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'support CoffeeScript syntax',
     module: 'coffee_script',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['coffee'],
       devDependencies: [],
@@ -645,12 +652,12 @@ export default [
         foo: ['index.coffee'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'support scoped modules',
     module: 'scoped_module',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['@unused/package'],
       devDependencies: [],
@@ -663,24 +670,24 @@ export default [
         'child-import': ['index.js'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'ignore require number',
     module: 'ignore_number',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: ['number'],
       devDependencies: [],
       missing: {},
       using: {},
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'discover dependencies from mocha opts specified by scripts',
     module: 'mocha_opts',
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: ['mocha'],
@@ -690,6 +697,7 @@ export default [
         chai: ['package.json'],
       },
     },
+    expectedErrorCode: -1,
   },
   {
     name: 'discover dependency from express view engine setting',
@@ -709,12 +717,12 @@ export default [
         express: ['index.js'],
       },
     },
+    expectedErrorCode: 0,
   },
   {
     name: 'follow simlinks',
     module: path.join('simlink', 'package'),
-    options: {
-    },
+    options: {},
     expected: {
       dependencies: [],
       devDependencies: [],
@@ -727,5 +735,6 @@ export default [
         react: ['lib/lib.js'],
       },
     },
+    expectedErrorCode: -1,
   },
 ];
