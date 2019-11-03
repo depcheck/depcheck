@@ -37,7 +37,8 @@ const travisCommands = [
 export default function getScripts(filepath, content = null) {
   return getCacheOrFile(filepath, () => {
     const basename = path.basename(filepath);
-    const fileContent = content !== null ? content : fs.readFileSync(filepath, 'utf-8');
+    const fileContent =
+      content !== null ? content : fs.readFileSync(filepath, 'utf-8');
 
     if (basename === 'package.json') {
       return lodash.values(JSON.parse(fileContent).scripts || {});

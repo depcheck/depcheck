@@ -18,7 +18,9 @@ function isIgnored(ignoreMatches, dependency) {
 
 function hasBin(rootDir, dependency) {
   try {
-    const metadata = readJSON(path.join(rootDir, 'node_modules', dependency, 'package.json'));
+    const metadata = readJSON(
+      path.join(rootDir, 'node_modules', dependency, 'package.json'),
+    );
     return {}.hasOwnProperty.call(metadata, 'bin');
   } catch (error) {
     return rootDir === path.parse(rootDir).root
@@ -27,22 +29,32 @@ function hasBin(rootDir, dependency) {
   }
 }
 
-function filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies) {
+function filterDependencies(
+  rootDir,
+  ignoreBinPackage,
+  ignoreMatches,
+  dependencies,
+) {
   return lodash(dependencies)
     .keys()
-    .reject((dep) =>
-      (isIgnored(ignoreMatches, dep))
-      || (ignoreBinPackage && hasBin(rootDir, dep)))
+    .reject(
+      (dep) =>
+        isIgnored(ignoreMatches, dep) ||
+        (ignoreBinPackage && hasBin(rootDir, dep)),
+    )
     .value();
 }
 
 export default function depcheck(rootDir, options, callback) {
   const getOption = (key) =>
-    (lodash.isUndefined(options[key]) ? defaultOptions[key] : options[key]);
+    lodash.isUndefined(options[key]) ? defaultOptions[key] : options[key];
 
   const ignoreBinPackage = getOption('ignoreBinPackage');
   const ignoreMatches = getOption('ignoreMatches');
-  const ignoreDirs = lodash.union(defaultOptions.ignoreDirs, options.ignoreDirs);
+  const ignoreDirs = lodash.union(
+    defaultOptions.ignoreDirs,
+    options.ignoreDirs,
+  );
   const skipMissing = getOption('skipMissing');
 
   const detectors = getOption('detectors');
@@ -51,13 +63,26 @@ export default function depcheck(rootDir, options, callback) {
     .merge({ '*': getOption('specials') })
     .value();
 
-  const metadata = options.package || readJSON(path.join(rootDir, 'package.json'));
+  const metadata =
+    options.package || readJSON(path.join(rootDir, 'package.json'));
   const dependencies = metadata.dependencies || {};
-  const devDependencies = metadata.devDependencies ? metadata.devDependencies : {};
+  const devDependencies = metadata.devDependencies
+    ? metadata.devDependencies
+    : {};
   const peerDeps = Object.keys(metadata.peerDependencies || {});
   const optionalDeps = Object.keys(metadata.optionalDependencies || {});
-  const deps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, dependencies);
-  const devDeps = filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, devDependencies);
+  const deps = filterDependencies(
+    rootDir,
+    ignoreBinPackage,
+    ignoreMatches,
+    dependencies,
+  );
+  const devDeps = filterDependencies(
+    rootDir,
+    ignoreBinPackage,
+    ignoreMatches,
+    devDependencies,
+  );
 
   return check({
     rootDir,
@@ -70,12 +95,19 @@ export default function depcheck(rootDir, options, callback) {
     parsers,
     detectors,
   })
-    .then((results) => Object.assign(results, {
-      missing: lodash.pick(
-        results.missing,
-        filterDependencies(rootDir, ignoreBinPackage, ignoreMatches, results.missing),
-      ),
-    }))
+    .then((results) =>
+      Object.assign(results, {
+        missing: lodash.pick(
+          results.missing,
+          filterDependencies(
+            rootDir,
+            ignoreBinPackage,
+            ignoreMatches,
+            results.missing,
+          ),
+        ),
+      }),
+    )
     .then(callback);
 }
 

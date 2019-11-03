@@ -43,7 +43,8 @@ export function getCustomConfig(kind, filename, content, rootDir) {
     if (command) {
       const args = command.split(/\s+/);
       const configIdx = args.findIndex((arg) =>
-        ['--config', '-c'].includes(arg));
+        ['--config', '-c'].includes(arg),
+      );
 
       if (configIdx !== -1 && args[configIdx + 1]) {
         const configFile = args[configIdx + 1];

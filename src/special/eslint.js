@@ -42,19 +42,25 @@ function normalizePackageName(name, prefix) {
      * it's a scoped package
      * package name is the prefix, or just a username
      */
-    const scopedPackageShortcutRegex = new RegExp(`^(@[^/]+)(?:/(?:${prefix})?)?$`);
+    const scopedPackageShortcutRegex = new RegExp(
+      `^(@[^/]+)(?:/(?:${prefix})?)?$`,
+    );
     const scopedPackageNameRegex = new RegExp(`^${prefix}(-|$)`);
 
     if (scopedPackageShortcutRegex.test(normalizedName)) {
-      normalizedName = normalizedName
-        .replace(scopedPackageShortcutRegex, `$1/${prefix}`);
+      normalizedName = normalizedName.replace(
+        scopedPackageShortcutRegex,
+        `$1/${prefix}`,
+      );
     } else if (!scopedPackageNameRegex.test(normalizedName.split('/')[1])) {
       /**
        * for scoped packages, insert the prefix after the first / unless
        * the path is already @scope/eslint or @scope/eslint-xxx-yyy
        */
-      normalizedName = normalizedName
-        .replace(/^@([^/]+)\/(.*)$/, `@$1/${prefix}-$2`);
+      normalizedName = normalizedName.replace(
+        /^@([^/]+)\/(.*)$/,
+        `@$1/${prefix}-$2`,
+      );
     }
   } else if (normalizedName.indexOf(`${prefix}-`) !== 0) {
     normalizedName = `${prefix}-${normalizedName}`;
@@ -82,8 +88,9 @@ function resolvePresetPackage(preset, rootDir) {
 
 function checkConfig(config, rootDir) {
   const parser = wrapToArray(config.parser);
-  const plugins = wrapToArray(config.plugins)
-    .map((plugin) => normalizePackageName(plugin, 'eslint-plugin'));
+  const plugins = wrapToArray(config.plugins).map((plugin) =>
+    normalizePackageName(plugin, 'eslint-plugin'),
+  );
 
   const extendsArray = wrapToArray(config.extends);
   const presets = extendsArray

@@ -59,13 +59,13 @@ function removeNodeModuleRelativePaths(filepath) {
 }
 
 function filter(deps, options) {
-  const runner = deps.filter((dep) => (
-    contain(options.runner, dep, 'jest-runner-')
-  ));
+  const runner = deps.filter((dep) =>
+    contain(options.runner, dep, 'jest-runner-'),
+  );
 
-  const watchPlugins = deps.filter((dep) => (
-    contain(options.watchPlugins, dep, 'jest-watch-')
-  ));
+  const watchPlugins = deps.filter((dep) =>
+    contain(options.watchPlugins, dep, 'jest-watch-'),
+  );
 
   const otherProps = lodash(options)
     .entries()
