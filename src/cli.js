@@ -123,7 +123,7 @@ export default function cli(args, log, error, exit) {
       }),
     )
     .then((result) => print(result, log, opt.argv.json, rootDir))
-    .then((result) => exit(opt.argv.json || noIssue(result) ? 0 : -1))
+    .then((result) => exit(noIssue(result) ? 0 : -1))
     .catch((errorMessage) => {
       error(errorMessage);
       exit(-1);
