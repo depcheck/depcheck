@@ -21,12 +21,9 @@ import exceptionDetector from './fake_detectors/exception';
 import dependDetector from './fake_detectors/dependCallExpression';
 
 function check(module, options) {
-  return new Promise(resolve =>
-    depcheck(
-      path.resolve(__dirname, 'fake_modules', module),
-      options,
-      resolve,
-    ));
+  return new Promise((resolve) =>
+    depcheck(path.resolve(__dirname, 'fake_modules', module), options, resolve),
+  );
 }
 
 describe('depcheck', () => {
@@ -37,9 +34,14 @@ describe('depcheck', () => {
         const { expected } = testCase;
         result.dependencies.should.eql(expected.dependencies);
         result.devDependencies.should.eql(expected.devDependencies);
-        result.missing.should.eql(resolveShortPath(expected.missing, testCase.module));
-        result.using.should.eql(resolveShortPath(expected.using, testCase.module));
-      }));
+        result.missing.should.eql(
+          resolveShortPath(expected.missing, testCase.module),
+        );
+        result.using.should.eql(
+          resolveShortPath(expected.using, testCase.module),
+        );
+      }),
+    );
   });
 
   it('should ignore bad javascript', () =>
@@ -69,15 +71,23 @@ describe('depcheck', () => {
     }));
 
   function testAccessUnreadableDirectory(
-    module, unreadable, unusedDeps, unusedDevDeps,
+    module,
+    unreadable,
+    unusedDeps,
+    unusedDevDeps,
   ) {
     if (platform() === 'win32') {
       return; // cannot test permission cases in Windows
     }
 
-    const unreadablePath = path.resolve(__dirname, 'fake_modules', module, unreadable);
+    const unreadablePath = path.resolve(
+      __dirname,
+      'fake_modules',
+      module,
+      unreadable,
+    );
 
-    before(done => fs.mkdir(unreadablePath, '0000', done));
+    before((done) => fs.mkdir(unreadablePath, '0000', done));
 
     it('should capture error', () =>
       check(module, {}).then((unused) => {
@@ -92,9 +102,11 @@ describe('depcheck', () => {
         error.toString().should.containEql('EACCES');
       }));
 
-    after(done =>
-      fs.chmod(unreadablePath, '0700', error =>
-        (error ? done(error) : fs.rmdir(unreadablePath, done))));
+    after((done) =>
+      fs.chmod(unreadablePath, '0700', (error) =>
+        error ? done(error) : fs.rmdir(unreadablePath, done),
+      ),
+    );
   }
 
   describe('access unreadable directory', () =>
@@ -114,15 +126,23 @@ describe('depcheck', () => {
     ));
 
   function testAccessUnreadableFile(
-    module, unreadable, unusedDeps, unusedDevDeps,
+    module,
+    unreadable,
+    unusedDeps,
+    unusedDevDeps,
   ) {
     if (platform() === 'win32') {
       return; // cannot test permission cases in Windows
     }
 
-    const unreadablePath = path.resolve(__dirname, 'fake_modules', module, unreadable);
+    const unreadablePath = path.resolve(
+      __dirname,
+      'fake_modules',
+      module,
+      unreadable,
+    );
 
-    before(done => fs.writeFile(unreadablePath, '', { mode: 0 }, done));
+    before((done) => fs.writeFile(unreadablePath, '', { mode: 0 }, done));
 
     it('should capture error', () =>
       check(module, {}).then((unused) => {
@@ -137,9 +157,11 @@ describe('depcheck', () => {
         error.toString().should.containEql('EACCES');
       }));
 
-    after(done =>
-      fs.chmod(unreadablePath, '0700', error =>
-        (error ? done(error) : fs.unlink(unreadablePath, done))));
+    after((done) =>
+      fs.chmod(unreadablePath, '0700', (error) =>
+        error ? done(error) : fs.unlink(unreadablePath, done),
+      ),
+    );
   }
 
   describe('access unreadable file', () =>
@@ -162,10 +184,7 @@ describe('depcheck', () => {
 
   it('should work fine even a customer parser throws exceptions', () =>
     testCustomPluggableComponents('good', {
-      detectors: [
-        depcheck.detector.requireCallExpression,
-        exceptionDetector,
-      ],
+      detectors: [depcheck.detector.requireCallExpression, exceptionDetector],
     }));
 
   it('should use custom parsers to generate AST', () =>
@@ -198,10 +217,7 @@ describe('depcheck', () => {
   it('should support multiple parsers to generate ASTs', () =>
     testCustomPluggableComponents('multiple_parsers', {
       parsers: {
-        '*.csv': [
-          multipleParserA,
-          multipleParserB,
-        ],
+        '*.csv': [multipleParserA, multipleParserB],
       },
     }));
 
@@ -215,18 +231,13 @@ describe('depcheck', () => {
 
   it('should use custom detector to find dependencies', () =>
     testCustomPluggableComponents('depend', {
-      detectors: [
-        dependDetector,
-      ],
+      detectors: [dependDetector],
     }));
 
   it('should handle other parsers even one throws exception', () =>
     check('import_list', {
       parsers: {
-        '*.txt': [
-          importListParser,
-          exceptionParser,
-        ],
+        '*.txt': [importListParser, exceptionParser],
       },
     }).then((unused) => {
       unused.dependencies.should.deepEqual([]);
