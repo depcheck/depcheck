@@ -92,9 +92,16 @@ function checkConfig(config, rootDir) {
     normalizePackageName(plugin, 'eslint-plugin'),
   );
 
-  const presets = wrapToArray(config.extends)
+  const extendsArray = wrapToArray(config.extends);
+  const presets = extendsArray
     .filter((preset) => !['eslint:recommended', 'eslint:all'].includes(preset))
     .map((preset) => resolvePresetPackage(preset, rootDir));
+
+  // prettier/recommended extends eslint-config-prettier
+  // https://github.com/prettier/eslint-plugin-prettier#recommended-configuration
+  if (extendsArray.includes('plugin:prettier/recommended')) {
+    presets.push('eslint-config-prettier');
+  }
 
   const presetPackages = presets
     .filter((preset) => !path.isAbsolute(preset))

@@ -54,6 +54,16 @@ const testCases = [
     ],
   },
   {
+    name: 'handle prettier',
+    content: {
+      extends: 'plugin:prettier/recommended',
+    },
+    expected: [
+      'eslint-plugin-prettier',
+      'eslint-config-prettier',
+    ],
+  },
+  {
     name: 'handle eslint config with full name',
     content: {
       extends: 'eslint-config-preset',
