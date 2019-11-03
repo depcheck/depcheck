@@ -20,8 +20,7 @@ export const availableSpecials = constructComponent(component, 'special');
 
 export const defaultOptions = {
   ignoreBinPackage: false,
-  ignoreMatches: [
-  ],
+  ignoreMatches: [],
   ignoreDirs: [
     '.git',
     '.svn',

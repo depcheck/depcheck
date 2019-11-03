@@ -34,6 +34,7 @@ export default function parseJSX(content) {
       ['pipelineOperator', { proposal: 'minimal' }],
       'throwExpressions',
       // and finally, jsx
-      'jsx'],
+      'jsx',
+    ],
   });
 }

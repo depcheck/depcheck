@@ -47,20 +47,26 @@ function getReactTransforms(deps, plugins) {
 
 function filter(deps, options) {
   const presets = deps.filter((dep) =>
-    contain(options.presets, dep, 'babel-preset-'));
+    contain(options.presets, dep, 'babel-preset-'),
+  );
 
   const presets7 = deps.filter((dep) =>
-    contain(options.presets, dep, 'preset-', '@babel'));
+    contain(options.presets, dep, 'preset-', '@babel'),
+  );
 
   const plugins = deps.filter((dep) =>
-    contain(options.plugins, dep, 'babel-plugin-'));
+    contain(options.plugins, dep, 'babel-plugin-'),
+  );
 
   const plugins7 = deps.filter((dep) =>
-    contain(options.plugins, dep, 'plugin-', '@babel'));
+    contain(options.plugins, dep, 'plugin-', '@babel'),
+  );
 
   const reactTransforms = getReactTransforms(deps, options.plugins);
 
-  return lodash.uniq(presets.concat(presets7, plugins, plugins7, reactTransforms));
+  return lodash.uniq(
+    presets.concat(presets7, plugins, plugins7, reactTransforms),
+  );
 }
 
 function checkOptions(deps, options = {}) {

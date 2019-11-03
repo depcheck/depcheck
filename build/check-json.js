@@ -32,8 +32,10 @@ function check(result) {
     // assert all dependencies in package.json are using
     const declaredDeps = Object.keys(metadata.dependencies);
     const declaredDevDeps = Object.keys(metadata.devDependencies);
-    assert.deepEqual(Object.keys(result.using).sort(),
-      declaredDeps.concat(declaredDevDeps).sort());
+    assert.deepEqual(
+      Object.keys(result.using).sort(),
+      declaredDeps.concat(declaredDevDeps).sort(),
+    );
   });
 }
 

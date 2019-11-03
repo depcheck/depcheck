@@ -8,7 +8,11 @@ export default function parseCommitizen(content, filePath, deps, rootDir) {
   if (resolvedFilePath === packageJsonPath) {
     const metadata = JSON.parse(content);
 
-    if (metadata.config && metadata.config.commitizen && metadata.config.commitizen.path) {
+    if (
+      metadata.config &&
+      metadata.config.commitizen &&
+      metadata.config.commitizen.path
+    ) {
       const commitizenPath = metadata.config.commitizen.path;
 
       if (!commitizenPath.startsWith('.')) {

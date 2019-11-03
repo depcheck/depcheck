@@ -12,19 +12,22 @@ function unify(list) {
 function getList(name) {
   return new Promise((resolve) =>
     fs.readdir(path.resolve(__dirname, '../src', name), (error, list) =>
-      resolve(error || unify(list))));
+      resolve(error || unify(list)),
+    ),
+  );
 }
 
-Promise.all([
-  getList('parser'),
-  getList('detector'),
-  getList('special'),
-]).then(([
-  parser,
-  detector,
-  special,
-]) => console.log(JSON.stringify({
-  parser,
-  detector,
-  special,
-}, null, 2)));
+Promise.all([getList('parser'), getList('detector'), getList('special')]).then(
+  ([parser, detector, special]) =>
+    console.log(
+      JSON.stringify(
+        {
+          parser,
+          detector,
+          special,
+        },
+        null,
+        2,
+      ),
+    ),
+);

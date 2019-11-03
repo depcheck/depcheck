@@ -5,20 +5,30 @@ import getNodes from '../utils/parser';
 
 function parseConfigModuleExports(node) {
   // node.left must be assigning to module.exports
-  if (node && node.type === 'AssignmentExpression' && node.left.type === 'MemberExpression'
-    && node.left.object && node.left.object.type === 'Identifier' && node.left.object.name === 'module'
-    && node.left.property && node.left.property.type === 'Identifier' && node.left.property.name === 'exports') {
+  if (
+    node &&
+    node.type === 'AssignmentExpression' &&
+    node.left.type === 'MemberExpression' &&
+    node.left.object &&
+    node.left.object.type === 'Identifier' &&
+    node.left.object.name === 'module' &&
+    node.left.property &&
+    node.left.property.type === 'Identifier' &&
+    node.left.property.name === 'exports'
+  ) {
     const config = {};
-    node.right.properties
-      .forEach((prop) => {
-        if (prop.value.type === 'ArrayExpression' && prop.key.name === 'plugins') {
-          const vals = [];
-          prop.value.elements
-            .filter((e) => e.type === 'StringLiteral')
-            .forEach((e) => vals.push(e.value));
-          config[prop.key.name] = vals;
-        }
-      });
+    node.right.properties.forEach((prop) => {
+      if (
+        prop.value.type === 'ArrayExpression' &&
+        prop.key.name === 'plugins'
+      ) {
+        const vals = [];
+        prop.value.elements
+          .filter((e) => e.type === 'StringLiteral')
+          .forEach((e) => vals.push(e.value));
+        config[prop.key.name] = vals;
+      }
+    });
     return config;
   }
   return null;
@@ -43,7 +53,6 @@ function loadConfig(filename, content) {
   }
   return [];
 }
-
 
 export default function parseGatsbyConfig(content, filename) {
   return loadConfig(filename, content);

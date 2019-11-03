@@ -1,5 +1,7 @@
 parser: babel-eslint
-extends: airbnb
+extends:
+  - airbnb
+  - plugin:prettier/recommended
 rules:
   implicit-arrow-linebreak: off
   import/no-dynamic-require: off

@@ -47,16 +47,20 @@ function getLoaders(deps, loaders) {
 
 function getBabelPresets(deps, loaders) {
   return lodash(loaders || [])
-    .filter((item) =>
-      typeof item !== 'string'
-      && item.loader
-      && item.loader === 'babel-loader'
-      && item.options
-      && item.options.presets
-      && Array.isArray(item.options.presets))
+    .filter(
+      (item) =>
+        typeof item !== 'string' &&
+        item.loader &&
+        item.loader === 'babel-loader' &&
+        item.options &&
+        item.options.presets &&
+        Array.isArray(item.options.presets),
+    )
     .map((item) => item.options.presets)
     .flatten()
-    .map((preset) => (Array.isArray(preset) && preset.length > 0 ? preset[0] : preset))
+    .map((preset) =>
+      Array.isArray(preset) && preset.length > 0 ? preset[0] : preset,
+    )
     .filter((preset) => typeof preset === 'string')
     .intersection(deps)
     .uniq()
@@ -71,11 +75,13 @@ function parseWebpack1(module, deps) {
 }
 
 function mapRuleUse(module) {
-  return module.rules
-    // filter use or loader because 'loader' is a shortcut to 'use'
-    .filter((rule) => rule.use || rule.loader)
-    // return coerced array, using the relevant key
-    .map((rule) => [].concat(rule.use || rule.loader));
+  return (
+    module.rules
+      // filter use or loader because 'loader' is a shortcut to 'use'
+      .filter((rule) => rule.use || rule.loader)
+      // return coerced array, using the relevant key
+      .map((rule) => [].concat(rule.use || rule.loader))
+  );
 }
 
 function parseWebpack2(module, deps) {

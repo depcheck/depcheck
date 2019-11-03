@@ -4,9 +4,20 @@ import requirePackageName from 'require-package-name';
 import { getScripts } from '../utils';
 
 const knownReporters = [
-  'dot', 'doc', 'tap', 'json', 'html', 'list',
-  'min', 'spec', 'nyan', 'xunit', 'markdown', 'progress',
-  'landing', 'json-stream',
+  'dot',
+  'doc',
+  'tap',
+  'json',
+  'html',
+  'list',
+  'min',
+  'spec',
+  'nyan',
+  'xunit',
+  'markdown',
+  'progress',
+  'landing',
+  'json-stream',
 ];
 
 function getOptsConfig(root, config) {
