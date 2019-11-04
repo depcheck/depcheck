@@ -18,9 +18,11 @@ export function evaluate(code) {
   return sandbox.module.exports;
 }
 
-export function tryRequire(module) {
+export function tryRequire(module, paths = []) {
   try {
-    return require(module); // eslint-disable-line global-require
+    let moduleName = module;
+    if (paths.length > 0) moduleName = require.resolve(moduleName, { paths });
+    return require(moduleName); // eslint-disable-line global-require
   } catch (e) {
     return null;
   }

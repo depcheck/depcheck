@@ -1,8 +1,9 @@
+import fs from 'fs';
 import path from 'path';
 import lodash from 'lodash';
 import minimatch from 'minimatch';
 import check from './check';
-import { readJSON } from './utils';
+import { readJSON, tryRequire } from './utils';
 
 import {
   defaultOptions,
@@ -10,6 +11,25 @@ import {
   availableDetectors,
   availableSpecials,
 } from './constants';
+
+function registerTs(rootDir) {
+  if (!require.extensions['.ts']) {
+    const ts = tryRequire('typescript', [rootDir, process.cwd(), __dirname]);
+    if (ts) {
+      require.extensions['.ts'] = (module, filename) => {
+        const content = fs.readFileSync(filename, 'utf8');
+        const options = tryRequire(path.join(rootDir, 'package.json')) || {};
+        options.fileName = filename;
+        const transpiled = ts.transpileModule(
+          content.charCodeAt(0) === 0xfeff ? content.slice(1) : content,
+          options,
+        );
+        // eslint-disable-next-line no-underscore-dangle
+        module._compile(transpiled.outputText, filename);
+      };
+    }
+  }
+}
 
 function isIgnored(ignoreMatches, dependency) {
   const match = lodash.partial(minimatch, dependency);
@@ -46,6 +66,8 @@ function filterDependencies(
 }
 
 export default function depcheck(rootDir, options, callback) {
+  registerTs(rootDir);
+
   const getOption = (key) =>
     lodash.isUndefined(options[key]) ? defaultOptions[key] : options[key];
 
