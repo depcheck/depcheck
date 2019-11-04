@@ -54,6 +54,7 @@ The *special* component is used to recognize the dependencies that are not gener
 - `gatsby` - [Gatsby](https://www.npmjs.com/package/gatsby) configuration parser
 - `husky` - [Husky](https://www.npmjs.com/package/husky) configuration parser
 - `lint-staged` - [Lint-staged](https://www.npmjs.com/package/lint-staged) configuration parser
+- `ttypescript` - [ttypescript](https://github.com/cevek/ttypescript) transformer parser
 
 The logic of a special is not perfect. There might be [false alerts](#false-alert). If this happens, please open an issue for us.
 
