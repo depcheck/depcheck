@@ -282,7 +282,9 @@ describe('webpack special parser', () => {
     testCases.forEach(testCase =>
       it(`should ${testCase.name} in configuration file ${fileName}`, () => {
         const config = JSON.stringify({ entry: testCase.entry, module: testCase.module });
-        const content = `module.exports = ${config}`;
+        const content = fileName.endsWith('.ts')
+          ? `const config: any = ${config}\nmodule.exports = config`
+          : `module.exports = ${config}`;
         return testWebpack(fileName, content, testCase.deps, testCase.deps);
       })));
 });

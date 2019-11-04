@@ -17,3 +17,8 @@ import 'vue-template-compiler';
  */
 import '@babel/polyfill';
 import '@babel/register';
+
+/**
+ * Typescript is loaded using tryRequire and is therefore not detected.
+ */
+import 'typescript';
