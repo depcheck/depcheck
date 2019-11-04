@@ -80,6 +80,7 @@ declare namespace depcheck {
     'lint-staged': Parser;
     mocha: Parser;
     tslint: Parser;
+    ttypescript: Parser;
     webpack: Parser;
   };
 }
