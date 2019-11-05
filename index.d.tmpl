@@ -43,46 +43,7 @@ declare namespace depcheck {
       [filePath: string]: any;
     };
   }
-
-  const parser: {
-    coffee: Parser;
-    es6: Parser;
-    es7: Parser;
-    jsx: Parser;
-    sass: Parser;
-    typescript: Parser;
-    vue: Parser;
-  };
-
-  const detector: {
-    exportDeclaration: Detector;
-    expressViewEngine: Detector;
-    gruntLoadTaskCallExpression: Detector;
-    importCallExpression: Detector;
-    importDeclaration: Detector;
-    requireCallExpression: Detector;
-    requireResolveCallExpression: Detector;
-    typescriptImportEqualsDeclaration: Detector;
-    detectTypescriptImportType: Detector;
-  };
-
-  const special: {
-    babel: Parser;
-    bin: Parser;
-    commitizen: Parser;
-    eslint: Parser;
-    'feross-standard': Parser;
-    gatsby: Parser;
-    'gulp-load-plugins': Parser;
-    husky: Parser;
-    jest: Parser;
-    karma: Parser;
-    'lint-staged': Parser;
-    mocha: Parser;
-    tslint: Parser;
-    ttypescript: Parser;
-    webpack: Parser;
-  };
+«Components»
 }
 
 export = depcheck;
