@@ -5,7 +5,7 @@ import walkdir from 'walkdir';
 import minimatch from 'minimatch';
 import builtInModules from 'builtin-modules';
 import requirePackageName from 'require-package-name';
-import { readJSON } from './utils';
+import { loadMetadata, readJSON } from './utils';
 import getNodes from './utils/parser';
 import { getAtTypesName } from './utils/typescript';
 import { availableParsers } from './constants';
@@ -41,14 +41,10 @@ function detect(detectors, node) {
 }
 
 function discoverPropertyDep(rootDir, deps, property, depName) {
-  try {
-    const file = path.resolve(rootDir, 'node_modules', depName, 'package.json');
-    const metadata = readJSON(file);
-    const propertyDeps = Object.keys(metadata[property] || {});
-    return lodash.intersection(deps, propertyDeps);
-  } catch (error) {
-    return [];
-  }
+  const metadata = loadMetadata(depName, rootDir);
+  if (!metadata) return [];
+  const propertyDeps = Object.keys(metadata[property] || {});
+  return lodash.intersection(deps, propertyDeps);
 }
 
 function getDependencies(dir, filename, deps, parser, detectors) {

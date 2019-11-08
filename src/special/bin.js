@@ -1,28 +1,26 @@
 import path from 'path';
 import lodash from 'lodash';
-import { readJSON, getScripts } from '../utils';
+import { loadMetadata, getScripts } from '../utils';
 
-const metadataCache = {};
+const binaryCache = {};
 
-function getCacheOrRequire(packagePath) {
-  if (metadataCache[packagePath]) {
-    return metadataCache[packagePath];
+function getCacheOrLoad(dep, dir) {
+  const index = `${dir}/${dep}`;
+  if (!binaryCache[index]) {
+    const metadata = loadMetadata(dep, dir) || {};
+    binaryCache[index] = metadata.bin || {};
   }
-
-  const metadata = readJSON(packagePath);
-  metadataCache[packagePath] = metadata;
-  return metadata;
+  return binaryCache[index];
 }
 
-function loadMetadata(dep, dir) {
-  try {
-    const packagePath = path.resolve(dir, 'node_modules', dep, 'package.json');
-    return getCacheOrRequire(packagePath);
-  } catch (error) {
-    return dir === path.parse(dir).root
-      ? {} // ignore silently
-      : loadMetadata(dep, path.dirname(dir));
+function getBinaries(dep, dir) {
+  const binMetadata = getCacheOrLoad(dep, dir);
+
+  if (typeof binMetadata === 'string') {
+    return [[dep, binMetadata]];
   }
+
+  return lodash.toPairs(binMetadata);
 }
 
 function getBinaryFeatures(dep, [key, value]) {
@@ -40,16 +38,6 @@ function getBinaryFeatures(dep, [key, value]) {
   ];
 
   return features;
-}
-
-function getBinaries(dep, dir) {
-  const metadata = loadMetadata(dep, dir);
-
-  if (typeof metadata.bin === 'string') {
-    return [[dep, metadata.bin]];
-  }
-
-  return lodash.toPairs(metadata.bin || {});
 }
 
 function isBinaryInUse(dep, scripts, dir) {
