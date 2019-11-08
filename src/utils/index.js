@@ -18,6 +18,17 @@ export function evaluate(code) {
   return sandbox.module.exports;
 }
 
+export function loadMetadata(moduleName, rootDir) {
+  try {
+    const file = require.resolve(`${moduleName}/package.json`, {
+      paths: [rootDir],
+    });
+    return readJSON(file);
+  } catch (error) {
+    return null;
+  }
+}
+
 export function tryRequire(module, paths = []) {
   try {
     let moduleName = module;
