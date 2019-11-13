@@ -1,13 +1,23 @@
 import path from 'path';
 import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
-import { wrapToArray } from '../utils/index';
+import { loadModuleData, wrapToArray } from '../utils';
 import { loadConfig } from '../utils/linters';
+
+function resolveConfigModule(preset, rootDir) {
+  const presetParts = preset.split('/');
+  let moduleName = presetParts.shift();
+  if (moduleName.startsWith('@')) {
+    moduleName += `/${presetParts.shift()}`;
+  }
+  const modulePath = loadModuleData(moduleName, rootDir).path;
+  return modulePath && path.resolve(modulePath, ...presetParts);
+}
 
 function requireConfig(preset, rootDir) {
   const presetPath = path.isAbsolute(preset)
     ? preset
-    : path.resolve(rootDir, 'node_modules', preset);
+    : resolveConfigModule(preset, rootDir);
 
   try {
     return require(presetPath); // eslint-disable-line global-require
