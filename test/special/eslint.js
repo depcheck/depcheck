@@ -216,7 +216,6 @@ describe('eslint special parser', () => {
       );
       result.should.deepEqual([
         'eslint-config-foo-bar',
-        'eslint-plugin-included',
         'eslint-plugin-not-included',
         'eslint-config-preset',
       ]);
