@@ -17,9 +17,7 @@ const testCases = [
     content: {
       parser: 'babel-eslint',
     },
-    expected: [
-      'babel-eslint',
-    ],
+    expected: ['babel-eslint'],
   },
   {
     name: 'detect specific plugins',
@@ -49,57 +47,42 @@ const testCases = [
     content: {
       extends: 'preset',
     },
-    expected: [
-      'eslint-config-preset',
-    ],
+    expected: ['eslint-config-preset'],
   },
   {
     name: 'handle prettier',
     content: {
       extends: 'plugin:prettier/recommended',
     },
-    expected: [
-      'eslint-plugin-prettier',
-      'eslint-config-prettier',
-    ],
+    expected: ['eslint-plugin-prettier', 'eslint-config-prettier'],
   },
   {
     name: 'handle eslint config with full name',
     content: {
       extends: 'eslint-config-preset',
     },
-    expected: [
-      'eslint-config-preset',
-    ],
+    expected: ['eslint-config-preset'],
   },
   {
     name: 'handle eslint config from package module',
     content: {
       extends: 'airbnb/base',
     },
-    expected: [
-      'eslint-config-airbnb',
-    ],
+    expected: ['eslint-config-airbnb'],
   },
   {
     name: 'handle eslint config with undeclared plugins',
     content: {
       extends: 'airbnb/react',
     },
-    expected: [
-      'eslint-config-airbnb',
-      'eslint-plugin-react',
-    ],
+    expected: ['eslint-config-airbnb', 'eslint-plugin-react'],
   },
   {
     name: 'handle eslint config with nested extends',
     content: {
       extends: 'airbnb',
     },
-    expected: [
-      'eslint-config-airbnb',
-      'eslint-plugin-react',
-    ],
+    expected: ['eslint-config-airbnb', 'eslint-plugin-react'],
   },
   {
     name: 'skip eslint recommended config',
@@ -134,63 +117,49 @@ const testCases = [
     content: {
       extends: '@my-org/short-customized',
     },
-    expected: [
-      '@my-org/eslint-config-short-customized',
-    ],
+    expected: ['@my-org/eslint-config-short-customized'],
   },
   {
     name: 'handle config of scoped module with full name',
     content: {
       extends: '@my-org/eslint-config-long-customized',
     },
-    expected: [
-      '@my-org/eslint-config-long-customized',
-    ],
+    expected: ['@my-org/eslint-config-long-customized'],
   },
   {
     name: 'handle config from plugin with short name',
     content: {
       extends: 'plugin:node/recommended',
     },
-    expected: [
-      'eslint-plugin-node',
-    ],
+    expected: ['eslint-plugin-node'],
   },
   {
     name: 'handle config from plugin with full name',
     content: {
       extends: 'plugin:eslint-plugin-node/recommended',
     },
-    expected: [
-      'eslint-plugin-node',
-    ],
+    expected: ['eslint-plugin-node'],
   },
   {
     name: 'handle config from scoped plugin with short name',
     content: {
       extends: 'plugin:@my-org/recommended',
     },
-    expected: [
-      '@my-org/eslint-plugin',
-    ],
+    expected: ['@my-org/eslint-plugin'],
   },
   {
     name: 'handle config from scoped plugin with short name & config',
     content: {
       extends: 'plugin:@my-org/short-customized/recommended',
     },
-    expected: [
-      '@my-org/eslint-plugin-short-customized',
-    ],
+    expected: ['@my-org/eslint-plugin-short-customized'],
   },
   {
     name: 'handle config from scoped plugin with full name',
     content: {
       extends: 'plugin:@my-org/eslint-plugin-long-customized/recommended',
     },
-    expected: [
-      '@my-org/eslint-plugin-long-customized',
-    ],
+    expected: ['@my-org/eslint-plugin-long-customized'],
   },
 ];
 
@@ -203,7 +172,10 @@ function testEslint(deps, content) {
     '/path/to/.eslintrc.yaml',
   ].forEach((pathToEslintrc) => {
     const result = eslintSpecialParser(
-      content, pathToEslintrc, deps, __dirname,
+      content,
+      pathToEslintrc,
+      deps,
+      __dirname,
     );
 
     result.should.deepEqual(deps);
@@ -247,9 +219,10 @@ describe('eslint special parser', () => {
   });
 
   describe('with JSON format', () =>
-    testCases.forEach(testCase =>
+    testCases.forEach((testCase) =>
       it(`should ${testCase.name}`, () =>
-        testEslint(testCase.expected, JSON.stringify(testCase.content)))));
+        testEslint(testCase.expected, JSON.stringify(testCase.content))),
+    ));
 
   describe('with package.json config', () =>
     testCases.forEach((testCase) => {
@@ -266,7 +239,8 @@ describe('eslint special parser', () => {
     }));
 
   describe('with YAML format', () =>
-    testCases.forEach(testCase =>
+    testCases.forEach((testCase) =>
       it(`should ${testCase.name}`, () =>
-        testEslint(testCase.expected, yaml.safeDump(testCase.content)))));
+        testEslint(testCase.expected, yaml.safeDump(testCase.content))),
+    ));
 });
