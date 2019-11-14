@@ -1,13 +1,13 @@
 import path from 'path';
 import lodash from 'lodash';
-import { loadMetadata, getScripts } from '../utils';
+import { loadModuleData, getScripts } from '../utils';
 
 const binaryCache = {};
 
 function getCacheOrLoad(dep, dir) {
   const index = `${dir}/${dep}`;
   if (!binaryCache[index]) {
-    const metadata = loadMetadata(dep, dir) || {};
+    const metadata = loadModuleData(dep, dir).metadata || {};
     binaryCache[index] = metadata.bin || {};
   }
   return binaryCache[index];
