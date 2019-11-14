@@ -5,7 +5,7 @@ import walkdir from 'walkdir';
 import minimatch from 'minimatch';
 import builtInModules from 'builtin-modules';
 import requirePackageName from 'require-package-name';
-import { loadMetadata, readJSON } from './utils';
+import { loadModuleData, readJSON } from './utils';
 import getNodes from './utils/parser';
 import { getAtTypesName } from './utils/typescript';
 import { availableParsers } from './constants';
@@ -41,7 +41,7 @@ function detect(detectors, node) {
 }
 
 function discoverPropertyDep(rootDir, deps, property, depName) {
-  const metadata = loadMetadata(depName, rootDir);
+  const { metadata } = loadModuleData(depName, rootDir);
   if (!metadata) return [];
   const propertyDeps = Object.keys(metadata[property] || {});
   return lodash.intersection(deps, propertyDeps);

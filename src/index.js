@@ -3,7 +3,7 @@ import path from 'path';
 import lodash from 'lodash';
 import minimatch from 'minimatch';
 import check from './check';
-import { loadMetadata, readJSON, tryRequire } from './utils';
+import { loadModuleData, readJSON, tryRequire } from './utils';
 
 import {
   defaultOptions,
@@ -37,7 +37,7 @@ function isIgnored(ignoreMatches, dependency) {
 }
 
 function hasBin(rootDir, dependency) {
-  const metadata = loadMetadata(dependency, rootDir);
+  const { metadata } = loadModuleData(dependency, rootDir);
   return !!metadata && {}.hasOwnProperty.call(metadata, 'bin');
 }
 

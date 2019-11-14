@@ -1,3 +1,4 @@
+import path from 'path';
 import vm from 'vm';
 
 export { default as getScripts } from './get-scripts';
@@ -18,14 +19,20 @@ export function evaluate(code) {
   return sandbox.module.exports;
 }
 
-export function loadMetadata(moduleName, rootDir) {
+export function loadModuleData(moduleName, rootDir) {
   try {
     const file = require.resolve(`${moduleName}/package.json`, {
       paths: [rootDir],
     });
-    return readJSON(file);
+    return {
+      path: path.dirname(file),
+      metadata: readJSON(file),
+    };
   } catch (error) {
-    return null;
+    return {
+      path: null,
+      metadata: null,
+    };
   }
 }
 

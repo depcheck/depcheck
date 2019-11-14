@@ -1,13 +1,30 @@
 import path from 'path';
 import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
-import { wrapToArray } from '../utils/index';
+import { loadModuleData, wrapToArray } from '../utils';
 import { loadConfig } from '../utils/linters';
 
-function requireConfig(preset, rootDir) {
+function resolveConfigModule(preset, rootDir, includedDeps) {
+  const presetParts = preset.split('/');
+  let moduleName = presetParts.shift();
+  if (moduleName.startsWith('@')) {
+    moduleName += `/${presetParts.shift()}`;
+  }
+  const moduleData = loadModuleData(moduleName, rootDir);
+  if (
+    moduleData.metadata &&
+    moduleData.metadata.dependencies &&
+    typeof moduleData.metadata.dependencies === 'object'
+  ) {
+    includedDeps.push(...Object.keys(moduleData.metadata.dependencies));
+  }
+  return moduleData.path && path.resolve(moduleData.path, ...presetParts);
+}
+
+function requireConfig(preset, rootDir, includedDeps) {
   const presetPath = path.isAbsolute(preset)
     ? preset
-    : path.resolve(rootDir, 'node_modules', preset);
+    : resolveConfigModule(preset, rootDir, includedDeps);
 
   try {
     return require(presetPath); // eslint-disable-line global-require
@@ -107,13 +124,16 @@ function checkConfig(config, rootDir) {
     .filter((preset) => !path.isAbsolute(preset))
     .map(requirePackageName);
 
+  const includedDeps = [];
   const presetDeps = lodash(presets)
-    .map((preset) => requireConfig(preset, rootDir))
+    .map((preset) => requireConfig(preset, rootDir, includedDeps))
     .map((presetConfig) => checkConfig(presetConfig, rootDir))
     .flatten()
     .value();
 
-  return lodash.union(parser, plugins, presetPackages, presetDeps);
+  return lodash
+    .union(parser, plugins, presetPackages, presetDeps)
+    .filter((dep) => !includedDeps.includes(dep));
 }
 
 const configNameRegex = /^\.eslintrc(\.(json|js|yml|yaml))?$/;
