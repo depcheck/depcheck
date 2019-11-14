@@ -23,8 +23,14 @@ export function parse(content) {
     // not valid JavaScript code
   }
 
+  try {
+    return evaluate(content);
+  } catch (error) {
+    // not valid JavaScript code
+  }
+
   // parse fail, return nothing
-  return {};
+  return null;
 }
 
 export function getCustomConfig(kind, filename, content, rootDir) {
@@ -51,11 +57,7 @@ export function getCustomConfig(kind, filename, content, rootDir) {
         const configPath = path.resolve(rootDir, configFile);
 
         const configContent = fs.readFileSync(configPath);
-        try {
-          return JSON.parse(configContent);
-        } catch (e) {
-          return null;
-        }
+        return parse(configContent);
       }
     }
   }

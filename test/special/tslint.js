@@ -116,7 +116,7 @@ describe('tslint special parser', () => {
   });
 
   it('should handle parse error', () =>
-    testTslint(['tslint'], '{ this is an invalid JSON string'));
+    testTslint([], '{ this is an invalid JSON string'));
 
   it('should handle non-standard JSON content', () =>
     testTslint(

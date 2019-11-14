@@ -244,6 +244,25 @@ describe('eslint special parser', () => {
       );
       result.should.deepEqual(['eslint-config-foo-bar']);
     });
+
+    it('should parse custom js configs from scripts', () => {
+      const rootDir = path.resolve(
+        __dirname,
+        '../fake_modules/eslint_config_js',
+      );
+      const packagePath = path.resolve(rootDir, 'package.json');
+      const packageContent = fs.readFileSync(packagePath, 'utf-8');
+      const dependencies = Object.keys(
+        JSON.parse(packageContent).devDependencies,
+      );
+      const result = eslintSpecialParser(
+        packageContent,
+        packagePath,
+        dependencies,
+        rootDir,
+      );
+      result.should.deepEqual(['eslint-config-foo-bar']);
+    });
   });
 
   describe('with JSON format', () =>
