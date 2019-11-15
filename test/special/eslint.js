@@ -237,7 +237,11 @@ describe('eslint special parser', () => {
         dependencies,
         rootDir,
       );
-      result.should.deepEqual(['eslint-config-foo-bar']);
+      result.should.deepEqual([
+        'eslint-config-foo-bar',
+        'eslint-plugin-not-included',
+        'eslint-config-preset',
+      ]);
     });
   });
 
