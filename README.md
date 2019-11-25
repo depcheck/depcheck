@@ -112,6 +112,16 @@ const options = {
     depcheck.special.eslint,
     depcheck.special.webpack
   ],
+  package: { // may specify dependencies instead of parsing package.json
+    dependencies: {
+      lodash: '^4.17.15'
+    },
+    devDependencies: {
+      eslint: '^6.6.0'
+    },
+    peerDependencies: {},
+    optionalDependencies: {}
+  }
 };
 
 depcheck('/path/to/your/project', options, (unused) => {

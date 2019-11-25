@@ -15,11 +15,21 @@ declare namespace depcheck {
 
   type Detector = (node: Node) => ReadonlyArray<string> | string;
 
+  interface PackageDependencies {
+    [dependencyName: string]: string;
+  }
+
   interface Options {
     ignoreBinPackage?: boolean;
     skipMissing?: boolean;
     ignoreDirs?: ReadonlyArray<string>;
     ignoreMatches?: ReadonlyArray<string>;
+    package?: {
+      dependencies?: PackageDependencies;
+      devDependencies?: PackageDependencies;
+      peerDependencies?: PackageDependencies;
+      optionalDependencies?: PackageDependencies;
+    };
     parsers?: {
       [match: string]: Parser;
     };
