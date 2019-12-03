@@ -27,11 +27,11 @@ function mergeBuckets(object1, object2) {
   });
 }
 
-function detect(detectors, node) {
+function detect(detectors, node, deps) {
   return lodash(detectors)
     .map((detector) => {
       try {
-        return detector(node);
+        return detector(node, deps);
       } catch (error) {
         return [];
       }
@@ -66,7 +66,7 @@ function getDependencies(dir, filename, deps, parser, detectors) {
       lodash.isArray(ast) && ast.every(lodash.isString)
         ? ast
         : lodash(getNodes(ast))
-            .map((node) => detect(detectors, node))
+            .map((node) => detect(detectors, node, deps))
             .flatten()
             .uniq()
             .map(requirePackageName)
