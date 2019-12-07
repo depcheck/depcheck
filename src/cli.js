@@ -90,6 +90,7 @@ export default function cli(args, log, error, exit) {
       'ignore-bin-package': false,
       'skip-missing': false,
     })
+    .describe('config', 'Pass a config file')
     .describe('ignore-bin-package', 'Ignore package with bin entry')
     .describe('skip-missing', 'Skip calculation of missing dependencies')
     .describe('json', 'Output results to JSON')
@@ -113,13 +114,14 @@ export default function cli(args, log, error, exit) {
     )
     .then(() =>
       depcheck(rootDir, {
-        ignoreBinPackage: opt.argv.ignoreBinPackage,
-        ignoreMatches: (opt.argv.ignores || '').split(','),
-        ignoreDirs: (opt.argv.ignoreDirs || '').split(','),
-        parsers: getParsers(opt.argv.parsers),
-        detectors: getDetectors(opt.argv.detectors),
-        specials: getSpecials(opt.argv.specials),
-        skipMissing: opt.argv.skipMissing,
+        ...opt.argv.config !== undefined ? require(opt.argv.config) : {},
+        ...opt.argv.ignoreBinPackage ? { ignoreBinPackage: opt.argv.ignoreBinPackage } : {},
+        ...opt.argv.ignores !== undefined ? { ignoreMatches: (opt.argv.ignores || '').split(',') } : {},
+        ...opt.argv.ignoreDirs !== undefined ? { ignoreDirs: (opt.argv.ignoreDirs || '').split(',') } : {},
+        ...opt.argv.parsers !== undefined ? { parsers: getParsers(opt.argv.parsers) } : {},
+        ...opt.argv.detectors !== undefined ? { detectors: getDetectors(opt.argv.detectors) } : {},
+        ...opt.argv.specials !== undefined ? { specials: getSpecials(opt.argv.specials) } : {},
+        ...opt.argv.skipMissing !== undefined ? { skipMissing: opt.argv.skipMissing } : {},
       }),
     )
     .then((result) => print(result, log, opt.argv.json, rootDir))
