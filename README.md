@@ -5,7 +5,7 @@ Depcheck is a tool for analyzing the dependencies in a project to see: how each 
 ## Status
 
 [![Build Status](https://travis-ci.org/depcheck/depcheck.svg?branch=master)](https://travis-ci.org/depcheck/depcheck)
-[![Build status](https://ci.appveyor.com/api/projects/status/xbooh370dinuyi0y/branch/master?svg=true)](https://ci.appveyor.com/project/lijunle/depcheck/branch/master)
+[![Financial Contributors on Open Collective](https://opencollective.com/depcheck/all/badge.svg?label=financial+contributors)](https://opencollective.com/depcheck) [![Build status](https://ci.appveyor.com/api/projects/status/xbooh370dinuyi0y/branch/master?svg=true)](https://ci.appveyor.com/project/lijunle/depcheck/branch/master)
 [![codecov.io](https://codecov.io/github/depcheck/depcheck/coverage.svg?branch=master)](https://codecov.io/github/depcheck/depcheck?branch=master)
 
 [![dependencies Status](https://david-dm.org/depcheck/depcheck/status.svg)](https://david-dm.org/depcheck/depcheck)
@@ -211,6 +211,36 @@ If you find that depcheck is reporting a false alert, please [open an issue](htt
 ## Changelog
 
 We use the [GitHub release page](https://github.com/depcheck/depcheck/releases) to manage changelog.
+
+## Contributors
+
+### Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/depcheck/depcheck/graphs/contributors"><img src="https://opencollective.com/depcheck/contributors.svg?width=890&button=false" /></a>
+
+### Financial Contributors
+
+Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/depcheck/contribute)]
+
+#### Individuals
+
+<a href="https://opencollective.com/depcheck"><img src="https://opencollective.com/depcheck/individuals.svg?width=890"></a>
+
+#### Organizations
+
+Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/depcheck/contribute)]
+
+<a href="https://opencollective.com/depcheck/organization/0/website"><img src="https://opencollective.com/depcheck/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/depcheck/organization/1/website"><img src="https://opencollective.com/depcheck/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/depcheck/organization/2/website"><img src="https://opencollective.com/depcheck/organization/2/avatar.svg"></a>
+<a href="https://opencollective.com/depcheck/organization/3/website"><img src="https://opencollective.com/depcheck/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/depcheck/organization/4/website"><img src="https://opencollective.com/depcheck/organization/4/avatar.svg"></a>
+<a href="https://opencollective.com/depcheck/organization/5/website"><img src="https://opencollective.com/depcheck/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/depcheck/organization/6/website"><img src="https://opencollective.com/depcheck/organization/6/avatar.svg"></a>
+<a href="https://opencollective.com/depcheck/organization/7/website"><img src="https://opencollective.com/depcheck/organization/7/avatar.svg"></a>
+<a href="https://opencollective.com/depcheck/organization/8/website"><img src="https://opencollective.com/depcheck/organization/8/avatar.svg"></a>
+<a href="https://opencollective.com/depcheck/organization/9/website"><img src="https://opencollective.com/depcheck/organization/9/avatar.svg"></a>
 
 ## License
 
