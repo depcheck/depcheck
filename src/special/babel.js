@@ -1,6 +1,6 @@
 import path from 'path';
 import lodash from 'lodash';
-import requireFromString from 'require-from-string';
+import { loadConfig } from '../utils/linters';
 
 function parse(content) {
   try {
@@ -81,20 +81,16 @@ function checkOptions(deps, options = {}) {
   return optDeps.concat(envDeps);
 }
 
-export default function parseBabel(content, filePath, deps) {
-  const filename = path.basename(filePath);
+const regex = /^(\.babelrc|babelrc\.js|babel\.config\.js)?$/;
 
-  if (filename === '.babelrc') {
-    const options = parse(content);
-    return checkOptions(deps, options);
+export default function parseBabel(content, filePath, deps, rootDir) {
+  const config = loadConfig('babel', regex, filePath, content, rootDir);
+
+  if (config) {
+    return checkOptions(deps, config);
   }
 
-  if (filename === 'babel.config.js') {
-    const options = requireFromString(content);
-    return checkOptions(deps, options);
-  }
-
-  if (filename === 'package.json') {
+  if (path.basename(filePath) === 'package.json') {
     const metadata = parse(content);
     return checkOptions(deps, metadata.babel);
   }
