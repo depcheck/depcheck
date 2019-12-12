@@ -57,7 +57,6 @@
     "minimatch": "^3.0.2",
     "node-sass-tilde-importer": "^1.0.2",
     "please-upgrade-node": "^3.2.0",
-    "require-from-string": "^2.0.2",
     "require-package-name": "^2.0.1",
     "resolve": "^1.12.0",
     "vue-template-compiler": "^2.6.10",
