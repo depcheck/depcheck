@@ -114,14 +114,28 @@ export default function cli(args, log, error, exit) {
     )
     .then(() =>
       depcheck(rootDir, {
-        ...opt.argv.config !== undefined ? require(opt.argv.config) : {},
-        ...opt.argv.ignoreBinPackage ? { ignoreBinPackage: opt.argv.ignoreBinPackage } : {},
-        ...opt.argv.ignores !== undefined ? { ignoreMatches: (opt.argv.ignores || '').split(',') } : {},
-        ...opt.argv.ignoreDirs !== undefined ? { ignoreDirs: (opt.argv.ignoreDirs || '').split(',') } : {},
-        ...opt.argv.parsers !== undefined ? { parsers: getParsers(opt.argv.parsers) } : {},
-        ...opt.argv.detectors !== undefined ? { detectors: getDetectors(opt.argv.detectors) } : {},
-        ...opt.argv.specials !== undefined ? { specials: getSpecials(opt.argv.specials) } : {},
-        ...opt.argv.skipMissing !== undefined ? { skipMissing: opt.argv.skipMissing } : {},
+        ...(opt.argv.config !== undefined ? require(opt.argv.config) : {}), // eslint-disable-line global-require
+        ...(opt.argv.ignoreBinPackage
+          ? { ignoreBinPackage: opt.argv.ignoreBinPackage }
+          : {}),
+        ...(opt.argv.ignores !== undefined
+          ? { ignoreMatches: (opt.argv.ignores || '').split(',') }
+          : {}),
+        ...(opt.argv.ignoreDirs !== undefined
+          ? { ignoreDirs: (opt.argv.ignoreDirs || '').split(',') }
+          : {}),
+        ...(opt.argv.parsers !== undefined
+          ? { parsers: getParsers(opt.argv.parsers) }
+          : {}),
+        ...(opt.argv.detectors !== undefined
+          ? { detectors: getDetectors(opt.argv.detectors) }
+          : {}),
+        ...(opt.argv.specials !== undefined
+          ? { specials: getSpecials(opt.argv.specials) }
+          : {}),
+        ...(opt.argv.skipMissing !== undefined
+          ? { skipMissing: opt.argv.skipMissing }
+          : {}),
       }),
     )
     .then((result) => print(result, log, opt.argv.json, rootDir))
