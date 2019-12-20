@@ -114,7 +114,7 @@ export default function cli(args, log, error, exit) {
     )
     .then(() =>
       depcheck(rootDir, {
-        ...(opt.argv.config !== undefined ? require(opt.argv.config) : {}), // eslint-disable-line global-require
+        ...(opt.argv.config !== undefined ? require(path.resolve(opt.argv.config)) : {}), // eslint-disable-line global-require
         ...(opt.argv.ignoreBinPackage
           ? { ignoreBinPackage: opt.argv.ignoreBinPackage }
           : {}),
