@@ -104,17 +104,23 @@ export default function cli(args, log, error, exit) {
 
   const dir = opt.argv._[0] || '.';
   const rootDir = path.resolve(dir);
+  const config =
+    opt.argv.config !== undefined
+      ? require(path.resolve(opt.argv.config)) // eslint-disable-line global-require
+      : {};
 
   checkPathExist(rootDir, `Path ${dir} does not exist`)
     .then(() =>
-      checkPathExist(
-        path.resolve(rootDir, 'package.json'),
-        `Path ${dir} does not contain a package.json file`,
-      ),
+      config.package !== undefined
+        ? Promise.resolve()
+        : checkPathExist(
+            path.resolve(rootDir, 'package.json'),
+            `Path ${dir} does not contain a package.json file`,
+          ),
     )
     .then(() =>
       depcheck(rootDir, {
-        ...(opt.argv.config !== undefined ? require(path.resolve(opt.argv.config)) : {}), // eslint-disable-line global-require
+        ...config,
         ...(opt.argv.ignoreBinPackage
           ? { ignoreBinPackage: opt.argv.ignoreBinPackage }
           : {}),
