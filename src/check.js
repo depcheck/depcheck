@@ -222,17 +222,17 @@ function buildResult(
   const missingDepsLookup = skipMissing
     ? []
     : (() => {
-      const allDeps = deps
-        .concat(devDeps)
-        .concat(peerDeps)
-        .concat(optionalDeps);
+        const allDeps = deps
+          .concat(devDeps)
+          .concat(peerDeps)
+          .concat(optionalDeps);
 
-      const missingDeps = lodash.difference(usingDeps, allDeps);
-      return lodash(missingDeps)
-        .map((missingDep) => [missingDep, usingDepsLookup[missingDep]])
-        .fromPairs()
-        .value();
-    })();
+        const missingDeps = lodash.difference(usingDeps, allDeps);
+        return lodash(missingDeps)
+          .map((missingDep) => [missingDep, usingDepsLookup[missingDep]])
+          .fromPairs()
+          .value();
+      })();
 
   return {
     dependencies: lodash.difference(deps, usingDeps),
