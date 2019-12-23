@@ -218,18 +218,21 @@ function buildResult(
     .value();
 
   const usingDeps = Object.keys(usingDepsLookup);
-  const allDeps = deps
-    .concat(devDeps)
-    .concat(peerDeps)
-    .concat(optionalDeps);
-  const missingDeps = lodash.difference(usingDeps, allDeps);
 
   const missingDepsLookup = skipMissing
     ? []
-    : lodash(missingDeps)
+    : (() => {
+      const allDeps = deps
+        .concat(devDeps)
+        .concat(peerDeps)
+        .concat(optionalDeps);
+
+      const missingDeps = lodash.difference(usingDeps, allDeps);
+      return lodash(missingDeps)
         .map((missingDep) => [missingDep, usingDepsLookup[missingDep]])
         .fromPairs()
         .value();
+    })();
 
   return {
     dependencies: lodash.difference(deps, usingDeps),
