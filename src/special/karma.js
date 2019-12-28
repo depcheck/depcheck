@@ -6,7 +6,6 @@ import parseES7 from '../parser/es7';
 import getNodes from '../utils/parser';
 import { wrapToArray, wrapToMap } from '../utils';
 
-// TODO support karma.conf.coffee
 const supportedConfNames = [
   'karma.conf.js',
   'karma.conf.ts',
