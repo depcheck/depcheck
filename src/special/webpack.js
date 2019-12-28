@@ -119,7 +119,7 @@ function parseEntries(entries, deps) {
     .value();
 }
 
-export default function parseWebpack(content, filepath, deps) {
+export default function parseWebpack(_content, filepath, deps) {
   const filename = path.basename(filepath);
   if (webpackConfigRegex.test(filename)) {
     const wpConfig = tryRequire(filepath);
