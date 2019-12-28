@@ -2,7 +2,7 @@
 
 require('please-upgrade-node')(require('../package.json'));
 
-/* eslint-disable no-console, prefer-arrow-callback, comma-dangle */
+/* eslint-disable no-console */
 
 require('../dist/cli')(
   process.argv.slice(2),
@@ -10,5 +10,5 @@ require('../dist/cli')(
   console.error,
   function exit(code) {
     process.exitCode = code;
-  }
+  },
 );
