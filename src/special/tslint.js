@@ -1,6 +1,6 @@
 import * as path from 'path';
 import requirePackageName from 'require-package-name';
-import { loadConfig } from '../utils/linters';
+import { loadConfig } from '../utils/cli-tools';
 import { wrapToArray } from '../utils/index';
 
 function resolvePresetPackage(preset, rootDir) {

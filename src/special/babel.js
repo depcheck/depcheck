@@ -1,6 +1,6 @@
 import path from 'path';
 import lodash from 'lodash';
-import { loadConfig } from '../utils/linters';
+import { loadConfig } from '../utils/cli-tools';
 
 function parse(content) {
   try {
