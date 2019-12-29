@@ -4,7 +4,6 @@ on: [pull_request]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -12,21 +11,22 @@ jobs:
         node-version: [10.x, 12.x]
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
-      run: |
-        npm ci
-        npm run compile
-        npm run component
-        npm run depcheck
-        npm run depcheck-json
-        npm run lint
-        npm run test-coverage
-        npm run test-dependent
-        cat ./coverage/coverage.lcov | ./node_modules/.bin/codecov
-      env:
-        CI: true
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install, build, and test
+        run: |
+          npm ci
+          npm run compile
+          npm run component
+          npm run depcheck
+          npm run depcheck-json
+          npm run lint
+          npm run prettier-check
+          npm run test-coverage
+          npm run test-dependent
+          cat ./coverage/coverage.lcov | ./node_modules/.bin/codecov
+        env:
+          CI: true

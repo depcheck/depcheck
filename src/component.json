@@ -1,14 +1,6 @@
 {
   "notice": "This file is for debugging and testing only, the production one is built from `build/component.js` script.",
-  "parser": [
-    "coffee",
-    "es6",
-    "es7",
-    "jsx",
-    "sass",
-    "typescript",
-    "vue"
-  ],
+  "parser": ["coffee", "es6", "es7", "jsx", "sass", "typescript", "vue"],
   "detector": [
     "exportDeclaration",
     "expressViewEngine",
@@ -19,8 +11,5 @@
     "requireResolveCallExpression",
     "typescriptImportEqualsDeclaration"
   ],
-  "special": [
-    "eslint",
-    "mocha"
-  ]
+  "special": ["eslint", "mocha"]
 }

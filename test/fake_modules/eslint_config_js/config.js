@@ -1,6 +1,4 @@
-const jsConfig = "not just a simple json object here";
+const jsConfig = 'not just a simple json object here';
 module.exports = {
-  "extends": [
-    "foo-bar"
-  ]
+  extends: ['foo-bar'],
 };
