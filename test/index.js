@@ -1,5 +1,3 @@
-/* global describe, it, before, after */
-
 import 'should';
 import fs from 'fs';
 import path from 'path';

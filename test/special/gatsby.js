@@ -1,12 +1,7 @@
-/* global describe, it */
-
 import 'should';
 import gatsbySpecialParser from '../../src/special/gatsby';
 
-const plugins = [
-  'gatsby-plugin-sass',
-  'gatsby-plugin-react-helmet',
-];
+const plugins = ['gatsby-plugin-sass', 'gatsby-plugin-react-helmet'];
 
 describe('gatsby special parser', () => {
   it('should ignore when it is not `gatsby-config`', () => {
@@ -18,6 +13,9 @@ describe('gatsby special parser', () => {
     const content = `module.exports = { plugins : ${JSON.stringify(plugins)} }`;
 
     const result = gatsbySpecialParser(content, '/a/gatsby-config.js');
-    result.should.deepEqual(['gatsby-plugin-sass', 'gatsby-plugin-react-helmet']);
+    result.should.deepEqual([
+      'gatsby-plugin-sass',
+      'gatsby-plugin-react-helmet',
+    ]);
   });
 });

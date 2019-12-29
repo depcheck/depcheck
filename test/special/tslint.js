@@ -1,5 +1,3 @@
-/* global describe, it */
-
 import 'should';
 import yaml from 'js-yaml';
 import * as fs from 'fs';
@@ -22,11 +20,7 @@ const testCases = [
   {
     name: 'skip built-in configs',
     content: {
-      extends: [
-        'tslint:recommended',
-        'tslint:latest',
-        'tslint:foo',
-      ],
+      extends: ['tslint:recommended', 'tslint:latest', 'tslint:foo'],
     },
     expected: ['tslint'],
   },
@@ -49,24 +43,14 @@ const testCases = [
     content: {
       extends: 'some-module',
     },
-    expected: [
-      'tslint',
-      'some-module',
-    ],
+    expected: ['tslint', 'some-module'],
   },
   {
     name: 'handle config of multiple modules',
     content: {
-      extends: [
-        'some-module',
-        '@another/module',
-      ],
+      extends: ['some-module', '@another/module'],
     },
-    expected: [
-      'tslint',
-      'some-module',
-      '@another/module',
-    ],
+    expected: ['tslint', 'some-module', '@another/module'],
   },
   {
     name: 'handle tslint-plugin-prettier',
@@ -76,10 +60,7 @@ const testCases = [
         prettier: true,
       },
     },
-    expected: [
-      'tslint',
-      'tslint-plugin-prettier',
-    ],
+    expected: ['tslint', 'tslint-plugin-prettier'],
   },
   {
     name: 'handle deactivated tslint-plugin-prettier',
@@ -89,9 +70,7 @@ const testCases = [
         prettier: false,
       },
     },
-    expected: [
-      'tslint',
-    ],
+    expected: ['tslint'],
   },
 ];
 
@@ -102,7 +81,10 @@ function testTslint(deps, content) {
     '/path/to/tslint.yaml',
   ].forEach((pathToTslintrc) => {
     const result = tslintSpecialParser(
-      content, pathToTslintrc, deps, __dirname,
+      content,
+      pathToTslintrc,
+      deps,
+      __dirname,
     );
 
     result.should.deepEqual(deps);
@@ -129,7 +111,9 @@ describe('tslint special parser', () => {
       const rootDir = path.resolve(__dirname, '../fake_modules/tslint_config');
       const packagePath = path.resolve(rootDir, 'package.json');
       const packageContent = fs.readFileSync(packagePath, 'utf-8');
-      const dependencies = Object.keys(JSON.parse(packageContent).devDependencies);
+      const dependencies = Object.keys(
+        JSON.parse(packageContent).devDependencies,
+      );
       const result = tslintSpecialParser(
         packageContent,
         packagePath,
@@ -146,7 +130,9 @@ describe('tslint special parser', () => {
       );
       const packagePath = path.resolve(rootDir, 'package.json');
       const packageContent = fs.readFileSync(packagePath, 'utf-8');
-      const dependencies = Object.keys(JSON.parse(packageContent).devDependencies);
+      const dependencies = Object.keys(
+        JSON.parse(packageContent).devDependencies,
+      );
       const result = tslintSpecialParser(
         packageContent,
         packagePath,
@@ -158,12 +144,14 @@ describe('tslint special parser', () => {
   });
 
   describe('with JSON format', () =>
-    testCases.forEach(testCase =>
+    testCases.forEach((testCase) =>
       it(`should ${testCase.name}`, () =>
-        testTslint(testCase.expected, JSON.stringify(testCase.content)))));
+        testTslint(testCase.expected, JSON.stringify(testCase.content))),
+    ));
 
   describe('with YAML format', () =>
-    testCases.forEach(testCase =>
+    testCases.forEach((testCase) =>
       it(`should ${testCase.name}`, () =>
-        testTslint(testCase.expected, yaml.safeDump(testCase.content)))));
+        testTslint(testCase.expected, yaml.safeDump(testCase.content))),
+    ));
 });

@@ -1,5 +1,3 @@
-/* global describe, it */
-
 import 'should';
 import parse from '../../src/special/gulp-load-plugins';
 
@@ -48,8 +46,8 @@ describe('gulp-load-plugins special parser', () => {
     },
   };
 
-  ['gulpfile.js', 'gulpfile.babel.js'].forEach(gulpFileName =>
-    Object.keys(testCases).forEach(name =>
+  ['gulpfile.js', 'gulpfile.babel.js'].forEach((gulpFileName) =>
+    Object.keys(testCases).forEach((name) =>
       it(`should recognize ${name}`, () => {
         const testCase = testCases[name];
         const result = parse(
@@ -60,5 +58,7 @@ describe('gulp-load-plugins special parser', () => {
         );
 
         result.should.deepEqual([testCase.dependency]);
-      })));
+      }),
+    ),
+  );
 });

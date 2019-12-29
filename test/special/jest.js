@@ -1,5 +1,3 @@
-/* global describe, it */
-
 import 'should';
 import path from 'path';
 import fse from 'fs-extra';
@@ -90,14 +88,8 @@ const testCases = [
     deps: ['jest-custom-reporter', 'jest-reporter'],
     content: {
       reporters: [
-        [
-          'jest-custom-reporter',
-          { foo: 'bar' },
-        ],
-        [
-          '<rootDir>/node_modules/jest-reporter',
-          { jest: 'reporter' },
-        ],
+        ['jest-custom-reporter', { foo: 'bar' }],
+        ['<rootDir>/node_modules/jest-reporter', { jest: 'reporter' }],
       ],
     },
   },
@@ -127,7 +119,9 @@ const testCases = [
 ];
 
 function random() {
-  return Math.random().toString().substring(2);
+  return Math.random()
+    .toString()
+    .substring(2);
 }
 
 async function getTempPath(filename, content) {
@@ -145,14 +139,13 @@ async function removeTempFile(filepath) {
 }
 
 async function testJest(content, deps, expectedDeps, filename) {
-  const tempPath = await getTempPath(
-    (filename || configFileNames[0]),
-    content,
-  );
+  const tempPath = await getTempPath(filename || configFileNames[0], content);
   try {
     const result = jestSpecialParser(content, tempPath, deps, __dirname);
     // sort() allows us to ignore order
-    Array.from(result).sort().should.deepEqual(expectedDeps.sort());
+    Array.from(result)
+      .sort()
+      .should.deepEqual(expectedDeps.sort());
   } finally {
     await removeTempFile(tempPath);
   }
@@ -229,8 +222,8 @@ describe('jest special parser', () => {
     return testJest(content, [], []);
   });
 
-  configFileNames.forEach(fileName => (
-    testCases.forEach(testCase => (
+  configFileNames.forEach((fileName) =>
+    testCases.forEach((testCase) =>
       it(`should ${testCase.name} in config file ${fileName}`, () => {
         const config = JSON.stringify(testCase.content);
         let content = config;
@@ -238,7 +231,7 @@ describe('jest special parser', () => {
           content = `module.exports = ${config}`;
         }
         return testJest(content, testCase.deps, testCase.deps, fileName);
-      })
-    ))
-  ));
+      }),
+    ),
+  );
 });

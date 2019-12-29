@@ -1,9 +1,9 @@
-/* global describe, it */
-
 import 'should';
 import path from 'path';
+import fs from 'fs';
 import fse from 'fs-extra';
 import parse from '../../src/special/webpack';
+import { tryRequire } from '../../src/utils';
 
 const configFileNames = [
   'webpack.config.js',
@@ -22,18 +22,14 @@ const testCases = [
     name: 'recognize single long-name webpack loader',
     deps: ['jade-loader'],
     module: {
-      loaders: [
-        { test: /\.jade$/, loader: 'jade-loader' },
-      ],
+      loaders: [{ test: /\.jade$/, loader: 'jade-loader' }],
     },
   },
   {
     name: 'recognize single short-name webpack loader',
     deps: ['jade-loader'],
     module: {
-      loaders: [
-        { test: /\.jade$/, loader: 'jade' },
-      ],
+      loaders: [{ test: /\.jade$/, loader: 'jade' }],
     },
   },
   {
@@ -50,48 +46,36 @@ const testCases = [
     name: 'recognize multiple webpack loaders concatenated with exclamation',
     deps: ['style-loader', 'css-loader'],
     module: {
-      loaders: [
-        { test: /\.css$/, loader: 'style!css' },
-      ],
+      loaders: [{ test: /\.css$/, loader: 'style!css' }],
     },
   },
   {
     name: 'recognize multiple webpack loaders within loaders property',
     deps: ['style-loader', 'css-loader'],
     module: {
-      loaders: [
-        { test: /\.css$/, loaders: ['style', 'css'] },
-      ],
+      loaders: [{ test: /\.css$/, loaders: ['style', 'css'] }],
     },
   },
   {
     name: 'recognize webpack loader with query parameters',
     deps: ['url-loader'],
     module: {
-      loaders: [
-        { test: /\.png$/, loader: 'url-loader?mimetype=image/png' },
-      ],
+      loaders: [{ test: /\.png$/, loader: 'url-loader?mimetype=image/png' }],
     },
   },
   {
     name: 'recognize webpack loaders in preLoaders and postLoaders properties',
     deps: ['pre-webpack-loader', 'post-webpack-loader'],
     module: {
-      preLoaders: [
-        { test: /\.pre$/, loader: 'pre' },
-      ],
-      postLoaders: [
-        { test: /\.post$/, loader: 'post' },
-      ],
+      preLoaders: [{ test: /\.pre$/, loader: 'pre' }],
+      postLoaders: [{ test: /\.post$/, loader: 'post' }],
     },
   },
   {
     name: 'recognize webpack v2 loaders in module.rules.loaders (string array)',
     deps: ['style-loader', 'css-loader'],
     module: {
-      rules: [
-        { test: /\.css$/, loaders: ['style-loader', 'css-loader'] },
-      ],
+      rules: [{ test: /\.css$/, loaders: ['style-loader', 'css-loader'] }],
     },
   },
   {
@@ -99,7 +83,10 @@ const testCases = [
     deps: ['style-loader', 'css-loader'],
     module: {
       rules: [
-        { test: /\.css$/, loaders: [{ loader: 'style-loader' }, { loader: 'css-loader' }] },
+        {
+          test: /\.css$/,
+          loaders: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+        },
       ],
     },
   },
@@ -107,45 +94,35 @@ const testCases = [
     name: 'recognize webpack v2 loaders in module.rules.loader',
     deps: ['style-loader'],
     module: {
-      rules: [
-        { test: /\.css$/, loader: 'style-loader' },
-      ],
+      rules: [{ test: /\.css$/, loader: 'style-loader' }],
     },
   },
   {
     name: 'recognize webpack v2 loaders in module.rules.loader (string array)',
     deps: ['style-loader'],
     module: {
-      rules: [
-        { test: /\.css$/, loader: ['style-loader'] },
-      ],
+      rules: [{ test: /\.css$/, loader: ['style-loader'] }],
     },
   },
   {
     name: 'recognize webpack v2 loaders in module.rules.use',
     deps: ['style-loader'],
     module: {
-      rules: [
-        { test: /\.css$/, use: 'style-loader' },
-      ],
+      rules: [{ test: /\.css$/, use: 'style-loader' }],
     },
   },
   {
     name: 'recognize webpack v2 loaders in module.rules.use (string array)',
     deps: ['style-loader', 'css-loader'],
     module: {
-      rules: [
-        { test: /\.css$/, use: ['style-loader', 'css-loader'] },
-      ],
+      rules: [{ test: /\.css$/, use: ['style-loader', 'css-loader'] }],
     },
   },
   {
     name: 'recognize webpack v2 loaders in module.rules.use (object)',
     deps: ['style-loader'],
     module: {
-      rules: [
-        { test: /\.css$/, use: { loader: 'style-loader' } },
-      ],
+      rules: [{ test: /\.css$/, use: { loader: 'style-loader' } }],
     },
   },
   {
@@ -153,7 +130,10 @@ const testCases = [
     deps: ['style-loader', 'css-loader'],
     module: {
       rules: [
-        { test: /\.css$/, use: [{ loader: 'style-loader' }, { loader: 'css-loader' }] },
+        {
+          test: /\.css$/,
+          use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+        },
       ],
     },
   },
@@ -170,18 +150,14 @@ const testCases = [
     name: 'recognize webpack v2 loaders in module.rules.loader (object array)',
     deps: ['style-loader'],
     module: {
-      rules: [
-        { test: /\.css$/, loader: [{ loader: 'style-loader' }] },
-      ],
+      rules: [{ test: /\.css$/, loader: [{ loader: 'style-loader' }] }],
     },
   },
   {
     name: 'handle invalid/unrecognised webpack v2 loaders',
     deps: [],
     module: {
-      rules: [
-        { test: /\.css$/, loader: [{ loader: null }, 1] },
-      ],
+      rules: [{ test: /\.css$/, loader: [{ loader: null }, 1] }],
     },
   },
   {
@@ -199,7 +175,7 @@ const testCases = [
     deps: ['polyfill'],
     entry: {
       polyfill: 'polyfill',
-      app: './src/app'
+      app: './src/app',
     },
   },
   {
@@ -207,7 +183,7 @@ const testCases = [
     deps: ['polyfill', 'font'],
     entry: {
       polyfill: ['polyfill', 'font'],
-      app: './src/app'
+      app: './src/app',
     },
   },
   {
@@ -216,13 +192,16 @@ const testCases = [
     module: {
       rules: [
         {
-          test: /\.js$/, use: {
+          test: /\.js$/,
+          use: {
             loader: 'babel-loader',
-            options: { presets: [
-              ['@babel/preset1', { option: 'option' }],
-              '@babel/preset2'
-            ]},
-          }
+            options: {
+              presets: [
+                ['@babel/preset1', { option: 'option' }],
+                '@babel/preset2',
+              ],
+            },
+          },
         },
       ],
     },
@@ -235,7 +214,9 @@ const testCases = [
 ];
 
 function random() {
-  return Math.random().toString().substring(2);
+  return Math.random()
+    .toString()
+    .substring(2);
 }
 
 async function getTempPath(filename, content) {
@@ -254,12 +235,31 @@ async function removeTempFile(filepath) {
 
 async function testWebpack(filename, content, deps, expectedDeps) {
   const tempPath = await getTempPath(filename, content);
-  const result = parse(content, tempPath, deps, __dirname);
+  const result = parse('content', tempPath, deps);
   await removeTempFile(tempPath);
   Array.from(result).should.deepEqual(expectedDeps);
 }
 
+function registerTs(rootDir) {
+  const ts = tryRequire('typescript', [rootDir, process.cwd(), __dirname]);
+  if (ts) {
+    require.extensions['.ts'] = (module, filename) => {
+      const content = fs.readFileSync(filename, 'utf8');
+      const options = tryRequire(path.join(rootDir, 'package.json')) || {};
+      options.fileName = filename;
+      const transpiled = ts.transpileModule(
+        content.charCodeAt(0) === 0xfeff ? content.slice(1) : content,
+        options,
+      );
+      // eslint-disable-next-line no-underscore-dangle
+      module._compile(transpiled.outputText, filename);
+    };
+  }
+}
+
 describe('webpack special parser', () => {
+  registerTs('.');
+
   it('should ignore when filename is not supported', () => {
     const result = parse('content', 'not-supported.txt', []);
     result.should.deepEqual([]);
@@ -275,16 +275,27 @@ describe('webpack special parser', () => {
   it('should handle require call to other modules', () => {
     const config = JSON.stringify({ module: testCases[0].module });
     const content = `module.exports = ${config}\nrequire('webpack')`;
-    return testWebpack('webpack.config.js', content, testCases[0].deps, testCases[0].deps);
+    return testWebpack(
+      'webpack.config.js',
+      content,
+      testCases[0].deps,
+      testCases[0].deps,
+    );
   });
 
-  configFileNames.forEach(fileName =>
-    testCases.forEach(testCase =>
+  configFileNames.forEach((fileName) =>
+    testCases.forEach((testCase) =>
       it(`should ${testCase.name} in configuration file ${fileName}`, () => {
-        const config = JSON.stringify({ entry: testCase.entry, module: testCase.module });
+        const config = JSON.stringify({
+          entry: testCase.entry,
+          module: testCase.module,
+        });
         const content = fileName.endsWith('.ts')
           ? `const config: any = ${config}\nmodule.exports = config`
           : `module.exports = ${config}`;
+
         return testWebpack(fileName, content, testCase.deps, testCase.deps);
-      })));
+      }),
+    ),
+  );
 });

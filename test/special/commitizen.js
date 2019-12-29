@@ -1,5 +1,3 @@
-/* global describe, it */
-
 import 'should';
 import commitizenSpecialParser from '../../src/special/commitizen';
 
@@ -17,7 +15,12 @@ describe('commitizen special parser', () => {
     };
 
     const content = JSON.stringify(metadata);
-    const result = commitizenSpecialParser(content, '/a/package.json', [], '/a');
+    const result = commitizenSpecialParser(
+      content,
+      '/a/package.json',
+      [],
+      '/a',
+    );
     result.should.deepEqual([]);
   });
 
@@ -31,7 +34,12 @@ describe('commitizen special parser', () => {
     };
 
     const content = JSON.stringify(metadata);
-    const result = commitizenSpecialParser(content, '/a/package.json', [], '/a');
+    const result = commitizenSpecialParser(
+      content,
+      '/a/package.json',
+      [],
+      '/a',
+    );
     result.should.deepEqual(['cz-test']);
   });
 
@@ -45,7 +53,12 @@ describe('commitizen special parser', () => {
     };
 
     const content = JSON.stringify(metadata);
-    const result = commitizenSpecialParser(content, '/a/package.json', [], '/a');
+    const result = commitizenSpecialParser(
+      content,
+      '/a/package.json',
+      [],
+      '/a',
+    );
     result.should.deepEqual(['cz-test']);
   });
 });

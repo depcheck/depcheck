@@ -1,5 +1,3 @@
-/* global describe, it, before, after */
-
 import 'should';
 import path from 'path';
 import cli from '../src/cli';

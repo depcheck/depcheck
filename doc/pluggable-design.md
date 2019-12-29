@@ -8,7 +8,7 @@ Here is the normal depcheck workflow:
 walk files under directory -> parse file -> detect packages it used
 ```
 
-There are three parts in the workflow: *walk files*, *parse file* and *detect packages*. The second and third part can be customized with **parser** and **detection**.
+There are three parts in the workflow: _walk files_, _parse file_ and _detect packages_. The second and third part can be customized with **parser** and **detection**.
 
 ## Parser
 
@@ -25,11 +25,8 @@ var opts = {
   parsers: {
     '*.js': depcheck.parser.es6,
     '*.jsx': depcheck.parser.jsx,
-    '*.json': [
-      depcheck.parser.json,
-      customJsonParser
-    ]
-  }
+    '*.json': [depcheck.parser.json, customJsonParser],
+  },
 };
 ```
 
@@ -43,14 +40,14 @@ Here is the default `parsers` option value when user not specify explicitly:
 var opts = {
   parsers: {
     '*.js': depcheck.parser.es6,
-    '*.jsx': depcheck.parser.jsx
-  }
+    '*.jsx': depcheck.parser.jsx,
+  },
 };
 ```
 
 ### Use Parser From CLI
 
-From CLI, user can only specify the out-of-box parsers. The CLI evaluates the value from `--parsers` argument, then convert it into *glob-parser* pairs. The syntax of `--parsers` argument looks like this:
+From CLI, user can only specify the out-of-box parsers. The CLI evaluates the value from `--parsers` argument, then convert it into _glob-parser_ pairs. The syntax of `--parsers` argument looks like this:
 
 ```
 --parsers="*.js:es6,*.jsx:jsx,*.json:json1&json2"
@@ -58,7 +55,7 @@ From CLI, user can only specify the out-of-box parsers. The CLI evaluates the va
 
 The quote mark (`"`) wrapping the value is to avoid the start mark (`*`) be parsed by CLI.
 
-As shown from the example, each *glob-parser* pair is concatenate with comma (`,`). For the glob corresponds to multiple parsers, concatenate them with `&` mark. Each parser name needs to match the parsers shipped under `depcheck.parser`.
+As shown from the example, each _glob-parser_ pair is concatenate with comma (`,`). For the glob corresponds to multiple parsers, concatenate them with `&` mark. Each parser name needs to match the parsers shipped under `depcheck.parser`.
 
 The above CLI argument is equivalent to the following API options:
 
@@ -67,11 +64,8 @@ var opts = {
   parsers: {
     '*.js': depcheck.parser.es6,
     '*.jsx': depcheck.parser.jsx,
-    '*.json': [
-      depcheck.parser.json1,
-      depcheck.parser.json2,
-    ]
-  }
+    '*.json': [depcheck.parser.json1, depcheck.parser.json2],
+  },
 };
 ```
 
@@ -91,7 +85,7 @@ There are two return value type can be handled by depcheck. The first type is AS
 
 The second option is plain string array. The string array indicates these packages **is used** by the file. Depcheck will mark these packages as dependencies and **skip the detector step**.
 
-On the parse error case, throw `SyntaxError` exception and depcheck will capture it and store it to the `invalidFiles` property in the result. When multiple parse error happens, *only one* error is stored in the `invalidFiles` property.
+On the parse error case, throw `SyntaxError` exception and depcheck will capture it and store it to the `invalidFiles` property in the result. When multiple parse error happens, _only one_ error is stored in the `invalidFiles` property.
 
 ## Detector
 
@@ -118,8 +112,8 @@ const opts = {
     depcheck.detector.requireResolveCallExpression,
     depcheck.detector.importDeclaration,
     depcheck.detector.exportNamedDeclaration,
-    depcheck.detector.gruntLoadTaskCallExpression // for backward compatible
-  ]
+    depcheck.detector.gruntLoadTaskCallExpression, // for backward compatible
+  ],
 };
 ```
 
@@ -141,8 +135,8 @@ The above CLI argument is equivalent to the following API options:
 var opts = {
   detectors: [
     depcheck.detector.requireCallExpression,
-    depcheck.detector.anotherDetector
-  ]
+    depcheck.detector.anotherDetector,
+  ],
 };
 ```
 
@@ -168,9 +162,9 @@ Please ensure your detector test node type before evaluate it - AST's `node.type
 
 ## Special Parser
 
-Special parser is one kind of parser, but it is *special*.
+Special parser is one kind of parser, but it is _special_.
 
-Usually, we find the using dependencies from source codes. But, sometimes, it is easier to target a specified dependency, then find whether it is used in the codes or not. That is the situation our *special* parser comes in.
+Usually, we find the using dependencies from source codes. But, sometimes, it is easier to target a specified dependency, then find whether it is used in the codes or not. That is the situation our _special_ parser comes in.
 
 **Every** file will be passed to **every** special parser for evaluation. The special parser reports the dependency packages from files.
 
@@ -180,10 +174,7 @@ Depcheck API exposes `specials` property, which accepts an array, in options to 
 
 ```js
 var opts = {
-  specials: [
-    depcheck.special.eslint,
-    depcheck.special.webpack
-  ]
+  specials: [depcheck.special.eslint, depcheck.special.webpack],
 };
 ```
 
@@ -199,10 +190,7 @@ The above example is equivalent to the following API options:
 
 ```js
 var opts = {
-  specials: [
-    depcheck.special.bin,
-    depcheck.special.eslint
-  ]
+  specials: [depcheck.special.bin, depcheck.special.eslint],
 };
 ```
 
@@ -216,7 +204,12 @@ function airbnbEslintConfig(content, filePath, deps, dir) {
   if (filename === '.eslintrc' && deps.indexOf('eslint-config-airbnb') !== -1) {
     var eslintConfig = JSON.parser(content);
     if (eslintConfig.extends === 'airbnb') {
-      return ['eslint-config-airbnb', 'eslint', 'babel-eslint', 'eslint-plugin-react'];
+      return [
+        'eslint-config-airbnb',
+        'eslint',
+        'babel-eslint',
+        'eslint-plugin-react',
+      ];
     }
   }
 
@@ -224,7 +217,7 @@ function airbnbEslintConfig(content, filePath, deps, dir) {
 }
 ```
 
-As seen from the code snippet, there are four parameters passed into the *special* parser:
+As seen from the code snippet, there are four parameters passed into the _special_ parser:
 
 - Content, same as normal parser, the file content.
 - FilePath, the file path, use `path.basename` to retrieve the file name.

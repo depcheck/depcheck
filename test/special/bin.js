@@ -1,5 +1,3 @@
-/* global describe, it */
-
 import 'should';
 import parse from '../../src/special/bin';
 
@@ -114,24 +112,26 @@ describe('bin special parser', () => {
   });
 
   describe('on `package.json`', () =>
-    testCases.forEach(testCase =>
+    testCases.forEach((testCase) =>
       it(`should ${testCase.name}`, () => {
         const content = testCase.script
           ? JSON.stringify({ scripts: { t: testCase.script } })
           : '{}';
 
         testParser(testCase, content, `/path/to/${testCase.name}/package.json`);
-      })));
+      }),
+    ));
 
   describe('on `.travis.yml`', () =>
-    testCases.forEach(testCase =>
+    testCases.forEach((testCase) =>
       it(`should ${testCase.name}`, () => {
         const content = testCase.script
           ? `script:\n  - ${testCase.script}`
           : '';
 
         testParser(testCase, content, `/path/to/${testCase.name}/.travis.yml`);
-      })));
+      }),
+    ));
 
   it('should check lifecycle commands in `.travis.yml` file', () => {
     const content = `before_deploy:\n  - ${testCases[0].script}`;

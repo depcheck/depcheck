@@ -1,5 +1,3 @@
-/* global describe, it */
-
 import 'should';
 import parse from '../../src/special/babel';
 
@@ -70,16 +68,23 @@ const testCases = [
     deps: ['babel-plugin-transform-async-to-module-method'],
     options: {
       plugins: [
-        ['transform-async-to-module-method', {
-          module: 'bluebird',
-          method: 'coroutine',
-        }],
+        [
+          'transform-async-to-module-method',
+          {
+            module: 'bluebird',
+            method: 'coroutine',
+          },
+        ],
       ],
     },
   },
   {
     name: 'recognize tranforms used in babel-plugin-react-transform',
-    deps: ['babel-plugin-react-transform', 'react-transform-hmr', 'react-transform-catch-errors'],
+    deps: [
+      'babel-plugin-react-transform',
+      'react-transform-hmr',
+      'react-transform-catch-errors',
+    ],
     options: {
       plugins: [
         [
@@ -122,20 +127,27 @@ describe('babel special parser', () => {
       presets: ['es2015'],
     });
 
-    const result = parse(content, '/path/to/.babelrc', ['babel-preset-es2015', 'dep']);
+    const result = parse(content, '/path/to/.babelrc', [
+      'babel-preset-es2015',
+      'dep',
+    ]);
     result.should.deepEqual(['babel-preset-es2015']);
   });
 
   it('should detect babel.config.js', () => {
-    const content = 'module.exports = { presets: [\'es2015\' ] }';
+    const content = "module.exports = { presets: ['es2015' ] }";
 
-    const result = parse(content, '/path/to/babel.config.js', ['babel-preset-es2015', 'dep']);
+    const result = parse(content, '/path/to/babel.config.js', [
+      'babel-preset-es2015',
+      'dep',
+    ]);
     result.should.deepEqual(['babel-preset-es2015']);
   });
 
-  testCases.forEach(testCase =>
+  testCases.forEach((testCase) =>
     it(`should ${testCase.name} in .babelrc file`, () =>
-      testBabel('.babelrc', testCase.deps, testCase.options)));
+      testBabel('.babelrc', testCase.deps, testCase.options)),
+  );
 
   testCases.forEach((testCase) =>
     it(`should ${testCase.name} inside .babelrc file env section`, () =>
@@ -143,7 +155,8 @@ describe('babel special parser', () => {
         env: {
           production: testCase.options,
         },
-      })));
+      })),
+  );
 
   testCases.forEach((testCase) =>
     it(`should ${testCase.name} in package.json file`, () =>
@@ -151,7 +164,8 @@ describe('babel special parser', () => {
         name: 'my-package',
         version: '1.0.0',
         babel: testCase.options,
-      })));
+      })),
+  );
 
   testCases.forEach((testCase) =>
     it(`should ${testCase.name} inside package.json file env section`, () =>
@@ -163,5 +177,6 @@ describe('babel special parser', () => {
             development: testCase.options,
           },
         },
-      })));
+      })),
+  );
 });

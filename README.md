@@ -17,7 +17,7 @@ Depcheck is a tool for analyzing the dependencies in a project to see: how each 
 npm install -g depcheck
 ```
 
-*Notice:* depcheck needs node.js >= 10.
+_Notice:_ depcheck needs node.js >= 10.
 
 ## Syntax Support
 
@@ -38,7 +38,7 @@ npm install -g depcheck typescript
 
 ## Special
 
-The *special* component is used to recognize the dependencies that are not generally used in the above syntax files. The following scenarios are supported by specials:
+The _special_ component is used to recognize the dependencies that are not generally used in the above syntax files. The following scenarios are supported by specials:
 
 - `bin` - Dependencies used in npm commands, Travis scripts or other CI scripts
 - `eslint` - [ESLint](https://www.npmjs.com/package/eslint) configuration presets, parsers and plugins
@@ -92,36 +92,42 @@ import depcheck from 'depcheck';
 const options = {
   ignoreBinPackage: false, // ignore the packages with bin entry
   skipMissing: false, // skip calculation of missing dependencies
-  ignoreDirs: [ // folder with these names will be ignored
+  ignoreDirs: [
+    // folder with these names will be ignored
     'sandbox',
     'dist',
-    'bower_components'
+    'bower_components',
   ],
-  ignoreMatches: [ // ignore dependencies that matches these globs
-    'grunt-*'
+  ignoreMatches: [
+    // ignore dependencies that matches these globs
+    'grunt-*',
   ],
-  parsers: { // the target parsers
+  parsers: {
+    // the target parsers
     '*.js': depcheck.parser.es6,
-    '*.jsx': depcheck.parser.jsx
+    '*.jsx': depcheck.parser.jsx,
   },
-  detectors: [ // the target detectors
+  detectors: [
+    // the target detectors
     depcheck.detector.requireCallExpression,
-    depcheck.detector.importDeclaration
+    depcheck.detector.importDeclaration,
   ],
-  specials: [ // the target special parsers
+  specials: [
+    // the target special parsers
     depcheck.special.eslint,
-    depcheck.special.webpack
+    depcheck.special.webpack,
   ],
-  package: { // may specify dependencies instead of parsing package.json
+  package: {
+    // may specify dependencies instead of parsing package.json
     dependencies: {
-      lodash: '^4.17.15'
+      lodash: '^4.17.15',
     },
     devDependencies: {
-      eslint: '^6.6.0'
+      eslint: '^6.6.0',
     },
     peerDependencies: {},
-    optionalDependencies: {}
-  }
+    optionalDependencies: {},
+  },
 };
 
 depcheck('/path/to/your/project', options, (unused) => {
@@ -200,7 +206,7 @@ $> depcheck /path/to/my/project --json | json
 
 Depcheck just walks through all files and tries to find the dependencies according to some predefined rules. However, the predefined rules may not be enough or may even be wrong.
 
-There may be some cases in which a dependency is being used but is reported as unused, or a dependency is not used but is reported as missing. These are *false alert* situations.
+There may be some cases in which a dependency is being used but is reported as unused, or a dependency is not used but is reported as missing. These are _false alert_ situations.
 
 If you find that depcheck is reporting a false alert, please [open an issue](https://github.com/depcheck/depcheck/issues/new) with the following information to let us know:
 
