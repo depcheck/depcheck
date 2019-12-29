@@ -71,7 +71,30 @@ var opts = {
       depcheck.parser.json1,
       depcheck.parser.json2,
     ]
+};
+```
+
+### Use Parser From JSON configuration
+
+With the JSON configuration (set in package.json), you can configure it like the following.
+
+```json
+"depcheck": {
+  "parsers": {
+    "*.js": "es6",
+    "*.jsx": "jsx",
   }
+}
+```
+
+The above JSON configuration is equivalent to the following API options:
+
+```js
+var opts = {
+  parsers: {
+    '*.js': depcheck.parser.es6,
+    '*.jsx': depcheck.parser.jsx,
+  },
 };
 ```
 
@@ -146,6 +169,19 @@ var opts = {
 };
 ```
 
+### Use Detector with the JSON configuration
+
+With the JSON configuration (set in package.json), you could configure it like the following.
+
+```json
+"depcheck": {
+  "detectors": [
+    "requireCallExpression",
+    "anotherDetector"
+  ]
+}
+```
+
 ### Implement Custom Detector
 
 Detector is a JavaScript function accepts an AST node and package dependencies and returns an array of dependency package names.
@@ -204,6 +240,19 @@ var opts = {
     depcheck.special.eslint
   ]
 };
+```
+
+### Use Special Parser with the JSON configuration
+
+With the JSON configuration (set in package.json), you could configure it like the following.
+
+```json
+"depcheck": {
+  "specials": [
+    "bin",
+    "eslint"
+  ]
+}
 ```
 
 ### Implement Custom Special Parser

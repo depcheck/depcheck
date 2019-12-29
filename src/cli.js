@@ -4,6 +4,8 @@ import yargs from 'yargs';
 import lodash from 'lodash';
 
 import depcheck from './index';
+import { readJSON } from './utils';
+
 import { version } from '../package.json';
 
 function checkPathExist(dir, errorMessage) {
@@ -13,8 +15,13 @@ function checkPathExist(dir, errorMessage) {
 }
 
 function getParsers(parsers) {
-  return lodash.isUndefined(parsers)
-    ? undefined
+  if (lodash.isUndefined(parsers)) {
+    return undefined;
+  }
+  return lodash.isObject(parsers)
+    ? lodash(parsers)
+        .mapValues((name) => depcheck.parser[name])
+        .value()
     : lodash(parsers)
         .split(',')
         .map((keyValuePair) => keyValuePair.split(':'))
@@ -26,14 +33,20 @@ function getParsers(parsers) {
 }
 
 function getDetectors(detectors) {
-  return lodash.isUndefined(detectors)
-    ? undefined
+  if (lodash.isUndefined(detectors)) {
+    return undefined;
+  }
+  return lodash.isArray(detectors)
+    ? detectors.map((name) => depcheck.detector[name])
     : detectors.split(',').map((name) => depcheck.detector[name]);
 }
 
 function getSpecials(specials) {
-  return lodash.isUndefined(specials)
-    ? undefined
+  if (lodash.isUndefined(specials)) {
+    return undefined;
+  }
+  return lodash.isArray(specials)
+    ? specials.map((name) => depcheck.special[name])
     : specials.split(',').map((name) => depcheck.special[name]);
 }
 
@@ -85,11 +98,7 @@ export default function cli(args, log, error, exit) {
   const opt = yargs(args)
     .usage('Usage: $0 [DIRECTORY]')
     .boolean(['dev', 'ignore-bin-package', 'skip-missing'])
-    .default({
-      dev: true,
-      'ignore-bin-package': false,
-      'skip-missing': false,
-    })
+    .default({ dev: true })
     .describe('ignore-bin-package', 'Ignore package with bin entry')
     .describe('skip-missing', 'Skip calculation of missing dependencies')
     .describe('json', 'Output results to JSON')
@@ -111,15 +120,34 @@ export default function cli(args, log, error, exit) {
         `Path ${dir} does not contain a package.json file`,
       ),
     )
-    .then(() =>
+    .then(() => readJSON(path.join(rootDir, 'package.json')))
+    .then((packageJson) =>
       depcheck(rootDir, {
-        ignoreBinPackage: opt.argv.ignoreBinPackage,
-        ignoreMatches: (opt.argv.ignores || '').split(','),
-        ignoreDirs: (opt.argv.ignoreDirs || '').split(','),
-        parsers: getParsers(opt.argv.parsers),
-        detectors: getDetectors(opt.argv.detectors),
-        specials: getSpecials(opt.argv.specials),
-        skipMissing: opt.argv.skipMissing,
+        ignoreBinPackage:
+          typeof opt.argv.ignoreBinPackage !== 'undefined'
+            ? opt.argv.ignoreBinPackage
+            : lodash.get(packageJson, 'depcheck.ignoreBinPackage'),
+        ignoreMatches:
+          typeof opt.argv.ignores !== 'undefined'
+            ? opt.argv.ignores.split(',')
+            : lodash.get(packageJson, 'depcheck.ignoreMatches'),
+        ignoreDirs:
+          typeof opt.argv.ignoreDirs !== 'undefined'
+            ? opt.argv.ignoreDirs.split(',')
+            : lodash.get(packageJson, 'depcheck.ignoreDirs'),
+        parsers: getParsers(
+          opt.argv.parsers || lodash.get(packageJson, 'depcheck.parsers'),
+        ),
+        detectors: getDetectors(
+          opt.argv.detectors || lodash.get(packageJson, 'depcheck.detectors'),
+        ),
+        specials: getSpecials(
+          opt.argv.specials || lodash.get(packageJson, 'depcheck.specials'),
+        ),
+        skipMissing:
+          typeof opt.argv.skipMissing !== 'undefined'
+            ? opt.argv.skipMissing
+            : lodash.get(packageJson, 'depcheck.skipMissing'),
       }),
     )
     .then((result) => print(result, log, opt.argv.json, rootDir))
