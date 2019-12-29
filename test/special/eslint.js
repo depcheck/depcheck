@@ -1,5 +1,3 @@
-/* global describe, it */
-
 import 'should';
 import yaml from 'js-yaml';
 import * as path from 'path';

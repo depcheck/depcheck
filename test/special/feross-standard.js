@@ -1,5 +1,3 @@
-/* global describe, it */
-
 import 'should';
 import standardSpecialParser from '../../src/special/feross-standard';
 

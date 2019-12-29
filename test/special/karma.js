@@ -1,5 +1,3 @@
-/* global describe, it */
-
 import path from 'path';
 import proxyquire from 'proxyquire';
 import 'should';

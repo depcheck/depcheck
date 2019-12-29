@@ -1,5 +1,3 @@
-/* global describe, it */
-
 import 'should';
 import gatsbySpecialParser from '../../src/special/gatsby';
 

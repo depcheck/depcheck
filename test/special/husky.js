@@ -1,5 +1,3 @@
-/* global describe, it */
-
 import 'should';
 import parse from '../../src/special/husky';
 
