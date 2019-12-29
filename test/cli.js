@@ -95,14 +95,19 @@ describe('depcheck command line', () => {
   });
 
   it('should use config', () =>
-    testCli(makeArgv('config', { config: path.resolve(__dirname, './fake_modules/config/depcheck.config.js') }))
-      .then(({ log, error, exitCode }) => {
-        log.should.equal('No depcheck issue');
+    testCli(
+      makeArgv('config', {
+        config: path.resolve(
+          __dirname,
+          './fake_modules/config/depcheck.config.js',
+        ),
+      }),
+    ).then(({ log, error, exitCode }) => {
+      log.should.equal('No depcheck issue');
 
-        error.should.be.empty();
-        exitCode.should.equal(0);
-      })
-    );
+      error.should.be.empty();
+      exitCode.should.equal(0);
+    }));
 
   it('should output error when folder is not a package', () =>
     testCli([__dirname]).then(({ log, error, exitCode }) => {
