@@ -4,6 +4,12 @@ import * as fs from 'fs';
 import { evaluate } from '.';
 import getScripts from './get-scripts';
 
+const optionKeysForConfig = {
+  babel: ['--config-file'],
+  eslint: ['--config', '-c'],
+  tslint: ['--config', '-c'],
+};
+
 export function parse(content) {
   try {
     return JSON.parse(content);
@@ -46,11 +52,11 @@ export function getCustomConfig(binName, filename, content, rootDir) {
     const commands = script.split('&&');
     const command = commands.find((c) => c.startsWith(binName));
 
-    if (command) {
+    const optionsKeys = optionKeysForConfig[binName];
+
+    if (command && optionsKeys) {
       const args = command.split(/\s+/);
-      const configIdx = args.findIndex((arg) =>
-        ['--config', '-c'].includes(arg),
-      );
+      const configIdx = args.findIndex((arg) => optionsKeys.includes(arg));
 
       if (configIdx !== -1 && args[configIdx + 1]) {
         const configFile = args[configIdx + 1];
