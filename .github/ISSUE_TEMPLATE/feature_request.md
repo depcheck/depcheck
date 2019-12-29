@@ -1,13 +1,13 @@
 ---
+
 name: Feature request
 about: Suggest an idea for this project
+---### Feature request description
 
----
-
-### Feature request description
 A description of the feature request
 
 ### Code snippets (if applicable)
+
 How the dependency is used (if applicable):
 
 ```
@@ -22,4 +22,5 @@ please include the section name (e.g. devDependencies, dependencies)
 ```
 
 ### Any extra info
+
 Anything else you want to include. Thank you for your input!

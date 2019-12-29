@@ -9,7 +9,10 @@ function toRequire(dep) {
 }
 
 export function lite(content) {
-  return content.replace(/\r\n/g, '\n').split('\n').filter(line => line);
+  return content
+    .replace(/\r\n/g, '\n')
+    .split('\n')
+    .filter((line) => line);
 }
 
 export function full(content) {

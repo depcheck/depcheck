@@ -1,6 +1,6 @@
 {
   "dependencies": {
-  "gatsby-plugin-react-helmet": "^3.0.4",
-  "gatsby-plugin-sass": "^2.0.7"
+    "gatsby-plugin-react-helmet": "^3.0.4",
+    "gatsby-plugin-sass": "^2.0.7"
   }
 }
