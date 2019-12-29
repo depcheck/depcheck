@@ -15,6 +15,7 @@ script:
   - npm run depcheck
   - npm run depcheck-json
   - npm run lint
+  - npm run prettier-check
   - npm run test-coverage
   - npm run test-dependent
   - cat ./coverage/coverage.lcov | ./node_modules/.bin/codecov
