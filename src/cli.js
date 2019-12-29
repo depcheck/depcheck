@@ -16,12 +16,12 @@ function getParsers(parsers) {
   return lodash.isUndefined(parsers)
     ? undefined
     : lodash(parsers)
-      .map((keyValuePair) => keyValuePair.split(':'))
-      .fromPairs()
-      .mapValues((value) =>
-        value.split('&').map(parserName => depcheck.parser[parserName]),
-      )
-      .value();
+        .map((keyValuePair) => keyValuePair.split(':'))
+        .fromPairs()
+        .mapValues((value) =>
+          value.split('&').map((parserName) => depcheck.parser[parserName]),
+        )
+        .value();
 }
 
 function getDetectors(detectors) {
@@ -93,15 +93,15 @@ export default async function cli(args, log, error, exit) {
     const depcheckResult = await depcheck(rootDir, {
       withoutDev: !opt.dev,
       ignoreBinPackage: opt.ignoreBinPackage,
-      ignoreMatches: (opt.ignores || []),
-      ignoreDirs: (opt.ignoreDirs || []),
+      ignoreMatches: opt.ignores || [],
+      ignoreDirs: opt.ignoreDirs || [],
       parsers: getParsers(opt.parsers),
       detectors: getDetectors(opt.detectors),
       specials: getSpecials(opt.specials),
       skipMissing: opt.skipMissing,
     });
     print(depcheckResult, log, opt.json);
-    exit((opt.json || noIssue(depcheckResult)) ? 0 : -1);
+    exit(opt.json || noIssue(depcheckResult) ? 0 : -1);
   } catch (err) {
     error(err);
     exit(-1);
