@@ -1,6 +1,7 @@
 /* global describe, it, before, beforeEach */
 import 'should';
 import proxyquire from 'proxyquire';
+import ConfigurationParsingException from '../src/utils/exceptions/configuration-parsing-exception';
 
 describe('configuration-reader', () => {
   let configurationReaderModule;
@@ -20,20 +21,20 @@ describe('configuration-reader', () => {
   });
 
   beforeEach(() => {
-    cosmiconfigResult = {
+    cosmiconfigResult = Promise.resolve({
       isEmpty: true,
       config: {},
-    };
+    });
   });
 
   describe('getConfiguration', () => {
     it('should load files correctly from a configuration file when no command args are provided', async () => {
-      cosmiconfigResult = {
+      cosmiconfigResult = Promise.resolve({
         isEmpty: false,
         config: {
           testConfig: 'aSampleValue',
         },
-      };
+      });
       const configResult = await configurationReaderModule.getConfiguration(
         [],
         'test',
@@ -43,12 +44,12 @@ describe('configuration-reader', () => {
     });
 
     it('should transform configuration values as camelCase', async () => {
-      cosmiconfigResult = {
+      cosmiconfigResult = Promise.resolve({
         isEmpty: false,
         config: {
           'test-config': 'anotherSampleValue',
         },
-      };
+      });
 
       const configResult = await configurationReaderModule.getConfiguration(
         [],
@@ -59,13 +60,13 @@ describe('configuration-reader', () => {
     });
 
     it('should give CLI arguments precedence over config file arguments', async () => {
-      cosmiconfigResult = {
+      cosmiconfigResult = Promise.resolve({
         isEmpty: false,
         config: {
           ignores: '1,2',
           anotherField: 'anotherValue',
         },
-      };
+      });
 
       const configResult = await configurationReaderModule.getConfiguration(
         ['scriptPath', '--ignores', '3,4'],
@@ -85,6 +86,26 @@ describe('configuration-reader', () => {
       );
 
       configResult.should.have.property('ignores', ['testValue']);
+    });
+
+    it('should throw a ConfigurationParsing exception if the config file cannot be parsed', async () => {
+      // eslint-disable-next-line prefer-promise-reject-errors
+      cosmiconfigResult = Promise.reject({
+        mark: {
+          name: 'test',
+        },
+      });
+
+      let thrownException = null;
+      try {
+        await configurationReaderModule.getConfiguration([], 'test', '1.0');
+      } catch (err) {
+        thrownException = err;
+      }
+      // eslint-disable-next-line no-unused-expressions
+      thrownException.should.not.be.null;
+      thrownException.should.be.instanceof(ConfigurationParsingException);
+      // const configResult = await configurationReaderModule.getConfiguration([], test, '1.0');
     });
   });
 });
