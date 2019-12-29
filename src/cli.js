@@ -91,7 +91,6 @@ export default async function cli(args, log, error, exit) {
       `Path ${dir} does not contain a package.json file`,
     );
     const depcheckResult = await depcheck(rootDir, {
-      withoutDev: !opt.dev,
       ignoreBinPackage: opt.ignoreBinPackage,
       ignoreMatches: opt.ignores || [],
       ignoreDirs: opt.ignoreDirs || [],
@@ -100,8 +99,8 @@ export default async function cli(args, log, error, exit) {
       specials: getSpecials(opt.specials),
       skipMissing: opt.skipMissing,
     });
-    print(depcheckResult, log, opt.json);
-    exit(opt.json || noIssue(depcheckResult) ? 0 : -1);
+    print(depcheckResult, log, opt.json, rootDir);
+    exit(noIssue(depcheckResult) ? 0 : -1);
   } catch (err) {
     error(err);
     exit(-1);
