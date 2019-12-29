@@ -22,7 +22,7 @@
     "prepublishOnly": "npm run compile && npm run component",
     "prettier": "prettier \"**/*.@(js|json|md|yml)\"",
     "prettier-check": "npm run prettier -- --check",
-    "lint": "eslint ./src ./build",
+    "lint": "eslint ./src ./build ./test",
     "test": "mocha ./test ./test/special --timeout 10000",
     "test-dependent": "dependent-build",
     "test-coverage": "cross-env NODE_ENV=test nyc mocha ./test ./test/special --timeout 20000 && nyc report --reporter=text-lcov > ./coverage/coverage.lcov"
@@ -83,6 +83,7 @@
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-mocha": "^6.2.2",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.17.0",
     "fs-extra": "^8.1.0",

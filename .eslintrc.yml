@@ -7,3 +7,6 @@ rules:
   import/no-dynamic-require: off
 plugins:
   - prettier
+  - mocha
+env:
+  mocha: true

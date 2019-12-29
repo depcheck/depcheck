@@ -1,5 +1,3 @@
-/* global describe, it */
-
 import 'should';
 import commitizenSpecialParser from '../../src/special/commitizen';
 
