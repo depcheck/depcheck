@@ -20,6 +20,8 @@
     "depcheck": "node ./bin/depcheck.js --ignore-dirs=fake_modules",
     "depcheck-json": "node ./bin/depcheck.js --ignore-dirs=fake_modules --json | node -r @babel/register ./build/check-json",
     "prepublishOnly": "npm run compile && npm run component",
+    "prettier": "prettier \"**/*.@(js|json|md|yml)\"",
+    "prettier:check": "npm run prettier -- --check",
     "lint": "eslint ./src ./build",
     "test": "mocha ./test ./test/special --timeout 10000",
     "test-dependent": "dependent-build",
@@ -84,6 +86,8 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.17.0",
     "fs-extra": "^8.1.0",
+    "husky": "^3.1.0",
+    "lint-staged": "^9.5.0",
     "mocha": "^6.2.2",
     "node-sass": "^4.13.0",
     "nyc": "^15.0.0",
@@ -112,6 +116,17 @@
   "mocha": {
     "require": [
       "@babel/register"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,md,yml}": [
+      "prettier --write",
+      "git add"
     ]
   }
 }

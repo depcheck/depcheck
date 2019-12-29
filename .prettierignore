@@ -1,0 +1,5 @@
+dist
+test/fake_modules/bad_js/index.js
+test/fake_modules/prettier/package.json
+test/fake_modules/tslint_config_custom_invalid/invalid.json
+CHANGELOG.md
