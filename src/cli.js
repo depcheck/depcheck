@@ -84,9 +84,8 @@ function print(result, log, json, rootDir) {
 export default function cli(args, log, error, exit) {
   const opt = yargs(args)
     .usage('Usage: $0 [DIRECTORY]')
-    .boolean(['dev', 'ignore-bin-package', 'skip-missing'])
+    .boolean(['ignore-bin-package', 'skip-missing'])
     .default({
-      dev: true,
       'ignore-bin-package': false,
       'skip-missing': false,
     })
