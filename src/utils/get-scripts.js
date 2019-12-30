@@ -32,7 +32,7 @@ const travisCommands = [
   'after_success',
   'after_failure',
   'before_deploy',
-  'deploy',
+  // 'deploy', // currently ignored
   'after_deploy',
   'after_script',
 ];
