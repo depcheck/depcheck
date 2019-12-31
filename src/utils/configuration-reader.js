@@ -11,10 +11,6 @@ export function getCliArgs(args, version) {
   return yargs(args)
     .usage('Usage: $0 [DIRECTORY]')
     .boolean(['ignore-bin-package', 'skip-missing'])
-    .default({
-      'ignore-bin-package': false,
-      'skip-missing': false,
-    })
     .describe('ignore-bin-package', 'Ignore package with bin entry')
     .describe('skip-missing', 'Skip calculation of missing dependencies')
     .describe('json', 'Output results to JSON')
