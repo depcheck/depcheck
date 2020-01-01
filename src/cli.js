@@ -13,15 +13,32 @@ function checkPathExist(dir, errorMessage) {
 }
 
 function getParsers(parsers) {
-  return lodash.isUndefined(parsers)
-    ? undefined
-    : lodash(parsers)
-        .map((keyValuePair) => keyValuePair.split(':'))
-        .fromPairs()
-        .mapValues((value) =>
-          value.split('&').map((parserName) => depcheck.parser[parserName]),
-        )
-        .value();
+  if (!parsers) {
+    return undefined;
+  }
+
+  const parserTuples = Object.entries(parsers).map(
+    ([extension, parserNames]) => {
+      /* parserNames might not be an array due to user error when creating a configuration file.
+        Example of a configuration file where this might happen:
+        {
+          parsers: {
+            "*.js" : "es6",
+            "*.jsx": ["jsx"]
+          }
+        }
+      */
+      const sanitizedParserNames = Array.isArray(parserNames)
+        ? parserNames
+        : [parserNames];
+      const parserLambdas = sanitizedParserNames.map(
+        (parserName) => depcheck.parser[parserName],
+      );
+      return [extension, parserLambdas];
+    },
+  );
+
+  return lodash.fromPairs(parserTuples);
 }
 
 function getDetectors(detectors) {

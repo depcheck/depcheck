@@ -87,7 +87,8 @@ All of the arguments are optional:
 Depcheck can be used with an rc configuration file. In order to do so, create a .depcheckrc file in your project's package.json folder, and set the CLI keys in YAML, JSON, and Javascript formats.
 For example, the CLI arguments `--ignores="eslint,babel-*" --skip-missing=true` would turn into:
 
-***.depcheckrc***
+**_.depcheckrc_**
+
 ```
 ignores: ["eslint", "babel-*"]
 skip-missing: true
@@ -95,16 +96,7 @@ skip-missing: true
 
 **Important:** if provided CLI arguments conflict with configuration file ones, the CLI ones will take precedence over the rc file ones.
 
-The rc configuration file can also contain the following extensions: `.json`, `.yaml`, `.yml`, `.js`, `.config.js`.
-If the `.js` or `.config.js` extension are used, then the file should export a Javascript object:
-
-***.depcheckrc.js***
-```
-module.exports = {
-  ignores: ["eslint", "babe-*"],
-  "skip-missing": true
-};
-```
+The rc configuration file can also contain the following extensions: `.json`, `.yaml`, `.yml`.
 
 ## API
 

@@ -1,10 +1,28 @@
 import yargs from 'yargs';
 import cosmiconfig from 'cosmiconfig';
 import camelcase from 'camelcase';
+import lodash from 'lodash';
 import ConfigurationParsingException from './exceptions/configuration-parsing-exception';
 
 function parseCsvArray(value) {
   return (value || '').split(',');
+}
+
+function convertObjectToCamelCase(obj) {
+  return Object.entries(obj).reduce((newObj, [key, value]) => {
+    newObj[camelcase(key)] = value; // eslint-disable-line no-param-reassign
+    return newObj;
+  }, {});
+}
+
+function createParsersObject(parsersFromCli) {
+  return lodash.isUndefined(parsersFromCli)
+    ? undefined
+    : lodash(parsersFromCli)
+        .map((keyValuePair) => keyValuePair.split(':'))
+        .fromPairs()
+        .mapValues((value) => value.split('&'))
+        .value();
 }
 
 export function getCliArgs(args, version) {
@@ -21,22 +39,25 @@ export function getCliArgs(args, version) {
     .describe('specials', 'Comma separated special parser list')
     .version('version', 'Show version number', version)
     .help('help', 'Show this help message')
-    .coerce(
-      ['ignores', 'ignore-dirs', 'parsers', 'detectors', 'specials'],
-      parseCsvArray,
-    );
+    .coerce(['ignores', 'ignore-dirs', 'detectors', 'specials'], parseCsvArray)
+    .coerce('parsers', (parsersStr) => {
+      const parsers = parseCsvArray(parsersStr);
+      return createParsersObject(parsers);
+    });
 }
 
-function convertObjectToCamelCase(obj) {
-  return Object.entries(obj).reduce((newObj, [key, value]) => {
-    newObj[camelcase(key)] = value; // eslint-disable-line no-param-reassign
-    return newObj;
-  }, {});
+/* istanbul ignore next */
+function returnNull() {
+  return null;
 }
 
 export async function getRCFileConfiguration(moduleName) {
   try {
-    const configFileExplorer = cosmiconfig(moduleName);
+    const configFileExplorer = cosmiconfig(moduleName, {
+      // this prevents cosmiconfig from picking up .js configuration files. "null" means no file was found.
+      // Gotta extract `() => null` into a function to be able to ignore the line from the code coverage count.
+      loaders: { '.js': returnNull },
+    });
     const findings = await configFileExplorer.search();
     return !findings || findings.isEmpty
       ? {}
