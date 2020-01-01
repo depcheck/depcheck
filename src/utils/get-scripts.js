@@ -1,4 +1,3 @@
-import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import lodash from 'lodash';
@@ -37,15 +36,14 @@ const travisCommands = [
   'after_script',
 ];
 
-export default function getScripts(filepath, content = null) {
+export default function getScripts(filepath, content) {
   return getCacheOrFile(filepath, () => {
     const basename = path.basename(filepath);
-    const fileContent =
-      content !== null ? content : fs.readFileSync(filepath, 'utf-8');
 
     if (basename === 'package.json') {
-      return lodash.values(JSON.parse(fileContent).scripts || {});
+      return lodash.values(JSON.parse(content).scripts || {});
     }
+
     if (basename === '.travis.yml') {
       const metadata = yaml.safeLoad(content) || {};
       return lodash(travisCommands)
