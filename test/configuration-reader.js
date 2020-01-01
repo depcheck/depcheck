@@ -1,4 +1,3 @@
-/* global describe, it, before, beforeEach */
 import 'should';
 import proxyquire from 'proxyquire';
 import ConfigurationParsingException from '../src/utils/exceptions/configuration-parsing-exception';
@@ -105,7 +104,6 @@ describe('configuration-reader', () => {
       // eslint-disable-next-line no-unused-expressions
       thrownException.should.not.be.null;
       thrownException.should.be.instanceof(ConfigurationParsingException);
-      // const configResult = await configurationReaderModule.getConfiguration([], test, '1.0');
     });
   });
 });
