@@ -322,4 +322,29 @@ describe('webpack special parser', () => {
 
     return testWebpack('styleguide.config.js', content, deps, expectedDeps);
   });
+
+  it('should handle next.js configuration', () => {
+    const expectedDeps = [
+      'html-loader',
+      'raw-loader',
+      'file-loader',
+      'markdown-loader',
+      'url-loader',
+    ];
+
+    const packagePath = path.resolve(
+      __dirname,
+      '../fake_modules/next_config/package.json',
+    );
+    const packageContent = fs.readFileSync(packagePath, 'utf-8');
+    const deps = Object.keys(JSON.parse(packageContent).devDependencies);
+
+    const filename = path.resolve(
+      __dirname,
+      '../fake_modules/next_config/next.config.js',
+    );
+    const content = fs.readFileSync(filename, 'utf8');
+
+    return testWebpack('next.config.js', content, deps, expectedDeps);
+  });
 });
