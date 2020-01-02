@@ -347,4 +347,23 @@ describe('webpack special parser', () => {
 
     return testWebpack('next.config.js', content, deps, expectedDeps);
   });
+
+  it('should handle next.js invalid configuration', () => {
+    const expectedDeps = [];
+
+    const packagePath = path.resolve(
+      __dirname,
+      '../fake_modules/next_config_invalid/package.json',
+    );
+    const packageContent = fs.readFileSync(packagePath, 'utf-8');
+    const deps = Object.keys(JSON.parse(packageContent).devDependencies);
+
+    const filename = path.resolve(
+      __dirname,
+      '../fake_modules/next_config_invalid/next.config.js',
+    );
+    const content = fs.readFileSync(filename, 'utf8');
+
+    return testWebpack('next.config.js', content, deps, expectedDeps);
+  });
 });
