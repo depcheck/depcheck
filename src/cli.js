@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import yargs from 'yargs';
 import lodash from 'lodash';
 
 import depcheck from './index';
-import { version } from '../package.json';
+import { version, name } from '../package.json';
+import { getConfiguration } from './utils/configuration-reader';
 
 function checkPathExist(dir, errorMessage) {
   return new Promise((resolve, reject) =>
@@ -13,28 +13,44 @@ function checkPathExist(dir, errorMessage) {
 }
 
 function getParsers(parsers) {
-  return lodash.isUndefined(parsers)
-    ? undefined
-    : lodash(parsers)
-        .split(',')
-        .map((keyValuePair) => keyValuePair.split(':'))
-        .fromPairs()
-        .mapValues((value) =>
-          value.split('&').map((name) => depcheck.parser[name]),
-        )
-        .value();
+  if (!parsers) {
+    return undefined;
+  }
+
+  const parserTuples = Object.entries(parsers).map(
+    ([extension, parserNames]) => {
+      /* parserNames might not be an array due to user error when creating a configuration file.
+        Example of a configuration file where this might happen:
+        {
+          parsers: {
+            "*.js" : "es6",
+            "*.jsx": ["jsx"]
+          }
+        }
+      */
+      const sanitizedParserNames = Array.isArray(parserNames)
+        ? parserNames
+        : [parserNames];
+      const parserLambdas = sanitizedParserNames.map(
+        (parserName) => depcheck.parser[parserName],
+      );
+      return [extension, parserLambdas];
+    },
+  );
+
+  return lodash.fromPairs(parserTuples);
 }
 
 function getDetectors(detectors) {
   return lodash.isUndefined(detectors)
     ? undefined
-    : detectors.split(',').map((name) => depcheck.detector[name]);
+    : detectors.map((detectorName) => depcheck.detector[detectorName]);
 }
 
 function getSpecials(specials) {
   return lodash.isUndefined(specials)
     ? undefined
-    : specials.split(',').map((name) => depcheck.special[name]);
+    : specials.map((specialName) => depcheck.special[specialName]);
 }
 
 function noIssue(result) {
@@ -81,50 +97,29 @@ function print(result, log, json, rootDir) {
   return result;
 }
 
-export default function cli(args, log, error, exit) {
-  const opt = yargs(args)
-    .usage('Usage: $0 [DIRECTORY]')
-    .boolean(['ignore-bin-package', 'skip-missing'])
-    .default({
-      'ignore-bin-package': false,
-      'skip-missing': false,
-    })
-    .describe('ignore-bin-package', 'Ignore package with bin entry')
-    .describe('skip-missing', 'Skip calculation of missing dependencies')
-    .describe('json', 'Output results to JSON')
-    .describe('ignores', 'Comma separated package list to ignore')
-    .describe('ignore-dirs', 'Comma separated folder names to ignore')
-    .describe('parsers', 'Comma separated glob:parser pair list')
-    .describe('detectors', 'Comma separated detector list')
-    .describe('specials', 'Comma separated special parser list')
-    .version('version', 'Show version number', version)
-    .help('help', 'Show this help message');
-
-  const dir = opt.argv._[0] || '.';
-  const rootDir = path.resolve(dir);
-
-  checkPathExist(rootDir, `Path ${dir} does not exist`)
-    .then(() =>
-      checkPathExist(
-        path.resolve(rootDir, 'package.json'),
-        `Path ${dir} does not contain a package.json file`,
-      ),
-    )
-    .then(() =>
-      depcheck(rootDir, {
-        ignoreBinPackage: opt.argv.ignoreBinPackage,
-        ignoreMatches: (opt.argv.ignores || '').split(','),
-        ignoreDirs: (opt.argv.ignoreDirs || '').split(','),
-        parsers: getParsers(opt.argv.parsers),
-        detectors: getDetectors(opt.argv.detectors),
-        specials: getSpecials(opt.argv.specials),
-        skipMissing: opt.argv.skipMissing,
-      }),
-    )
-    .then((result) => print(result, log, opt.argv.json, rootDir))
-    .then((result) => exit(noIssue(result) ? 0 : -1))
-    .catch((errorMessage) => {
-      error(errorMessage);
-      exit(-1);
+export default async function cli(args, log, error, exit) {
+  try {
+    const opt = await getConfiguration(args, name, version);
+    const dir = opt._[0] || '.';
+    const rootDir = path.resolve(dir);
+    await checkPathExist(rootDir, `Path ${dir} does not exist`);
+    await checkPathExist(
+      path.resolve(rootDir, 'package.json'),
+      `Path ${dir} does not contain a package.json file`,
+    );
+    const depcheckResult = await depcheck(rootDir, {
+      ignoreBinPackage: opt.ignoreBinPackage,
+      ignoreMatches: opt.ignores || [],
+      ignoreDirs: opt.ignoreDirs || [],
+      parsers: getParsers(opt.parsers),
+      detectors: getDetectors(opt.detectors),
+      specials: getSpecials(opt.specials),
+      skipMissing: opt.skipMissing,
     });
+    print(depcheckResult, log, opt.json, rootDir);
+    exit(noIssue(depcheckResult) ? 0 : -1);
+  } catch (err) {
+    error(err);
+    exit(-1);
+  }
 }

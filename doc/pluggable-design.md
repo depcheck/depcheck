@@ -69,6 +69,20 @@ var opts = {
 };
 ```
 
+### Use Parser From a Configuration File
+
+When specifying parsers in the configuration file, the `parsers` should be an object. The keys should be the extension, and the values should be an array with the parsers.
+The CLI example in a YAML configuration file would turn into:
+
+```
+parsers:
+  '*.js': ['es6'],
+  '*.jsx': ['jsx'],
+  '*.json':
+    - json1
+    - json2
+```
+
 ### Implement Custom Parser
 
 Because the parser is just a normal JavaScript function. Everybody can implement its own syntax parser, then pass its own parser via API.
