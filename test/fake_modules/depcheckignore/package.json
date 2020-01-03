@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "lodash": "0.0.1",
+    "debug": "0.0.1"
+  }
+}

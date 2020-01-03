@@ -1,5 +1,4 @@
 import path from 'path';
-import fs from 'fs';
 import fse from 'fs-extra';
 import { setContent } from '../src/utils/file';
 
@@ -7,9 +6,9 @@ export function resolveShortPath(expected, module) {
   return Object.keys(expected).reduce(
     (obj, key) => ({
       ...obj,
-      [key]: expected[key].map((name) =>
-        fs.realpathSync(path.resolve(__dirname, 'fake_modules', module, name)),
-      ),
+      [key]: expected[key].map((name) => {
+        return path.resolve(__dirname, 'fake_modules', module, name);
+      }),
     }),
     {},
   );

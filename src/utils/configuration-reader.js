@@ -34,7 +34,18 @@ export function getCliArgs(args, version) {
     .describe('skip-missing', 'Skip calculation of missing dependencies')
     .describe('json', 'Output results to JSON')
     .describe('ignores', 'Comma separated package list to ignore')
-    .describe('ignore-dirs', 'Comma separated folder names to ignore')
+    .describe(
+      'ignore-dirs',
+      'Comma separated folder names to ignore (deprecated)',
+    )
+    .describe(
+      'ignore-path',
+      'Path to a file with patterns describing files to ignore.',
+    )
+    .describe(
+      'ignore-patterns',
+      'Comma separated patterns describing files to ignore.',
+    )
     .describe('parsers', 'Comma separated glob:parser pair list')
     .describe('detectors', 'Comma separated detector list')
     .describe('specials', 'Comma separated special parser list')
