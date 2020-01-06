@@ -23,13 +23,16 @@ function getCacheOrFile(key, fn) {
 }
 
 const travisCommands = [
-  // Reference: http://docs.travis-ci.com/user/customizing-the-build/#The-Build-Lifecycle
+  // Reference: https://docs.travis-ci.com/user/job-lifecycle
   'before_install',
   'install',
   'before_script',
   'script',
-  'after_success or after_failure',
+  'before_cache',
+  'after_success',
+  'after_failure',
   'before_deploy',
+  // 'deploy', // currently ignored
   'after_deploy',
   'after_script',
 ];
