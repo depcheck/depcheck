@@ -19,6 +19,7 @@ const knownReporters = [
   'landing',
   'json-stream',
 ];
+const mochaTypescript = '@types/mocha';
 
 function getOptsConfig(root, config) {
   const argvs = config.split(/\s+/);
@@ -88,6 +89,10 @@ export default function parseMocha(content, filepath, deps, rootDir) {
   }
 
   requires.push(...getDependencies(config, deps));
+
+  if (deps.includes(mochaTypescript)) {
+    requires.push(mochaTypescript);
+  }
 
   return requires;
 }

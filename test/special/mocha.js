@@ -23,6 +23,17 @@ describe('mocha special parser', () => {
     result.should.deepEqual(['chai']);
   });
 
+  it('should recognize @types/mocha as used dependency', () => {
+    const optPath = path.resolve(__dirname, 'test/mocha.opts');
+    const result = parse(
+      'content',
+      optPath,
+      ['@types/mocha', 'unused'],
+      __dirname,
+    );
+    result.should.deepEqual(['@types/mocha']);
+  });
+
   it('should recognize dependencies path-module used in mocha options', () => {
     const content = [
       '--require chai/path/to/module',
