@@ -213,6 +213,7 @@ describe('eslint special parser', () => {
         rootDir,
       );
       result.should.deepEqual([
+        'eslint-plugin-ignored',
         'eslint-config-foo-bar',
         'eslint-plugin-not-included',
         'eslint-config-preset',

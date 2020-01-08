@@ -1,3 +1,4 @@
 {
-  "extends": "eslint-config-foo-bar"
+  "extends": "eslint-config-foo-bar",
+  "plugins": ["ignored"]
 }
