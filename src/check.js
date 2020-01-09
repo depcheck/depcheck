@@ -1,4 +1,3 @@
-import fs from 'fs';
 import path from 'path';
 import lodash from 'lodash';
 import walkdir from 'walkdir';
@@ -9,6 +8,7 @@ import { loadModuleData, readJSON } from './utils';
 import getNodes from './utils/parser';
 import { getAtTypesName } from './utils/typescript';
 import { availableParsers } from './constants';
+import { getContent } from './utils/file';
 
 function isModule(dir) {
   try {
@@ -49,17 +49,9 @@ function discoverPropertyDep(rootDir, deps, property, depName) {
 
 function getDependencies(dir, filename, deps, parser, detectors) {
   return new Promise((resolve, reject) => {
-    fs.readFile(filename, 'utf8', (error, content) => {
-      if (error) {
-        reject(error);
-      }
-
-      try {
-        resolve(parser(content, filename, deps, dir));
-      } catch (syntaxError) {
-        reject(syntaxError);
-      }
-    });
+    getContent(filename)
+      .then((content) => resolve(parser(content, filename, deps, dir)))
+      .catch((error) => reject(error));
   }).then((ast) => {
     // when parser returns string array, skip detector step and treat them as dependencies.
     const dependencies =
@@ -126,11 +118,15 @@ function checkFile(dir, filename, deps, parsers, detectors) {
             .value(),
         },
       }),
-      (error) => ({
-        invalidFiles: {
-          [filename]: error,
-        },
-      }),
+      (error) => {
+        // TODO: later replace that call using the debug package
+        // console.error('checkFile error', filename, error);
+        return {
+          invalidFiles: {
+            [filename]: error,
+          },
+        };
+      },
     ),
   );
 }
