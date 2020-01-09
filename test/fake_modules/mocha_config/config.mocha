@@ -1,0 +1,7 @@
+---
+require:
+  - babel
+  - chai
+reporter:
+  - dot
+ui: bdd

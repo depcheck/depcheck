@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "babel": "1.0.0",
+    "chai": "1.0.0",
+    "mocha": "1.0.0"
+  },
+  "scripts": {
+    "test": "mocha --config config.mocha"
+  }
+}
