@@ -2,7 +2,7 @@ import path from 'path';
 import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
 import { loadModuleData, wrapToArray } from '../utils';
-import { loadConfig } from '../utils/linters';
+import { loadConfig } from '../utils/cli-tools';
 
 function resolveConfigModule(preset, rootDir, includedDeps) {
   const presetParts = preset.split('/');

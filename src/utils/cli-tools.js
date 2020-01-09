@@ -4,6 +4,12 @@ import * as fs from 'fs';
 import { evaluate } from '.';
 import getScripts from './get-scripts';
 
+const optionKeysForConfig = {
+  babel: ['--config-file'],
+  eslint: ['--config', '-c'],
+  tslint: ['--config', '-c'],
+};
+
 export function parse(content) {
   try {
     return JSON.parse(content);
@@ -33,24 +39,24 @@ export function parse(content) {
   return null;
 }
 
-export function getCustomConfig(kind, filename, content, rootDir) {
+export function getCustomConfig(binName, filename, content, rootDir) {
   const scripts = getScripts(filename, content);
 
   if (scripts.length === 0) {
     return null;
   }
 
-  const script = scripts.find((s) => s.split(/\s+/).includes(kind));
+  const script = scripts.find((s) => s.split(/\s+/).includes(binName));
 
   if (script) {
     const commands = script.split('&&');
-    const command = commands.find((c) => c.startsWith(kind));
+    const command = commands.find((c) => c.startsWith(binName));
 
-    if (command) {
+    const optionsKeys = optionKeysForConfig[binName];
+
+    if (command && optionsKeys) {
       const args = command.split(/\s+/);
-      const configIdx = args.findIndex((arg) =>
-        ['--config', '-c'].includes(arg),
-      );
+      const configIdx = args.findIndex((arg) => optionsKeys.includes(arg));
 
       if (configIdx !== -1 && args[configIdx + 1]) {
         const configFile = args[configIdx + 1];
@@ -65,7 +71,7 @@ export function getCustomConfig(kind, filename, content, rootDir) {
   return null;
 }
 
-export function loadConfig(flavour, filenameRegex, filename, content, rootDir) {
+export function loadConfig(binName, filenameRegex, filename, content, rootDir) {
   const basename = path.basename(filename);
 
   if (filenameRegex.test(basename)) {
@@ -73,7 +79,7 @@ export function loadConfig(flavour, filenameRegex, filename, content, rootDir) {
     return config;
   }
 
-  const custom = getCustomConfig(flavour, filename, content, rootDir);
+  const custom = getCustomConfig(binName, filename, content, rootDir);
 
   if (custom) {
     return custom;
