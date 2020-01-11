@@ -1,5 +1,6 @@
 import path from 'path';
 import lodash from 'lodash';
+import { getContent } from '../utils/file';
 
 const _ = lodash;
 
@@ -92,12 +93,12 @@ function checkOptions(deps, options = {}) {
   return filter(deps, pickedOptions);
 }
 
-export default function parseJest(content, filePath, deps, rootDir) {
-  const filename = path.basename(filePath);
-  if (jestConfigRegex.test(filename)) {
+export default async function parseJest(filename, deps, rootDir) {
+  const basename = path.basename(filename);
+  if (jestConfigRegex.test(basename)) {
     try {
       // eslint-disable-next-line global-require
-      const options = require(filePath) || {};
+      const options = require(filename) || {};
       return checkOptions(deps, options);
     } catch (error) {
       return [];
@@ -108,6 +109,7 @@ export default function parseJest(content, filePath, deps, rootDir) {
   const resolvedFilePath = path.resolve(rootDir, filename);
 
   if (resolvedFilePath === packageJsonPath) {
+    const content = await getContent(filename);
     const metadata = parse(content);
     return checkOptions(deps, metadata.jest);
   }

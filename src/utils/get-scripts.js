@@ -1,6 +1,7 @@
 import path from 'path';
 import yaml from 'js-yaml';
 import lodash from 'lodash';
+import { getContent } from './file';
 
 const scriptCache = {};
 
@@ -10,12 +11,12 @@ export function clearCache() {
   });
 }
 
-function getCacheOrFile(key, fn) {
+async function getCacheOrFile(key, fn) {
   if (scriptCache[key]) {
     return scriptCache[key];
   }
 
-  const value = fn();
+  const value = await fn();
   scriptCache[key] = value;
 
   return value;
@@ -36,15 +37,17 @@ const travisCommands = [
   'after_script',
 ];
 
-export default function getScripts(filepath, content) {
-  return getCacheOrFile(filepath, () => {
-    const basename = path.basename(filepath);
+export default async function getScripts(filename) {
+  return getCacheOrFile(filename, async () => {
+    const basename = path.basename(filename);
 
     if (basename === 'package.json') {
+      const content = await getContent(filename);
       return lodash.values(JSON.parse(content).scripts || {});
     }
 
     if (basename === '.travis.yml') {
+      const content = await getContent(filename);
       const metadata = yaml.safeLoad(content) || {};
       return lodash(travisCommands)
         .map((cmd) => metadata[cmd] || [])

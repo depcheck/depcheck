@@ -9,7 +9,6 @@ import { loadModuleData, readJSON } from './utils';
 import getNodes from './utils/parser';
 import { getAtTypesName } from './utils/typescript';
 import { availableParsers } from './constants';
-import { getContent } from './utils/file';
 
 function isModule(dir) {
   try {
@@ -48,61 +47,54 @@ function discoverPropertyDep(rootDir, deps, property, depName) {
   return lodash.intersection(deps, propertyDeps);
 }
 
-function getDependencies(dir, filename, deps, parser, detectors) {
-  return new Promise((resolve, reject) => {
-    getContent(filename)
-      .then((content) => resolve(parser(content, filename, deps, dir)))
-      .catch((error) => reject(error));
-  }).then((ast) => {
-    // when parser returns string array, skip detector step and treat them as dependencies.
-    const dependencies =
-      lodash.isArray(ast) && ast.every(lodash.isString)
-        ? ast
-        : lodash(getNodes(ast))
-            .map((node) => detect(detectors, node, deps))
-            .flatten()
-            .uniq()
-            .map(requirePackageName)
-            .thru((_dependencies) =>
-              parser === availableParsers.typescript
-                ? // If this is a typescript file, importing foo would also use @types/foo, but
-                  // only if @types/foo is already a specified dependency.
-                  lodash(_dependencies)
-                    .map((dependency) => {
-                      const atTypesName = getAtTypesName(dependency);
-                      return deps.includes(atTypesName)
-                        ? [dependency, atTypesName]
-                        : [dependency];
-                    })
-                    .flatten()
-                    .value()
-                : _dependencies,
-            )
-            .value();
+async function getDependencies(dir, filename, deps, parser, detectors) {
+  const result = await parser(filename, deps, dir);
 
-    const discover = lodash.partial(discoverPropertyDep, dir, deps);
-    const discoverPeerDeps = lodash.partial(discover, 'peerDependencies');
-    const discoverOptionalDeps = lodash.partial(
-      discover,
-      'optionalDependencies',
-    );
-    const peerDeps = lodash(dependencies)
-      .map(discoverPeerDeps)
-      .flatten()
-      .value();
-    const optionalDeps = lodash(dependencies)
-      .map(discoverOptionalDeps)
-      .flatten()
-      .value();
+  // when parser returns string array, skip detector step and treat them as dependencies.
+  const dependencies =
+    lodash.isArray(result) && result.every(lodash.isString)
+      ? result
+      : lodash(getNodes(result))
+          .map((node) => detect(detectors, node, deps))
+          .flatten()
+          .uniq()
+          .map(requirePackageName)
+          .thru((_dependencies) =>
+            parser === availableParsers.typescript
+              ? // If this is a typescript file, importing foo would also use @types/foo, but
+                // only if @types/foo is already a specified dependency.
+                lodash(_dependencies)
+                  .map((dependency) => {
+                    const atTypesName = getAtTypesName(dependency);
+                    return deps.includes(atTypesName)
+                      ? [dependency, atTypesName]
+                      : [dependency];
+                  })
+                  .flatten()
+                  .value()
+              : _dependencies,
+          )
+          .value();
 
-    return lodash(dependencies)
-      .concat(peerDeps)
-      .concat(optionalDeps)
-      .filter((dep) => dep && dep !== '.' && dep !== '..') // TODO why need check?
-      .filter((dep) => !lodash.includes(builtInModules, dep))
-      .uniq()
-      .value();
-  });
+  const discover = lodash.partial(discoverPropertyDep, dir, deps);
+  const discoverPeerDeps = lodash.partial(discover, 'peerDependencies');
+  const discoverOptionalDeps = lodash.partial(discover, 'optionalDependencies');
+  const peerDeps = lodash(dependencies)
+    .map(discoverPeerDeps)
+    .flatten()
+    .value();
+  const optionalDeps = lodash(dependencies)
+    .map(discoverOptionalDeps)
+    .flatten()
+    .value();
+
+  return lodash(dependencies)
+    .concat(peerDeps)
+    .concat(optionalDeps)
+    .filter((dep) => dep && dep !== '.' && dep !== '..') // TODO why need check?
+    .filter((dep) => !lodash.includes(builtInModules, dep))
+    .uniq()
+    .value();
 }
 
 function checkFile(dir, filename, deps, parsers, detectors) {

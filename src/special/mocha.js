@@ -3,6 +3,7 @@ import path from 'path';
 import requirePackageName from 'require-package-name';
 import { parse } from '../utils/cli-tools';
 import { getScripts, wrapToArray } from '../utils';
+import { getContent } from '../utils/file';
 
 const knownReporters = [
   'dot',
@@ -84,23 +85,25 @@ function getParamDependencies(content, deps) {
 
 const configNameRegex = /^\.mocharc\.(json|jsonc|js|yml|yaml)$/;
 
-export default function parseMocha(content, filepath, deps, rootDir) {
+export default async function parseMocha(filename, deps, rootDir) {
   const defaultOptPath = path.resolve(rootDir, 'test/mocha.opts');
-  const basename = path.basename(filepath);
+  const basename = path.basename(filename);
   let cliConfig;
   let paramConfig;
 
-  if (filepath === defaultOptPath) {
-    cliConfig = content;
+  if (filename === defaultOptPath) {
+    cliConfig = await getContent(filename);
   } else if (configNameRegex.test(basename)) {
+    const content = await getContent(filename);
     paramConfig = parse(content);
   } else {
-    const scripts = getScripts(filepath, content);
+    const scripts = await getScripts(filename);
     const mochaScript = scripts.find((s) => s.indexOf('mocha') !== -1);
     if (mochaScript) {
       cliConfig = mochaScript.slice(mochaScript.indexOf('mocha'));
     }
     if (basename === 'package.json') {
+      const content = await getContent(filename);
       paramConfig = JSON.parse(content).mocha;
     }
   }
@@ -110,12 +113,12 @@ export default function parseMocha(content, filepath, deps, rootDir) {
   if (cliConfig) {
     let optsConfig;
 
-    optsConfig = getOptsConfig(filepath, cliConfig, '--opts');
+    optsConfig = getOptsConfig(filename, cliConfig, '--opts');
     if (optsConfig) {
       requires.push(...getCliDependencies(optsConfig, deps));
     }
 
-    optsConfig = getOptsConfig(filepath, cliConfig, '--config');
+    optsConfig = getOptsConfig(filename, cliConfig, '--config');
     if (optsConfig) {
       requires.push(...getParamDependencies(parse(optsConfig), deps));
     }

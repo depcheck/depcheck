@@ -1,7 +1,8 @@
 import path from 'path';
 import lodash from 'lodash';
-import parseES7 from '../parser/es7';
+import { parseES7Content } from '../parser/es7';
 import getNodes from '../utils/parser';
+import { getContent } from '../utils/file';
 
 function parseConfigModuleExports(node) {
   // node.left must be assigning to module.exports
@@ -33,8 +34,9 @@ function parseConfigModuleExports(node) {
   }
   return null;
 }
-function parseConfig(content) {
-  const ast = parseES7(content);
+
+async function parseConfig(content) {
+  const ast = parseES7Content(content);
   return lodash(getNodes(ast))
     .map((node) => parseConfigModuleExports(node))
     .flatten()
@@ -43,17 +45,14 @@ function parseConfig(content) {
     .first();
 }
 
-function loadConfig(filename, content) {
+export default async function parseGatsbyConfig(filename) {
   const basename = path.basename(filename);
 
   const GatbyConfig = 'gatsby-config.js';
   if (GatbyConfig === basename) {
-    const config = parseConfig(content);
+    const content = await getContent(filename);
+    const config = await parseConfig(content);
     return config.plugins || [];
   }
   return [];
-}
-
-export default function parseGatsbyConfig(content, filename) {
-  return loadConfig(filename, content);
 }

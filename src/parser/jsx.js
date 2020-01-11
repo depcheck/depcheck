@@ -1,6 +1,8 @@
 import { parse } from '@babel/parser';
+import { getContent } from '../utils/file';
 
-export default function parseJSX(content) {
+export default async function parseJSX(filename) {
+  const content = await getContent(filename);
   return parse(content, {
     sourceType: 'module',
 

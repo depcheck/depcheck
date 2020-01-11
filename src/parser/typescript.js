@@ -1,6 +1,8 @@
 import { parse } from '@babel/parser';
+import { getContent } from '../utils/file';
 
-export default function parseTypescript(content) {
+export default async function parseTypescript(filename) {
+  const content = await getContent(filename);
   // Enable all known compatible @babel/parser plugins at the time of writing.
   // Because we only parse them, not evaluate any code, it is safe to do so.
   // note that babel/parser 7+ does not support *, due to plugin incompatibilities

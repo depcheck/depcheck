@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { evaluate } from '.';
 import getScripts from './get-scripts';
+import { getContent } from './file';
 
 const optionKeysForConfig = {
   babel: ['--config-file'],
@@ -39,8 +40,8 @@ export function parse(content) {
   return null;
 }
 
-export function getCustomConfig(binName, filename, content, rootDir) {
-  const scripts = getScripts(filename, content);
+export async function getCustomConfig(binName, filename, rootDir) {
+  const scripts = await getScripts(filename);
 
   if (scripts.length === 0) {
     return null;
@@ -71,15 +72,16 @@ export function getCustomConfig(binName, filename, content, rootDir) {
   return null;
 }
 
-export function loadConfig(binName, filenameRegex, filename, content, rootDir) {
+export async function loadConfig(binName, filenameRegex, filename, rootDir) {
   const basename = path.basename(filename);
 
   if (filenameRegex.test(basename)) {
+    const content = await getContent(filename);
     const config = parse(content);
     return config;
   }
 
-  const custom = getCustomConfig(binName, filename, content, rootDir);
+  const custom = await getCustomConfig(binName, filename, rootDir);
 
   if (custom) {
     return custom;

@@ -6,10 +6,10 @@ import { tryRequire } from '../utils';
 
 const sass = tryRequire('node-sass');
 
-export default function parseSASS(content, filePath, deps, rootDir) {
+export default async function parseSASS(filename, deps, rootDir) {
   const { stats } = sass.renderSync({
-    file: filePath,
-    includePaths: [path.dirname(filePath)],
+    file: filename,
+    includePaths: [path.dirname(filename)],
     importer: tildeImporter,
   });
 

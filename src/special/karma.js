@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import resolve from 'resolve';
 import lodash from 'lodash';
-import parseES7 from '../parser/es7';
+import parseES7, { parseES7Content } from '../parser/es7';
 import getNodes from '../utils/parser';
 import { wrapToArray, wrapToMap } from '../utils';
 
@@ -111,8 +111,8 @@ function parseConfigModuleExports(node) {
   return null;
 }
 
-function parseConfig(content) {
-  const ast = parseES7(content);
+async function parseConfig(filename) {
+  const ast = await parseES7(filename);
   return lodash(getNodes(ast))
     .map((node) => parseConfigModuleExports(node))
     .flatten()
@@ -127,7 +127,7 @@ function collectInstalledPluginInfo(karmaPluginsInstalled, rootDir) {
     const packageMain = resolve.sync(plugin, { basedir: rootDir });
     const packageContents = fs.readFileSync(packageMain, { encoding: 'utf8' });
     // don't evaluate the contents, since it probably has module requirements we can't load
-    const ast = parseES7(packageContents);
+    const ast = parseES7Content(packageContents);
     const p = lodash(getNodes(ast))
       .map((node) => parsePluginModuleExports(node))
       .flatten()
@@ -237,14 +237,14 @@ function collectUsages(config, karmaPluginsInstalled, rootDir) {
   );
 }
 
-export default function parseKarma(content, filePath, deps, rootDir) {
+export default async function parseKarma(filename, deps, rootDir) {
   const resolvedConfigPaths = supportedConfNames.map((name) =>
     path.resolve(rootDir, name),
   );
-  if (!resolvedConfigPaths.includes(filePath)) {
+  if (!resolvedConfigPaths.includes(filename)) {
     return [];
   }
-  const config = parseConfig(content);
+  const config = await parseConfig(filename);
   // possibly unused plugins
   const karmaPluginsInstalled = deps
     .filter((dep) => dep.startsWith('karma-'))

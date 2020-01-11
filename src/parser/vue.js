@@ -1,7 +1,9 @@
 import { parse } from '@babel/parser';
 import { parseComponent } from 'vue-template-compiler';
+import { getContent } from '../utils/file';
 
-export default function parseVue(content) {
+export default async function parseVue(filename) {
+  const content = await getContent(filename);
   const parsed = parseComponent(content);
   if (!parsed.script) {
     return [];
