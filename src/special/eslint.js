@@ -4,32 +4,34 @@ import requirePackageName from 'require-package-name';
 import { loadModuleData, wrapToArray } from '../utils';
 import { loadConfig } from '../utils/cli-tools';
 
-function resolveConfigModule(preset, rootDir, includedDeps) {
+function resolveConfigModule(preset, rootDir) {
   const presetParts = preset.split('/');
   let moduleName = presetParts.shift();
   if (moduleName.startsWith('@')) {
     moduleName += `/${presetParts.shift()}`;
   }
   const moduleData = loadModuleData(moduleName, rootDir);
-  if (
+  const includedDeps =
     moduleData.metadata &&
     moduleData.metadata.dependencies &&
     typeof moduleData.metadata.dependencies === 'object'
-  ) {
-    includedDeps.push(...Object.keys(moduleData.metadata.dependencies));
-  }
-  return moduleData.path && path.resolve(moduleData.path, ...presetParts);
+      ? Object.keys(moduleData.metadata.dependencies)
+      : [];
+  return [
+    moduleData.path && path.resolve(moduleData.path, ...presetParts),
+    includedDeps,
+  ];
 }
 
-function requireConfig(preset, rootDir, includedDeps) {
-  const presetPath = path.isAbsolute(preset)
-    ? preset
-    : resolveConfigModule(preset, rootDir, includedDeps);
+function requireConfig(preset, rootDir) {
+  const [presetPath, includedDeps] = path.isAbsolute(preset)
+    ? [preset, []]
+    : resolveConfigModule(preset, rootDir);
 
   try {
-    return require(presetPath); // eslint-disable-line global-require
+    return [require(presetPath), includedDeps]; // eslint-disable-line global-require
   } catch (error) {
-    return {}; // silently return nothing
+    return [{}, []]; // silently return nothing
   }
 }
 
@@ -103,7 +105,7 @@ function resolvePresetPackage(preset, rootDir) {
   return normalizePackageName(preset, 'eslint-config');
 }
 
-function checkConfig(config, rootDir) {
+function checkConfig(config, rootDir, includedDeps = []) {
   const parser = wrapToArray(config.parser);
   const plugins = wrapToArray(config.plugins).map((plugin) =>
     normalizePackageName(plugin, 'eslint-plugin'),
@@ -124,10 +126,9 @@ function checkConfig(config, rootDir) {
     .filter((preset) => !path.isAbsolute(preset))
     .map(requirePackageName);
 
-  const includedDeps = [];
   const presetDeps = lodash(presets)
-    .map((preset) => requireConfig(preset, rootDir, includedDeps))
-    .map((presetConfig) => checkConfig(presetConfig, rootDir))
+    .map((preset) => requireConfig(preset, rootDir))
+    .map(([presetConfig, deps]) => checkConfig(presetConfig, rootDir, deps))
     .flatten()
     .value();
 
@@ -138,7 +139,7 @@ function checkConfig(config, rootDir) {
 
 const configNameRegex = /^\.eslintrc(\.(json|js|yml|yaml))?$/;
 
-export default function parseESLint(content, filename, deps, rootDir) {
+export default function parseESLint(content, filename, _, rootDir) {
   const config = loadConfig(
     'eslint',
     configNameRegex,
