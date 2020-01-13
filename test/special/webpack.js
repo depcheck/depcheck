@@ -298,4 +298,28 @@ describe('webpack special parser', () => {
       }),
     ),
   );
+
+  it('should handle styleguidist webpack configuration', () => {
+    const expectedDeps = [
+      'babel-loader',
+      'url-loader',
+      'style-loader',
+      'css-loader',
+    ];
+
+    const packagePath = path.resolve(
+      __dirname,
+      '../fake_modules/styleguidist_config/package.json',
+    );
+    const packageContent = fs.readFileSync(packagePath, 'utf-8');
+    const deps = Object.keys(JSON.parse(packageContent).devDependencies);
+
+    const filename = path.resolve(
+      __dirname,
+      '../fake_modules/styleguidist_config/styleguide.config.js',
+    );
+    const content = fs.readFileSync(filename, 'utf8');
+
+    return testWebpack('styleguide.config.js', content, deps, expectedDeps);
+  });
 });

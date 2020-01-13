@@ -119,18 +119,29 @@ function parseEntries(entries, deps) {
     .value();
 }
 
+function parseWebpackConfig(webpackConfig, deps) {
+  const module = webpackConfig.module || {};
+  const entry = webpackConfig.entry || [];
+
+  const webpack1Loaders = parseWebpack1(module, deps);
+  const webpack2Loaders = parseWebpack2(module, deps);
+  const webpackEntries = parseEntries(entry, deps);
+  return [...webpack1Loaders, ...webpack2Loaders, ...webpackEntries];
+}
+
 export default function parseWebpack(_content, filepath, deps) {
   const filename = path.basename(filepath);
   if (webpackConfigRegex.test(filename)) {
-    const wpConfig = tryRequire(filepath);
-    if (wpConfig) {
-      const module = wpConfig.module || {};
-      const entry = wpConfig.entry || [];
+    const webpackConfig = tryRequire(filepath);
+    if (webpackConfig) {
+      return parseWebpackConfig(webpackConfig, deps);
+    }
+  }
 
-      const webpack1Loaders = parseWebpack1(module, deps);
-      const webpack2Loaders = parseWebpack2(module, deps);
-      const webpackEntries = parseEntries(entry, deps);
-      return [...webpack1Loaders, ...webpack2Loaders, ...webpackEntries];
+  if (filename === 'styleguide.config.js') {
+    const styleguideConfig = tryRequire(filepath);
+    if (styleguideConfig && styleguideConfig.webpackConfig) {
+      return parseWebpackConfig(styleguideConfig.webpackConfig, deps);
     }
   }
 
