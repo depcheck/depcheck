@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import requirePackageName from 'require-package-name';
-import { getScripts } from '../utils';
+import { parse } from '../utils/cli-tools';
+import { getScripts, wrapToArray } from '../utils';
 
 const knownReporters = [
   'dot',
@@ -19,10 +20,11 @@ const knownReporters = [
   'landing',
   'json-stream',
 ];
+const mochaTypescript = '@types/mocha';
 
-function getOptsConfig(root, config) {
+function getOptsConfig(root, config, param) {
   const argvs = config.split(/\s+/);
-  const optsIndex = argvs.indexOf('--opts');
+  const optsIndex = argvs.indexOf(param);
 
   if (optsIndex === -1) {
     return null;
@@ -37,7 +39,7 @@ function getOptsConfig(root, config) {
   return fs.readFileSync(path.resolve(root, '..', optsPath), 'utf-8');
 }
 
-function getDependencies(content, deps) {
+function getCliDependencies(content, deps) {
   const lines = content.split(/\s+/);
   const result = [];
 
@@ -62,32 +64,72 @@ function getDependencies(content, deps) {
     .filter((name) => deps.includes(name));
 }
 
+function getParamDependencies(content, deps) {
+  const result = [];
+  if (content.require) {
+    result.push(...wrapToArray(content.require));
+  }
+  if (content.reporter) {
+    result.push(
+      ...wrapToArray(content.reporter).filter(
+        (r) => !knownReporters.includes(r),
+      ),
+    );
+  }
+  return result
+    .map(requirePackageName)
+    .filter((v, k, arr) => arr.indexOf(v) === k)
+    .filter((name) => deps.includes(name));
+}
+
+const configNameRegex = /^\.mocharc\.(json|jsonc|js|yml|yaml)$/;
+
 export default function parseMocha(content, filepath, deps, rootDir) {
   const defaultOptPath = path.resolve(rootDir, 'test/mocha.opts');
-  let config;
+  const basename = path.basename(filepath);
+  let cliConfig;
+  let paramConfig;
 
   if (filepath === defaultOptPath) {
-    config = content;
+    cliConfig = content;
+  } else if (configNameRegex.test(basename)) {
+    paramConfig = parse(content);
   } else {
     const scripts = getScripts(filepath, content);
     const mochaScript = scripts.find((s) => s.indexOf('mocha') !== -1);
     if (mochaScript) {
-      config = mochaScript.slice(mochaScript.indexOf('mocha'));
+      cliConfig = mochaScript.slice(mochaScript.indexOf('mocha'));
+    }
+    if (basename === 'package.json') {
+      paramConfig = JSON.parse(content).mocha;
     }
   }
 
-  if (!config) {
-    return [];
-  }
-
   const requires = [];
-  const optsConfig = getOptsConfig(filepath, config);
 
-  if (optsConfig) {
-    requires.push(...getDependencies(optsConfig, deps));
+  if (cliConfig) {
+    let optsConfig;
+
+    optsConfig = getOptsConfig(filepath, cliConfig, '--opts');
+    if (optsConfig) {
+      requires.push(...getCliDependencies(optsConfig, deps));
+    }
+
+    optsConfig = getOptsConfig(filepath, cliConfig, '--config');
+    if (optsConfig) {
+      requires.push(...getParamDependencies(parse(optsConfig), deps));
+    }
+
+    requires.push(...getCliDependencies(cliConfig, deps));
   }
 
-  requires.push(...getDependencies(config, deps));
+  if (paramConfig) {
+    requires.push(...getParamDependencies(paramConfig, deps));
+  }
+
+  if ((cliConfig || paramConfig) && deps.includes(mochaTypescript)) {
+    requires.push(mochaTypescript);
+  }
 
   return requires;
 }

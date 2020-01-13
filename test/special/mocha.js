@@ -23,6 +23,17 @@ describe('mocha special parser', () => {
     result.should.deepEqual(['chai']);
   });
 
+  it('should recognize @types/mocha as used dependency', () => {
+    const optPath = path.resolve(__dirname, 'test/mocha.opts');
+    const result = parse(
+      'content',
+      optPath,
+      ['@types/mocha', 'unused'],
+      __dirname,
+    );
+    result.should.deepEqual(['@types/mocha']);
+  });
+
   it('should recognize dependencies path-module used in mocha options', () => {
     const content = [
       '--require chai/path/to/module',
@@ -34,8 +45,53 @@ describe('mocha special parser', () => {
     result.should.deepEqual(['chai']);
   });
 
+  [
+    '.mocharc.json',
+    '.mocharc.jsonc',
+    '.mocharc.js',
+    '.mocharc.yml',
+    '.mocharc.yaml',
+  ].forEach((filename) => {
+    it(`should recognize dependencies specified in configuration file ${filename}`, () => {
+      const content =
+        '{"require": "chai","reporter": ["list", "custom-reporter"]}';
+      const optPath = path.resolve(__dirname, filename);
+      const result = parse(
+        content,
+        optPath,
+        ['chai', 'list', 'custom-reporter', 'unused'],
+        __dirname,
+      );
+      result.should.deepEqual(['chai', 'custom-reporter']);
+    });
+  });
+
+  it('should recognize dependencies specified in package.json configuration', () => {
+    const content =
+      '{"mocha": {"require": ["chai"],"reporter": ["list", "custom-reporter"]}}';
+    const optPath = path.resolve(__dirname, 'package.json');
+    const result = parse(
+      content,
+      optPath,
+      ['chai', 'list', 'custom-reporter', 'unused'],
+      __dirname,
+    );
+    result.should.deepEqual(['chai', 'custom-reporter']);
+  });
+
   it('should recognize mocha options specified from scripts', () => {
     const rootDir = path.resolve(__dirname, '../fake_modules/mocha_opts');
+    const packagePath = path.resolve(rootDir, 'package.json');
+    const packageContent = fs.readFileSync(packagePath, 'utf-8');
+    const dependencies = Object.keys(
+      JSON.parse(packageContent).devDependencies,
+    );
+    const result = parse(packageContent, packagePath, dependencies, rootDir);
+    result.should.deepEqual(['babel', 'chai']);
+  });
+
+  it('should recognize mocha configuration specified from scripts', () => {
+    const rootDir = path.resolve(__dirname, '../fake_modules/mocha_config');
     const packagePath = path.resolve(rootDir, 'package.json');
     const packageContent = fs.readFileSync(packagePath, 'utf-8');
     const dependencies = Object.keys(
