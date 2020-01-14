@@ -2,7 +2,10 @@ import 'should';
 import yaml from 'js-yaml';
 import * as path from 'path';
 import * as fs from 'fs';
-import eslintSpecialParser from '../../src/special/eslint';
+import parser from '../../src/special/eslint';
+import { getTestParserWithTempFile } from '../utils';
+
+const testParser = getTestParserWithTempFile(parser);
 
 const testCases = [
   {
@@ -161,28 +164,24 @@ const testCases = [
   },
 ];
 
-function testEslint(deps, content) {
-  [
-    '/path/to/.eslintrc',
-    '/path/to/.eslintrc.js',
-    '/path/to/.eslintrc.json',
-    '/path/to/.eslintrc.yml',
-    '/path/to/.eslintrc.yaml',
-  ].forEach((pathToEslintrc) => {
-    const result = eslintSpecialParser(
-      content,
-      pathToEslintrc,
-      deps,
-      __dirname,
-    );
-
-    result.should.deepEqual(deps);
-  });
+async function testEslint(deps, content) {
+  await Promise.all(
+    [
+      '.eslintrc',
+      '.eslintrc.js',
+      '.eslintrc.json',
+      '.eslintrc.yml',
+      '.eslintrc.yaml',
+    ].map(async (pathToEslintrc) => {
+      const result = await testParser(content, pathToEslintrc, deps, __dirname);
+      result.should.deepEqual(deps);
+    }),
+  );
 }
 
 describe('eslint special parser', () => {
-  it('should ignore when filename is not `.eslintrc`', () => {
-    const result = eslintSpecialParser('content', '/a/file', [], __dirname);
+  it('should ignore when filename is not `.eslintrc`', async () => {
+    const result = await parser('/a/file', [], __dirname);
     result.should.deepEqual([]);
   });
 
@@ -196,7 +195,7 @@ describe('eslint special parser', () => {
     ));
 
   describe('with custom config', () => {
-    it('should parse custom configs from scripts', () => {
+    it('should parse custom configs from scripts', async () => {
       const rootDir = path.resolve(
         __dirname,
         '../fake_modules/eslint_config_custom',
@@ -206,12 +205,7 @@ describe('eslint special parser', () => {
       const dependencies = Object.keys(
         JSON.parse(packageContent).devDependencies,
       );
-      const result = eslintSpecialParser(
-        packageContent,
-        packagePath,
-        dependencies,
-        rootDir,
-      );
+      const result = await parser(packagePath, dependencies, rootDir);
       result.should.deepEqual([
         'eslint-plugin-ignored',
         'eslint-config-foo-bar',
@@ -220,7 +214,7 @@ describe('eslint special parser', () => {
       ]);
     });
 
-    it('should parse custom js configs from scripts', () => {
+    it('should parse custom js configs from scripts', async () => {
       const rootDir = path.resolve(
         __dirname,
         '../fake_modules/eslint_config_js',
@@ -230,12 +224,7 @@ describe('eslint special parser', () => {
       const dependencies = Object.keys(
         JSON.parse(packageContent).devDependencies,
       );
-      const result = eslintSpecialParser(
-        packageContent,
-        packagePath,
-        dependencies,
-        rootDir,
-      );
+      const result = await parser(packagePath, dependencies, rootDir);
       result.should.deepEqual([
         'eslint-config-foo-bar',
         'eslint-plugin-not-included',
@@ -252,10 +241,10 @@ describe('eslint special parser', () => {
 
   describe('with package.json config', () =>
     testCases.forEach((testCase) => {
-      it(`should ${testCase.name}`, () => {
-        const packageResult = eslintSpecialParser(
+      it(`should ${testCase.name}`, async () => {
+        const packageResult = await testParser(
           JSON.stringify({ eslintConfig: testCase.content }),
-          path.resolve(__dirname, 'package.json'),
+          'package.json',
           testCase.expected,
           __dirname,
         );

@@ -1,3 +1,5 @@
+import { getContent } from '../../src/utils/file';
+
 function parser(prefix, content) {
   return content
     .replace(/\r\n/g, '\n')
@@ -12,6 +14,12 @@ function parser(prefix, content) {
     }));
 }
 
-export const multipleParserA = (content) => parser('parser_a,', content);
+export const multipleParserA = async (filename) => {
+  const content = await getContent(filename);
+  return parser('parser_a,', content);
+};
 
-export const multipleParserB = (content) => parser('parser_b,', content);
+export const multipleParserB = async (filename) => {
+  const content = await getContent(filename);
+  return parser('parser_b,', content);
+};

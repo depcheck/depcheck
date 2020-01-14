@@ -1,13 +1,16 @@
 import 'should';
-import parse from '../../src/special/husky';
+import parser from '../../src/special/husky';
+import { getTestParserWithContentPromise } from '../utils';
+
+const testParser = getTestParserWithContentPromise(parser);
 
 describe('husky special parser', () => {
-  it('should ignore when filename is not supported', () => {
-    const result = parse('content', 'not-supported.txt', [], '/root/dir');
+  it('should ignore when filename is not supported', async () => {
+    const result = await parser('not-supported.txt', [], '/root/dir');
     result.should.deepEqual([]);
   });
 
-  it('should detect husky when used', () => {
+  it('should detect husky when used', async () => {
     const expected = ['husky'];
     const content = JSON.stringify({
       husky: {
@@ -16,7 +19,7 @@ describe('husky special parser', () => {
         },
       },
     });
-    const actual = parse(content, '/path/to/package.json');
+    const actual = await testParser(content, '/path/to/package.json');
     actual.should.deepEqual(expected);
   });
 });

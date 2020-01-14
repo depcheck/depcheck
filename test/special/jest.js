@@ -1,7 +1,10 @@
 import 'should';
-import path from 'path';
-import fse from 'fs-extra';
-import jestSpecialParser from '../../src/special/jest';
+import parser from '../../src/special/jest';
+import { getTestParserWithTempFile } from '../utils';
+
+// NOTE: we can't use getTestParserWithContentPromise here
+// because the parser is using require
+const testParser = getTestParserWithTempFile(parser);
 
 const configFileNames = [
   'jest.config.js',
@@ -118,42 +121,17 @@ const testCases = [
   },
 ];
 
-function random() {
-  return Math.random()
-    .toString()
-    .substring(2);
-}
-
-async function getTempPath(filename, content) {
-  const tempFolder = path.resolve(__dirname, `tmp-${random()}`);
-  const tempPath = path.resolve(tempFolder, filename);
-  await fse.ensureDir(tempFolder);
-  await fse.outputFile(tempPath, content);
-  return tempPath;
-}
-
-async function removeTempFile(filepath) {
-  const fileFolder = path.dirname(filepath);
-  await fse.remove(filepath);
-  await fse.remove(fileFolder);
-}
-
-async function testJest(content, deps, expectedDeps, filename) {
-  const tempPath = await getTempPath(filename || configFileNames[0], content);
-  try {
-    const result = jestSpecialParser(content, tempPath, deps, __dirname);
-    // sort() allows us to ignore order
-    Array.from(result)
-      .sort()
-      .should.deepEqual(expectedDeps.sort());
-  } finally {
-    await removeTempFile(tempPath);
-  }
+async function testJest(content, deps, expectedDeps, _filename) {
+  const filename = _filename || configFileNames[0];
+  const result = await testParser(content, filename, deps, __dirname);
+  Array.from(result)
+    .sort()
+    .should.deepEqual(expectedDeps.sort());
 }
 
 describe('jest special parser', () => {
-  it('should ignore when filename is not supported', () => {
-    const result = jestSpecialParser('content', 'jest.js', [], __dirname);
+  it('should ignore when filename is not supported', async () => {
+    const result = await parser('jest.js', [], __dirname);
     result.should.deepEqual([]);
   });
 
@@ -186,45 +164,37 @@ describe('jest special parser', () => {
     return testJest(content, testCases[1].deps, testCases[1].deps);
   });
 
-  it('should handle options which are not supported', () => {
-    const result = jestSpecialParser(
-      'module.exports = { automock: true }',
-      'jest.config.js',
-      [],
-      __dirname,
-    );
+  it('should handle options which are not supported', async () => {
+    const content = 'module.exports = { automock: true }';
+    const result = await testParser(content, 'jest.config.js', [], __dirname);
     result.should.deepEqual([]);
   });
 
-  it('should handle JSON parse error when using package.json', () => {
+  it('should handle JSON parse error when using package.json', async () => {
     const content = '{ this is an invalid JSON string';
-    const result = jestSpecialParser(
-      content,
-      path.resolve(__dirname, 'package.json'),
-      [],
-      __dirname,
-    );
+    const result = await testParser(content, 'package.json', [], __dirname);
     result.should.deepEqual([]);
   });
 
-  it('should handle package.json config', () => {
-    const result = jestSpecialParser(
-      JSON.stringify({ jest: [...testCases].pop().content }),
-      path.resolve(__dirname, 'package.json'),
+  it('should handle package.json config', async () => {
+    const content = JSON.stringify({ jest: [...testCases].pop().content });
+    const result = await testParser(
+      content,
+      'package.json',
       [...testCases].pop().deps,
       __dirname,
     );
     result.sort().should.deepEqual([...testCases].pop().deps.sort());
   });
 
-  it('should handle if module.exports evaluates to undefined', () => {
+  it('should handle if module.exports evaluates to undefined', async () => {
     const content = 'module.exports = undefined';
     return testJest(content, [], []);
   });
 
   configFileNames.forEach((fileName) =>
     testCases.forEach((testCase) =>
-      it(`should ${testCase.name} in config file ${fileName}`, () => {
+      it(`should ${testCase.name} in config file ${fileName}`, async () => {
         const config = JSON.stringify(testCase.content);
         let content = config;
         if (fileName.split('.').pop() === 'js') {

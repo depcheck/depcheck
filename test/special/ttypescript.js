@@ -1,7 +1,10 @@
 import 'should';
-import path from 'path';
-import fse from 'fs-extra';
-import parse from '../../src/special/ttypescript';
+import parser from '../../src/special/ttypescript';
+import { getTestParserWithTempFile } from '../utils';
+
+// NOTE: we can't use getTestParserWithContentPromise here
+// because the parser is using readJSON which is a require
+const testParser = getTestParserWithTempFile(parser);
 
 const configFileNames = ['tsconfig.json', 'tsconfig.bundle.json'];
 
@@ -20,31 +23,9 @@ const testCases = [
   },
 ];
 
-function random() {
-  return Math.random()
-    .toString()
-    .substring(2);
-}
-
-async function getTempPath(filename, content) {
-  const tempFolder = path.resolve(__dirname, `temp-${random()}`);
-  const tempPath = path.resolve(tempFolder, filename);
-  await fse.ensureDir(tempFolder);
-  await fse.outputFile(tempPath, content);
-  return tempPath;
-}
-
-async function removeTempFile(filepath) {
-  const fileFolder = path.dirname(filepath);
-  await fse.remove(filepath);
-  await fse.remove(fileFolder);
-}
-
 async function testTTypeScript(filename, content, expectedDeps) {
-  const tempPath = await getTempPath(filename, content);
   const deps = ['dummy', ...expectedDeps];
-  const result = parse(content, tempPath, deps, __dirname);
-  await removeTempFile(tempPath);
+  const result = await testParser(content, filename, deps, __dirname);
   Array.from(result).should.deepEqual(expectedDeps);
 }
 

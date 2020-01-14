@@ -1,30 +1,27 @@
 import 'should';
-import commitizenSpecialParser from '../../src/special/commitizen';
+import parser from '../../src/special/commitizen';
+import { getTestParserWithContentPromise } from '../utils';
+
+const testParser = getTestParserWithContentPromise(parser);
 
 describe('commitizen special parser', () => {
-  it('should ignore when it is not `package.json`', () => {
-    const result = commitizenSpecialParser('content', '/a/file', [], '/a');
+  it('should ignore when it is not `package.json`', async () => {
+    const result = await parser('/a/file', [], '/a');
     result.should.deepEqual([]);
   });
 
-  it('should ignore when path is missing', () => {
+  it('should ignore when path is missing', async () => {
     const metadata = {
       config: {
         commitizen: {},
       },
     };
-
     const content = JSON.stringify(metadata);
-    const result = commitizenSpecialParser(
-      content,
-      '/a/package.json',
-      [],
-      '/a',
-    );
+    const result = await testParser(content, '/a/package.json', [], '/a');
     result.should.deepEqual([]);
   });
 
-  it('should recognize the module used by commitizen (long style)', () => {
+  it('should recognize the module used by commitizen (long style)', async () => {
     const metadata = {
       config: {
         commitizen: {
@@ -32,18 +29,12 @@ describe('commitizen special parser', () => {
         },
       },
     };
-
     const content = JSON.stringify(metadata);
-    const result = commitizenSpecialParser(
-      content,
-      '/a/package.json',
-      [],
-      '/a',
-    );
+    const result = await testParser(content, '/a/package.json', [], '/a');
     result.should.deepEqual(['cz-test']);
   });
 
-  it('should recognize the module used by commitizen (short style)', () => {
+  it('should recognize the module used by commitizen (short style)', async () => {
     const metadata = {
       config: {
         commitizen: {
@@ -51,14 +42,8 @@ describe('commitizen special parser', () => {
         },
       },
     };
-
     const content = JSON.stringify(metadata);
-    const result = commitizenSpecialParser(
-      content,
-      '/a/package.json',
-      [],
-      '/a',
-    );
+    const result = await testParser(content, '/a/package.json', [], '/a');
     result.should.deepEqual(['cz-test']);
   });
 });

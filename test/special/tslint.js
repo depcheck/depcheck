@@ -2,7 +2,12 @@ import 'should';
 import yaml from 'js-yaml';
 import * as fs from 'fs';
 import * as path from 'path';
-import tslintSpecialParser from '../../src/special/tslint';
+import parser from '../../src/special/tslint';
+import { getTestParserWithTempFile } from '../utils';
+
+// NOTE: we can't use getTestParserWithContentPromise here
+// because the parser is using readJSON which is a require
+const testParser = getTestParserWithTempFile(parser);
 
 const testCases = [
   {
@@ -74,26 +79,18 @@ const testCases = [
   },
 ];
 
-function testTslint(deps, content) {
-  [
-    '/path/to/tslint.json',
-    '/path/to/tslint.yml',
-    '/path/to/tslint.yaml',
-  ].forEach((pathToTslintrc) => {
-    const result = tslintSpecialParser(
-      content,
-      pathToTslintrc,
-      deps,
-      __dirname,
-    );
-
-    result.should.deepEqual(deps);
-  });
+async function testTslint(deps, content) {
+  await Promise.all(
+    ['tslint.json', 'tslint.yml', 'tslint.yaml'].map(async (pathToTslintrc) => {
+      const result = await testParser(content, pathToTslintrc, deps, __dirname);
+      result.should.deepEqual(deps);
+    }),
+  );
 }
 
 describe('tslint special parser', () => {
-  it('should ignore when filename is not `tslint.json`', () => {
-    const result = tslintSpecialParser('content', '/a/file');
+  it('should ignore when filename is not `tslint.json`', async () => {
+    const result = await parser('/a/file');
     result.should.deepEqual([]);
   });
 
@@ -107,23 +104,18 @@ describe('tslint special parser', () => {
     ));
 
   describe('with custom config', () => {
-    it('should parse custom configs from scripts', () => {
+    it('should parse custom configs from scripts', async () => {
       const rootDir = path.resolve(__dirname, '../fake_modules/tslint_config');
       const packagePath = path.resolve(rootDir, 'package.json');
       const packageContent = fs.readFileSync(packagePath, 'utf-8');
       const dependencies = Object.keys(
         JSON.parse(packageContent).devDependencies,
       );
-      const result = tslintSpecialParser(
-        packageContent,
-        packagePath,
-        dependencies,
-        rootDir,
-      );
+      const result = await parser(packagePath, dependencies, rootDir);
       result.should.deepEqual(['tslint', 'foo-bar']);
     });
 
-    it('should skip invalid custom configs from scripts', () => {
+    it('should skip invalid custom configs from scripts', async () => {
       const rootDir = path.resolve(
         __dirname,
         '../fake_modules/tslint_config_custom_invalid',
@@ -133,12 +125,7 @@ describe('tslint special parser', () => {
       const dependencies = Object.keys(
         JSON.parse(packageContent).devDependencies,
       );
-      const result = tslintSpecialParser(
-        packageContent,
-        packagePath,
-        dependencies,
-        rootDir,
-      );
+      const result = await parser(packagePath, dependencies, rootDir);
       result.should.deepEqual([]);
     });
   });

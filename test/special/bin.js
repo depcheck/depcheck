@@ -1,5 +1,8 @@
 import 'should';
-import parse from '../../src/special/bin';
+import parser from '../../src/special/bin';
+import { getTestParserWithContentPromise } from '../utils';
+
+const testParser = getTestParserWithContentPromise(parser);
 
 const testCases = [
   {
@@ -100,14 +103,19 @@ const testCases = [
   },
 ];
 
-function testParser(testCase, content, filename) {
-  const result = parse(content, filename, testCase.dependencies, __dirname);
+async function testBin(testCase, content, filename) {
+  const result = await testParser(
+    content,
+    filename,
+    testCase.dependencies,
+    __dirname,
+  );
   result.should.deepEqual(testCase.expected);
 }
 
 describe('bin special parser', () => {
-  it('should ignore when filename is not supported', () => {
-    const result = parse('content', 'not-supported.txt', [], '/root/dir');
+  it('should ignore when filename is not supported', async () => {
+    const result = await parser('not-supported.txt', [], '/root/dir');
     result.should.deepEqual([]);
   });
 
@@ -118,7 +126,11 @@ describe('bin special parser', () => {
           ? JSON.stringify({ scripts: { t: testCase.script } })
           : '{}';
 
-        testParser(testCase, content, `/path/to/${testCase.name}/package.json`);
+        return testBin(
+          testCase,
+          content,
+          `/path/to/${testCase.name}/package.json`,
+        );
       }),
     ));
 
@@ -129,12 +141,16 @@ describe('bin special parser', () => {
           ? `script:\n  - ${testCase.script}`
           : '';
 
-        testParser(testCase, content, `/path/to/${testCase.name}/.travis.yml`);
+        return testBin(
+          testCase,
+          content,
+          `/path/to/${testCase.name}/.travis.yml`,
+        );
       }),
     ));
 
   it('should check lifecycle commands in `.travis.yml` file', () => {
     const content = `before_deploy:\n  - ${testCases[0].script}`;
-    testParser(testCases[0], content, '/path/to/.travis.yml');
+    return testBin(testCases[0], content, '/path/to/.travis.yml');
   });
 });

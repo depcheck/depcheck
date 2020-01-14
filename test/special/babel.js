@@ -1,5 +1,8 @@
 import 'should';
-import parse from '../../src/special/babel';
+import parser from '../../src/special/babel';
+import { getTestParserWithContentPromise } from '../utils';
+
+const testParser = getTestParserWithContentPromise(parser);
 
 const testCases = [
   {
@@ -111,33 +114,37 @@ const testCases = [
   },
 ];
 
-function testBabel(filename, deps, content) {
-  const result = parse(content ? JSON.stringify(content) : '', filename, deps);
+async function testBabel(filename, deps, content) {
+  const result = await testParser(
+    content ? JSON.stringify(content) : '',
+    filename,
+    deps,
+  );
   result.should.deepEqual(deps);
 }
 
 describe('babel special parser', () => {
-  it('should ignore when filename is not supported', () => {
-    const result = parse('content', 'not-supported.txt', ['deps']);
+  it('should ignore when filename is not supported', async () => {
+    const result = await parser('not-supported.txt', ['deps']);
     result.should.deepEqual([]);
   });
 
-  it('should recognize dependencies not a babel plugin', () => {
+  it('should recognize dependencies not a babel plugin', async () => {
     const content = JSON.stringify({
       presets: ['es2015'],
     });
 
-    const result = parse(content, '/path/to/.babelrc', [
+    const result = await testParser(content, '/path/to/.babelrc', [
       'babel-preset-es2015',
       'dep',
     ]);
     result.should.deepEqual(['babel-preset-es2015']);
   });
 
-  it('should detect babel.config.js', () => {
+  it('should detect babel.config.js', async () => {
     const content = "module.exports = { presets: ['es2015' ] }";
 
-    const result = parse(content, '/path/to/babel.config.js', [
+    const result = await testParser(content, '/path/to/babel.config.js', [
       'babel-preset-es2015',
       'dep',
     ]);

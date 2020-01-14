@@ -1,13 +1,16 @@
 import 'should';
-import parse from '../../src/special/lint-staged';
+import parser from '../../src/special/lint-staged';
+import { getTestParserWithContentPromise } from '../utils';
+
+const testParser = getTestParserWithContentPromise(parser);
 
 describe('lint-staged special parser', () => {
-  it('should ignore when filename is not supported', () => {
-    const result = parse('content', 'not-supported.txt', [], '/root/dir');
+  it('should ignore when filename is not supported', async () => {
+    const result = await parser('not-supported.txt', [], '/root/dir');
     result.should.deepEqual([]);
   });
 
-  it('should detect lint-staged when used', () => {
+  it('should detect lint-staged when used', async () => {
     const expected = ['lint-staged'];
     const content = JSON.stringify({
       'lint-staged': {
@@ -15,7 +18,7 @@ describe('lint-staged special parser', () => {
         '*.{js,jsx,ts,tsx}': 'eslint --ext .js,.ts,.tsx',
       },
     });
-    const actual = parse(content, '/path/to/package.json');
+    const actual = await testParser(content, '/path/to/package.json');
     actual.should.deepEqual(expected);
   });
 });

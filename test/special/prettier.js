@@ -1,16 +1,11 @@
 import 'should';
-import fs from 'fs';
 import path from 'path';
-import parse from '../../src/special/prettier';
+import parser from '../../src/special/prettier';
 
-function testPrettier(moduleName, fileName, expectedDeps) {
+async function testPrettier(moduleName, fileName, expectedDeps) {
   const rootDir = path.resolve(__dirname, '../fake_modules', moduleName);
-  const content = fs.readFileSync(
-    path.resolve(rootDir, 'package.json'),
-    'utf8',
-  );
   const deps = ['dummy', '@company/prettier-config'];
-  const result = parse(content, path.resolve(rootDir, fileName), deps, rootDir);
+  const result = await parser(path.resolve(rootDir, fileName), deps, rootDir);
   Array.from(result).should.deepEqual(expectedDeps);
 }
 
