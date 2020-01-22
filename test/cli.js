@@ -95,13 +95,20 @@ describe('depcheck command line', () => {
   });
 
   it.only('should load config from cli argument', () =>
-    testCli(makeArgv('config_argument', { config: path.resolve('test/fake_modules', 'config_argument', 'subdir', 'depcheckrc.json') }))
-      .then(({ log, error, exitCode }) => {
-        log.should.equal('No depcheck issue');
-        error.should.be.empty();
-        exitCode.should.equal(0);
-      })
-  );
+    testCli(
+      makeArgv('config_argument', {
+        config: path.resolve(
+          'test/fake_modules',
+          'config_argument',
+          'subdir',
+          'depcheckrc.json',
+        ),
+      }),
+    ).then(({ log, error, exitCode }) => {
+      log.should.equal('No depcheck issue');
+      error.should.be.empty();
+      exitCode.should.equal(0);
+    }));
 
   it('should output error when folder is not a package', () =>
     testCli([__dirname]).then(({ log, error, exitCode }) => {

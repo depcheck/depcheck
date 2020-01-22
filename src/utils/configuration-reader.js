@@ -61,8 +61,7 @@ export async function getRCFileConfiguration(moduleName, filename) {
     });
     const findings = await (filename !== undefined
       ? configFileExplorer.load(filename)
-      : configFileExplorer.search()
-    );
+      : configFileExplorer.search());
     return !findings || findings.isEmpty
       ? {}
       : convertObjectToCamelCase(findings.config);
@@ -75,6 +74,9 @@ export async function getRCFileConfiguration(moduleName, filename) {
 
 export async function getConfiguration(args, moduleName, version) {
   const cliConfig = getCliArgs(args, version);
-  const rcConfig = await getRCFileConfiguration(moduleName, cliConfig.argv.config);
+  const rcConfig = await getRCFileConfiguration(
+    moduleName,
+    cliConfig.argv.config,
+  );
   return { ...rcConfig, ...cliConfig.argv };
 }
