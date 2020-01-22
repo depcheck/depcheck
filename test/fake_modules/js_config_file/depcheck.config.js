@@ -1,3 +1,12 @@
 module.exports = {
-  ignores: ['foo'],
+  parsers: {
+    '*.js': 'es6',
+    '*.txt': () => ['foo'],
+  },
+  detectors: [
+    () => ['bar'],
+  ],
+  specials: [
+    () => ['baz'],
+  ],
 };

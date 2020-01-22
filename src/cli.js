@@ -32,7 +32,7 @@ function getParsers(parsers) {
         ? parserNames
         : [parserNames];
       const parserLambdas = sanitizedParserNames.map(
-        (parserName) => depcheck.parser[parserName],
+        (parserName) => typeof parserName === 'string' ? depcheck.parser[parserName] : parserName,
       );
       return [extension, parserLambdas];
     },
@@ -44,13 +44,13 @@ function getParsers(parsers) {
 function getDetectors(detectors) {
   return lodash.isUndefined(detectors)
     ? undefined
-    : detectors.map((detectorName) => depcheck.detector[detectorName]);
+    : detectors.map((detectorName) => typeof detectorName === 'string' ? depcheck.detector[detectorName] : detectorName);
 }
 
 function getSpecials(specials) {
   return lodash.isUndefined(specials)
     ? undefined
-    : specials.map((specialName) => depcheck.special[specialName]);
+    : specials.map((specialName) => typeof specialName === 'string' ? depcheck.special[specialName] : specialName);
 }
 
 function noIssue(result) {
