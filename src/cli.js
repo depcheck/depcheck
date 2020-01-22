@@ -109,7 +109,7 @@ export default async function cli(args, log, error, exit) {
     );
     const depcheckResult = await depcheck(rootDir, {
       ignoreBinPackage: opt.ignoreBinPackage,
-      ignoreMatches: opt.ignores || [],
+      ignoreMatches: opt.ignoreMatches || [],
       ignoreDirs: opt.ignoreDirs || [],
       parsers: getParsers(opt.parsers),
       detectors: getDetectors(opt.detectors),
