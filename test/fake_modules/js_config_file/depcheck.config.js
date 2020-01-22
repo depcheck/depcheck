@@ -3,10 +3,6 @@ module.exports = {
     '*.js': 'es6',
     '*.txt': () => ['foo'],
   },
-  detectors: [
-    () => ['bar'],
-  ],
-  specials: [
-    () => ['baz'],
-  ],
+  detectors: [() => ['bar']],
+  specials: [() => ['baz']],
 };
