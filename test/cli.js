@@ -94,7 +94,7 @@ describe('depcheck command line', () => {
     );
   });
 
-  it.only('should load config from cli argument', () =>
+  it('should load config from cli argument', () =>
     testCli(
       makeArgv('config_argument', {
         config: path.resolve(
