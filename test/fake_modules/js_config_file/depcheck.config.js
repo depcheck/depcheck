@@ -1,3 +1,3 @@
 module.exports = {
-  ignoreMatches: ['foo'],
+  ignores: ['foo'],
 };
