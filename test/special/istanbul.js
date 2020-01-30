@@ -1,15 +1,17 @@
 import 'should';
-import path from 'path';
-import parse from '../../src/special/istanbul';
+import parser from '../../src/special/istanbul';
 import { clearCache } from '../../src/utils/get-scripts';
+import { getTestParserWithContentPromise } from '../utils';
+
+const testParser = getTestParserWithContentPromise(parser);
 
 describe('istanbul (nyc) special parser', () => {
   beforeEach(() => {
     clearCache();
   });
 
-  it('should ignore when filename is not supported', () => {
-    const result = parse('content', 'not-supported.txt', ['unused'], __dirname);
+  it('should ignore when filename is not supported', async () => {
+    const result = await parser('not-supported.txt', ['unused'], __dirname);
     result.should.deepEqual([]);
   });
 
@@ -20,11 +22,11 @@ describe('istanbul (nyc) special parser', () => {
     '.nycrc.yaml',
     'nyc.config.js',
   ].forEach((filename) => {
-    it(`should recognize dependencies specified in configuration file ${filename}`, () => {
+    it(`should recognize dependencies specified in configuration file ${filename}`, async () => {
       const content =
         '{"extends": ["simple", "@namespace/module", "sub/module", "@sub/ns/module"], "all": true}';
-      const optPath = path.resolve(__dirname, filename);
-      const result = parse(
+      const optPath = filename;
+      const result = await testParser(
         content,
         optPath,
         [
@@ -46,10 +48,15 @@ describe('istanbul (nyc) special parser', () => {
     });
   });
 
-  it('should recognize dependencies specified in package.json configuration', () => {
+  it('should recognize dependencies specified in package.json configuration', async () => {
     const content = '{"nyc": {"extends": "simple", "skip-full": true}}';
-    const optPath = path.resolve(__dirname, 'package.json');
-    const result = parse(content, optPath, ['simple', 'unused'], __dirname);
+    const optPath = 'package.json';
+    const result = await testParser(
+      content,
+      optPath,
+      ['simple', 'unused'],
+      __dirname,
+    );
     result.should.deepEqual(['simple']);
   });
 });

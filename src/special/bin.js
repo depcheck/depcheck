@@ -49,7 +49,7 @@ function isBinaryInUse(dep, scripts, dir) {
   );
 }
 
-export default function parseBinary(content, filepath, deps, dir) {
-  const scripts = getScripts(filepath, content);
+export default async function parseBinary(filename, deps, dir) {
+  const scripts = await getScripts(filename);
   return deps.filter((dep) => isBinaryInUse(dep, scripts, dir));
 }

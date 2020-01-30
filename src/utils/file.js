@@ -13,3 +13,7 @@ export function getContent(filename) {
   }
   return promises[filename];
 }
+
+export function setContent(filename, content) {
+  promises[filename] = Promise.resolve(content);
+}

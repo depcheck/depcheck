@@ -1,9 +1,13 @@
 import 'should';
 import path from 'path';
 import fs from 'fs';
-import fse from 'fs-extra';
-import parse from '../../src/special/webpack';
+import parser from '../../src/special/webpack';
 import { tryRequire } from '../../src/utils';
+import { getTestParserWithTempFile } from '../utils';
+
+// NOTE: we can't use getTestParserWithContentPromise here
+// because the parser is using tryRequire
+const testParser = getTestParserWithTempFile(parser);
 
 const configFileNames = [
   'webpack.config.js',
@@ -213,30 +217,8 @@ const testCases = [
   },
 ];
 
-function random() {
-  return Math.random()
-    .toString()
-    .substring(2);
-}
-
-async function getTempPath(filename, content) {
-  const tempFolder = path.resolve(__dirname, `temp-${random()}`);
-  const tempPath = path.resolve(tempFolder, filename);
-  await fse.ensureDir(tempFolder);
-  await fse.outputFile(tempPath, content);
-  return tempPath;
-}
-
-async function removeTempFile(filepath) {
-  const fileFolder = path.dirname(filepath);
-  await fse.remove(filepath);
-  await fse.remove(fileFolder);
-}
-
 async function testWebpack(filename, content, deps, expectedDeps) {
-  const tempPath = await getTempPath(filename, content);
-  const result = parse('content', tempPath, deps);
-  await removeTempFile(tempPath);
+  const result = await testParser(content, filename, deps, __dirname);
   Array.from(result).should.deepEqual(expectedDeps);
 }
 
@@ -260,8 +242,8 @@ function registerTs(rootDir) {
 describe('webpack special parser', () => {
   registerTs('.');
 
-  it('should ignore when filename is not supported', () => {
-    const result = parse('content', 'not-supported.txt', []);
+  it('should ignore when filename is not supported', async () => {
+    const result = await parser('not-supported.txt', []);
     result.should.deepEqual([]);
   });
 

@@ -3,6 +3,7 @@ import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
 import { loadModuleData, wrapToArray } from '../utils';
 import { loadConfig } from '../utils/cli-tools';
+import { getContent } from '../utils/file';
 
 function resolveConfigModule(preset, rootDir) {
   const presetParts = preset.split('/');
@@ -139,14 +140,8 @@ function checkConfig(config, rootDir, includedDeps = []) {
 
 const configNameRegex = /^\.eslintrc(\.(json|js|yml|yaml))?$/;
 
-export default function parseESLint(content, filename, _, rootDir) {
-  const config = loadConfig(
-    'eslint',
-    configNameRegex,
-    filename,
-    content,
-    rootDir,
-  );
+export default async function parseESLint(filename, deps, rootDir) {
+  const config = await loadConfig('eslint', configNameRegex, filename, rootDir);
 
   if (config) {
     return checkConfig(config, rootDir);
@@ -156,6 +151,7 @@ export default function parseESLint(content, filename, _, rootDir) {
   const resolvedFilePath = path.resolve(rootDir, filename);
 
   if (resolvedFilePath === packageJsonPath) {
+    const content = await getContent(filename);
     const parsed = JSON.parse(content);
     if (parsed.eslintConfig) {
       return checkConfig(parsed.eslintConfig, rootDir);

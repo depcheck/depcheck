@@ -1,6 +1,7 @@
 import path from 'path';
 import lodash from 'lodash';
 import { loadConfig } from '../utils/cli-tools';
+import { getContent } from '../utils/file';
 
 function parse(content) {
   try {
@@ -83,14 +84,15 @@ function checkOptions(deps, options = {}) {
 
 const regex = /^(\.babelrc|babelrc\.js|babel\.config\.js)?$/;
 
-export default function parseBabel(content, filePath, deps, rootDir) {
-  const config = loadConfig('babel', regex, filePath, content, rootDir);
+export default async function parseBabel(filename, deps, rootDir) {
+  const config = await loadConfig('babel', regex, filename, rootDir);
 
   if (config) {
     return checkOptions(deps, config);
   }
 
-  if (path.basename(filePath) === 'package.json') {
+  if (path.basename(filename) === 'package.json') {
+    const content = await getContent(filename);
     const metadata = parse(content);
     return checkOptions(deps, metadata.babel);
   }

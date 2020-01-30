@@ -1,9 +1,12 @@
 import 'should';
-import parse from '../../src/special/gulp-load-plugins';
+import parser from '../../src/special/gulp-load-plugins';
+import { getTestParserWithContentPromise } from '../utils';
+
+const testParser = getTestParserWithContentPromise(parser);
 
 describe('gulp-load-plugins special parser', () => {
-  it('should ignore when file is not `gulpfile.js`', () => {
-    const result = parse('content', '/path/to/not-gulpfile.js', [], '/path/to');
+  it('should ignore when file is not `gulpfile.js`', async () => {
+    const result = await parser('/path/to/not-gulpfile.js', [], '/path/to');
     result.should.deepEqual([]);
   });
 
@@ -48,9 +51,9 @@ describe('gulp-load-plugins special parser', () => {
 
   ['gulpfile.js', 'gulpfile.babel.js'].forEach((gulpFileName) =>
     Object.keys(testCases).forEach((name) =>
-      it(`should recognize ${name}`, () => {
+      it(`should recognize ${name}`, async () => {
         const testCase = testCases[name];
-        const result = parse(
+        const result = await testParser(
           testCase.code,
           `/path/to/${gulpFileName}`,
           [testCase.dependency, 'gulp-load-plugins'],

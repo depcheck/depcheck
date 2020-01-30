@@ -1,5 +1,6 @@
 import path from 'path';
 import { parse } from '../utils/cli-tools';
+import { getContent } from '../utils/file';
 
 const configNameRegex = /^(\.nycrc(\.(json|yml|yaml))?|nyc.config.js)$/;
 
@@ -22,13 +23,15 @@ function getExtendsDependencies(extendConfig, deps) {
   return dependencies;
 }
 
-export default function parseIstanbul(content, filepath, deps) {
-  const basename = path.basename(filepath);
+export default async function parseIstanbul(filename, deps) {
+  const basename = path.basename(filename);
   let config;
 
   if (configNameRegex.test(basename)) {
+    const content = await getContent(filename);
     config = parse(content);
   } else if (basename === 'package.json') {
+    const content = await getContent(filename);
     config = JSON.parse(content).nyc;
   }
 

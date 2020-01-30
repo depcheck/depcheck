@@ -155,25 +155,25 @@ function loadNextWebpackConfig(filepath) {
   return null;
 }
 
-export default function parseWebpack(_content, filepath, deps) {
-  const filename = path.basename(filepath);
+export default function parseWebpack(filename, deps) {
+  const basename = path.basename(filename);
 
-  if (webpackConfigRegex.test(filename)) {
-    const webpackConfig = tryRequire(filepath);
+  if (webpackConfigRegex.test(basename)) {
+    const webpackConfig = tryRequire(filename);
     if (webpackConfig) {
       return parseWebpackConfig(webpackConfig, deps);
     }
   }
 
-  if (filename === 'styleguide.config.js') {
-    const styleguideConfig = tryRequire(filepath);
+  if (basename === 'styleguide.config.js') {
+    const styleguideConfig = tryRequire(filename);
     if (styleguideConfig && styleguideConfig.webpackConfig) {
       return parseWebpackConfig(styleguideConfig.webpackConfig, deps);
     }
   }
 
-  if (filename === 'next.config.js') {
-    const webpackConfig = loadNextWebpackConfig(filepath);
+  if (basename === 'next.config.js') {
+    const webpackConfig = loadNextWebpackConfig(filename);
     if (webpackConfig) {
       return parseWebpackConfig(webpackConfig, deps);
     }

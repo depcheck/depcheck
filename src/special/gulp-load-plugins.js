@@ -3,9 +3,10 @@ import lodash from 'lodash';
 import minimatch from 'minimatch';
 import traverse from '@babel/traverse';
 
-import esParser from '../parser/es7';
+import { parseES7Content } from '../parser/es7';
 import importDetector from '../detector/importDeclaration';
 import requireDetector from '../detector/requireCallExpression';
+import { getContent } from '../utils/file';
 
 function getPluginLookup(deps) {
   const patterns = ['gulp-*', 'gulp.*', '@*/gulp{-,.}*'];
@@ -164,8 +165,8 @@ function check(content, deps, path) {
   return [];
 }
 
-export default function parseGulpPlugins(content, filePath, deps, rootDir) {
-  const resolvedPath = resolve(filePath);
+export default async function parseGulpPlugins(filename, deps, rootDir) {
+  const resolvedPath = resolve(filename);
   if (
     resolvedPath !== resolve(rootDir, 'gulpfile.js') &&
     resolvedPath !== resolve(rootDir, 'gulpfile.babel.js')
@@ -174,7 +175,8 @@ export default function parseGulpPlugins(content, filePath, deps, rootDir) {
   }
 
   const pluginLookup = getPluginLookup(deps);
-  const ast = esParser(content);
+  const content = await getContent(filename);
+  const ast = await parseES7Content(content);
   const results = [];
   traverse(ast, {
     enter(path) {

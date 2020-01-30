@@ -1,6 +1,7 @@
 import { parse } from '@babel/parser';
+import { getContent } from '../utils/file';
 
-export default function parseES7(content) {
+export function parseES7Content(content) {
   return parse(content, {
     sourceType: 'module',
 
@@ -34,4 +35,9 @@ export default function parseES7(content) {
       'throwExpressions',
     ],
   });
+}
+
+export default async function parseES7(filename) {
+  const content = await getContent(filename);
+  return parseES7Content(content);
 }

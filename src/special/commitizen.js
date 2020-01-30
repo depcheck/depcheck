@@ -1,11 +1,14 @@
 import path from 'path';
 import requirePackageName from 'require-package-name';
+import { getContent } from '../utils/file';
 
-export default function parseCommitizen(content, filePath, deps, rootDir) {
+export default async function parseCommitizen(filename, deps, rootDir) {
   const packageJsonPath = path.resolve(rootDir, 'package.json');
-  const resolvedFilePath = path.resolve(filePath);
+  const resolvedFilePath = path.resolve(filename);
 
   if (resolvedFilePath === packageJsonPath) {
+    const content = await getContent(filename);
+
     const metadata = JSON.parse(content);
 
     if (
