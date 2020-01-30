@@ -737,4 +737,18 @@ export default [
     },
     expectedErrorCode: -1,
   },
+  {
+    name: 'allow decorators',
+    module: 'decorators',
+    options: {},
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        mobx: ['index.tsx'],
+      },
+    },
+    expectedErrorCode: 0,
+  },
 ];

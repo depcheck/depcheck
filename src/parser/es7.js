@@ -13,8 +13,8 @@ export default function parseES7(content) {
       'classProperties',
       'classPrivateProperties',
       'classPrivateMethods',
-      ['decorators', { decoratorsBeforeExport: true }],
-      // not decorators-legacy
+      // ['decorators', { decoratorsBeforeExport: true }],
+      'decorators-legacy',
       'doExpressions',
       'dynamicImport',
       'exportDefaultFrom',

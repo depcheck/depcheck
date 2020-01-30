@@ -19,8 +19,8 @@ export default function parseVue(content) {
       'classProperties',
       'classPrivateProperties',
       'classPrivateMethods',
-      ['decorators', { decoratorsBeforeExport: true }],
-      // not decorators-legacy
+      // ['decorators', { decoratorsBeforeExport: true }],
+      'decorators-legacy', // Vue cannot support both decorators
       'doExpressions',
       'dynamicImport',
       'exportDefaultFrom',
