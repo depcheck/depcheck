@@ -29,6 +29,7 @@ export function getCliArgs(args, version) {
   return yargs(args)
     .usage('Usage: $0 [DIRECTORY]')
     .boolean(['ignore-bin-package', 'skip-missing'])
+    .describe('config', 'A config file to be parsed')
     .describe('ignore-bin-package', 'Ignore package with bin entry')
     .describe('skip-missing', 'Skip calculation of missing dependencies')
     .describe('json', 'Output results to JSON')
@@ -51,14 +52,16 @@ function returnNull() {
   return null;
 }
 
-export async function getRCFileConfiguration(moduleName) {
+export async function getRCFileConfiguration(moduleName, filename) {
   try {
     const configFileExplorer = cosmiconfig(moduleName, {
       // this prevents cosmiconfig from picking up .js configuration files. "null" means no file was found.
       // Gotta extract `() => null` into a function to be able to ignore the line from the code coverage count.
       loaders: { '.js': returnNull },
     });
-    const findings = await configFileExplorer.search();
+    const findings = await (filename !== undefined
+      ? configFileExplorer.load(filename)
+      : configFileExplorer.search());
     return !findings || findings.isEmpty
       ? {}
       : convertObjectToCamelCase(findings.config);
@@ -70,7 +73,10 @@ export async function getRCFileConfiguration(moduleName) {
 }
 
 export async function getConfiguration(args, moduleName, version) {
-  const rcConfig = await getRCFileConfiguration(moduleName);
   const cliConfig = getCliArgs(args, version);
+  const rcConfig = await getRCFileConfiguration(
+    moduleName,
+    cliConfig.argv.config,
+  );
   return { ...rcConfig, ...cliConfig.argv };
 }

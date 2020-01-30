@@ -84,6 +84,8 @@ All of the arguments are optional:
 
 `--parsers`, `--detectors` and `--specials`: These arguments are for advanced usage. They provide an easy way to customize the file parser and dependency detection. Check [the pluggable design document](https://github.com/depcheck/depcheck/blob/master/doc/pluggable-design.md) for more information.
 
+`--config=[filename]`: An external configuration file (see below).
+
 ## Usage with a configuration file
 
 Depcheck can be used with an rc configuration file. In order to do so, create a .depcheckrc file in your project's package.json folder, and set the CLI keys in YAML, JSON, and Javascript formats.
