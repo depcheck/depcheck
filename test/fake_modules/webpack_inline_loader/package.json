@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "slick-carousel": "1.0.0",
+    "slickity-slick": "1.1.1"
+  }
+}

@@ -751,4 +751,19 @@ export default [
     },
     expectedErrorCode: 0,
   },
+  {
+    name: 'discover webpack inline loaders',
+    module: 'webpack_inline_loader',
+    options: {},
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        'slick-carousel': ['index.js'],
+        'slickity-slick': ['index.ts'],
+      },
+    },
+    expectedErrorCode: 0,
+  },
 ];
