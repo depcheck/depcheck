@@ -10,10 +10,12 @@ describe('configuration-reader', () => {
     configurationReaderModule = proxyquire(
       '../src/utils/configuration-reader',
       {
-        cosmiconfig: () => {
-          return {
-            search: () => cosmiconfigResult,
-          };
+        cosmiconfig: {
+          cosmiconfig: () => {
+            return {
+              search: () => cosmiconfigResult,
+            };
+          },
         },
       },
     );
