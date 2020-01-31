@@ -145,6 +145,7 @@ function loadNextWebpackConfig(filepath) {
       return nextConfig.webpack(fakeConfig, fakeContext);
     }
   } catch (error) {
+    /* eslint no-console: off */
     console.error(
       'Next.js webpack configuration detection failed with the following error',
       error,
