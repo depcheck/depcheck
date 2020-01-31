@@ -1,5 +1,5 @@
 import yargs from 'yargs';
-import cosmiconfig from 'cosmiconfig';
+import { cosmiconfig } from 'cosmiconfig';
 import camelcase from 'camelcase';
 import lodash from 'lodash';
 import ConfigurationParsingException from './exceptions/configuration-parsing-exception';
