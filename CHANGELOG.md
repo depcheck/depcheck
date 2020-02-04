@@ -1,5 +1,67 @@
 # Changelog
 
+## [Unreleased](https://github.com/depcheck/depcheck/tree/HEAD)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.9.2...HEAD)
+
+**Closed issues:**
+
+- Depcheck should only process files that are relevant to depcheck [\#420](https://github.com/depcheck/depcheck/issues/420)
+- False positive when using inline Webpack loader  [\#236](https://github.com/depcheck/depcheck/issues/236)
+
+**Merged pull requests:**
+
+- feat: Detect inline webpack loaders [\#520](https://github.com/depcheck/depcheck/pull/520) ([rumpl](https://github.com/rumpl))
+- chore: Update all dependencies [\#519](https://github.com/depcheck/depcheck/pull/519) ([rumpl](https://github.com/rumpl))
+- Config cli argument [\#517](https://github.com/depcheck/depcheck/pull/517) ([dword-design](https://github.com/dword-design))
+
+## [0.9.2](https://github.com/depcheck/depcheck/tree/0.9.2) (2020-01-30)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.9.1...0.9.2)
+
+**Closed issues:**
+
+- Use Cosmiconfig [\#516](https://github.com/depcheck/depcheck/issues/516)
+- Feature: add special parser for Istanbul.js [\#508](https://github.com/depcheck/depcheck/issues/508)
+- New mocha configuration file not seen [\#507](https://github.com/depcheck/depcheck/issues/507)
+- False positive with @types/mocha [\#504](https://github.com/depcheck/depcheck/issues/504)
+- Error: ENFILE: file table overflow \(macOS\) [\#501](https://github.com/depcheck/depcheck/issues/501)
+- eslint: dependency wrongly mark as unused [\#500](https://github.com/depcheck/depcheck/issues/500)
+- special/eslint: bad calculation of preset dependencies [\#476](https://github.com/depcheck/depcheck/issues/476)
+- Load ignore rules from a lines separated file [\#409](https://github.com/depcheck/depcheck/issues/409)
+- Improvements for CI use [\#162](https://github.com/depcheck/depcheck/issues/162)
+
+**Merged pull requests:**
+
+- Review special documentation [\#515](https://github.com/depcheck/depcheck/pull/515) ([sveyret](https://github.com/sveyret))
+- Add Istanbul special parser [\#514](https://github.com/depcheck/depcheck/pull/514) ([sveyret](https://github.com/sveyret))
+- Refactor: read content only when needed [\#513](https://github.com/depcheck/depcheck/pull/513) ([znarf](https://github.com/znarf))
+- Add `debug` package and messages to the project [\#512](https://github.com/depcheck/depcheck/pull/512) ([znarf](https://github.com/znarf))
+- Support for more decorators [\#511](https://github.com/depcheck/depcheck/pull/511) ([micky2be](https://github.com/micky2be))
+- Improve recursive work of eslint configuration check [\#506](https://github.com/depcheck/depcheck/pull/506) ([sveyret](https://github.com/sveyret))
+- Improvements for mocha [\#505](https://github.com/depcheck/depcheck/pull/505) ([sveyret](https://github.com/sveyret))
+- Support webpack styleguidist configuration [\#503](https://github.com/depcheck/depcheck/pull/503) ([znarf](https://github.com/znarf))
+- Use a single promise to read a given file [\#502](https://github.com/depcheck/depcheck/pull/502) ([znarf](https://github.com/znarf))
+- Support for next.js webpack configuration [\#496](https://github.com/depcheck/depcheck/pull/496) ([znarf](https://github.com/znarf))
+- Rename 'linters' and fix babel config file detection [\#495](https://github.com/depcheck/depcheck/pull/495) ([znarf](https://github.com/znarf))
+- Suppress unnecessary fileContent [\#494](https://github.com/depcheck/depcheck/pull/494) ([znarf](https://github.com/znarf))
+- Update travis commands and reference [\#493](https://github.com/depcheck/depcheck/pull/493) ([znarf](https://github.com/znarf))
+- Add eslint-plugin-mocha and lint test directory [\#492](https://github.com/depcheck/depcheck/pull/492) ([znarf](https://github.com/znarf))
+- Better prettier configuration [\#490](https://github.com/depcheck/depcheck/pull/490) ([znarf](https://github.com/znarf))
+- Remove remaining dev option [\#489](https://github.com/depcheck/depcheck/pull/489) ([znarf](https://github.com/znarf))
+- chore: remove editorconfig file [\#488](https://github.com/depcheck/depcheck/pull/488) ([rumpl](https://github.com/rumpl))
+- Update babel target to node 10, use prettier plugin [\#487](https://github.com/depcheck/depcheck/pull/487) ([rumpl](https://github.com/rumpl))
+- chore\(deps\): Update all dependencies to latest [\#486](https://github.com/depcheck/depcheck/pull/486) ([rumpl](https://github.com/rumpl))
+- Do not calculate expensive dep differences when skipMissing is active [\#485](https://github.com/depcheck/depcheck/pull/485) ([dword-design](https://github.com/dword-design))
+- Adjust babel special to eslint implementation [\#484](https://github.com/depcheck/depcheck/pull/484) ([dword-design](https://github.com/dword-design))
+- Add deps parameter to detectors [\#482](https://github.com/depcheck/depcheck/pull/482) ([dword-design](https://github.com/dword-design))
+- Activating Open Collective [\#481](https://github.com/depcheck/depcheck/pull/481) ([monkeywithacupcake](https://github.com/monkeywithacupcake))
+- Document and provide types for the API's package option [\#479](https://github.com/depcheck/depcheck/pull/479) ([edsrzf](https://github.com/edsrzf))
+- Try to load eslint.js modules without a module.exports wrapper [\#478](https://github.com/depcheck/depcheck/pull/478) ([rjatkins](https://github.com/rjatkins))
+- special/eslint: corrections on dependencies resolver [\#477](https://github.com/depcheck/depcheck/pull/477) ([sveyret](https://github.com/sveyret))
+- chore: add changelog file [\#475](https://github.com/depcheck/depcheck/pull/475) ([rumpl](https://github.com/rumpl))
+- Support loading configuration from a config file. [\#408](https://github.com/depcheck/depcheck/pull/408) ([Urik](https://github.com/Urik))
+
 ## [0.9.1](https://github.com/depcheck/depcheck/tree/0.9.1) (2019-11-08)
 
 [Full Changelog](https://github.com/depcheck/depcheck/compare/0.9.0...0.9.1)
@@ -20,7 +82,6 @@
 - False dependency when using ESLint vue plugin [\#239](https://github.com/depcheck/depcheck/issues/239)
 - False positive when using vue-sticky in a vue component [\#238](https://github.com/depcheck/depcheck/issues/238)
 - devDependencies defined in package scripts not detected. [\#200](https://github.com/depcheck/depcheck/issues/200)
-- Wrong unused dep detected [\#189](https://github.com/depcheck/depcheck/issues/189)
 - Support ESLint YAML and JS config. [\#150](https://github.com/depcheck/depcheck/issues/150)
 
 **Merged pull requests:**
@@ -219,7 +280,7 @@
 
 ## [0.7.0](https://github.com/depcheck/depcheck/tree/0.7.0) (2019-01-26)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.11...0.7.0)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10...0.7.0)
 
 **Fixed bugs:**
 
@@ -264,30 +325,17 @@
 - Bump nyc to 13.x [\#267](https://github.com/depcheck/depcheck/pull/267) ([LinusU](https://github.com/LinusU))
 - Friendly error messages for node \< 4 [\#219](https://github.com/depcheck/depcheck/pull/219) ([sudo-suhas](https://github.com/sudo-suhas))
 
-## [0.6.11](https://github.com/depcheck/depcheck/tree/0.6.11) (2018-08-23)
-
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.2...0.6.11)
-
-## [0.6.10-beta.2](https://github.com/depcheck/depcheck/tree/0.6.10-beta.2) (2018-08-23)
-
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10...0.6.10-beta.2)
-
 ## [0.6.10](https://github.com/depcheck/depcheck/tree/0.6.10) (2018-08-23)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.1...0.6.10)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.2...0.6.10)
 
 **Closed issues:**
 
-- error ELIFECYCLE [\#221](https://github.com/depcheck/depcheck/issues/221)
-- @types packages causing false positives  [\#210](https://github.com/depcheck/depcheck/issues/210)
-- depcheck not triggering fail from bashscript- [\#171](https://github.com/depcheck/depcheck/issues/171)
 - Deploy failed \(invalid NPM token?\) [\#275](https://github.com/depcheck/depcheck/issues/275)
 - Next Release \(0.6.10\) [\#265](https://github.com/depcheck/depcheck/issues/265)
 
 **Merged pull requests:**
 
-- Fix error when Typescript is not installed [\#282](https://github.com/depcheck/depcheck/pull/282) ([mnkhouri](https://github.com/mnkhouri))
-- Enable the plugins for Typescript parser, too [\#258](https://github.com/depcheck/depcheck/pull/258) ([cdagli](https://github.com/cdagli))
 - Add support for TSLint [\#266](https://github.com/depcheck/depcheck/pull/266) ([LinusU](https://github.com/LinusU))
 - Fix typo: pasers -\> parsers [\#263](https://github.com/depcheck/depcheck/pull/263) ([mnkhouri](https://github.com/mnkhouri))
 - Support Vue.js \(closes \#195\) [\#254](https://github.com/depcheck/depcheck/pull/254) ([oligot](https://github.com/oligot))
@@ -296,6 +344,25 @@
 - Recognize object array loaders in module.rules.loaders [\#233](https://github.com/depcheck/depcheck/pull/233) ([alexgerv](https://github.com/alexgerv))
 - Fixed support of jsx syntax [\#230](https://github.com/depcheck/depcheck/pull/230) ([yurii-sorokin](https://github.com/yurii-sorokin))
 - Add support for import\(\) expressions [\#205](https://github.com/depcheck/depcheck/pull/205) ([haggholm](https://github.com/haggholm))
+
+## [0.6.10-beta.2](https://github.com/depcheck/depcheck/tree/0.6.10-beta.2) (2018-08-23)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.11...0.6.10-beta.2)
+
+## [0.6.11](https://github.com/depcheck/depcheck/tree/0.6.11) (2018-08-23)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.1...0.6.11)
+
+**Closed issues:**
+
+- error ELIFECYCLE [\#221](https://github.com/depcheck/depcheck/issues/221)
+- @types packages causing false positives  [\#210](https://github.com/depcheck/depcheck/issues/210)
+- depcheck not triggering fail from bashscript- [\#171](https://github.com/depcheck/depcheck/issues/171)
+
+**Merged pull requests:**
+
+- Fix error when Typescript is not installed [\#282](https://github.com/depcheck/depcheck/pull/282) ([mnkhouri](https://github.com/mnkhouri))
+- Enable the plugins for Typescript parser, too [\#258](https://github.com/depcheck/depcheck/pull/258) ([cdagli](https://github.com/cdagli))
 
 ## [0.6.10-beta.1](https://github.com/depcheck/depcheck/tree/0.6.10-beta.1) (2018-08-20)
 
@@ -310,6 +377,7 @@
 **Merged pull requests:**
 
 - Update NPM tokens for deploy from Travis [\#278](https://github.com/depcheck/depcheck/pull/278) ([mnkhouri](https://github.com/mnkhouri))
+- Adds a lockfile [\#271](https://github.com/depcheck/depcheck/pull/271) ([mnkhouri](https://github.com/mnkhouri))
 
 ## [0.6.10-beta.0](https://github.com/depcheck/depcheck/tree/0.6.10-beta.0) (2018-08-13)
 
@@ -325,7 +393,6 @@
 **Merged pull requests:**
 
 - Bump Mocha to 5.x [\#274](https://github.com/depcheck/depcheck/pull/274) ([LinusU](https://github.com/LinusU))
-- Adds a lockfile [\#271](https://github.com/depcheck/depcheck/pull/271) ([mnkhouri](https://github.com/mnkhouri))
 - Use linters utility in ESLint special [\#270](https://github.com/depcheck/depcheck/pull/270) ([LinusU](https://github.com/LinusU))
 - Update issue templates [\#268](https://github.com/depcheck/depcheck/pull/268) ([mnkhouri](https://github.com/mnkhouri))
 
