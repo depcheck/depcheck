@@ -5,7 +5,7 @@ const ANGULAR_FILES = ['angular-cli.json', 'angular.json'];
 const ANGULAR_JSON_KEYS = ['scripts', 'styles', 'assets'];
 
 const traverse = (obj, candidates) => {
-  obj.keys((k) => {
+  Object.keys(obj).forEach((k) => {
     if (obj[k] && typeof obj[k] === 'object') {
       if (ANGULAR_JSON_KEYS.includes(k)) {
         candidates.push(obj[k]);
@@ -35,7 +35,7 @@ export default async function parseAngular(filename) {
         dependencies.push(match[match.length - 1].replace('node_modules/', ''));
       }
     });
-    dependencies = dependencies.filter((d) => dependencies.includes(d));
+    dependencies = dependencies.filter((d, i) => dependencies.indexOf(d) >= i);
 
     return dependencies;
   }
