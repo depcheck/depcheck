@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@scoped/dedendencie": "1.0.0",
+    "unscoped": "1.0.0",
+    "@foo-scoped/dedendencie": "1.0.0",
+    "foo-unsecoped": "1.0.0"
+  }
+}
