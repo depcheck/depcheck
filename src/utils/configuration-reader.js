@@ -51,7 +51,10 @@ export function getCliArgs(args, version) {
     .describe('specials', 'Comma separated special parser list')
     .version('version', 'Show version number', version)
     .help('help', 'Show this help message')
-    .coerce(['ignores', 'ignore-dirs', 'detectors', 'specials'], parseCsvArray)
+    .coerce(
+      ['ignores', 'ignore-dirs', 'ignore-patterns', 'detectors', 'specials'],
+      parseCsvArray,
+    )
     .coerce('parsers', (parsersStr) => {
       const parsers = parseCsvArray(parsersStr);
       return createParsersObject(parsers);

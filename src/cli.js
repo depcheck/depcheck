@@ -112,6 +112,7 @@ export default async function cli(args, log, error, exit) {
       ignorePath: opt.ignorePath,
       ignoreMatches: opt.ignores || [],
       ignoreDirs: opt.ignoreDirs || [],
+      ignorePatterns: opt.ignorePatterns || [],
       parsers: getParsers(opt.parsers),
       detectors: getDetectors(opt.detectors),
       specials: getSpecials(opt.specials),
