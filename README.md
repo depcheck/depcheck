@@ -78,7 +78,11 @@ All of the arguments are optional:
 
 `--ignores`: A comma separated array containing package names to ignore. It can be glob expressions. Example, `--ignores="eslint,babel-*"`.
 
-`--ignore-dirs`: A comma separated array containing directory names to ignore. Example, `--ignore-dirs=dist,coverage`.
+`--ignore-dirs`: DEPRECATED, use ignore-patterns instead. A comma separated array containing directory names to ignore. Example, `--ignore-dirs=dist,coverage`.
+
+`--ignore-path`: Path to a file with patterns describing files to ignore. Files must match the .gitignore [spec](http://git-scm.com/docs/gitignore). Example, `--ignore-path=.eslintignore`.
+
+`--ignore-patterns`: Comma separated patterns describing files to ignore. Patterns must match the .gitignore [spec](http://git-scm.com/docs/gitignore). Example, `--ignore-patterns=build/Release,dist,coverage,*.log`.
 
 `--help`: Show the help message.
 
@@ -112,8 +116,8 @@ import depcheck from 'depcheck';
 const options = {
   ignoreBinPackage: false, // ignore the packages with bin entry
   skipMissing: false, // skip calculation of missing dependencies
-  ignoreDirs: [
-    // folder with these names will be ignored
+  ignorePatterns: [
+    // files matching these patterns will be ignored
     'sandbox',
     'dist',
     'bower_components',
