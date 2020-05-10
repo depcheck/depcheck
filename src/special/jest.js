@@ -87,9 +87,7 @@ function filter(deps, options) {
 }
 
 function checkOptions(deps, options = {}) {
-  const pickedOptions = lodash(options)
-    .pick(supportedProperties)
-    .value();
+  const pickedOptions = lodash(options).pick(supportedProperties).value();
   return filter(deps, pickedOptions);
 }
 
