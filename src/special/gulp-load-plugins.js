@@ -104,10 +104,7 @@ function check(content, deps, path) {
     path.isImportDeclaration() &&
     path.get('specifiers')[0] &&
     path.get('specifiers')[0].isImportDefaultSpecifier() &&
-    path
-      .get('specifiers')[0]
-      .get('local')
-      .isIdentifier()
+    path.get('specifiers')[0].get('local').isIdentifier()
   ) {
     const importVariableName = path.get('specifiers')[0].get('local').node.name;
     const identifierReferences = getIdentifierReferences(
@@ -184,8 +181,5 @@ export default async function parseGulpPlugins(filename, deps, rootDir) {
     },
   });
 
-  return lodash(results)
-    .filter()
-    .uniq()
-    .value();
+  return lodash(results).filter().uniq().value();
 }

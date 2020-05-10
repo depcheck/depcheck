@@ -124,9 +124,7 @@ const testCases = [
 async function testJest(content, deps, expectedDeps, _filename) {
   const filename = _filename || configFileNames[0];
   const result = await testParser(content, filename, deps, __dirname);
-  Array.from(result)
-    .sort()
-    .should.deepEqual(expectedDeps.sort());
+  Array.from(result).sort().should.deepEqual(expectedDeps.sort());
 }
 
 describe('jest special parser', () => {

@@ -15,9 +15,7 @@ export function resolveShortPath(expected, module) {
 }
 
 function random() {
-  return Math.random()
-    .toString()
-    .substring(2);
+  return Math.random().toString().substring(2);
 }
 
 export function getTestParserWithTempFile(parser) {
