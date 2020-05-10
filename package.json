@@ -57,15 +57,16 @@
     "cosmiconfig": "^6.0.0",
     "debug": "^4.1.1",
     "deps-regex": "^0.1.4",
+    "ignore": "^5.1.4",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.15",
     "minimatch": "^3.0.4",
     "node-sass-tilde-importer": "^1.0.2",
     "please-upgrade-node": "^3.2.0",
+    "readdirp": "^3.4.0",
     "require-package-name": "^2.0.1",
     "resolve": "^1.15.0",
     "vue-template-compiler": "^2.6.11",
-    "walkdir": "^0.4.1",
     "yargs": "^15.1.0"
   },
   "devDependencies": {
