@@ -24,7 +24,6 @@
     "prettier-check": "npm run prettier -- --check",
     "lint": "eslint ./src ./build ./test",
     "test": "mocha ./test ./test/special --timeout 10000",
-    "test-dependent": "dependent-build",
     "test-coverage": "cross-env NODE_ENV=test nyc mocha ./test ./test/special --timeout 20000 && nyc report --reporter=text-lcov > ./coverage/coverage.lcov"
   },
   "author": {
@@ -80,7 +79,6 @@
     "babel-plugin-add-module-exports": "^1.0.2",
     "babel-plugin-istanbul": "^6.0.0",
     "cross-env": "^7.0.0",
-    "dependent-build": "^0.1.6",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.10.0",
