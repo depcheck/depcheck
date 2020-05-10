@@ -4,7 +4,7 @@ Depcheck is a tool for analyzing the dependencies in a project to see: how each 
 
 ## Status
 
-[![Build Status](https://travis-ci.org/depcheck/depcheck.svg?branch=master)](https://travis-ci.org/depcheck/depcheck)
+[![Build Status](https://github.com/depcheck/depcheck/workflows/ci/badge.svg)](https://github.com/depcheck/depcheck/actions)
 [![Financial Contributors on Open Collective](https://opencollective.com/depcheck/all/badge.svg?label=financial+contributors)](https://opencollective.com/depcheck) [![Build status](https://ci.appveyor.com/api/projects/status/xbooh370dinuyi0y/branch/master?svg=true)](https://ci.appveyor.com/project/lijunle/depcheck/branch/master)
 [![codecov.io](https://codecov.io/github/depcheck/depcheck/coverage.svg?branch=master)](https://codecov.io/github/depcheck/depcheck?branch=master)
 

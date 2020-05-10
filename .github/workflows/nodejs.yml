@@ -1,21 +1,30 @@
-name: linux ci
+name: ci
 
 on: [pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest]
         node-version: [10.x, 12.x]
 
+    runs-on: ${{ matrix.os }}
+
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js ${{ matrix.node-version }}
+      - uses: actions/checkout@v2
+
+      - name: setup git
+        if: matrix.os == 'windows-latest'
+        run: |
+          git config core.symlinks true
+          git reset --hard
+
+      - name: ${{ matrix.os }} / Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+
       - name: npm install, build, and test
         run: |
           npm ci
@@ -26,7 +35,12 @@ jobs:
           npm run lint
           npm run prettier-check
           npm run test-coverage
-          npm run test-dependent
-          cat ./coverage/coverage.lcov | ./node_modules/.bin/codecov
         env:
           CI: true
+
+      - uses: codecov/codecov-action@v1
+        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '12.x'
+        with:
+          file: ./coverage/coverage.lcov
+          name: codecov-umbrella
+          fail_ci_if_error: true

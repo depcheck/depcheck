@@ -79,7 +79,6 @@
     "babel-eslint": "^10.0.3",
     "babel-plugin-add-module-exports": "^1.0.2",
     "babel-plugin-istanbul": "^6.0.0",
-    "codecov": "^3.6.3",
     "cross-env": "^7.0.0",
     "dependent-build": "^0.1.6",
     "eslint": "^6.8.0",
