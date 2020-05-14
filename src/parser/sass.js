@@ -17,7 +17,9 @@ export default async function parseSASS(filename, deps, rootDir) {
     .map((file) => path.relative(rootDir, file))
     .filter((file) => file.indexOf('node_modules') >= 0) // refer to node_modules
     .map((file) => file.replace(/\\/g, '/')) // normalize paths in Windows
-    .map((file) => file.substring(file.indexOf('node_modules/') + 'node_modules/'.length)) // avoid heading slash
+    .map((file) =>
+      file.substring(file.indexOf('node_modules/') + 'node_modules/'.length),
+    ) // avoid heading slash
     .map(requirePackageName)
     .uniq()
     .value();
