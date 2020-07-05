@@ -1,6 +1,7 @@
 import yaml from 'js-yaml';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as JSON5 from 'json5';
 import { evaluate } from '.';
 import getScripts from './get-scripts';
 import { getContent } from './file';
@@ -16,6 +17,12 @@ export function parse(content) {
     return JSON.parse(content);
   } catch (error) {
     // not JSON format
+  }
+
+  try {
+    return JSON5.parse(content);
+  } catch (error) {
+    // not JSON5 format
   }
 
   try {

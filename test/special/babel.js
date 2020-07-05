@@ -141,6 +141,19 @@ describe('babel special parser', () => {
     result.should.deepEqual(['babel-preset-es2015']);
   });
 
+  it('should parse JSON5 config files', async () => {
+    const content = `{
+  // JSON5 comment
+  "presets": ["es2015"]
+}`;
+
+    const result = await testParser(content, '/path/to/.babelrc', [
+      'babel-preset-es2015',
+      'dep',
+    ]);
+    result.should.deepEqual(['babel-preset-es2015']);
+  });
+
   it('should detect babel.config.js', async () => {
     const content = "module.exports = { presets: ['es2015' ] }";
 
