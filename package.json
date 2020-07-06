@@ -58,6 +58,7 @@
     "deps-regex": "^0.1.4",
     "ignore": "^5.1.8",
     "js-yaml": "^3.14.0",
+    "json5": "^2.1.3",
     "lodash": "^4.17.15",
     "minimatch": "^3.0.4",
     "node-sass-tilde-importer": "^1.0.2",
