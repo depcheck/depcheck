@@ -2,7 +2,7 @@ import yaml from 'js-yaml';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as JSON5 from 'json5';
-import { evaluate } from '.';
+import { evaluate, tryRequire } from '.';
 import getScripts from './get-scripts';
 import { getContent } from './file';
 
@@ -83,6 +83,11 @@ export async function loadConfig(binName, filenameRegex, filename, rootDir) {
   const basename = path.basename(filename);
 
   if (filenameRegex.test(basename)) {
+    const requireConfig = tryRequire(filename);
+    if (requireConfig) {
+      return requireConfig;
+    }
+
     const content = await getContent(filename);
     const config = parse(content);
     return config;
