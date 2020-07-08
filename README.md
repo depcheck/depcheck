@@ -57,6 +57,7 @@ The _special_ component is used to recognize the dependencies that are not gener
 - `tslint` - [TSLint](https://www.npmjs.com/package/tslint) configuration presets, parsers and plugins
 - `ttypescript` - [ttypescript](https://github.com/cevek/ttypescript) transformers
 - `webpack` - [Webpack](https://www.npmjs.com/package/webpack) loaders
+- `serverless`- [Serverless](https://www.npmjs.com/package/serverless) plugins
 
 The logic of a special is not perfect. There might be [false alerts](#false-alert). If this happens, please open an issue for us.
 
