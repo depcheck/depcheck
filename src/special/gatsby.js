@@ -25,12 +25,16 @@ function parseConfigModuleExports(node) {
       ) {
         const vals = [];
         prop.value.elements
-        .filter((e) => e.type === 'ObjectExpression')
-        .map((e) => e.properties)
-        .reduce((acc, props) => acc.concat(props), [])
-        .filter((prop) => prop.key.value === 'resolve' && prop.value && prop.value.type === "StringLiteral")
-        .forEach((prop) => vals.push(prop.value.value))
-
+          .filter((e) => e.type === 'ObjectExpression')
+          .map((e) => e.properties)
+          .reduce((acc, props) => acc.concat(props), [])
+          .filter(
+            (resolvePropCandidate) =>
+              resolvePropCandidate.key.value === 'resolve' &&
+              resolvePropCandidate.value &&
+              resolvePropCandidate.value.type === 'StringLiteral',
+          )
+          .forEach((resolveProp) => vals.push(resolveProp.value.value));
 
         prop.value.elements
           .filter((e) => e.type === 'StringLiteral')

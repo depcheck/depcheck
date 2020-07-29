@@ -23,7 +23,7 @@ describe('gatsby special parser', () => {
   });
 
   it('should recognize resolve dependencies', async () => {
-    const plugins = [
+    const resolvePlugins = [
       {
         resolve: 'gatsby-plugin-page-creator',
         options: {
@@ -31,18 +31,18 @@ describe('gatsby special parser', () => {
         },
       },
       'gatsby-plugin-react-helmet',
-      'gatsby-plugin-catch-links'
+      'gatsby-plugin-catch-links',
     ];
 
-    const content = `module.exports = { plugins : ${JSON.stringify(plugins)} }`;
+    const content = `module.exports = { plugins : ${JSON.stringify(
+      resolvePlugins,
+    )} }`;
 
     const result = await testParser(content, '/a/gatsby-config.js');
     result.should.deepEqual([
       'gatsby-plugin-page-creator',
       'gatsby-plugin-react-helmet',
-      'gatsby-plugin-catch-links'
+      'gatsby-plugin-catch-links',
     ]);
   });
-
-
 });
