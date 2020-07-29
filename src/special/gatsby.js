@@ -4,6 +4,12 @@ import { parseES7Content } from '../parser/es7';
 import getNodes from '../utils/parser';
 import { getContent } from '../utils/file';
 
+/**
+ * 
+ * 
+ * @param {Object} node Root node of the gatsby.config.js file 
+ * 
+ */
 function parseConfigModuleExports(node) {
   // node.left must be assigning to module.exports
   if (
@@ -17,14 +23,20 @@ function parseConfigModuleExports(node) {
     node.left.property.type === 'Identifier' &&
     node.left.property.name === 'exports'
   ) {
-    const config = {};
-    node.right.properties.forEach((prop) => {
-      if (
-        prop.value.type === 'ArrayExpression' &&
-        prop.key.name === 'plugins'
-      ) {
-        const vals = [];
-        prop.value.elements
+    const plugins = findPluginsInObjectExpression(node.right)
+    return {plugins}
+  }
+  return null;
+}
+
+function findStringPlugins(pluginElementsArray) {
+  return pluginElementsArray
+          .filter((e) => e.type === 'StringLiteral')
+          .map((e) => e.value);
+}
+
+function findResolvePlugins(pluginElementsArray) {
+  return pluginElementsArray
           .filter((e) => e.type === 'ObjectExpression')
           .map((e) => e.properties)
           .reduce((acc, props) => acc.concat(props), [])
@@ -34,17 +46,45 @@ function parseConfigModuleExports(node) {
               resolvePropCandidate.value &&
               resolvePropCandidate.value.type === 'StringLiteral',
           )
-          .forEach((resolveProp) => vals.push(resolveProp.value.value));
+          .map((resolveProp) => resolveProp.value.value);
+}
 
-        prop.value.elements
-          .filter((e) => e.type === 'StringLiteral')
-          .forEach((e) => vals.push(e.value));
-        config[prop.key.name] = vals;
+function findNestedPlugins(pluginElementsArray) {
+  return pluginElementsArray
+          .filter((e) => e.type === 'ObjectExpression')
+          .map((e) => e.properties)
+          .reduce((acc, props) => acc.concat(props), [])
+          .filter(
+            (optionsPropCandidate) =>
+              optionsPropCandidate &&
+              optionsPropCandidate.key &&
+              optionsPropCandidate.key.value === 'options' &&
+              optionsPropCandidate.value &&
+              optionsPropCandidate.value.type === 'ObjectExpression'
+          )
+          .map((optionsNode) => findPluginsInObjectExpression(optionsNode.value))
+          .reduce((deps, dep) => deps.concat(dep), []);
+}
+
+function findPluginsInObjectExpression(node) {
+  const dependencies = [];
+    node.properties.forEach((prop) => {
+      if (
+        prop.value.type === 'ArrayExpression' &&
+        (prop.key.name === 'plugins' || prop.key.value === 'plugins')
+      ) {
+        const vals = [];
+
+        vals.push(...findResolvePlugins(prop.value.elements));
+        vals.push(...findStringPlugins(prop.value.elements));
+        vals.push(...findNestedPlugins(prop.value.elements))
+
+        dependencies.push(...vals);
+
+        
       }
     });
-    return config;
-  }
-  return null;
+    return dependencies;
 }
 
 async function parseConfig(content) {

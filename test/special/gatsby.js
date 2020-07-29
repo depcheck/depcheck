@@ -45,4 +45,35 @@ describe('gatsby special parser', () => {
       'gatsby-plugin-catch-links',
     ]);
   });
+
+  it('should recognize nested dependencies', async () => {
+    const resolvePlugins = [
+      {
+        resolve: 'gatsby-plugin-page-creator',
+        options: {
+          plugins: [
+            {
+              resolve: 'gatsby-remark-relative-images',
+              options: {
+                name: 'uploads',
+              },
+            }],
+        },
+      },
+      'gatsby-plugin-react-helmet',
+      'gatsby-plugin-catch-links',
+    ];
+
+    const content = `module.exports = { plugins : ${JSON.stringify(
+      resolvePlugins,
+    )} }`;
+
+    const result = await testParser(content, '/a/gatsby-config.js');
+    result.should.deepEqual([
+      'gatsby-plugin-page-creator',
+      'gatsby-plugin-react-helmet',
+      'gatsby-plugin-catch-links',
+      'gatsby-remark-relative-images'
+    ]);
+  });
 });
