@@ -42,5 +42,7 @@ describe('gatsby special parser', () => {
       'gatsby-plugin-react-helmet',
       'gatsby-plugin-catch-links'
     ]);
-  })
+  });
+
+
 });

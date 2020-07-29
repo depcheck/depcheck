@@ -25,6 +25,14 @@ function parseConfigModuleExports(node) {
       ) {
         const vals = [];
         prop.value.elements
+        .filter((e) => e.type === 'ObjectExpression')
+        .map((e) => e.properties)
+        .reduce((acc, props) => acc.concat(props), [])
+        .filter((prop) => prop.key.value === 'resolve' && prop.value && prop.value.type === "StringLiteral")
+        .forEach((prop) => vals.push(prop.value.value))
+
+
+        prop.value.elements
           .filter((e) => e.type === 'StringLiteral')
           .forEach((e) => vals.push(e.value));
         config[prop.key.name] = vals;
