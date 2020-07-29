@@ -21,13 +21,29 @@ export const availableSpecials = constructComponent(component, 'special');
 export const defaultOptions = {
   ignoreBinPackage: false,
   ignoreMatches: [],
-  ignoreDirs: [
+  ignorePatterns: [
     '.git',
     '.svn',
     '.hg',
     '.idea',
     'node_modules',
     'bower_components',
+    // Images
+    '*.png',
+    '*.gif',
+    '*.jpg',
+    '*.jpeg',
+    '*.svg',
+    // Fonts
+    '*.woff',
+    '*.woff2',
+    '*.eot',
+    '*.ttf',
+    // Archives
+    '*.zip',
+    '*.gz',
+    // Videos
+    '*.mp4',
   ],
   skipMissing: false,
   parsers: {

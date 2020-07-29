@@ -19,15 +19,14 @@ function getParsers(parsers) {
 
   const parserTuples = Object.entries(parsers).map(
     ([extension, parserNames]) => {
-      /* parserNames might not be an array due to user error when creating a configuration file.
-        Example of a configuration file where this might happen:
-        {
-          parsers: {
-            "*.js" : "es6",
-            "*.jsx": ["jsx"]
-          }
-        }
-      */
+      // parserNames might not be an array due to user error when creating a configuration file.
+      // Example of a configuration file where this might happen:
+      // {
+      //   parsers: {
+      //     "*.js" : "es6",
+      //     "*.jsx": ["jsx"]
+      //   }
+      // }
       const sanitizedParserNames = Array.isArray(parserNames)
         ? parserNames
         : [parserNames];
@@ -109,8 +108,10 @@ export default async function cli(args, log, error, exit) {
     );
     const depcheckResult = await depcheck(rootDir, {
       ignoreBinPackage: opt.ignoreBinPackage,
+      ignorePath: opt.ignorePath,
       ignoreMatches: opt.ignores || [],
       ignoreDirs: opt.ignoreDirs || [],
+      ignorePatterns: opt.ignorePatterns || [],
       parsers: getParsers(opt.parsers),
       detectors: getDetectors(opt.detectors),
       specials: getSpecials(opt.specials),
