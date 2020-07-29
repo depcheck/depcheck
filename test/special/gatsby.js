@@ -21,4 +21,26 @@ describe('gatsby special parser', () => {
       'gatsby-plugin-react-helmet',
     ]);
   });
+
+  it('should recognize resolve dependencies', async () => {
+    const plugins = [
+      {
+        resolve: 'gatsby-plugin-page-creator',
+        options: {
+          path: `${__dirname}/frontend/pages`,
+        },
+      },
+      'gatsby-plugin-react-helmet',
+      'gatsby-plugin-catch-links'
+    ];
+
+    const content = `module.exports = { plugins : ${JSON.stringify(plugins)} }`;
+
+    const result = await testParser(content, '/a/gatsby-config.js');
+    result.should.deepEqual([
+      'gatsby-plugin-page-creator',
+      'gatsby-plugin-react-helmet',
+      'gatsby-plugin-catch-links'
+    ]);
+  })
 });
