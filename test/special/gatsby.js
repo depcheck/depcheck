@@ -57,7 +57,8 @@ describe('gatsby special parser', () => {
               options: {
                 name: 'uploads',
               },
-            }],
+            },
+          ],
         },
       },
       'gatsby-plugin-react-helmet',
@@ -73,7 +74,7 @@ describe('gatsby special parser', () => {
       'gatsby-plugin-page-creator',
       'gatsby-plugin-react-helmet',
       'gatsby-plugin-catch-links',
-      'gatsby-remark-relative-images'
+      'gatsby-remark-relative-images',
     ]);
   });
 });
