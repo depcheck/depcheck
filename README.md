@@ -4,7 +4,7 @@ Depcheck is a tool for analyzing the dependencies in a project to see: how each 
 
 ## Status
 
-[![Build Status](https://travis-ci.org/depcheck/depcheck.svg?branch=master)](https://travis-ci.org/depcheck/depcheck)
+[![Build Status](https://github.com/depcheck/depcheck/workflows/ci/badge.svg)](https://github.com/depcheck/depcheck/actions)
 [![Financial Contributors on Open Collective](https://opencollective.com/depcheck/all/badge.svg?label=financial+contributors)](https://opencollective.com/depcheck) [![Build status](https://ci.appveyor.com/api/projects/status/xbooh370dinuyi0y/branch/master?svg=true)](https://ci.appveyor.com/project/lijunle/depcheck/branch/master)
 [![codecov.io](https://codecov.io/github/depcheck/depcheck/coverage.svg?branch=master)](https://codecov.io/github/depcheck/depcheck?branch=master)
 
@@ -57,6 +57,7 @@ The _special_ component is used to recognize the dependencies that are not gener
 - `tslint` - [TSLint](https://www.npmjs.com/package/tslint) configuration presets, parsers and plugins
 - `ttypescript` - [ttypescript](https://github.com/cevek/ttypescript) transformers
 - `webpack` - [Webpack](https://www.npmjs.com/package/webpack) loaders
+- `serverless`- [Serverless](https://www.npmjs.com/package/serverless) plugins
 
 The logic of a special is not perfect. There might be [false alerts](#false-alert). If this happens, please open an issue for us.
 
@@ -78,7 +79,11 @@ All of the arguments are optional:
 
 `--ignores`: A comma separated array containing package names to ignore. It can be glob expressions. Example, `--ignores="eslint,babel-*"`.
 
-`--ignore-dirs`: A comma separated array containing directory names to ignore. Example, `--ignore-dirs=dist,coverage`.
+`--ignore-dirs`: DEPRECATED, use ignore-patterns instead. A comma separated array containing directory names to ignore. Example, `--ignore-dirs=dist,coverage`.
+
+`--ignore-path`: Path to a file with patterns describing files to ignore. Files must match the .gitignore [spec](http://git-scm.com/docs/gitignore). Example, `--ignore-path=.eslintignore`.
+
+`--ignore-patterns`: Comma separated patterns describing files to ignore. Patterns must match the .gitignore [spec](http://git-scm.com/docs/gitignore). Example, `--ignore-patterns=build/Release,dist,coverage,*.log`.
 
 `--help`: Show the help message.
 
@@ -112,8 +117,8 @@ import depcheck from 'depcheck';
 const options = {
   ignoreBinPackage: false, // ignore the packages with bin entry
   skipMissing: false, // skip calculation of missing dependencies
-  ignoreDirs: [
-    // folder with these names will be ignored
+  ignorePatterns: [
+    // files matching these patterns will be ignored
     'sandbox',
     'dist',
     'bower_components',

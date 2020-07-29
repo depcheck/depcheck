@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import lodash from 'lodash';
 import minimatch from 'minimatch';
+import ignore from 'ignore';
+import debug from 'debug';
 import check from './check';
 import { loadModuleData, readJSON, tryRequire } from './utils';
 
@@ -57,6 +59,36 @@ function filterDependencies(
     .value();
 }
 
+function getIgnorer({ rootDir, ignorePath, ignorePatterns }) {
+  const ignorer = ignore();
+
+  ignorer.add(ignorePatterns);
+
+  // If an .*ignore file is configured
+  if (ignorePath) {
+    const ignorePathFile = path.resolve(rootDir, ignorePath);
+    if (fs.existsSync(ignorePathFile)) {
+      debug('depcheck:ignorer')(`Using ${ignorePathFile} as ignore file.`);
+      const ignorePathFileContent = fs.readFileSync(ignorePathFile, 'utf8');
+      ignorer.add(ignorePathFileContent);
+    }
+    return ignorer;
+  }
+
+  // Fallback on .depcheckignore or .gitignore
+  const ignoreFile = ['.depcheckignore', '.gitignore']
+    .map((file) => path.resolve(rootDir, file))
+    .find((file) => fs.existsSync(file));
+
+  if (ignoreFile) {
+    debug('depcheck:ignorer')(`Using ${ignoreFile} as ignore file.`);
+    const ignoreContent = fs.readFileSync(ignoreFile, 'utf8');
+    ignorer.add(ignoreContent);
+  }
+
+  return ignorer;
+}
+
 export default function depcheck(rootDir, options, callback) {
   registerTs(rootDir);
 
@@ -65,11 +97,19 @@ export default function depcheck(rootDir, options, callback) {
 
   const ignoreBinPackage = getOption('ignoreBinPackage');
   const ignoreMatches = getOption('ignoreMatches');
-  const ignoreDirs = lodash.union(
-    defaultOptions.ignoreDirs,
-    options.ignoreDirs,
-  );
+  const ignorePath = getOption('ignorePath');
   const skipMissing = getOption('skipMissing');
+
+  // Support for ignoreDirs and ignorePatterns
+  // - potential BREAKING CHANGE with previous implementation
+  // - ignoreDirs was previously matching the exact name of a given directory
+  // - ignorePatterns now use glob style syntax provided by the `ignore` package
+  // - given the previous usage, should be mostly retro-compatible
+  const ignorePatterns = lodash.union(
+    defaultOptions.ignorePatterns,
+    options.ignoreDirs,
+    options.ignorePatterns,
+  );
 
   const detectors = getOption('detectors');
   const parsers = lodash(getOption('parsers'))
@@ -98,9 +138,11 @@ export default function depcheck(rootDir, options, callback) {
     devDependencies,
   );
 
+  const ignorer = getIgnorer({ rootDir, ignorePath, ignorePatterns });
+
   return check({
     rootDir,
-    ignoreDirs,
+    ignorer,
     skipMissing,
     deps,
     devDeps,

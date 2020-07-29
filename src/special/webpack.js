@@ -135,6 +135,7 @@ function loadNextWebpackConfig(filepath) {
     plugins: [],
     module: { rules: [] },
     optimization: { splitChunks: { cacheGroups: {} } },
+    resolve: { alias: {} },
   };
 
   const fakeContext = { webpack: fakeWebpack, defaultLoaders: {} };

@@ -2,18 +2,44 @@
 
 ## [Unreleased](https://github.com/depcheck/depcheck/tree/HEAD)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.9.2...HEAD)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/1.0.0...HEAD)
 
 **Closed issues:**
 
-- Depcheck should only process files that are relevant to depcheck [\#420](https://github.com/depcheck/depcheck/issues/420)
-- False positive when using inline Webpack loader  [\#236](https://github.com/depcheck/depcheck/issues/236)
+- Bug: specials are not working [\#551](https://github.com/depcheck/depcheck/issues/551)
+- Option to exit without error code \(when running via "npm run depcheck"\) [\#533](https://github.com/depcheck/depcheck/issues/533)
 
 **Merged pull requests:**
 
+- chore: update all dependencies \(July 2020\) [\#555](https://github.com/depcheck/depcheck/pull/555) ([znarf](https://github.com/znarf))
+
+## [1.0.0](https://github.com/depcheck/depcheck/tree/1.0.0) (2020-05-14)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.9.2...1.0.0)
+
+**Closed issues:**
+
+- Error when running from script [\#531](https://github.com/depcheck/depcheck/issues/531)
+- Missing Changelog for 0.9.2 [\#521](https://github.com/depcheck/depcheck/issues/521)
+- Depcheck should only process files that are relevant to depcheck [\#420](https://github.com/depcheck/depcheck/issues/420)
+- False positive when using inline Webpack loader  [\#236](https://github.com/depcheck/depcheck/issues/236)
+- Dependencies out of date [\#273](https://github.com/depcheck/depcheck/issues/273)
+- Add support for @types declaration packages [\#163](https://github.com/depcheck/depcheck/issues/163)
+- Improvements for CI use [\#162](https://github.com/depcheck/depcheck/issues/162)
+
+**Merged pull requests:**
+
+- fix: sass parser not working with monorepo setup [\#536](https://github.com/depcheck/depcheck/pull/536) ([yingzhe](https://github.com/yingzhe))
+- chore: build on linux and windows on GH actions [\#535](https://github.com/depcheck/depcheck/pull/535) ([rumpl](https://github.com/rumpl))
+- Chore update deps [\#534](https://github.com/depcheck/depcheck/pull/534) ([rumpl](https://github.com/rumpl))
+- Support resolve.alias in fakeConfig for next.js [\#532](https://github.com/depcheck/depcheck/pull/532) ([znarf](https://github.com/znarf))
 - feat: Detect inline webpack loaders [\#520](https://github.com/depcheck/depcheck/pull/520) ([rumpl](https://github.com/rumpl))
 - chore: Update all dependencies [\#519](https://github.com/depcheck/depcheck/pull/519) ([rumpl](https://github.com/rumpl))
 - Config cli argument [\#517](https://github.com/depcheck/depcheck/pull/517) ([dword-design](https://github.com/dword-design))
+- Support for .\*ignore files [\#498](https://github.com/depcheck/depcheck/pull/498) ([znarf](https://github.com/znarf))
+- Add export detection \(`export x from y`\) [\#272](https://github.com/depcheck/depcheck/pull/272) ([mnkhouri](https://github.com/mnkhouri))
+- Bump nyc to 13.x [\#267](https://github.com/depcheck/depcheck/pull/267) ([LinusU](https://github.com/LinusU))
+- Enable the plugins for Typescript parser, too [\#258](https://github.com/depcheck/depcheck/pull/258) ([cdagli](https://github.com/cdagli))
 
 ## [0.9.2](https://github.com/depcheck/depcheck/tree/0.9.2) (2020-01-30)
 
@@ -29,7 +55,6 @@
 - eslint: dependency wrongly mark as unused [\#500](https://github.com/depcheck/depcheck/issues/500)
 - special/eslint: bad calculation of preset dependencies [\#476](https://github.com/depcheck/depcheck/issues/476)
 - Load ignore rules from a lines separated file [\#409](https://github.com/depcheck/depcheck/issues/409)
-- Improvements for CI use [\#162](https://github.com/depcheck/depcheck/issues/162)
 
 **Merged pull requests:**
 
@@ -146,7 +171,6 @@
 - show react jsx file by  [\#405](https://github.com/depcheck/depcheck/issues/405)
 - Typescript @types false positive [\#402](https://github.com/depcheck/depcheck/issues/402)
 - false report on dependency [\#401](https://github.com/depcheck/depcheck/issues/401)
-- Add support for @types declaration packages [\#163](https://github.com/depcheck/depcheck/issues/163)
 
 **Merged pull requests:**
 
@@ -298,7 +322,6 @@
 - depcheck error for workbox-build [\#290](https://github.com/depcheck/depcheck/issues/290)
 - Implement a test using only production dependencies [\#281](https://github.com/depcheck/depcheck/issues/281)
 - TypeError: Cannot read property 'ModuleKind' of null [\#280](https://github.com/depcheck/depcheck/issues/280)
-- Dependencies out of date [\#273](https://github.com/depcheck/depcheck/issues/273)
 - False "unused dependencies" for `export ... from ...` [\#262](https://github.com/depcheck/depcheck/issues/262)
 - False positive when using vuegister with mocha  [\#241](https://github.com/depcheck/depcheck/issues/241)
 - Doesn't appear to work 0.6.7 [\#220](https://github.com/depcheck/depcheck/issues/220)
@@ -321,8 +344,6 @@
 - Add tests for esnext syntax in Typescript [\#283](https://github.com/depcheck/depcheck/pull/283) ([mnkhouri](https://github.com/mnkhouri))
 - Update NPM tokens with correct permissions [\#279](https://github.com/depcheck/depcheck/pull/279) ([mnkhouri](https://github.com/mnkhouri))
 - Upgrade all dependencies [\#276](https://github.com/depcheck/depcheck/pull/276) ([nkbt](https://github.com/nkbt))
-- Add export detection \(`export x from y`\) [\#272](https://github.com/depcheck/depcheck/pull/272) ([mnkhouri](https://github.com/mnkhouri))
-- Bump nyc to 13.x [\#267](https://github.com/depcheck/depcheck/pull/267) ([LinusU](https://github.com/LinusU))
 - Friendly error messages for node \< 4 [\#219](https://github.com/depcheck/depcheck/pull/219) ([sudo-suhas](https://github.com/sudo-suhas))
 
 ## [0.6.10](https://github.com/depcheck/depcheck/tree/0.6.10) (2018-08-23)
@@ -362,7 +383,6 @@
 **Merged pull requests:**
 
 - Fix error when Typescript is not installed [\#282](https://github.com/depcheck/depcheck/pull/282) ([mnkhouri](https://github.com/mnkhouri))
-- Enable the plugins for Typescript parser, too [\#258](https://github.com/depcheck/depcheck/pull/258) ([cdagli](https://github.com/cdagli))
 
 ## [0.6.10-beta.1](https://github.com/depcheck/depcheck/tree/0.6.10-beta.1) (2018-08-20)
 
@@ -377,7 +397,6 @@
 **Merged pull requests:**
 
 - Update NPM tokens for deploy from Travis [\#278](https://github.com/depcheck/depcheck/pull/278) ([mnkhouri](https://github.com/mnkhouri))
-- Adds a lockfile [\#271](https://github.com/depcheck/depcheck/pull/271) ([mnkhouri](https://github.com/mnkhouri))
 
 ## [0.6.10-beta.0](https://github.com/depcheck/depcheck/tree/0.6.10-beta.0) (2018-08-13)
 
@@ -393,6 +412,7 @@
 **Merged pull requests:**
 
 - Bump Mocha to 5.x [\#274](https://github.com/depcheck/depcheck/pull/274) ([LinusU](https://github.com/LinusU))
+- Adds a lockfile [\#271](https://github.com/depcheck/depcheck/pull/271) ([mnkhouri](https://github.com/mnkhouri))
 - Use linters utility in ESLint special [\#270](https://github.com/depcheck/depcheck/pull/270) ([LinusU](https://github.com/LinusU))
 - Update issue templates [\#268](https://github.com/depcheck/depcheck/pull/268) ([mnkhouri](https://github.com/mnkhouri))
 
