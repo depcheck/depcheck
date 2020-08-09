@@ -1,6 +1,7 @@
 import path from 'path';
 import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
+
 const sass = require('sass');
 
 function removeNodeModulesOrTildaFromPath(packagePath) {
@@ -13,7 +14,6 @@ function removeNodeModulesOrTildaFromPath(packagePath) {
   }
   return packagePath;
 }
-
 
 export default async function parseSASS(filename) {
   const includedFiles = [];
