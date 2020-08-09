@@ -1,7 +1,7 @@
 import path from 'path';
 import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
-import { tryRequire } from '../utils';
+const sass = require('sass');
 
 function removeNodeModulesOrTildaFromPath(packagePath) {
   const nodeModulesIndex = packagePath.indexOf('node_modules/');
@@ -14,7 +14,6 @@ function removeNodeModulesOrTildaFromPath(packagePath) {
   return packagePath;
 }
 
-const sass = tryRequire('sass');
 
 export default async function parseSASS(filename) {
   const includedFiles = [];
