@@ -223,7 +223,7 @@ export default [
     expectedErrorCode: -1,
   },
   {
-    name: 'support SASS/SCSS syntax', 
+    name: 'support SASS/SCSS syntax',
     module: 'sass',
     options: {},
     expected: {
