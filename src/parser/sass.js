@@ -16,7 +16,7 @@ function removeNodeModulesOrTildaFromPath(packagePath) {
 
 const sass = tryRequire('sass');
 
-export default async function parseSASS(filename, deps, rootDir) {
+export default async function parseSASS(filename) {
   const includedFiles = [];
   let sassDetails = {};
   try {
@@ -38,7 +38,7 @@ export default async function parseSASS(filename, deps, rootDir) {
     });
   } catch (e) {
     sassDetails.stats = {
-      includedFiles
+      includedFiles,
     };
   }
 
@@ -46,7 +46,7 @@ export default async function parseSASS(filename, deps, rootDir) {
     .map(removeNodeModulesOrTildaFromPath)
     .map(requirePackageName)
     .uniq()
-    .filter(x => x)
+    .filter((x) => x)
     .value();
 
   return result;
