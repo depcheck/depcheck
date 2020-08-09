@@ -1,4 +1,7 @@
-@import "node_modules/scss-dep/index";
+@use '@scss-deps/fonts/_index.scss';
+@use 'node_modules/scss-dep-2';
+@use 'scss-dep-3';
+@import "~scss-dep/index";
 
 div {
   font-size: $font-size;
