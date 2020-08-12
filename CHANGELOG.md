@@ -1,16 +1,31 @@
 # Changelog
 
-## [Unreleased](https://github.com/depcheck/depcheck/tree/HEAD)
+## [1.2.0](https://github.com/depcheck/depcheck/tree/1.2.0) (2020-08-12)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/1.0.0...HEAD)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/1.0.0...1.2.0)
 
 **Closed issues:**
 
+- Sass 'use' syntax not working [\#576](https://github.com/depcheck/depcheck/issues/576)
+- depcheck should ignore depcheck by default [\#565](https://github.com/depcheck/depcheck/issues/565)
+- False unused dev dependencies report  [\#560](https://github.com/depcheck/depcheck/issues/560)
+- False alert for eslint packages [\#554](https://github.com/depcheck/depcheck/issues/554)
 - Bug: specials are not working [\#551](https://github.com/depcheck/depcheck/issues/551)
+- depcheck should ignore hidden folders and files [\#543](https://github.com/depcheck/depcheck/issues/543)
+- ignore-patterns option from readme description is not supported in latest release [\#537](https://github.com/depcheck/depcheck/issues/537)
 - Option to exit without error code \(when running via "npm run depcheck"\) [\#533](https://github.com/depcheck/depcheck/issues/533)
+- babelrc format [\#527](https://github.com/depcheck/depcheck/issues/527)
+- Support Gatsby plugins with resolve [\#525](https://github.com/depcheck/depcheck/issues/525)
 
 **Merged pull requests:**
 
+- fix: now supports multi ignore in ignorePattern [\#578](https://github.com/depcheck/depcheck/pull/578) ([YonatanKra](https://github.com/YonatanKra))
+- feat\(sass parser\): support @use and namespace syntax [\#577](https://github.com/depcheck/depcheck/pull/577) ([YonatanKra](https://github.com/YonatanKra))
+- Add resolve and nested dependency check for Gatsby [\#573](https://github.com/depcheck/depcheck/pull/573) ([nagygergo](https://github.com/nagygergo))
+- fix: support eslint config that needs to be required [\#561](https://github.com/depcheck/depcheck/pull/561) ([znarf](https://github.com/znarf))
+- Feat: Special for serverless config [\#559](https://github.com/depcheck/depcheck/pull/559) ([mzl-md](https://github.com/mzl-md))
+- Add node 14.x to the matrix [\#557](https://github.com/depcheck/depcheck/pull/557) ([rumpl](https://github.com/rumpl))
+- Try to parse JSON5 babelrc files [\#556](https://github.com/depcheck/depcheck/pull/556) ([rumpl](https://github.com/rumpl))
 - chore: update all dependencies \(July 2020\) [\#555](https://github.com/depcheck/depcheck/pull/555) ([znarf](https://github.com/znarf))
 
 ## [1.0.0](https://github.com/depcheck/depcheck/tree/1.0.0) (2020-05-14)
@@ -304,7 +319,7 @@
 
 ## [0.7.0](https://github.com/depcheck/depcheck/tree/0.7.0) (2019-01-26)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10...0.7.0)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.11...0.7.0)
 
 **Fixed bugs:**
 
@@ -346,6 +361,10 @@
 - Upgrade all dependencies [\#276](https://github.com/depcheck/depcheck/pull/276) ([nkbt](https://github.com/nkbt))
 - Friendly error messages for node \< 4 [\#219](https://github.com/depcheck/depcheck/pull/219) ([sudo-suhas](https://github.com/sudo-suhas))
 
+## [0.6.11](https://github.com/depcheck/depcheck/tree/0.6.11) (2018-08-23)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10...0.6.11)
+
 ## [0.6.10](https://github.com/depcheck/depcheck/tree/0.6.10) (2018-08-23)
 
 [Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.2...0.6.10)
@@ -368,11 +387,7 @@
 
 ## [0.6.10-beta.2](https://github.com/depcheck/depcheck/tree/0.6.10-beta.2) (2018-08-23)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.11...0.6.10-beta.2)
-
-## [0.6.11](https://github.com/depcheck/depcheck/tree/0.6.11) (2018-08-23)
-
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.1...0.6.11)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.1...0.6.10-beta.2)
 
 **Closed issues:**
 
