@@ -1,7 +1,11 @@
 {
   "dependencies": {
+    "@scss-deps/fonts": "0.0.1",
     "sass-dep": "0.0.1",
+    "sass-dep2": "0.0.1",
     "scss-dep": "0.0.1",
+    "scss-dep-2": "0.0.1",
+    "scss-dep-3": "0.0.1",
     "unused-sass-dep": "0.0.1"
   }
 }

@@ -232,6 +232,10 @@ export default [
       missing: {},
       using: {
         'sass-dep': ['sass.sass'],
+        'sass-dep2': ['sass.sass'],
+        '@scss-deps/fonts': ['scss.scss'],
+        'scss-dep-2': ['scss.scss'],
+        'scss-dep-3': ['scss.scss'],
         'scss-dep': ['scss.scss'],
       },
     },
