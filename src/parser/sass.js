@@ -4,6 +4,10 @@ import requirePackageName from 'require-package-name';
 
 const sass = require('sass');
 
+function unixSlashes(packagePath) {
+  return packagePath.replace(/\\/g, "/");
+}
+
 function removeNodeModulesOrTildaFromPath(packagePath) {
   const nodeModulesIndex = packagePath.indexOf('node_modules/');
   if (nodeModulesIndex > -1) {
@@ -17,7 +21,7 @@ function removeNodeModulesOrTildaFromPath(packagePath) {
 
 export default async function parseSASS(filename) {
   const includedFiles = [];
-  let sassDetails = {};
+  let sassDetails = {}; 
   try {
     // sass processor does not respect the custom importer
     sassDetails = sass.renderSync({
@@ -42,6 +46,8 @@ export default async function parseSASS(filename) {
   }
 
   const result = lodash(sassDetails.stats.includedFiles)
+    .filter((packagePath) => packagePath !== filename)
+    .map(unixSlashes)
     .map(removeNodeModulesOrTildaFromPath)
     .map(requirePackageName)
     .uniq()
