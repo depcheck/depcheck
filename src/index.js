@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import lodash from 'lodash';
-import minimatch from 'minimatch';
+import multimatch from 'multimatch';
 import ignore from 'ignore';
 import debug from 'debug';
 import check from './check';
@@ -34,8 +34,7 @@ function registerTs(rootDir) {
 }
 
 function isIgnored(ignoreMatches, dependency) {
-  const match = lodash.partial(minimatch, dependency);
-  return ignoreMatches.some(match);
+  return Boolean(multimatch(dependency, ignoreMatches).length);
 }
 
 function hasBin(rootDir, dependency) {
