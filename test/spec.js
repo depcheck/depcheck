@@ -587,12 +587,12 @@ export default [
       devDependencies: [],
       missing: {
         'missing-dep': ['index.js'],
-        'missing-ignore-not': ['index.js']
+        'missing-ignore-not': ['index.js'],
       },
       using: {
         'missing-dep': ['index.js'],
         'missing-ignore-dep': ['index.js'],
-        'missing-ignore-not': ['index.js']
+        'missing-ignore-not': ['index.js'],
       },
     },
     expectedErrorCode: -1,
