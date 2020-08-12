@@ -5,7 +5,7 @@ import requirePackageName from 'require-package-name';
 const sass = require('sass');
 
 function unixSlashes(packagePath) {
-  return packagePath.replace(/\\/g, "/");
+  return packagePath.replace(/\\/g, '/');
 }
 
 function removeNodeModulesOrTildaFromPath(packagePath) {
@@ -21,7 +21,7 @@ function removeNodeModulesOrTildaFromPath(packagePath) {
 
 export default async function parseSASS(filename) {
   const includedFiles = [];
-  let sassDetails = {}; 
+  let sassDetails = {};
   try {
     // sass processor does not respect the custom importer
     sassDetails = sass.renderSync({
