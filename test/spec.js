@@ -584,17 +584,19 @@ export default [
     name: 'ignore ignoreMatches for missing',
     module: 'missing_ignore',
     options: {
-      ignoreMatches: ['missing-ignore-*'],
+      ignoreMatches: ['missing-ignore-*', '!missing-ignore-not'],
     },
     expected: {
       dependencies: [],
       devDependencies: [],
       missing: {
         'missing-dep': ['index.js'],
+        'missing-ignore-not': ['index.js'],
       },
       using: {
         'missing-dep': ['index.js'],
         'missing-ignore-dep': ['index.js'],
+        'missing-ignore-not': ['index.js'],
       },
     },
     expectedErrorCode: -1,
