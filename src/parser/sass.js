@@ -1,27 +1,57 @@
 import path from 'path';
 import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
-import tildeImporter from 'node-sass-tilde-importer';
-import { tryRequire } from '../utils';
 
-const sass = tryRequire('node-sass');
+const sass = require('sass');
 
-export default async function parseSASS(filename, deps, rootDir) {
-  const { stats } = sass.renderSync({
-    file: filename,
-    includePaths: [path.dirname(filename)],
-    importer: tildeImporter,
-  });
+function unixSlashes(packagePath) {
+  return packagePath.replace(/\\/g, '/');
+}
 
-  const result = lodash(stats.includedFiles)
-    .map((file) => path.relative(rootDir, file))
-    .filter((file) => file.indexOf('node_modules') >= 0) // refer to node_modules
-    .map((file) => file.replace(/\\/g, '/')) // normalize paths in Windows
-    .map((file) =>
-      file.substring(file.indexOf('node_modules/') + 'node_modules/'.length),
-    ) // avoid heading slash
+function removeNodeModulesOrTildaFromPath(packagePath) {
+  const nodeModulesIndex = packagePath.indexOf('node_modules/');
+  if (nodeModulesIndex > -1) {
+    return packagePath.substring(nodeModulesIndex + 'node_modules/'.length);
+  }
+  if (packagePath.indexOf(`~`) === 0) {
+    return packagePath.substring(1);
+  }
+  return packagePath;
+}
+
+export default async function parseSASS(filename) {
+  const includedFiles = [];
+  let sassDetails = {};
+  try {
+    // sass processor does not respect the custom importer
+    sassDetails = sass.renderSync({
+      file: filename,
+      includePaths: [path.dirname(filename)],
+      importer: [
+        function importer(url) {
+          includedFiles.push(url);
+          return {
+            contents: `
+              h1 {
+                font-size: 40px;
+              }`,
+          };
+        },
+      ],
+    });
+  } catch (e) {
+    sassDetails.stats = {
+      includedFiles,
+    };
+  }
+
+  const result = lodash(sassDetails.stats.includedFiles)
+    .filter((packagePath) => packagePath !== filename)
+    .map(unixSlashes)
+    .map(removeNodeModulesOrTildaFromPath)
     .map(requirePackageName)
     .uniq()
+    .filter((x) => x)
     .value();
 
   return result;

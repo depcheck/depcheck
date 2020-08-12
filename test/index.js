@@ -35,6 +35,7 @@ describe('depcheck', () => {
         result.missing.should.eql(
           resolveShortPath(expected.missing, testCase.module),
         );
+
         result.using.should.eql(
           resolveShortPath(expected.using, testCase.module),
         );
