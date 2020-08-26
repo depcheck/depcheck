@@ -121,6 +121,14 @@ function parseEntries(entries, deps) {
 }
 
 function parseWebpackConfig(webpackConfig, deps) {
+  if (Array.isArray(webpackConfig)) {
+    return webpackConfig.reduce((accumulator, currentValue) => {
+      const currentResults = parseWebpackConfig(currentValue, deps);
+      Array.prototype.push.apply(accumulator, currentResults);
+      return accumulator;
+    }, []);
+  }
+
   const module = webpackConfig.module || {};
   const entry = webpackConfig.entry || [];
 
