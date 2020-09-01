@@ -3,8 +3,13 @@
 export function extractInlineWebpack(value) {
   const parts = value.split('!');
   if (parts.length === 1) {
-    return value;
+    return [value]; // ['module-name'] or ['path/to/file']
   }
-
-  return parts.pop();
+  if (parts[0] === '') {
+    // ['', 'something-loader', 'path/to/file']
+    // ignore first item
+    return parts.slice(1);
+  }
+  // ['something-loader', 'another-loader', 'path/to/file']
+  return parts;
 }

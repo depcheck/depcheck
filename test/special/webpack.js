@@ -281,6 +281,16 @@ describe('webpack special parser', () => {
     ),
   );
 
+  it('should handle multiple webpack configurations in one file', () => {
+    const config = JSON.stringify([
+      { module: { loaders: [{ test: /\.js$/, loader: 'babel' }] } },
+      { module: { loaders: [{ test: /\.css$/, loader: 'css' }] } },
+    ]);
+    const content = `module.exports = ${config}`;
+    const deps = ['babel-loader', 'css-loader'];
+    return testWebpack('webpack.config.js', content, deps, deps);
+  });
+
   it('should handle styleguidist webpack configuration', () => {
     const expectedDeps = [
       'babel-loader',

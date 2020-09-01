@@ -764,13 +764,18 @@ export default [
     expected: {
       dependencies: [],
       devDependencies: [],
-      missing: {},
+      missing: {
+        'another-loader': ['index.js'],
+        'script-loader': ['index.js', 'index.ts'],
+      },
       using: {
+        'another-loader': ['index.js'],
+        'script-loader': ['index.js', 'index.ts'],
         'slick-carousel': ['index.js'],
         'slickity-slick': ['index.ts'],
       },
     },
-    expectedErrorCode: 0,
+    expectedErrorCode: -1,
   },
   {
     name: 'support .depcheckignore',

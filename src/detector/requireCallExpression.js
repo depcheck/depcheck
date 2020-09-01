@@ -13,7 +13,7 @@ export default function requireCallExpression(node) {
       node.arguments[0].type === 'StringLiteral'
     ) {
       return typeof node.arguments[0].value === 'string'
-        ? [extractInlineWebpack(node.arguments[0].value)]
+        ? extractInlineWebpack(node.arguments[0].value)
         : [];
     }
 
@@ -22,7 +22,7 @@ export default function requireCallExpression(node) {
       node.arguments[0].quasis.length === 1 &&
       node.arguments[0].expressions.length === 0
     ) {
-      return [extractInlineWebpack(node.arguments[0].quasis[0].value.raw)];
+      return extractInlineWebpack(node.arguments[0].quasis[0].value.raw);
     }
   }
   return [];
