@@ -1,25 +1,97 @@
 import path from 'path';
+import fs from 'fs';
 import lodash from 'lodash';
 import requirePackageName from 'require-package-name';
 
+const { parse } = require('scss-parser');
+const createQueryWrapper = require('query-ast');
 const sass = require('sass');
+
+const IMPORT_RULE_TYPE = 'atrule';
 
 function unixSlashes(packagePath) {
   return packagePath.replace(/\\/g, '/');
 }
 
+// TODO::remove stuff after ':'
 function removeNodeModulesOrTildaFromPath(packagePath) {
-  const nodeModulesIndex = packagePath.indexOf('node_modules/');
+  let suspectedFileName = packagePath;
+
+  // remove ':'
+  const colonsIndex = packagePath.indexOf(':');
+  if (colonsIndex > 1) {
+    suspectedFileName = suspectedFileName.substring(0, colonsIndex);
+  }
+  // remove 'node_modules/'
+  const nodeModulesIndex = suspectedFileName.indexOf('node_modules/');
   if (nodeModulesIndex > -1) {
-    return packagePath.substring(nodeModulesIndex + 'node_modules/'.length);
+    return suspectedFileName.substring(
+      nodeModulesIndex + 'node_modules/'.length,
+    );
   }
-  if (packagePath.indexOf(`~`) === 0) {
-    return packagePath.substring(1);
+
+  // remove '~'
+  if (suspectedFileName.indexOf(`~`) === 0) {
+    return suspectedFileName.substring(1);
   }
-  return packagePath;
+  return suspectedFileName;
+}
+
+function isLocalFile(filePath, folderName) {
+  if (filePath[0] === '_') {
+    return true;
+  }
+
+  if (filePath[0] === '@') {
+    return false;
+  }
+
+  let isLocal = false;
+  const prefixPerms = ['_', ''];
+
+  prefixPerms.forEach((prefix) => {
+    if (isLocal) return;
+    try {
+      isLocal = fs.existsSync(
+        path.join(folderName, `${prefix}${filePath}.scss`),
+      );
+    } catch (e) {
+      console.error(e);
+    }
+  });
+
+  return isLocal;
+}
+
+function parseSCSS(filename) {
+  const folderName = path.dirname(filename);
+  const fileContents = fs.readFileSync(filename).toString();
+  const ast = parse(fileContents);
+  const queryWrapper = createQueryWrapper(ast);
+  const imports = queryWrapper(IMPORT_RULE_TYPE).nodes.map(
+    (node) => node.children[2].node.value,
+  );
+
+  const result = lodash(imports)
+    .filter((packagePath) => packagePath !== filename)
+    .map(unixSlashes)
+    .map(removeNodeModulesOrTildaFromPath)
+    .map(requirePackageName)
+    .uniq()
+    .filter((filePath) => !isLocalFile(filePath, folderName))
+    .filter((x) => x)
+    .value();
+
+  return result;
 }
 
 export default async function parseSASS(filename) {
+  const isScss = path.extname(filename) === '.scss';
+
+  if (isScss) {
+    return parseSCSS(filename);
+  }
+
   const includedFiles = [];
   let sassDetails = {};
   try {
