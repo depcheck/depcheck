@@ -46,21 +46,9 @@ function isLocalFile(filePath, folderName) {
     return false;
   }
 
-  let isLocal = false;
-  const prefixPerms = ['_', ''];
-
-  prefixPerms.forEach((prefix) => {
-    if (isLocal) return;
-    try {
-      isLocal = fs.existsSync(
-        path.join(folderName, `${prefix}${filePath}.scss`),
-      );
-    } catch (e) {
-      console.error(e);
-    }
-  });
-
-  return isLocal;
+  return fs.existsSync(
+    path.join(folderName, `${filePath}.scss`),
+  );
 }
 
 function parseSCSS(filename) {
@@ -91,7 +79,7 @@ export default async function parseSASS(filename) {
   if (isScss) {
     return parseSCSS(filename);
   }
-
+  debugger;
   const includedFiles = [];
   let sassDetails = {};
   try {
