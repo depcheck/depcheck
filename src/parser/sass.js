@@ -46,9 +46,7 @@ function isLocalFile(filePath, folderName) {
     return false;
   }
 
-  return fs.existsSync(
-    path.join(folderName, `${filePath}.scss`),
-  );
+  return fs.existsSync(path.join(folderName, `${filePath}.scss`));
 }
 
 function parseSCSS(filename) {
@@ -79,7 +77,7 @@ export default async function parseSASS(filename) {
   if (isScss) {
     return parseSCSS(filename);
   }
-  debugger;
+
   const includedFiles = [];
   let sassDetails = {};
   try {
