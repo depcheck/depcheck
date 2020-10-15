@@ -17,6 +17,12 @@ Depcheck is a tool for analyzing the dependencies in a project to see: how each 
 npm install -g depcheck
 ```
 
+Or simply using [npx](https://blog.npmjs.org/post/162869356040/introducing-npx-an-npm-package-runner) which is a package runner bundled in `npm`:
+
+```
+$ npx depcheck
+```
+
 _Notice:_ depcheck needs node.js >= 10.
 
 ## Syntax Support
