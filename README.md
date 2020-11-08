@@ -135,8 +135,8 @@ const options = {
   ],
   parsers: {
     // the target parsers
-    '*.js': depcheck.parser.es6,
-    '*.jsx': depcheck.parser.jsx,
+    '**/*.js': depcheck.parser.es6,
+    '**/*.jsx': depcheck.parser.jsx,
   },
   detectors: [
     // the target detectors

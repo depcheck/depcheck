@@ -189,14 +189,14 @@ describe('depcheck', () => {
   it('should use custom parsers to generate AST', () =>
     testCustomPluggableComponents('import_list', {
       parsers: {
-        '*.txt': importListParser,
+        '**/*.txt': importListParser,
       },
     }));
 
   it('should handle the returned string array as dependent packages', () =>
     testCustomPluggableComponents('import_list', {
       parsers: {
-        '*.txt': importListParserLite,
+        '**/*.txt': importListParserLite,
       },
       detectors: [
         // the detector step is skipped because parser returns string array
@@ -206,7 +206,7 @@ describe('depcheck', () => {
   it('should discover peer dependencies for the parser returning string array case', () =>
     testCustomPluggableComponents('import_list_peer', {
       parsers: {
-        '*.txt': importListParserLite,
+        '**/*.txt': importListParserLite,
       },
       detectors: [
         // the detector step is skipped because parser returns string array
@@ -216,15 +216,15 @@ describe('depcheck', () => {
   it('should support multiple parsers to generate ASTs', () =>
     testCustomPluggableComponents('multiple_parsers', {
       parsers: {
-        '*.csv': [multipleParserA, multipleParserB],
+        '**/*.csv': [multipleParserA, multipleParserB],
       },
     }));
 
   it('should generate ASTs when multiple globs match filename', () =>
     testCustomPluggableComponents('multiple_parsers', {
       parsers: {
-        '*.csv': multipleParserA,
-        'index.*': multipleParserB,
+        '**/*.csv': multipleParserA,
+        '**/index.*': multipleParserB,
       },
     }));
 
@@ -236,7 +236,7 @@ describe('depcheck', () => {
   it('should handle other parsers even one throws exception', () =>
     check('import_list', {
       parsers: {
-        '*.txt': [importListParser, exceptionParser],
+        '**/*.txt': [importListParser, exceptionParser],
       },
     }).then((unused) => {
       unused.dependencies.should.deepEqual([]);
@@ -248,5 +248,17 @@ describe('depcheck', () => {
       Object.keys(unused.invalidFiles)[0].should.endWith(
         path.join('/test/fake_modules/import_list/index.txt'),
       );
+    }));
+
+  it('support parser patterns based on the file paths', () =>
+    check('filepath_pattern', {
+      parsers: {
+        '**/src/*.js': depcheck.parser.jsx,
+      },
+    }).then((unused) => {
+      unused.dependencies.should.deepEqual(['dont-find-me']);
+      unused.devDependencies.should.deepEqual([]);
+      unused.missing.should.deepEqual({});
+      Object.keys(unused.using).should.deepEqual(['find-me', 'find-me2']);
     }));
 });

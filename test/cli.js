@@ -195,7 +195,7 @@ describe('depcheck command line', () => {
   it('should recognize JSX file even only pass jsx parser and require detector', () =>
     testCli(
       makeArgv('jsx', {
-        argv: ['--parsers="*.jsx:jsx"', '--dectors=requireCallExpression'],
+        argv: ['--parsers="**/*.jsx:jsx"', '--dectors=requireCallExpression'],
       }),
     ).then(({ logs, error, exitCode }) => {
       logs.should.have.length(1);
@@ -208,7 +208,7 @@ describe('depcheck command line', () => {
   it('should not recognize JSX file when not pass jsx parser', () =>
     testCli(
       makeArgv('jsx', {
-        argv: ['--parsers="*.jsx:es6"'],
+        argv: ['--parsers="**/*.jsx:es6"'],
       }),
     ).then(({ logs, error, exitCode }) => {
       logs.should.have.length(2);
