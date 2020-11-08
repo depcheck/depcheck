@@ -215,6 +215,34 @@ const testCases = [
     deps: [],
     nomodule: true,
   },
+  {
+    name: 'recognize oneOf webpack loaders',
+    deps: ['style-loader', 'css-loader'],
+    module: {
+      rules: [
+        {
+          test: '*.css',
+          oneOf: [
+            {
+              use: [
+                // when running depcheck on blog.tailwindcss.com the first `use` is undefined...
+                undefined,
+                {
+                  loader: 'style-loader',
+                },
+                {
+                  loader: 'css-loader',
+                },
+              ],
+            },
+            {
+              use: 'css-loader',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ];
 
 async function testWebpack(filename, content, deps, expectedDeps) {
