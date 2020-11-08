@@ -1,0 +1,7 @@
+@use "@test-dep/aFile2";
+@use "mixin"; // should ignore...
+@use "sass:math"; // should show only sass...
+
+div {
+  font-size: $font-size;
+}
