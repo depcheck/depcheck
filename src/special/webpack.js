@@ -7,8 +7,14 @@ const webpackConfigRegex = /webpack(\..+)?\.conf(?:ig|)\.(babel\.)?[jt]s/;
 const loaderTemplates = ['*-webpack-loader', '*-web-loader', '*-loader', '*'];
 
 function extractLoaders(item) {
+  if (!item) {
+    return [];
+  }
   if (typeof item === 'string') {
     return item;
+  }
+  if (Array.isArray(item)) {
+    return item.map(extractLoaders);
   }
 
   if (item.loader && typeof item.loader === 'string') {
@@ -85,6 +91,12 @@ function mapRuleUse(module) {
   );
 }
 
+function mapOneOf(module) {
+  return module.rules
+    .filter((rule) => !!rule.oneOf)
+    .map((rule) => rule.oneOf.map((r) => r.use || r.loader));
+}
+
 function parseWebpack2(module, deps) {
   if (!module.rules) {
     return [];
@@ -92,7 +104,8 @@ function parseWebpack2(module, deps) {
 
   const mappedLoaders = module.rules.filter((rule) => rule.loaders);
   const mappedUses = mapRuleUse(module);
-  const mapped = lodash.flatten([...mappedLoaders, ...mappedUses]);
+  const oneOf = mapOneOf(module);
+  const mapped = lodash.flatten([...mappedLoaders, ...mappedUses, ...oneOf]);
   const loaders = getLoaders(deps, mapped);
   const presets = getBabelPresets(deps, mapped);
   return [...loaders, ...presets];
