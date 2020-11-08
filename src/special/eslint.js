@@ -133,9 +133,25 @@ function checkConfig(config, rootDir, includedDeps = []) {
     .flatten()
     .value();
 
-  return lodash
+  const result = lodash
     .union(parser, plugins, presetPackages, presetDeps)
     .filter((dep) => !includedDeps.includes(dep));
+
+  if (config.settings) {
+    Object.keys(config.settings).forEach((key) => {
+      if (key !== 'import/resolver') {
+        return;
+      }
+      Object.keys(config.settings[key]).forEach((resolverName) => {
+        // node and webpack resolvers are included in `eslint-plugin-import`
+        if (!['node', 'webpack'].includes(resolverName)) {
+          result.push(`eslint-import-resolver-${resolverName}`);
+        }
+      });
+    });
+  }
+
+  return result;
 }
 
 const configNameRegex = /^\.eslintrc(\.(json|js|yml|yaml))?$/;

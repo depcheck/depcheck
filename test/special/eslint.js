@@ -162,6 +162,20 @@ const testCases = [
     },
     expected: ['@my-org/eslint-plugin-long-customized'],
   },
+  {
+    name: 'handle import resolvers',
+    content: {
+      plugins: ['import'],
+      settings: {
+        'import/resolver': {
+          typescript: {},
+          node: {},
+        },
+        sharedData: 'Hello',
+      },
+    },
+    expected: ['eslint-plugin-import', 'eslint-import-resolver-typescript'],
+  },
 ];
 
 async function testEslint(deps, content) {
