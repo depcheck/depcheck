@@ -69,6 +69,7 @@
     "resolve": "^1.17.0",
     "sass": "^1.26.10",
     "scss-parser": "^1.0.4",
+    "semver": "^7.3.2",
     "vue-template-compiler": "^2.6.11",
     "yargs": "^15.4.0"
   },
