@@ -1,8 +1,10 @@
 ---
-
 name: Feature request
 about: Suggest an idea for this project
----### Feature request description
+labels: feature
+---
+
+### Feature request description
 
 A description of the feature request
 
