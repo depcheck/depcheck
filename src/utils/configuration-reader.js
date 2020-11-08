@@ -82,7 +82,7 @@ export async function getRCFileConfiguration(moduleName, filename) {
   } catch (error) {
     // It's not documented in cosmiconfig's documentation,
     // but error in this case should be a YAMLException
-    throw new ConfigurationParsingException(error.mark.name);
+    throw new ConfigurationParsingException(filename, error);
   }
 }
 
