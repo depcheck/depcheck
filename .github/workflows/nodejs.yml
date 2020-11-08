@@ -43,4 +43,4 @@ jobs:
         with:
           file: ./coverage/coverage.lcov
           name: codecov-umbrella
-          fail_ci_if_error: true
+          fail_ci_if_error: false
