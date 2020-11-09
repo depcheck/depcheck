@@ -785,6 +785,20 @@ export default [
     expectedErrorCode: -1,
   },
   {
+    name: 'discover webpack inline loaders with parameters',
+    module: 'webpack_loader_with_parameters',
+    options: {},
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        'file-loader': ['index.js'],
+      },
+    },
+    expectedErrorCode: 0,
+  },
+  {
     name: 'support .depcheckignore',
     module: 'depcheckignore',
     options: {},
