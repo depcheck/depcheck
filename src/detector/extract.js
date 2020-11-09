@@ -8,7 +8,12 @@ export function extractInlineWebpack(value) {
   if (parts[0] === '') {
     // ['', 'something-loader', 'path/to/file']
     // ignore first item
-    return parts.slice(1);
+    const loaderParts = parts[1].split('?');
+    if (loaderParts.length === 1) {
+      return parts;
+    }
+
+    return loaderParts[0];
   }
   // ['something-loader', 'another-loader', 'path/to/file']
   return parts;
