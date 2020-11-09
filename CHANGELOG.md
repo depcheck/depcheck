@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.3.0](https://github.com/depcheck/depcheck/tree/1.3.0) (2020-11-09)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/1.2.0...1.3.0)
+
+**Fixed bugs:**
+
+- False positive: eslint import resolvers [\#571](https://github.com/depcheck/depcheck/issues/571)
+
+**Closed issues:**
+
+- false alert for React 17 [\#591](https://github.com/depcheck/depcheck/issues/591)
+- false alert with typescript path aliases [\#590](https://github.com/depcheck/depcheck/issues/590)
+- Allow to define patterns against absolute file path \(again\) [\#589](https://github.com/depcheck/depcheck/issues/589)
+- Can't read property 'name' of undefined [\#579](https://github.com/depcheck/depcheck/issues/579)
+- Support .\*ignore files [\#497](https://github.com/depcheck/depcheck/issues/497)
+
+**Merged pull requests:**
+
+- Update dependencies [\#599](https://github.com/depcheck/depcheck/pull/599) ([rumpl](https://github.com/rumpl))
+- Support webpack's `oneOf` in rules [\#598](https://github.com/depcheck/depcheck/pull/598) ([rumpl](https://github.com/rumpl))
+- Fix eslint when eslint-plugin-import is used [\#597](https://github.com/depcheck/depcheck/pull/597) ([rumpl](https://github.com/rumpl))
+- The error thrown is not always a YAML error [\#596](https://github.com/depcheck/depcheck/pull/596) ([rumpl](https://github.com/rumpl))
+- Support parser patterns based on file paths [\#595](https://github.com/depcheck/depcheck/pull/595) ([rumpl](https://github.com/rumpl))
+- Support react \>= 17.0.0 that doesn't need to be imported [\#594](https://github.com/depcheck/depcheck/pull/594) ([rumpl](https://github.com/rumpl))
+- Use the promise version of the api in the example [\#593](https://github.com/depcheck/depcheck/pull/593) ([rumpl](https://github.com/rumpl))
+- Add option to run depcheck through npx [\#586](https://github.com/depcheck/depcheck/pull/586) ([elrumordelaluz](https://github.com/elrumordelaluz))
+- fix\(sass-parser\): ignore local import in scss  [\#581](https://github.com/depcheck/depcheck/pull/581) ([YonatanKra](https://github.com/YonatanKra))
+- Improved webpack support [\#580](https://github.com/depcheck/depcheck/pull/580) ([cwillisf](https://github.com/cwillisf))
+
 ## [1.2.0](https://github.com/depcheck/depcheck/tree/1.2.0) (2020-08-12)
 
 [Full Changelog](https://github.com/depcheck/depcheck/compare/1.0.0...1.2.0)
@@ -319,7 +348,7 @@
 
 ## [0.7.0](https://github.com/depcheck/depcheck/tree/0.7.0) (2019-01-26)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.11...0.7.0)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10...0.7.0)
 
 **Fixed bugs:**
 
@@ -361,10 +390,6 @@
 - Upgrade all dependencies [\#276](https://github.com/depcheck/depcheck/pull/276) ([nkbt](https://github.com/nkbt))
 - Friendly error messages for node \< 4 [\#219](https://github.com/depcheck/depcheck/pull/219) ([sudo-suhas](https://github.com/sudo-suhas))
 
-## [0.6.11](https://github.com/depcheck/depcheck/tree/0.6.11) (2018-08-23)
-
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10...0.6.11)
-
 ## [0.6.10](https://github.com/depcheck/depcheck/tree/0.6.10) (2018-08-23)
 
 [Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.2...0.6.10)
@@ -387,7 +412,11 @@
 
 ## [0.6.10-beta.2](https://github.com/depcheck/depcheck/tree/0.6.10-beta.2) (2018-08-23)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.1...0.6.10-beta.2)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.11...0.6.10-beta.2)
+
+## [0.6.11](https://github.com/depcheck/depcheck/tree/0.6.11) (2018-08-23)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.1...0.6.11)
 
 **Closed issues:**
 
