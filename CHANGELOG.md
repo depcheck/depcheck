@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.1](https://github.com/depcheck/depcheck/tree/1.3.1) (2020-11-09)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/1.3.0...1.3.1)
+
+**Merged pull requests:**
+
+- Fix extracting dependencies from webpack [\#602](https://github.com/depcheck/depcheck/pull/602) ([rumpl](https://github.com/rumpl))
+
 ## [1.3.0](https://github.com/depcheck/depcheck/tree/1.3.0) (2020-11-09)
 
 [Full Changelog](https://github.com/depcheck/depcheck/compare/1.2.0...1.3.0)
@@ -348,7 +356,7 @@
 
 ## [0.7.0](https://github.com/depcheck/depcheck/tree/0.7.0) (2019-01-26)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10...0.7.0)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.11...0.7.0)
 
 **Fixed bugs:**
 
@@ -390,6 +398,10 @@
 - Upgrade all dependencies [\#276](https://github.com/depcheck/depcheck/pull/276) ([nkbt](https://github.com/nkbt))
 - Friendly error messages for node \< 4 [\#219](https://github.com/depcheck/depcheck/pull/219) ([sudo-suhas](https://github.com/sudo-suhas))
 
+## [0.6.11](https://github.com/depcheck/depcheck/tree/0.6.11) (2018-08-23)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10...0.6.11)
+
 ## [0.6.10](https://github.com/depcheck/depcheck/tree/0.6.10) (2018-08-23)
 
 [Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.2...0.6.10)
@@ -412,11 +424,7 @@
 
 ## [0.6.10-beta.2](https://github.com/depcheck/depcheck/tree/0.6.10-beta.2) (2018-08-23)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.11...0.6.10-beta.2)
-
-## [0.6.11](https://github.com/depcheck/depcheck/tree/0.6.11) (2018-08-23)
-
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.1...0.6.11)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.1...0.6.10-beta.2)
 
 **Closed issues:**
 
