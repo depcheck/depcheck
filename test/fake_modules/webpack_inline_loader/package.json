@@ -1,6 +1,28 @@
 {
   "dependencies": {
     "slick-carousel": "1.0.0",
-    "slickity-slick": "1.1.1"
+    "slickity-slick": "1.1.1",
+    "style-loader-01": "1.0.0",
+    "style-loader-02": "1.0.0",
+    "style-loader-03": "1.0.0",
+    "style-loader-04": "1.0.0",
+    "css-loader-01": "1.0.0",
+    "css-loader-02": "1.0.0",
+    "css-loader-03": "1.0.0",
+    "css-loader-04": "1.0.0",
+    "imports-loader-01": "1.0.0",
+    "imports-loader-02": "1.0.0",
+    "lodash-01": "1.0.0",
+    "style-loader-11": "1.0.0",
+    "style-loader-12": "1.0.0",
+    "style-loader-13": "1.0.0",
+    "style-loader-14": "1.0.0",
+    "css-loader-11": "1.0.0",
+    "css-loader-12": "1.0.0",
+    "css-loader-13": "1.0.0",
+    "css-loader-14": "1.0.0",
+    "imports-loader-11": "1.0.0",
+    "imports-loader-12": "1.0.0",
+    "lodash-11": "1.0.0"
   }
 }
