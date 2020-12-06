@@ -76,9 +76,9 @@ The CLI example in a YAML configuration file would turn into:
 
 ```
 parsers:
-  '*.js': ['es6'],
-  '*.jsx': ['jsx'],
-  '*.json':
+  '**/*.js': ['es6'],
+  '**/*.jsx': ['jsx'],
+  '**/*.json':
     - json1
     - json2
 ```
