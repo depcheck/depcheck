@@ -77,4 +77,35 @@ describe('gatsby special parser', () => {
       'gatsby-remark-relative-images',
     ]);
   });
+
+  it('should recognize template literals', async () => {
+    const content =
+      'module.exports = {\n' +
+      '  plugins : [\n' +
+      '    {\n' +
+      '      resolve: `gatsby-plugin-page-creator`,' +
+      '      options: {\n' +
+      '        plugins: [\n' +
+      '          {\n' +
+      '            resolve: `gatsby-remark-relative-images`,\n' +
+      '            options: {\n' +
+      '              name: "uploads",\n' +
+      '            },\n' +
+      '          },\n' +
+      '        ],\n' +
+      '      },\n' +
+      '    },\n' +
+      '    `gatsby-plugin-react-helmet`,\n' +
+      '    "gatsby-plugin-catch-links",\n' +
+      '  ],' +
+      '}';
+
+    const result = await testParser(content, '/a/gatsby-config.js');
+    result.should.deepEqual([
+      'gatsby-plugin-page-creator',
+      'gatsby-plugin-react-helmet',
+      'gatsby-plugin-catch-links',
+      'gatsby-remark-relative-images',
+    ]);
+  });
 });

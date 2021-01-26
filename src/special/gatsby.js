@@ -6,8 +6,11 @@ import { getContent } from '../utils/file';
 
 function findStringPlugins(pluginElementsArray) {
   return pluginElementsArray
-    .filter((e) => e.type === 'StringLiteral')
-    .map((e) => e.value);
+    .filter((e) => e.type === 'StringLiteral' || e.type === 'TemplateLiteral')
+    .map((e) => {
+      if (e.type === 'TemplateLiteral') return e.quasis[0].value.cooked;
+      return e.value;
+    });
 }
 
 function findResolvePlugins(pluginElementsArray) {
@@ -17,11 +20,17 @@ function findResolvePlugins(pluginElementsArray) {
     .reduce((acc, props) => acc.concat(props), [])
     .filter(
       (resolvePropCandidate) =>
-        resolvePropCandidate.key.value === 'resolve' &&
+        (resolvePropCandidate.key.name === 'resolve' ||
+          resolvePropCandidate.key.value === 'resolve') &&
         resolvePropCandidate.value &&
-        resolvePropCandidate.value.type === 'StringLiteral',
+        (resolvePropCandidate.value.type === 'StringLiteral' ||
+          resolvePropCandidate.value.type === 'TemplateLiteral'),
     )
-    .map((resolveProp) => resolveProp.value.value);
+    .map((resolveProp) => {
+      if (resolveProp.value.type === 'TemplateLiteral')
+        return resolveProp.value.quasis[0].value.cooked;
+      return resolveProp.value.value;
+    });
 }
 
 function findNestedPlugins(pluginElementsArray) {
@@ -34,7 +43,8 @@ function findNestedPlugins(pluginElementsArray) {
         (optionsPropCandidate) =>
           optionsPropCandidate &&
           optionsPropCandidate.key &&
-          optionsPropCandidate.key.value === 'options' &&
+          (optionsPropCandidate.key.name === 'options' ||
+            optionsPropCandidate.key.value === 'options') &&
           optionsPropCandidate.value &&
           optionsPropCandidate.value.type === 'ObjectExpression',
       )
