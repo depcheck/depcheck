@@ -79,27 +79,26 @@ describe('gatsby special parser', () => {
   });
 
   it('should recognize template literals', async () => {
-    const resolvePlugins = [
-      {
-        resolve: `gatsby-plugin-page-creator`,
-        options: {
-          plugins: [
-            {
-              resolve: `gatsby-remark-relative-images`,
-              options: {
-                name: 'uploads',
-              },
-            },
-          ],
-        },
-      },
-      `gatsby-plugin-react-helmet`,
-      'gatsby-plugin-catch-links',
-    ];
-
-    const content = `module.exports = { plugins : ${JSON.stringify(
-      resolvePlugins,
-    )} }`;
+    const content =
+      'module.exports = {\n' +
+      '  plugins : [\n' +
+      '    {\n' +
+      '      resolve: `gatsby-plugin-page-creator`,' +
+      '      options: {\n' +
+      '        plugins: [\n' +
+      '          {\n' +
+      '            resolve: `gatsby-remark-relative-images`,\n' +
+      '            options: {\n' +
+      '              name: "uploads",\n' +
+      '            },\n' +
+      '          },\n' +
+      '        ],\n' +
+      '      },\n' +
+      '    },\n' +
+      '    `gatsby-plugin-react-helmet`,\n' +
+      '    "gatsby-plugin-catch-links",\n' +
+      '  ],' +
+      '}';
 
     const result = await testParser(content, '/a/gatsby-config.js');
     result.should.deepEqual([
