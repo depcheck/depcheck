@@ -1,14 +1,15 @@
 import { parse } from '@babel/parser';
-import { parseComponent } from 'vue-template-compiler';
+import { parse as vueParse } from '@vue/compiler-sfc';
 import { getContent } from '../utils/file';
 
 export default async function parseVue(filename) {
   const content = await getContent(filename);
-  const parsed = parseComponent(content);
-  if (!parsed.script) {
+  const parsed = vueParse(content);
+  if (!parsed.descriptor.script) {
     return [];
   }
-  return parse(parsed.script.content, {
+
+  return parse(parsed.descriptor.script.content, {
     sourceType: 'module',
 
     // Enable all known compatible @babel/parser plugins at the time of writing.
