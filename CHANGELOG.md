@@ -1,5 +1,36 @@
 # Changelog
 
+## [Unreleased](https://github.com/depcheck/depcheck/tree/HEAD)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/1.4.0...HEAD)
+
+**Fixed bugs:**
+
+- Not working with Vue3 [\#610](https://github.com/depcheck/depcheck/issues/610)
+
+## [1.4.0](https://github.com/depcheck/depcheck/tree/1.4.0) (2021-02-16)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/1.3.1...1.4.0)
+
+**Fixed bugs:**
+
+- updating from 1.2.0 to 1.3.1 parsers glob stopped working [\#606](https://github.com/depcheck/depcheck/issues/606)
+- 非常差劲 导致我项目启动不了了！！！！误报非常的多 提issue 都不可能提的过来 [\#604](https://github.com/depcheck/depcheck/issues/604)
+- False positive: eslint-import-resolver-typescript [\#603](https://github.com/depcheck/depcheck/issues/603)
+- Depcheck Fails Incorrectly at "=" sign starting v1.3.0 [\#601](https://github.com/depcheck/depcheck/issues/601)
+- False positive in Next.js Config file: `next.config.js` [\#583](https://github.com/depcheck/depcheck/issues/583)
+
+**Closed issues:**
+
+- Different output when invoking from shell script [\#617](https://github.com/depcheck/depcheck/issues/617)
+- How to disable a special when using the API? [\#614](https://github.com/depcheck/depcheck/issues/614)
+
+**Merged pull requests:**
+
+- Use @vue/compiler-sfc [\#625](https://github.com/depcheck/depcheck/pull/625) ([rumpl](https://github.com/rumpl))
+- fix: fixing broken gatsby parser [\#622](https://github.com/depcheck/depcheck/pull/622) ([chris-hammond](https://github.com/chris-hammond))
+- Update the docs to a confirmed working config [\#616](https://github.com/depcheck/depcheck/pull/616) ([Milad](https://github.com/Milad))
+
 ## [1.3.1](https://github.com/depcheck/depcheck/tree/1.3.1) (2020-11-09)
 
 [Full Changelog](https://github.com/depcheck/depcheck/compare/1.3.0...1.3.1)
