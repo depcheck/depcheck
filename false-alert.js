@@ -10,7 +10,6 @@
  * For more information: https://github.com/depcheck/depcheck/issues/130
  */
 import 'node-sass';
-import 'vue-template-compiler';
 
 /**
  * Recongnize the required module by nyc. See depcheck/depcheck#183

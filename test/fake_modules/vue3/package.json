@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "vue": "0.0.1",
+    "vue-dep-1": "0.0.1",
+    "vue-dep-2": "0.0.1",
+    "unused-dep": "0.0.1"
+  }
+}

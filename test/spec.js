@@ -265,6 +265,22 @@ export default [
     expectedErrorCode: -1,
   },
   {
+    name: 'support Vue 3 syntax',
+    module: 'vue3',
+    options: {},
+    expected: {
+      dependencies: ['unused-dep'],
+      devDependencies: [],
+      missing: {},
+      using: {
+        vue: ['index.js'],
+        'vue-dep-1': ['component.vue'],
+        'vue-dep-2': ['component.vue'],
+      },
+    },
+    expectedErrorCode: -1,
+  },
+  {
     name: 'find dependencies used in code but not declared in package.json',
     module: 'missing',
     options: {},
