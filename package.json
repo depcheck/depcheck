@@ -71,6 +71,7 @@
     "sass": "^1.29.0",
     "scss-parser": "^1.0.4",
     "semver": "^7.3.2",
+    "vue": "3.0.7",
     "yargs": "^16.1.0"
   },
   "devDependencies": {
