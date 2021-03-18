@@ -1,5 +1,5 @@
 import lodash from 'lodash';
-import builtInModules from 'builtin-modules';
+import builtInModules from './builtin-modules';
 
 /* eslint-disable import/prefer-default-export */
 const orgDepRegex = /@(.*?)\/(.*)/;
