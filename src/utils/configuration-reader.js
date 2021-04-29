@@ -66,7 +66,7 @@ function returnNull() {
   return null;
 }
 
-export async function getRCFileConfiguration(moduleName, filename) {
+export async function getRCFileConfiguration(moduleName, filename, dir) {
   try {
     const configFileExplorer = cosmiconfig(moduleName, {
       // this prevents cosmiconfig from picking up .js configuration files. "null" means no file was found.
@@ -75,7 +75,7 @@ export async function getRCFileConfiguration(moduleName, filename) {
     });
     const findings = await (filename !== undefined
       ? configFileExplorer.load(filename)
-      : configFileExplorer.search());
+      : configFileExplorer.search(dir));
     return !findings || findings.isEmpty
       ? {}
       : convertObjectToCamelCase(findings.config);
@@ -87,10 +87,12 @@ export async function getRCFileConfiguration(moduleName, filename) {
 }
 
 export async function getConfiguration(args, moduleName, version) {
+  const dir = args[0] || '.';
   const cliConfig = getCliArgs(args, version);
   const rcConfig = await getRCFileConfiguration(
     moduleName,
     cliConfig.argv.config,
+    dir
   );
   return { ...rcConfig, ...cliConfig.argv };
 }
