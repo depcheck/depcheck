@@ -1,10 +1,10 @@
 import path from 'path';
 import debug from 'debug';
+import isCore from 'is-core-module';
 import lodash from 'lodash';
 import readdirp from 'readdirp';
 import minimatch from 'minimatch';
 import requirePackageName from 'require-package-name';
-import builtInModules from './utils/builtin-modules';
 import { loadModuleData, readJSON } from './utils';
 import getNodes from './utils/parser';
 import { getAtTypesName } from './utils/typescript';
@@ -89,7 +89,7 @@ async function getDependencies(dir, filename, deps, parser, detectors) {
     .concat(peerDeps)
     .concat(optionalDeps)
     .filter((dep) => dep && dep !== '.' && dep !== '..') // TODO why need check?
-    .filter((dep) => !lodash.includes(builtInModules, dep))
+    .filter((dep) => !isCore(dep))
     .uniq()
     .value();
 }
