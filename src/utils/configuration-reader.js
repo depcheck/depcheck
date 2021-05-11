@@ -92,7 +92,7 @@ export async function getConfiguration(args, moduleName, version) {
   const rcConfig = await getRCFileConfiguration(
     moduleName,
     cliConfig.argv.config,
-    dir
+    dir,
   );
   return { ...rcConfig, ...cliConfig.argv };
 }
