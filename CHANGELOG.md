@@ -1,12 +1,18 @@
 # Changelog
 
-## [Unreleased](https://github.com/depcheck/depcheck/tree/HEAD)
+## [1.4.1](https://github.com/depcheck/depcheck/tree/1.4.1) (2021-05-11)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/1.4.0...HEAD)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/1.4.0...1.4.1)
 
 **Fixed bugs:**
 
+- punycode being listed as unused, although the built in version is deprecated [\#628](https://github.com/depcheck/depcheck/issues/628)
 - Not working with Vue3 [\#610](https://github.com/depcheck/depcheck/issues/610)
+
+**Merged pull requests:**
+
+- Update config reader to work in monorepo [\#631](https://github.com/depcheck/depcheck/pull/631) ([AminFazlMondo](https://github.com/AminFazlMondo))
+- Remove punycode from the buildin modules [\#629](https://github.com/depcheck/depcheck/pull/629) ([rumpl](https://github.com/rumpl))
 
 ## [1.4.0](https://github.com/depcheck/depcheck/tree/1.4.0) (2021-02-16)
 
@@ -168,6 +174,7 @@
 - Try to load eslint.js modules without a module.exports wrapper [\#478](https://github.com/depcheck/depcheck/pull/478) ([rjatkins](https://github.com/rjatkins))
 - special/eslint: corrections on dependencies resolver [\#477](https://github.com/depcheck/depcheck/pull/477) ([sveyret](https://github.com/sveyret))
 - chore: add changelog file [\#475](https://github.com/depcheck/depcheck/pull/475) ([rumpl](https://github.com/rumpl))
+- Use babel on typescript and support @types [\#422](https://github.com/depcheck/depcheck/pull/422) ([conartist6](https://github.com/conartist6))
 - Support loading configuration from a config file. [\#408](https://github.com/depcheck/depcheck/pull/408) ([Urik](https://github.com/Urik))
 
 ## [0.9.1](https://github.com/depcheck/depcheck/tree/0.9.1) (2019-11-08)
@@ -236,6 +243,7 @@
 - Add a detector for typescript import type [\#439](https://github.com/depcheck/depcheck/pull/439) ([sveyret](https://github.com/sveyret))
 - special/bin: climb up directories to find binary module [\#437](https://github.com/depcheck/depcheck/pull/437) ([sveyret](https://github.com/sveyret))
 - Add paths for missing dependencies [\#433](https://github.com/depcheck/depcheck/pull/433) ([rumpl](https://github.com/rumpl))
+- Add support for babel 7's scoped plugins [\#432](https://github.com/depcheck/depcheck/pull/432) ([d-fischer](https://github.com/d-fischer))
 
 ## [0.8.4](https://github.com/depcheck/depcheck/tree/0.8.4) (2019-10-29)
 
@@ -257,10 +265,8 @@
 
 **Merged pull requests:**
 
-- Add support for babel 7's scoped plugins [\#432](https://github.com/depcheck/depcheck/pull/432) ([d-fischer](https://github.com/d-fischer))
 - Update dependencies to latest [\#430](https://github.com/depcheck/depcheck/pull/430) ([rumpl](https://github.com/rumpl))
 - docs: fix typos [\#424](https://github.com/depcheck/depcheck/pull/424) ([piperchester](https://github.com/piperchester))
-- Use babel on typescript and support @types [\#422](https://github.com/depcheck/depcheck/pull/422) ([conartist6](https://github.com/conartist6))
 - Add support for integration tests jest configuration [\#415](https://github.com/depcheck/depcheck/pull/415) ([idan-at](https://github.com/idan-at))
 - added fixed for eslint:all and updated deps [\#406](https://github.com/depcheck/depcheck/pull/406) ([KaboomFox](https://github.com/KaboomFox))
 - Bump @babel/cli from 7.5.0 to 7.5.5 [\#390](https://github.com/depcheck/depcheck/pull/390) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
@@ -281,6 +287,7 @@
 - Bump typescript from 3.4.5 to 3.5.3 [\#370](https://github.com/depcheck/depcheck/pull/370) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump yargs from 13.2.2 to 13.2.4 [\#368](https://github.com/depcheck/depcheck/pull/368) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump codecov from 3.3.0 to 3.5.0 [\#366](https://github.com/depcheck/depcheck/pull/366) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Bump eslint-plugin-import from 2.17.2 to 2.18.0 [\#364](https://github.com/depcheck/depcheck/pull/364) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
 ## [0.8.3](https://github.com/depcheck/depcheck/tree/0.8.3) (2019-07-09)
 
@@ -294,7 +301,6 @@
 **Merged pull requests:**
 
 - support flow syntax in es7 and jsx parsers [\#373](https://github.com/depcheck/depcheck/pull/373) ([jrnail23](https://github.com/jrnail23))
-- Bump eslint-plugin-import from 2.17.2 to 2.18.0 [\#364](https://github.com/depcheck/depcheck/pull/364) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump eslint-plugin-react from 7.13.0 to 7.14.2 [\#363](https://github.com/depcheck/depcheck/pull/363) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
 ## [0.8.2](https://github.com/depcheck/depcheck/tree/0.8.2) (2019-07-03)
