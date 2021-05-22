@@ -112,21 +112,22 @@ function checkConfig(config, rootDir, includedDeps = []) {
     configs.push(...config.overrides);
   }
 
-  const parser = configs
-    .map((value) => wrapToArray(value.parser))
-    .flatMap((value) => value)
-    .filter((value) => value !== undefined);
-
-  const plugins = configs
+  const plugins = lodash(configs)
     .map((value) => wrapToArray(value.plugins))
-    .filter((value) => value !== undefined)
-    .flatMap((value) => value)
-    .map((plugin) => normalizePackageName(plugin, 'eslint-plugin'));
+    .flatten()
+    .map((plugin) => normalizePackageName(plugin, 'eslint-plugin'))
+    .value();
 
-  const extendsArray = configs
+  const parser = lodash(configs)
+    .map((value) => wrapToArray(value.parser))
+    .flatten()
+    .value();
+
+  const extendsArray = lodash(configs)
     .map((value) => wrapToArray(value.extends))
-    .filter((value) => value !== undefined)
-    .flatMap((value) => value);
+    .flatten()
+    .value();
+
   const presets = extendsArray
     .filter((preset) => !['eslint:recommended', 'eslint:all'].includes(preset))
     .map((preset) => resolvePresetPackage(preset, rootDir));
