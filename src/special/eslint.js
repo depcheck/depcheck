@@ -107,12 +107,26 @@ function resolvePresetPackage(preset, rootDir) {
 }
 
 function checkConfig(config, rootDir, includedDeps = []) {
-  const parser = wrapToArray(config.parser);
-  const plugins = wrapToArray(config.plugins).map((plugin) =>
-    normalizePackageName(plugin, 'eslint-plugin'),
-  );
+  const configs = [config];
+  if (config.overrides) {
+    configs.push(...config.overrides);
+  }
 
-  const extendsArray = wrapToArray(config.extends);
+  const parser = configs
+    .map((value) => wrapToArray(value.parser))
+    .flatMap((value) => value)
+    .filter((value) => value !== undefined);
+
+  const plugins = configs
+    .map((value) => wrapToArray(value.plugins))
+    .filter((value) => value !== undefined)
+    .flatMap((value) => value)
+    .map((plugin) => normalizePackageName(plugin, 'eslint-plugin'));
+
+  const extendsArray = configs
+    .map((value) => wrapToArray(value.extends))
+    .filter((value) => value !== undefined)
+    .flatMap((value) => value);
   const presets = extendsArray
     .filter((preset) => !['eslint:recommended', 'eslint:all'].includes(preset))
     .map((preset) => resolvePresetPackage(preset, rootDir));
@@ -137,19 +151,21 @@ function checkConfig(config, rootDir, includedDeps = []) {
     .union(parser, plugins, presetPackages, presetDeps)
     .filter((dep) => !includedDeps.includes(dep));
 
-  if (config.settings) {
-    Object.keys(config.settings).forEach((key) => {
-      if (key !== 'import/resolver') {
-        return;
-      }
-      Object.keys(config.settings[key]).forEach((resolverName) => {
-        // node and webpack resolvers are included in `eslint-plugin-import`
-        if (!['node', 'webpack'].includes(resolverName)) {
-          result.push(`eslint-import-resolver-${resolverName}`);
+  configs.forEach((value) => {
+    if (value.settings) {
+      Object.keys(value.settings).forEach((key) => {
+        if (key !== 'import/resolver') {
+          return;
         }
+        Object.keys(value.settings[key]).forEach((resolverName) => {
+          // node and webpack resolvers are included in `eslint-plugin-import`
+          if (!['node', 'webpack'].includes(resolverName)) {
+            result.push(`eslint-import-resolver-${resolverName}`);
+          }
+        });
       });
-    });
-  }
+    }
+  });
 
   return result;
 }
