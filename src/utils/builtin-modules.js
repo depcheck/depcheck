@@ -1,4 +1,4 @@
-export default [
+ [
   'assert',
   'async_hooks',
   'buffer',
