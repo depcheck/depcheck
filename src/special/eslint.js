@@ -107,12 +107,27 @@ function resolvePresetPackage(preset, rootDir) {
 }
 
 function checkConfig(config, rootDir, includedDeps = []) {
-  const parser = wrapToArray(config.parser);
-  const plugins = wrapToArray(config.plugins).map((plugin) =>
-    normalizePackageName(plugin, 'eslint-plugin'),
-  );
+  const configs = [config];
+  if (config.overrides) {
+    configs.push(...config.overrides);
+  }
 
-  const extendsArray = wrapToArray(config.extends);
+  const plugins = lodash(configs)
+    .map((value) => wrapToArray(value.plugins))
+    .flatten()
+    .map((plugin) => normalizePackageName(plugin, 'eslint-plugin'))
+    .value();
+
+  const parser = lodash(configs)
+    .map((value) => wrapToArray(value.parser))
+    .flatten()
+    .value();
+
+  const extendsArray = lodash(configs)
+    .map((value) => wrapToArray(value.extends))
+    .flatten()
+    .value();
+
   const presets = extendsArray
     .filter((preset) => !['eslint:recommended', 'eslint:all'].includes(preset))
     .map((preset) => resolvePresetPackage(preset, rootDir));
@@ -137,19 +152,21 @@ function checkConfig(config, rootDir, includedDeps = []) {
     .union(parser, plugins, presetPackages, presetDeps)
     .filter((dep) => !includedDeps.includes(dep));
 
-  if (config.settings) {
-    Object.keys(config.settings).forEach((key) => {
-      if (key !== 'import/resolver') {
-        return;
-      }
-      Object.keys(config.settings[key]).forEach((resolverName) => {
-        // node and webpack resolvers are included in `eslint-plugin-import`
-        if (!['node', 'webpack'].includes(resolverName)) {
-          result.push(`eslint-import-resolver-${resolverName}`);
+  configs.forEach((value) => {
+    if (value.settings) {
+      Object.keys(value.settings).forEach((key) => {
+        if (key !== 'import/resolver') {
+          return;
         }
+        Object.keys(value.settings[key]).forEach((resolverName) => {
+          // node and webpack resolvers are included in `eslint-plugin-import`
+          if (!['node', 'webpack'].includes(resolverName)) {
+            result.push(`eslint-import-resolver-${resolverName}`);
+          }
+        });
       });
-    });
-  }
+    }
+  });
 
   return result;
 }

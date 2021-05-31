@@ -176,6 +176,82 @@ const testCases = [
     },
     expected: ['eslint-plugin-import', 'eslint-import-resolver-typescript'],
   },
+  {
+    name: 'handle override plugins',
+    content: {
+      overrides: [
+        {
+          plugins: ['eslint-plugin-boo', '@foo/bar', '@baz\\eslint-plugin'],
+        },
+        {
+          plugins: ['baz', '@foo'],
+        },
+      ],
+      plugins: ['mocha', '@foo', '@bar/eslint-plugin'],
+    },
+    expected: [
+      'eslint-plugin-mocha',
+      '@foo/eslint-plugin',
+      '@bar/eslint-plugin',
+      'eslint-plugin-boo',
+      '@foo/eslint-plugin-bar',
+      '@baz/eslint-plugin',
+      'eslint-plugin-baz',
+    ],
+  },
+  {
+    name: 'handle override parser',
+    content: {
+      parser: 'babel-eslint',
+      overrides: [
+        {
+          parser: ['babel-eslint', 'babel-eslint2'],
+        },
+        {
+          parser: ['babel-eslint3'],
+        },
+      ],
+    },
+    expected: ['babel-eslint', 'babel-eslint2', 'babel-eslint3'],
+  },
+  {
+    name: 'handle override extends',
+    content: {
+      extends: 'preset',
+      overrides: [
+        {
+          extends: ['preset1', 'preset1a'],
+        },
+        {
+          extends: 'preset2',
+        },
+      ],
+    },
+    expected: [
+      'eslint-config-preset',
+      'eslint-config-preset1',
+      'eslint-config-preset1a',
+      'eslint-config-preset2',
+    ],
+  },
+  {
+    name: 'handle override import resolvers',
+    content: {
+      overrides: [
+        {
+          plugins: ['import'],
+          settings: {
+            'import/resolver': {
+              typescript: {},
+              node: {},
+            },
+            sharedData: 'Hello',
+          },
+        },
+      ],
+    },
+    expected: ['eslint-plugin-import', 'eslint-import-resolver-typescript'],
+  },
 ];
 
 async function testEslint(deps, content) {
