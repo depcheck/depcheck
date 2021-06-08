@@ -57,6 +57,7 @@ export const defaultOptions = {
     '**/*.sass': availableParsers.sass,
     '**/*.scss': availableParsers.sass,
     '**/*.vue': availableParsers.vue,
+    '**/*.svelte': availableParsers.svelte,
   },
   detectors: [
     availableDetectors.importDeclaration,
