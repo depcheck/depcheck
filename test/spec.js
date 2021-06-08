@@ -848,4 +848,19 @@ export default [
     },
     expectedErrorCode: -1,
   },
+  {
+    name: 'find unused dependencies in Svelte files',
+    module: 'svelte',
+    options: {},
+    expected: {
+      dependencies: ['dont-find-me'],
+      devDependencies: [],
+      missing: {},
+      using: {
+        'find-me': ['App.svelte'],
+        svelte: ['App.svelte'],
+      },
+    },
+    expectedErrorCode: -1,
+  },
 ];
