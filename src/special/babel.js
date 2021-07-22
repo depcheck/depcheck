@@ -82,7 +82,7 @@ function checkOptions(deps, options = {}) {
   return optDeps.concat(envDeps);
 }
 
-const regex = /^(\.babelrc|babelrc\.js|babel\.config\.js)?$/;
+const regex = /^(\.babelrc(\.(cjs|js(on)?))?|babel\.config\.(cjs|js(on)?))?$/;
 
 export default async function parseBabel(filename, deps, rootDir) {
   const config = await loadConfig('babel', regex, filename, rootDir);
