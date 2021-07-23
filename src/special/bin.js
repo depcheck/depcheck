@@ -30,6 +30,8 @@ function getBinaryFeatures(dep, [key, value]) {
     key,
     `--require ${key}`,
     `--require ${key}/register`,
+    `-r ${key}`,
+    `-r ${key}/register`,
     `$(npm bin)/${key}`,
     `node_modules/.bin/${key}`,
     `./node_modules/.bin/${key}`,
