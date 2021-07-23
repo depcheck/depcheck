@@ -96,6 +96,18 @@ const testCases = [
     expected: ['binary-package'],
   },
   {
+    name: 'detect packages used with -r and /register',
+    script: 'module -r binary-entry/register',
+    dependencies: ['binary-package'],
+    expected: ['binary-package'],
+  },
+  {
+    name: 'detect packages used with -r',
+    script: 'module -r binary-entry',
+    dependencies: ['binary-package'],
+    expected: ['binary-package'],
+  },
+  {
     name: 'detect packages with single binary',
     script: 'single-binary-package --argument',
     dependencies: ['single-binary-package'],
