@@ -155,9 +155,29 @@ describe('babel special parser', () => {
   });
 
   it('should detect babel.config.js', async () => {
-    const content = "module.exports = { presets: ['es2015' ] }";
+    const content = "module.exports = { presets: ['es2015'] }";
 
     const result = await testParser(content, '/path/to/babel.config.js', [
+      'babel-preset-es2015',
+      'dep',
+    ]);
+    result.should.deepEqual(['babel-preset-es2015']);
+  });
+
+  it('should detect babel.config.cjs', async () => {
+    const content = "module.exports = { presets: ['es2015'] }";
+
+    const result = await testParser(content, '/path/to/babel.config.cjs', [
+      'babel-preset-es2015',
+      'dep',
+    ]);
+    result.should.deepEqual(['babel-preset-es2015']);
+  });
+
+  it('should detect babel.config.json', async () => {
+    const content = '{ "presets": ["es2015"] }';
+
+    const result = await testParser(content, '/path/to/babel.config.json', [
       'babel-preset-es2015',
       'dep',
     ]);
