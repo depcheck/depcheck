@@ -232,6 +232,8 @@ export default [
       missing: {
         '@test-dep/aFile': ['sass2.sass'],
         '@test-dep/aFile2': ['scss2.scss'],
+        '@test-dep/aFile3': ['scss2.scss'],
+        '@test-dep/aFile4': ['scss2.scss'],
         sass: ['scss2.scss'],
       },
       using: {
@@ -243,6 +245,8 @@ export default [
         'scss-dep': ['scss.scss'],
         '@test-dep/aFile': ['sass2.sass'],
         '@test-dep/aFile2': ['scss2.scss'],
+        '@test-dep/aFile3': ['scss2.scss'],
+        '@test-dep/aFile4': ['scss2.scss'],
         sass: ['scss2.scss'],
       },
     },

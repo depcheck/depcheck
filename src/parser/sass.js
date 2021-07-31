@@ -8,6 +8,7 @@ const createQueryWrapper = require('query-ast');
 const sass = require('sass');
 
 const IMPORT_RULE_TYPE = 'atrule';
+const IMPORT_KEYWORDS = ['import', 'use', 'forward'];
 
 function unixSlashes(packagePath) {
   return packagePath.replace(/\\/g, '/');
@@ -54,9 +55,11 @@ function parseSCSS(filename) {
   const fileContents = fs.readFileSync(filename).toString();
   const ast = parse(fileContents);
   const queryWrapper = createQueryWrapper(ast);
-  const imports = queryWrapper(IMPORT_RULE_TYPE).nodes.map(
-    (node) => node.children[2].node.value,
-  );
+  const imports = queryWrapper(IMPORT_RULE_TYPE)
+    .nodes.filter((node) =>
+      IMPORT_KEYWORDS.includes(node.children[0].node.value),
+    )
+    .map((node) => node.children[2].node.value);
 
   const result = lodash(imports)
     .filter((packagePath) => packagePath !== filename)
