@@ -9,3 +9,4 @@ test/
 build/
 coverage/
 .nyc_output
+.idea/
