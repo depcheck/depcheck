@@ -157,6 +157,7 @@ function loadNextWebpackConfig(filepath) {
     module: { rules: [] },
     optimization: { splitChunks: { cacheGroups: {} } },
     resolve: { alias: {} },
+    watchOptions: { ignored: [] },
   };
 
   const fakeContext = { webpack: fakeWebpack, defaultLoaders: {} };
