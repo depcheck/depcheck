@@ -1,7 +1,7 @@
 // Indexes files are compiled via `build/component.mjs`
-import availableParsers from './parser';
-import availableDetectors from './detector';
-import availableSpecials from './special';
+import * as availableParsers from './parser';
+import * as availableDetectors from './detector';
+import * as availableSpecials from './special';
 
 export { availableParsers, availableDetectors, availableSpecials };
 
