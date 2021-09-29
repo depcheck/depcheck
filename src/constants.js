@@ -1,22 +1,9 @@
-import path from 'path';
-import lodash from 'lodash';
-import component from './component.json';
+// Indexes files are compiled via `build/component.mjs`
+import availableParsers from './parser';
+import availableDetectors from './detector';
+import availableSpecials from './special';
 
-function constructComponent(source, name) {
-  return lodash(source[name])
-    .map((file) => [
-      file,
-      require(path.resolve(__dirname, name, file)), // eslint-disable-line global-require
-    ])
-    .fromPairs()
-    .value();
-}
-
-export const availableParsers = constructComponent(component, 'parser');
-
-export const availableDetectors = constructComponent(component, 'detector');
-
-export const availableSpecials = constructComponent(component, 'special');
+export { availableParsers, availableDetectors, availableSpecials };
 
 export const defaultOptions = {
   ignoreBinPackage: false,
@@ -68,5 +55,5 @@ export const defaultOptions = {
     availableDetectors.importCallExpression,
     availableDetectors.gruntLoadTaskCallExpression,
   ],
-  specials: lodash.values(availableSpecials),
+  specials: Object.values(availableSpecials),
 };

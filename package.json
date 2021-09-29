@@ -15,7 +15,7 @@
     "url": "git://github.com/depcheck/depcheck.git"
   },
   "scripts": {
-    "component": "node -r @babel/register ./build/component.js > ./dist/component.json && node -r @babel/register ./build/component.js ./index.d.tmpl > ./dist/index.d.ts",
+    "component": "node ./build/component.mjs",
     "compile": "babel src/ -d dist/",
     "depcheck": "node ./bin/depcheck.js --ignore-dirs=fake_modules",
     "depcheck-json": "node ./bin/depcheck.js --ignore-dirs=fake_modules --json | node -r @babel/register ./build/check-json",
@@ -76,6 +76,7 @@
   "devDependencies": {
     "@babel/cli": "^7.12.1",
     "@babel/core": "^7.12.3",
+    "@babel/plugin-syntax-module-string-names": "^7.12.13",
     "@babel/plugin-transform-object-assign": "^7.12.1",
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.12.1",

@@ -1,7 +1,8 @@
 {
   "plugins": [
     "add-module-exports",
-    "@babel/transform-object-assign"
+    "@babel/transform-object-assign",
+    "@babel/plugin-syntax-module-string-names"
   ],
   "presets": [
     ["@babel/env", {
