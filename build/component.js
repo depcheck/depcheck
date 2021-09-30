@@ -1,12 +1,7 @@
-import fs from 'fs';
-import { basename, dirname, join } from 'path';
-import { fileURLToPath } from 'url';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import babel from '@babel/core';
-
-// we're in esm, there is no __dirname. however, top-level await doesn't work in node12
-// eslint-disable-next-line no-underscore-dangle
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import * as babel from '@babel/core';
+import * as fs from 'fs';
+import { basename, join } from 'path';
 
 const fromDirname = (...p) => join(__dirname, ...p);
 const fromDist = (...p) => join(__dirname, '../dist', ...p);

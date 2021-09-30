@@ -15,7 +15,7 @@
     "url": "git://github.com/depcheck/depcheck.git"
   },
   "scripts": {
-    "component": "node ./build/component.mjs",
+    "component": "node -r @babel/register ./build/component.js",
     "compile": "babel src/ -d dist/",
     "depcheck": "node ./bin/depcheck.js --ignore-dirs=fake_modules",
     "depcheck-json": "node ./bin/depcheck.js --ignore-dirs=fake_modules --json | node -r @babel/register ./build/check-json",
