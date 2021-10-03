@@ -1,6 +1,6 @@
 import path from 'path';
 import fse from 'fs-extra';
-import { setContent } from '../src/utils/file';
+import { setContent } from '../dist/utils/file';
 
 export function resolveShortPath(expected, module) {
   return Object.keys(expected).reduce(

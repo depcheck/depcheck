@@ -1,5 +1,5 @@
 import 'should';
-import parser from '../../src/special/react17';
+import parser from '../../dist/special/react17';
 import { getTestParserWithContentPromise } from '../utils';
 
 const testParser = getTestParserWithContentPromise(parser);

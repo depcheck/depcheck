@@ -1,5 +1,5 @@
 import 'should';
-import parser from '../../src/special/commitizen';
+import parser from '../../dist/special/commitizen';
 import { getTestParserWithContentPromise } from '../utils';
 
 const testParser = getTestParserWithContentPromise(parser);

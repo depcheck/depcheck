@@ -2,7 +2,7 @@ import 'should';
 import yaml from 'js-yaml';
 import * as fs from 'fs';
 import * as path from 'path';
-import parser from '../../src/special/tslint';
+import parser from '../../dist/special/tslint';
 import { getTestParserWithTempFile } from '../utils';
 
 // NOTE: we can't use getTestParserWithContentPromise here

@@ -1,8 +1,8 @@
 import 'should';
 import path from 'path';
 import fs from 'fs';
-import parser from '../../src/special/webpack';
-import { tryRequire } from '../../src/utils';
+import parser from '../../dist/special/webpack';
+import { tryRequire } from '../../dist/utils';
 import { getTestParserWithTempFile } from '../utils';
 
 // NOTE: we can't use getTestParserWithContentPromise here

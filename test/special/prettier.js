@@ -1,6 +1,6 @@
 import 'should';
 import path from 'path';
-import parser from '../../src/special/prettier';
+import parser from '../../dist/special/prettier';
 
 async function testPrettier(moduleName, fileName, expectedDeps) {
   const rootDir = path.resolve(__dirname, '../fake_modules', moduleName);

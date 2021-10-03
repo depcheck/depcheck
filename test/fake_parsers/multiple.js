@@ -1,4 +1,4 @@
-import { getContent } from '../../src/utils/file';
+import { getContent } from '../../dist/utils/file';
 
 function parser(prefix, content) {
   return content

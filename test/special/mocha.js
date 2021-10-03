@@ -1,8 +1,8 @@
 import 'should';
 import fs from 'fs';
 import path from 'path';
-import parser from '../../src/special/mocha';
-import { clearCache } from '../../src/utils/get-scripts';
+import parser from '../../dist/special/mocha';
+import { clearCache } from '../../dist/utils/get-scripts';
 import {
   getTestParserWithTempFile,
   getTestParserWithContentPromise,

@@ -1,6 +1,6 @@
 import 'should';
 import proxyquire from 'proxyquire';
-import ConfigurationParsingException from '../src/utils/exceptions/configuration-parsing-exception';
+import ConfigurationParsingException from '../dist/utils/exceptions/configuration-parsing-exception';
 
 describe('configuration-reader', () => {
   let configurationReaderModule;
@@ -8,7 +8,7 @@ describe('configuration-reader', () => {
 
   before(() => {
     configurationReaderModule = proxyquire(
-      '../src/utils/configuration-reader',
+      '../dist/utils/configuration-reader',
       {
         cosmiconfig: {
           cosmiconfig: () => {

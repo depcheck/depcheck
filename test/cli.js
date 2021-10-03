@@ -1,6 +1,6 @@
 import 'should';
 import path from 'path';
-import cli from '../src/cli';
+import cli from '../dist/cli';
 import testCases from './spec';
 import { resolveShortPath } from './utils';
 

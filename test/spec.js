@@ -1,5 +1,5 @@
 import path from 'path';
-import depcheck from '../src/index';
+import depcheck from '../dist/index';
 
 export default [
   {

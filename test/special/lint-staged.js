@@ -1,5 +1,5 @@
 import 'should';
-import parser from '../../src/special/lint-staged';
+import parser from '../../dist/special/lint-staged';
 import { getTestParserWithContentPromise } from '../utils';
 
 const testParser = getTestParserWithContentPromise(parser);

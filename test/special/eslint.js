@@ -2,7 +2,7 @@ import 'should';
 import yaml from 'js-yaml';
 import * as path from 'path';
 import * as fs from 'fs';
-import parser from '../../src/special/eslint';
+import parser from '../../dist/special/eslint';
 import { getTestParserWithTempFile } from '../utils';
 
 const testParser = getTestParserWithTempFile(parser);

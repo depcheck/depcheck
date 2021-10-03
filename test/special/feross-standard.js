@@ -1,5 +1,5 @@
 import 'should';
-import parser from '../../src/special/feross-standard';
+import parser from '../../dist/special/feross-standard';
 import { getTestParserWithContentPromise } from '../utils';
 
 const testParser = getTestParserWithContentPromise(parser);

@@ -1,5 +1,5 @@
 import 'should';
-import parser from '../../src/special/ttypescript';
+import parser from '../../dist/special/ttypescript';
 import { getTestParserWithTempFile } from '../utils';
 
 // NOTE: we can't use getTestParserWithContentPromise here

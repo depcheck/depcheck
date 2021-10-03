@@ -60,7 +60,7 @@ Object.keys(karmaPlugins)
     sourceMap[plugin.fileName] = plugin.src;
   });
 
-const parser = proxyquireStrict('../../src/special/karma', {
+const parser = proxyquireStrict('../../dist/special/karma', {
   resolve: {
     sync(module) {
       const plugin = karmaPlugins[module];

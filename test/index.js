@@ -4,7 +4,7 @@ import path from 'path';
 import { platform } from 'os';
 
 import testCases from './spec';
-import depcheck from '../src/index';
+import depcheck from '../dist/index';
 import { resolveShortPath } from './utils';
 
 import {

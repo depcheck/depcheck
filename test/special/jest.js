@@ -1,5 +1,5 @@
 import 'should';
-import parser from '../../src/special/jest';
+import parser from '../../dist/special/jest';
 import { getTestParserWithTempFile } from '../utils';
 
 // NOTE: we can't use getTestParserWithContentPromise here

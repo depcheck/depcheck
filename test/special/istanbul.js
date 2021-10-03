@@ -1,6 +1,6 @@
 import 'should';
-import parser from '../../src/special/istanbul';
-import { clearCache } from '../../src/utils/get-scripts';
+import parser from '../../dist/special/istanbul';
+import { clearCache } from '../../dist/utils/get-scripts';
 import { getTestParserWithContentPromise } from '../utils';
 
 const testParser = getTestParserWithContentPromise(parser);

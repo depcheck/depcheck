@@ -1,5 +1,5 @@
 import 'should';
-import parser from '../../src/special/serverless';
+import parser from '../../dist/special/serverless';
 import { getTestParserWithContentPromise } from '../utils';
 
 const testParser = getTestParserWithContentPromise(parser);

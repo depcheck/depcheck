@@ -1,5 +1,5 @@
 import 'should';
-import parser from '../../src/special/bin';
+import parser from '../../dist/special/bin';
 import { getTestParserWithContentPromise } from '../utils';
 
 const testParser = getTestParserWithContentPromise(parser);
