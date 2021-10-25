@@ -83,6 +83,8 @@ All of the arguments are optional:
 
 `--json`: Output results in JSON. When not specified, depcheck outputs in human friendly format.
 
+`--oneline`: Output results as space separated string. Useful for copy/paste.
+
 `--ignores`: A comma separated array containing package names to ignore. It can be glob expressions. Example, `--ignores="eslint,babel-*"`.
 
 `--ignore-dirs`: DEPRECATED, use ignore-patterns instead. A comma separated array containing directory names to ignore. Example, `--ignore-dirs=dist,coverage`.

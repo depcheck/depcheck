@@ -60,12 +60,18 @@ function noIssue(result) {
   );
 }
 
-function prettify(caption, deps) {
+function prettify(caption, deps, oneline) {
+  if (oneline) {
+    return deps.length ? [caption, deps.join(' ')] : [];
+  }
   const list = deps.map((dep) => `* ${dep}`);
   return list.length ? [caption].concat(list) : [];
 }
 
-function mapMissing(missing, rootDir) {
+function mapMissing(missing, rootDir, oneline) {
+  if (oneline) {
+    return lodash.keys(missing);
+  }
   return lodash.map(
     missing,
     (foundInFiles, key) =>
@@ -73,8 +79,8 @@ function mapMissing(missing, rootDir) {
   );
 }
 
-function print(result, log, json, rootDir) {
-  if (json) {
+function print(result, log, opt, rootDir) {
+  if (opt.json) {
     log(
       JSON.stringify(result, (key, value) =>
         lodash.isError(value) ? value.stack : value,
@@ -83,11 +89,20 @@ function print(result, log, json, rootDir) {
   } else if (noIssue(result)) {
     log('No depcheck issue');
   } else {
-    const deps = prettify('Unused dependencies', result.dependencies);
-    const devDeps = prettify('Unused devDependencies', result.devDependencies);
+    const deps = prettify(
+      'Unused dependencies',
+      result.dependencies,
+      opt.oneline,
+    );
+    const devDeps = prettify(
+      'Unused devDependencies',
+      result.devDependencies,
+      opt.oneline,
+    );
     const missing = prettify(
       'Missing dependencies',
-      mapMissing(result.missing, rootDir),
+      mapMissing(result.missing, rootDir, opt.oneline),
+      opt.oneline,
     );
     const content = deps.concat(devDeps, missing).join('\n');
     log(content);
@@ -117,7 +132,7 @@ export default async function cli(args, log, error, exit) {
       specials: getSpecials(opt.specials),
       skipMissing: opt.skipMissing,
     });
-    print(depcheckResult, log, opt.json, rootDir);
+    print(depcheckResult, log, opt, rootDir);
     exit(noIssue(depcheckResult) ? 0 : -1);
   } catch (err) {
     error(err);

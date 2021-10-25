@@ -33,6 +33,7 @@ export function getCliArgs(args, version) {
     .describe('ignore-bin-package', 'Ignore package with bin entry')
     .describe('skip-missing', 'Skip calculation of missing dependencies')
     .describe('json', 'Output results to JSON')
+    .describe('oneline', 'Output results as space separated string')
     .describe('ignores', 'Comma separated package list to ignore')
     .describe(
       'ignore-dirs',
