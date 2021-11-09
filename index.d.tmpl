@@ -38,6 +38,19 @@ declare namespace depcheck {
     detectors?: ReadonlyArray<Detector>;
     specials?: ReadonlyArray<Parser>;
   }
+  
+  interface Config {
+    ignoreBinPackage?: Options['ignoreBinPackage'];
+    skipMissing?: Options['skipMissing'];
+    json?: boolean;
+    ignores?: Options['ignoreMatches'];
+    ignoreDirs?: Options['ignoreDirs'];
+    ignorePath?: Options['ignorePath'];
+    ignorePatterns?: Options['ignorePatterns']
+    parsers?: { [match: string]: (keyof typeof parser) | ReadonlyArray<keyof typeof parser> };
+    detectors?: ReadonlyArray<keyof typeof detector>;
+    specials?: ReadonlyArray<keyof typeof special>;
+  }
 
   interface Results {
     dependencies: string[];
