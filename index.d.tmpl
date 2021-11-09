@@ -22,8 +22,10 @@ declare namespace depcheck {
   interface Options {
     ignoreBinPackage?: boolean;
     skipMissing?: boolean;
-    ignoreDirs?: ReadonlyArray<string>;
     ignoreMatches?: ReadonlyArray<string>;
+    ignoreDirs?: ReadonlyArray<string>;
+    ignorePath?: string;
+    ignorePatterns?: ReadonlyArray<string>;
     package?: {
       dependencies?: PackageDependencies;
       devDependencies?: PackageDependencies;
