@@ -259,6 +259,7 @@ async function testEslint(deps, content) {
     [
       '.eslintrc',
       '.eslintrc.js',
+      '.eslintrc.cjs',
       '.eslintrc.json',
       '.eslintrc.yml',
       '.eslintrc.yaml',
