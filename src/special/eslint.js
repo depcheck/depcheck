@@ -171,7 +171,7 @@ function checkConfig(config, rootDir, includedDeps = []) {
   return result;
 }
 
-const configNameRegex = /^\.eslintrc(\.(json|js|yml|yaml))?$/;
+const configNameRegex = /^\.eslintrc(\.(json|js|cjs|yml|yaml))?$/;
 
 export default async function parseESLint(filename, deps, rootDir) {
   const config = await loadConfig('eslint', configNameRegex, filename, rootDir);
