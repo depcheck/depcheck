@@ -4,6 +4,7 @@
     "@types/org__org-pkg": "0.0.1",
     "@types/react": "0.0.1",
     "@types/node": "0.0.1",
+    "@types/typeless-module": "0.0.1",
     "react": "0.0.1",
     "ts-dep-1": "0.0.1",
     "ts-dep-2": "0.0.1",
