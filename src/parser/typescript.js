@@ -31,7 +31,7 @@ export default async function parseTypescript(filename) {
       'objectRestSpread',
       'optionalCatchBinding',
       'optionalChaining',
-      { pipelineOperator: { proposal: 'minimal' } },
+      [ 'pipelineOperator', { proposal: 'minimal' } ],
       'throwExpressions',
     ],
   });
