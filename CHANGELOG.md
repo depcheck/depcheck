@@ -1,12 +1,30 @@
 # Changelog
 
-## [Unreleased](https://github.com/depcheck/depcheck/tree/HEAD)
+## [1.4.3](https://github.com/depcheck/depcheck/tree/1.4.3) (2022-01-09)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/1.4.2...HEAD)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/1.4.2...1.4.3)
+
+**Fixed bugs:**
+
+- Different results when running depcheck from npm install -g vs npx [\#689](https://github.com/depcheck/depcheck/issues/689)
+- Fails with Top-Level Await [\#671](https://github.com/depcheck/depcheck/issues/671)
 
 **Closed issues:**
 
+- false alert on file src/server.js [\#655](https://github.com/depcheck/depcheck/issues/655)
 - Svelte Support [\#650](https://github.com/depcheck/depcheck/issues/650)
+- False positive: types-only dependencies [\#568](https://github.com/depcheck/depcheck/issues/568)
+
+**Merged pull requests:**
+
+- feat\(eslint\): add support for .eslintrc.cjs [\#681](https://github.com/depcheck/depcheck/pull/681) ([shian15810](https://github.com/shian15810))
+- feat\(types\): improve typings [\#680](https://github.com/depcheck/depcheck/pull/680) ([shian15810](https://github.com/shian15810))
+- cli: --oneline option [\#679](https://github.com/depcheck/depcheck/pull/679) ([webdevium](https://github.com/webdevium))
+- fix: allow using @types-module for typescript type-only imports [\#670](https://github.com/depcheck/depcheck/pull/670) ([rexxars](https://github.com/rexxars))
+- Support next.config.js with next-transpile-modules [\#660](https://github.com/depcheck/depcheck/pull/660) ([crossjs](https://github.com/crossjs))
+- Fix scss parsing for non-import '@' keywords [\#658](https://github.com/depcheck/depcheck/pull/658) ([Dylanlan](https://github.com/Dylanlan))
+- feat: detect deps used with -r in package.json [\#657](https://github.com/depcheck/depcheck/pull/657) ([Dylanlan](https://github.com/Dylanlan))
+- Support babel.config.js\(on\) files [\#656](https://github.com/depcheck/depcheck/pull/656) ([crossjs](https://github.com/crossjs))
 
 ## [1.4.2](https://github.com/depcheck/depcheck/tree/1.4.2) (2021-06-08)
 
