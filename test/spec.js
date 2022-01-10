@@ -3,8 +3,7 @@ import depcheck from '../src/index';
 
 export default [
   {
-    name:
-      'detect missing module for dynamic import() when missing in package.json',
+    name: 'find missing module for dynamic import when missing in package.json',
     module: 'import_function_missing',
     options: {},
     expected: {

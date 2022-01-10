@@ -27,7 +27,7 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          npm ci
+          npm install
           npm run compile
           npm run component
           npm run depcheck

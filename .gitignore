@@ -42,3 +42,6 @@ dependent-build
 # IDE files
 .idea/
 *.iml
+
+# npm
+package-lock.json
