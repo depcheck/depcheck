@@ -4,6 +4,10 @@
   "description": "Check dependencies in your node module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "bin/*.js",
+    "dist/**/*.{js,json,ts}"
+  ],
   "engines": {
     "node": ">=10"
   },
