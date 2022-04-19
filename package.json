@@ -64,12 +64,10 @@
     "minimatch": "^3.0.4",
     "multimatch": "^5.0.0",
     "please-upgrade-node": "^3.2.0",
-    "query-ast": "^1.0.3",
     "readdirp": "^3.5.0",
     "require-package-name": "^2.0.1",
     "resolve": "^1.18.1",
-    "sass": "^1.29.0",
-    "scss-parser": "^1.0.4",
+    "sass": "^1.50.1",
     "semver": "^7.3.2",
     "yargs": "^16.1.0"
   },
