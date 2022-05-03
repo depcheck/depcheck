@@ -92,7 +92,6 @@
     "eslint-plugin-react": "^7.21.5",
     "fs-extra": "^9.0.1",
     "mocha": "^8.2.1",
-    "node-sass": "^6.0.0",
     "nyc": "^15.1.0",
     "patch-version": "^0.1.1",
     "prettier": "^2.1.2",
