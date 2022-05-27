@@ -108,10 +108,22 @@ const testCases = [
     expected: ['binary-package'],
   },
   {
-    name: 'detect packages with single binary',
+    name: 'detect packages with single binary with default name',
     script: 'single-binary-package --argument',
     dependencies: ['single-binary-package'],
     expected: ['single-binary-package'],
+  },
+  {
+    name: 'detect scoped packages with single binary with default name',
+    script: 'scoped-single-binary-package --argument',
+    dependencies: ['@scoped/scoped-single-binary-package'],
+    expected: ['@scoped/scoped-single-binary-package'],
+  },
+  {
+    name: 'detect scoped packages with named binary',
+    script: 'scoped-binary-entry --argument',
+    dependencies: ['@scoped/scoped-binary-package'],
+    expected: ['@scoped/scoped-binary-package'],
   },
 ];
 
