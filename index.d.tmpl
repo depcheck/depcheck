@@ -12,7 +12,7 @@ declare namespace depcheck {
   }
 
   type Parser = (content: string, filePath: string, deps: ReadonlyArray<string>, rootDir: string) => Node;
-
+  type SpecialParser = (filePath: string, deps: ReadonlyArray<string>, rootDir: string) => string[];
   type Detector = (node: Node) => ReadonlyArray<string> | string;
 
   interface PackageDependencies {
@@ -36,9 +36,9 @@ declare namespace depcheck {
       [match: string]: Parser;
     };
     detectors?: ReadonlyArray<Detector>;
-    specials?: ReadonlyArray<Parser>;
+    specials?: ReadonlyArray<SpecialParser>;
   }
-  
+
   interface Config {
     ignoreBinPackage?: Options['ignoreBinPackage'];
     skipMissing?: Options['skipMissing'];
