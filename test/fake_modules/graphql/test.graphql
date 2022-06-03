@@ -1,0 +1,5 @@
+#import "./foo.graphql"
+#import "ok/test.graphql"
+#import "@scope/ok/test.graphql"
+#import "@scope/missing/missing.graphql"
+#import "missing/missing.graphql"
