@@ -164,6 +164,17 @@ describe('babel special parser', () => {
     result.should.deepEqual(['babel-preset-es2015']);
   });
 
+  it('should detect babel.config.js exporting a function', async () => {
+    const content =
+      "module.exports = api => ({ presets: ['es2015'], ignore: api.env('test') ? [] : ['**/*.test.*'] })";
+
+    const result = await testParser(content, '/path/to/babel.config.js', [
+      'babel-preset-es2015',
+      'dep',
+    ]);
+    result.should.deepEqual(['babel-preset-es2015']);
+  });
+
   it('should detect babel.config.cjs', async () => {
     const content = "module.exports = { presets: ['es2015'] }";
 

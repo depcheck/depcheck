@@ -84,11 +84,31 @@ function checkOptions(deps, options = {}) {
 
 const regex = /^(\.babelrc(\.(cjs|js(on)?))?|babel\.config\.(cjs|js(on)?))?$/;
 
+function callConfigIfFunction(config) {
+  if (typeof config === 'function') {
+    return config({
+      cache: Object.assign(() => null, {
+        forever() {},
+        never() {},
+        using() {},
+        invalidate() {},
+      }),
+      caller(cb) {
+        cb({ name: 'depcheck' });
+      },
+      env() {
+        return true;
+      },
+    });
+  }
+  return config;
+}
+
 export default async function parseBabel(filename, deps, rootDir) {
   const config = await loadConfig('babel', regex, filename, rootDir);
 
   if (config) {
-    return checkOptions(deps, config);
+    return checkOptions(deps, callConfigIfFunction(config));
   }
 
   if (path.basename(filename) === 'package.json') {
