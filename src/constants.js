@@ -53,6 +53,7 @@ export const defaultOptions = {
     '**/*.litcoffee': availableParsers.coffee,
     '**/*.coffee.md': availableParsers.coffee,
     '**/*.graphql': availableParsers.graphql,
+    '**/tsconfig*.json': availableParsers.tsconfig,
     '**/*.ts': availableParsers.typescript,
     '**/*.tsx': availableParsers.typescript,
     '**/*.sass': availableParsers.sass,
