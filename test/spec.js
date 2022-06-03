@@ -909,6 +909,29 @@ export default [
     expectedErrorCode: -1,
   },
   {
+    name: 'detect dependencies in storybook configuration',
+    module: 'storybook',
+    options: {},
+    expected: {
+      dependencies: [],
+      devDependencies: ['@storybook/addon-unused'],
+      missing: {
+        '@storybook/addon-links': ['.storybook/main.js'],
+        '@storybook/builder-webpack5': ['.storybook/main.js'],
+        '@storybook/manager-webpack5': ['.storybook/main.js'],
+      },
+      using: {
+        '@storybook/addon-essentials': ['.storybook/main.js'],
+        '@storybook/addon-links': ['.storybook/main.js'],
+        '@storybook/builder-webpack5': ['.storybook/main.js'],
+        '@storybook/manager-webpack5': ['.storybook/main.js'],
+        '@storybook/react': ['.storybook/main.js'],
+        typescript: ['.storybook/main.js'],
+      },
+    },
+    expectedErrorCode: -1,
+  },
+  {
     name: 'allows url imports',
     module: 'url_import',
     options: {},
