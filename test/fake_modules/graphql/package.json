@@ -1,0 +1,9 @@
+{
+  "name": "graphql-depcheck-test",
+  "version": "1.0.0",
+  "dependencies": {
+    "unused": "*",
+    "@scope/ok": "*",
+    "ok": "*"
+  }
+}

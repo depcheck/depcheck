@@ -868,4 +868,24 @@ export default [
     },
     expectedErrorCode: -1,
   },
+  {
+    name: 'find dependencies in graphql files',
+    module: 'graphql',
+    options: {},
+    expected: {
+      dependencies: ['unused'],
+      devDependencies: [],
+      missing: {
+        '@scope/missing': ['test.graphql'],
+        missing: ['test.graphql'],
+      },
+      using: {
+        '@scope/missing': ['test.graphql'],
+        '@scope/ok': ['test.graphql'],
+        missing: ['test.graphql'],
+        ok: ['test.graphql'],
+      },
+    },
+    expectedErrorCode: -1,
+  },
 ];
