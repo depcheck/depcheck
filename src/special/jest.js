@@ -88,7 +88,14 @@ function filter(deps, options) {
 
 function checkOptions(deps, options = {}) {
   const pickedOptions = lodash(options).pick(supportedProperties).value();
-  return filter(deps, pickedOptions);
+  const baseFoundDeps = filter(deps, pickedOptions);
+  if (options.projects) {
+    const projectDeps = options.projects.map((projectConfig) =>
+      checkOptions(deps, projectConfig),
+    );
+    return baseFoundDeps.concat(...projectDeps);
+  }
+  return baseFoundDeps;
 }
 
 export default async function parseJest(filename, deps, rootDir) {

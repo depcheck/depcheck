@@ -119,6 +119,26 @@ const testCases = [
       snapshotSerializers: ['jest-serializer-vue'],
     },
   },
+  {
+    name: 'recognize projects',
+    deps: ['babel-jest', 'vue-jest'],
+    content: {
+      projects: [
+        {
+          name: 'vue',
+          transform: {
+            '^.+\\.vue$': 'vue-jest',
+          },
+        },
+        {
+          name: 'babel',
+          transform: {
+            '^.+\\.js$': '<rootDir>/node_modules/babel-jest',
+          },
+        },
+      ],
+    },
+  },
 ];
 
 async function testJest(content, deps, expectedDeps, _filename) {
