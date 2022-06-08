@@ -94,13 +94,9 @@ function checkOptions(deps, options = {}) {
 export default async function parseJest(filename, deps, rootDir) {
   const basename = path.basename(filename);
   if (jestConfigRegex.test(basename)) {
-    try {
-      // eslint-disable-next-line global-require
-      const options = require(filename) || {};
-      return checkOptions(deps, options);
-    } catch (error) {
-      return [];
-    }
+    // eslint-disable-next-line global-require
+    const options = require(filename) || {};
+    return checkOptions(deps, options);
   }
 
   const packageJsonPath = path.resolve(rootDir, 'package.json');
