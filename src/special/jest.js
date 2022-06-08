@@ -1,6 +1,7 @@
 import path from 'path';
 import lodash from 'lodash';
 import { getContent } from '../utils/file';
+import { tryRequire } from '../utils';
 
 const _ = lodash;
 
@@ -94,13 +95,8 @@ function checkOptions(deps, options = {}) {
 export default async function parseJest(filename, deps, rootDir) {
   const basename = path.basename(filename);
   if (jestConfigRegex.test(basename)) {
-    try {
-      // eslint-disable-next-line global-require
-      const options = require(filename) || {};
-      return checkOptions(deps, options);
-    } catch (error) {
-      return [];
-    }
+    const options = tryRequire(filename) || {};
+    return checkOptions(deps, options);
   }
 
   const packageJsonPath = path.resolve(rootDir, 'package.json');

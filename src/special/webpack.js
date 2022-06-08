@@ -179,18 +179,18 @@ function loadNextWebpackConfig(filepath) {
   return null;
 }
 
-export default function parseWebpack(filename, deps) {
+export default function parseWebpack(filename, deps, rootDir) {
   const basename = path.basename(filename);
 
   if (webpackConfigRegex.test(basename)) {
-    const webpackConfig = tryRequire(filename);
+    const webpackConfig = tryRequire(filename, rootDir);
     if (webpackConfig) {
       return parseWebpackConfig(webpackConfig, deps);
     }
   }
 
   if (basename === 'styleguide.config.js') {
-    const styleguideConfig = tryRequire(filename);
+    const styleguideConfig = tryRequire(filename, rootDir);
     if (styleguideConfig && styleguideConfig.webpackConfig) {
       return parseWebpackConfig(styleguideConfig.webpackConfig, deps);
     }

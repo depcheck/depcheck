@@ -83,12 +83,12 @@ export async function loadConfig(binName, filenameRegex, filename, rootDir) {
   const basename = path.basename(filename);
 
   if (filenameRegex.test(basename)) {
-    const requireConfig = tryRequire(filename);
+    const requireConfig = tryRequire(filename, rootDir);
     if (requireConfig) {
       return requireConfig;
     }
 
-    const content = await getContent(filename);
+    const content = await getContent(filename, rootDir);
     const config = parse(content);
     return config;
   }

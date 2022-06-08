@@ -1,5 +1,6 @@
 import path from 'path';
 import vm from 'vm';
+import { createRequire } from 'module';
 
 export { default as getScripts } from './get-scripts';
 
@@ -36,11 +37,19 @@ export function loadModuleData(moduleName, rootDir) {
   }
 }
 
-export function tryRequire(module, paths = []) {
+export function requireFile(
+  filePath,
+  rootDir = process.cwd(),
+  paths = undefined,
+) {
+  const targetRequire = createRequire(path.resolve(rootDir, 'package.json'));
+  const contents = targetRequire(targetRequire.resolve(filePath, paths));
+  return 'default' in contents ? contents.default : contents;
+}
+
+export function tryRequire(module, rootDir, paths) {
   try {
-    let moduleName = module;
-    if (paths.length > 0) moduleName = require.resolve(moduleName, { paths });
-    return require(moduleName); // eslint-disable-line global-require
+    return requireFile(module, rootDir, paths);
   } catch (e) {
     return null;
   }

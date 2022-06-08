@@ -16,11 +16,16 @@ import {
 
 function registerTs(rootDir) {
   if (!require.extensions['.ts']) {
-    const ts = tryRequire('typescript', [rootDir, process.cwd(), __dirname]);
+    const ts = tryRequire('typescript', rootDir, [
+      rootDir,
+      process.cwd(),
+      __dirname,
+    ]);
     if (ts) {
       require.extensions['.ts'] = (module, filename) => {
         const content = fs.readFileSync(filename, 'utf8');
-        const options = tryRequire(path.join(rootDir, 'package.json')) || {};
+        const options =
+          tryRequire(path.join(rootDir, 'package.json'), rootDir) || {};
         options.fileName = filename;
         const transpiled = ts.transpileModule(
           content.charCodeAt(0) === 0xfeff ? content.slice(1) : content,
