@@ -1,5 +1,6 @@
 import path from 'path';
 import lodash from 'lodash';
+import requirePackageName from 'require-package-name';
 import { getContent } from '../utils/file';
 
 const _ = lodash;
@@ -56,7 +57,7 @@ function removeNodeModuleRelativePaths(filepath) {
   if (Array.isArray(filepath)) {
     return removeNodeModuleRelativePaths(filepath[0]);
   }
-  return filepath.replace(/^.*node_modules\//, '').replace(/\/.*/, '');
+  return requirePackageName(filepath.replace(/^.*node_modules\//, ''));
 }
 
 function filter(deps, options) {

@@ -70,6 +70,16 @@ const testCases = [
     },
   },
   {
+    name: 'recognize scoped dependencies',
+    deps: ['vue-jest', '@swc/jest'],
+    content: {
+      transform: {
+        '^.+\\.vue$': 'vue-jest',
+        '^.+\\.ts$': '@swc/jest',
+      },
+    },
+  },
+  {
     name: 'recognize duplicated transformer',
     deps: ['babel-jest'],
     content: {
