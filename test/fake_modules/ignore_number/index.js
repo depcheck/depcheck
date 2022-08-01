@@ -1,6 +1,6 @@
 /*
  * Require number is used in minify tools (e.g., browserify, webpack).
- * However, number is not a valid package for NPM.
+ * However, number is not a valid package for npm.
  * Reference: https://docs.npmjs.com/files/package.json#name
  */
 
