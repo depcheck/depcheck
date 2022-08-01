@@ -32,11 +32,11 @@ Depcheck not only recognizes the dependencies in JavaScript files, but also supp
 - JavaScript (ES5, ES6 and ES7)
 - [React JSX](http://facebook.github.io/react/docs/jsx-in-depth.html)
 - [CoffeeScript](http://coffeescript.org/)
-- [Typescript](http://www.typescriptlang.org/) (with `typescript` dependency)
+- [TypeScript](http://www.typescriptlang.org/) (with `typescript` dependency)
 - [SASS and SCSS](http://sass-lang.com/) (with `node-sass` dependency)
 - [Vue.js](https://vuejs.org/) (with `@vue/compiler-sfc` dependency)
 
-To get the syntax support by external dependency, please install the corresponding package explicitly. For example, for Typescript user, install depcheck with `typescript` package:
+To get the syntax support by external dependency, please install the corresponding package explicitly. For example, for TypeScript user, install depcheck with `typescript` package:
 
 ```
 npm install -g depcheck typescript
@@ -101,7 +101,7 @@ All of the arguments are optional:
 
 ## Usage with a configuration file
 
-Depcheck can be used with an rc configuration file. In order to do so, create a .depcheckrc file in your project's package.json folder, and set the CLI keys in YAML, JSON, and Javascript formats.
+Depcheck can be used with an rc configuration file. In order to do so, create a .depcheckrc file in your project's package.json folder, and set the CLI keys in YAML, JSON, and JavaScript formats.
 For example, the CLI arguments `--ignores="eslint,babel-*" --skip-missing=true` would turn into:
 
 **_.depcheckrc_**

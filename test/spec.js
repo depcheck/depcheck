@@ -201,7 +201,7 @@ export default [
     expectedErrorCode: 0,
   },
   {
-    name: 'support Typescript syntax',
+    name: 'support TypeScript syntax',
     module: 'typescript',
     options: {},
     expected: {

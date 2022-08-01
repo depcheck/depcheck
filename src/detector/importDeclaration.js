@@ -5,7 +5,7 @@ export default function detectImportDeclaration(node, deps) {
     return [];
   }
 
-  // Typescript "import type X from 'foo'" - doesn't need to depend on the
+  // TypeScript "import type X from 'foo'" - doesn't need to depend on the
   // actual module, instead it can rely on `@types/<module>` instead.
   if (
     node.importKind === 'type' &&
