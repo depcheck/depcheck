@@ -17,6 +17,7 @@ export default async function parseVue(filename) {
     // note that babel/parser 7+ does not support *, due to plugin incompatibilities
     // Because the guys using React always want the newest syntax.
     plugins: [
+      'typescript',
       'asyncGenerators',
       'bigInt',
       'classProperties',
