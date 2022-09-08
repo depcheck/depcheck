@@ -3,8 +3,7 @@ import depcheck from '../src/index';
 
 export default [
   {
-    name:
-      'detect missing module for dynamic import() when missing in package.json',
+    name: 'detect missing module for dynamic import() when missing in package.json',
     module: 'import_function_missing',
     options: {},
     expected: {
@@ -281,6 +280,23 @@ export default [
         vue: ['index.js'],
         'vue-dep-1': ['component.vue'],
         'vue-dep-2': ['component.vue'],
+      },
+    },
+    expectedErrorCode: -1,
+  },
+  {
+    name: 'support Vue 3 setup script syntax',
+    module: 'vue3_setup',
+    options: {},
+    expected: {
+      dependencies: ['unused-dep'],
+      devDependencies: [],
+      missing: {},
+      using: {
+        vue: ['index.js'],
+        'vue-dep-1': ['component.vue'],
+        'vue-dep-2': ['component.vue'],
+        'vue-ts-dep-1': ['component_ts.vue'],
       },
     },
     expectedErrorCode: -1,

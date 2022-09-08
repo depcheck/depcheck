@@ -5,11 +5,21 @@ import { getContent } from '../utils/file';
 export default async function parseVue(filename) {
   const content = await getContent(filename);
   const parsed = vueParse(content);
-  if (!parsed.descriptor.script) {
+  if (!parsed.descriptor.script && !parsed.descriptor.scriptSetup) {
     return [];
   }
 
-  return parse(parsed.descriptor.script.content, {
+  let script = '';
+
+  if (parsed.descriptor.script) {
+    script += parsed.descriptor.script.content;
+  }
+
+  if (parsed.descriptor.scriptSetup) {
+    script += parsed.descriptor.scriptSetup.content;
+  }
+
+  return parse(script, {
     sourceType: 'module',
 
     // Enable all known compatible @babel/parser plugins at the time of writing.
@@ -39,6 +49,7 @@ export default async function parseVue(filename) {
       'optionalChaining',
       ['pipelineOperator', { proposal: 'minimal' }],
       'throwExpressions',
+      'typescript',
       // and finally, jsx
       'jsx',
     ],
