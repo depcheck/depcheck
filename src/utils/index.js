@@ -1,5 +1,11 @@
 import path from 'path';
 import vm from 'vm';
+import jiti from 'jiti';
+
+const jitiInstance = jiti(__filename);
+
+// Import via Jiti since ESM is not supported yet
+const moduleRoot = jitiInstance('module-root').default;
 
 export { default as getScripts } from './get-scripts';
 
@@ -21,14 +27,14 @@ export function evaluate(code) {
 
 export function loadModuleData(moduleName, rootDir) {
   try {
-    const file = require.resolve(`${moduleName}/package.json`, {
-      paths: [rootDir],
-    });
+    const file = path.join(moduleRoot(moduleName, { cwd: rootDir }), 'package.json');
+    console.log(file)
     return {
       path: path.dirname(file),
       metadata: readJSON(file),
     };
   } catch (error) {
+    console.log(error)
     return {
       path: null,
       metadata: null,

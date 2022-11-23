@@ -113,6 +113,12 @@ const testCases = [
     dependencies: ['single-binary-package'],
     expected: ['single-binary-package'],
   },
+  {
+    name: 'esm',
+    script: 'esm',
+    dependencies: ['esm'],
+    expected: ['esm'],
+  },
 ];
 
 async function testBin(testCase, content, filename) {
