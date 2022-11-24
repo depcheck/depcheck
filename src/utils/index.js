@@ -33,7 +33,6 @@ export function loadModuleData(moduleName, rootDir) {
       metadata: readJSON(file),
     };
   } catch (error) {
-    console.log(error)
     return {
       path: null,
       metadata: null,
