@@ -28,7 +28,6 @@ export function evaluate(code) {
 export function loadModuleData(moduleName, rootDir) {
   try {
     const file = path.join(moduleRoot(moduleName, { cwd: rootDir }), 'package.json');
-    console.log(file)
     return {
       path: path.dirname(file),
       metadata: readJSON(file),
