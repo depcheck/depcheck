@@ -1,12 +1,7 @@
 import path from 'path';
 import vm from 'vm';
-import jiti from 'jiti';
 
-const jitiInstance = jiti(__filename);
-
-// Import via Jiti since ESM is not supported yet
-const moduleRoot = jitiInstance('module-root').default;
-
+import moduleRoot from './module-root'
 export { default as getScripts } from './get-scripts';
 
 export function readJSON(filePath) {
@@ -27,7 +22,7 @@ export function evaluate(code) {
 
 export function loadModuleData(moduleName, rootDir) {
   try {
-    const file = path.join(moduleRoot(moduleName, { cwd: rootDir }), 'package.json');
+    const file = path.join(moduleRoot(moduleName, { cwd: rootDir }), 'package.json');
     return {
       path: path.dirname(file),
       metadata: readJSON(file),
