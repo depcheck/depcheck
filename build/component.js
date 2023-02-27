@@ -33,7 +33,7 @@ if (process.argv.length > 2) {
       if (line === '«Components»') {
         printItemTypes('parser', 'Parser', parser);
         printItemTypes('detector', 'Detector', detector);
-        printItemTypes('special', 'Parser', special);
+        printItemTypes('special', 'SpecialParser', special);
       } else {
         console.log(line);
       }
