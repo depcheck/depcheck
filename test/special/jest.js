@@ -70,6 +70,16 @@ const testCases = [
     },
   },
   {
+    name: 'recognize transform path with scoped package',
+    deps: ['@swc/jest', '@swc/jest2'],
+    content: {
+      transform: {
+        '^.+\\.js$': '@swc/jest',
+        '^.+\\.jsx$': '@swc/jest2/something-else',
+      },
+    },
+  },
+  {
     name: 'recognize duplicated transformer',
     deps: ['babel-jest'],
     content: {
