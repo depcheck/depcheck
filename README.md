@@ -33,7 +33,7 @@ Depcheck not only recognizes the dependencies in JavaScript files, but also supp
 - [React JSX](http://facebook.github.io/react/docs/jsx-in-depth.html)
 - [CoffeeScript](http://coffeescript.org/)
 - [TypeScript](http://www.typescriptlang.org/) (with `typescript` dependency)
-- [SASS and SCSS](http://sass-lang.com/) (with `node-sass` dependency)
+- [SASS and SCSS](http://sass-lang.com/)
 - [Vue.js](https://vuejs.org/) (with `@vue/compiler-sfc` dependency)
 
 To get the syntax support by external dependency, please install the corresponding package explicitly. For example, for TypeScript user, install depcheck with `typescript` package:
