@@ -3,7 +3,9 @@
 export function extractInlineWebpack(value) {
   const parts = value.split('!');
   if (parts.length === 1) {
-    return [value]; // ['module-name'] or ['path/to/file']
+    return /^https?:\/\//i.test(value)
+      ? [] // ignore URLs (https://foo.bar/file.js)
+      : [value]; // ['module-name'] or ['path/to/file']
   }
   if (parts[0] === '') {
     // ['', 'something-loader', 'path/to/file']

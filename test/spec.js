@@ -908,4 +908,16 @@ export default [
     },
     expectedErrorCode: -1,
   },
+  {
+    name: 'allows url imports',
+    module: 'url_import',
+    options: {},
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {},
+    },
+    expectedErrorCode: 0,
+  },
 ];
