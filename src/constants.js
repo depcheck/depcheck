@@ -48,6 +48,8 @@ export const defaultOptions = {
   skipMissing: false,
   parsers: {
     '**/*.js': availableParsers.jsx,
+    '**/*.mjs': availableParsers.jsx,
+    '**/*.cjs': availableParsers.jsx,
     '**/*.jsx': availableParsers.jsx,
     '**/*.coffee': availableParsers.coffee,
     '**/*.litcoffee': availableParsers.coffee,
