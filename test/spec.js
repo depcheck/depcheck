@@ -224,6 +224,26 @@ export default [
     expectedErrorCode: -1,
   },
   {
+    name: 'support tsconfig extends and types fields',
+    module: 'tsconfig',
+    options: {},
+    expected: {
+      dependencies: [],
+      devDependencies: ['@types/unused'],
+      missing: {
+        '@types/jest': ['tsconfig.json'],
+        'tsconfig-base': ['tsconfig.build.json'],
+      },
+      using: {
+        '@mybrand/tsconfig': ['tsconfig.json'],
+        '@types/jest': ['tsconfig.json'],
+        '@types/node': ['tsconfig.json'],
+        'tsconfig-base': ['tsconfig.build.json'],
+      },
+    },
+    expectedErrorCode: -1,
+  },
+  {
     name: 'support SASS/SCSS syntax',
     module: 'sass',
     options: {},
