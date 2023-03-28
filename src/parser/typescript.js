@@ -16,7 +16,7 @@ export default async function parseTypescript(filename) {
       'classProperties',
       'classPrivateProperties',
       'classPrivateMethods',
-      // { decorators: { decoratorsBeforeExport: true } },
+      // ['decorators', { decoratorsBeforeExport: true }],
       'decorators-legacy',
       'doExpressions',
       'dynamicImport',
@@ -31,7 +31,7 @@ export default async function parseTypescript(filename) {
       'objectRestSpread',
       'optionalCatchBinding',
       'optionalChaining',
-      { pipelineOperator: { proposal: 'minimal' } },
+      ['pipelineOperator', { proposal: 'minimal' }],
       'throwExpressions',
     ],
   });
