@@ -1,0 +1,9 @@
+{
+  "name": "storybook",
+  "devDependencies": {
+    "@storybook/react": "*",
+    "@storybook/addon-essentials": "*",
+    "@storybook/addon-unused": "*",
+    "typescript": "*"
+  }
+}

@@ -1,119 +1,70 @@
-import path from 'path';
 import fs from 'fs';
 import lodash from 'lodash';
+import path from 'path';
 import requirePackageName from 'require-package-name';
+import sass from 'sass';
 
-const { parse } = require('scss-parser');
-const createQueryWrapper = require('query-ast');
-const sass = require('sass');
+const sassModuleRegex = /^\s*@use\s+['"]sass:[a-z]+['"]/gm;
 
-const IMPORT_RULE_TYPE = 'atrule';
-const IMPORT_KEYWORDS = ['import', 'use', 'forward'];
-
-function unixSlashes(packagePath) {
-  return packagePath.replace(/\\/g, '/');
-}
-
-// TODO::remove stuff after ':'
 function removeNodeModulesOrTildaFromPath(packagePath) {
   let suspectedFileName = packagePath;
 
   // remove ':'
-  const colonsIndex = packagePath.indexOf(':');
-  if (colonsIndex > 1) {
-    suspectedFileName = suspectedFileName.substring(0, colonsIndex);
-  }
+  const pathBeforeColon = packagePath.split(':')[0];
+  suspectedFileName = pathBeforeColon ?? suspectedFileName;
+
   // remove 'node_modules/'
-  const nodeModulesIndex = suspectedFileName.indexOf('node_modules/');
-  if (nodeModulesIndex > -1) {
-    return suspectedFileName.substring(
-      nodeModulesIndex + 'node_modules/'.length,
-    );
+  const pathInNodeModules = suspectedFileName.split('node_modules/')[1];
+  if (pathInNodeModules) {
+    return pathInNodeModules;
   }
 
   // remove '~'
-  if (suspectedFileName.indexOf(`~`) === 0) {
-    return suspectedFileName.substring(1);
+  if (suspectedFileName.startsWith(`~`)) {
+    return suspectedFileName.slice(1);
   }
   return suspectedFileName;
 }
 
-function isLocalFile(filePath, folderName) {
-  if (filePath[0] === '_') {
-    return true;
-  }
+/**
+ * Prevents sass compilation from crashing when importing missing dep
+ * @type {import('sass').Importer}
+ */
+const missingDepImporter = {
+  canonicalize: (importPath) => new URL(`file:${importPath}`),
+  load: () => ({ contents: '', syntax: 'css' }),
+};
 
-  if (filePath[0] === '@') {
-    return false;
-  }
+export default async function parseSASS(filename, _deps, rootDir) {
+  const modulesDir = path.resolve(rootDir, 'node_modules');
+  const filterLocalFile = (filepath) =>
+    !(filepath.startsWith(rootDir) && !filepath.startsWith(modulesDir));
 
-  return fs.existsSync(path.join(folderName, `${filePath}.scss`));
-}
-
-function parseSCSS(filename) {
-  const folderName = path.dirname(filename);
-  const fileContents = fs.readFileSync(filename).toString();
-  const ast = parse(fileContents);
-  const queryWrapper = createQueryWrapper(ast);
-  const imports = queryWrapper(IMPORT_RULE_TYPE)
-    .nodes.filter((node) =>
-      IMPORT_KEYWORDS.includes(node.children[0].node.value),
-    )
-    .map((node) => node.children[2].node.value);
-
-  const result = lodash(imports)
-    .filter((packagePath) => packagePath !== filename)
-    .map(unixSlashes)
-    .map(removeNodeModulesOrTildaFromPath)
-    .map(requirePackageName)
-    .uniq()
-    .filter((filePath) => !isLocalFile(filePath, folderName))
-    .filter((x) => x)
-    .value();
-
-  return result;
-}
-
-export default async function parseSASS(filename) {
-  const isScss = path.extname(filename) === '.scss';
-
-  if (isScss) {
-    return parseSCSS(filename);
-  }
-
-  const includedFiles = [];
-  let sassDetails = {};
-  try {
-    // sass processor does not respect the custom importer
-    sassDetails = sass.renderSync({
-      file: filename,
-      includePaths: [path.dirname(filename)],
-      importer: [
-        function importer(url) {
-          includedFiles.push(url);
-          return {
-            contents: `
-              h1 {
-                font-size: 40px;
-              }`,
-          };
+  const sassString = fs.readFileSync(filename).toString();
+  const usesSass = sassString.match(sassModuleRegex);
+  const { loadedUrls } = sass.compileString(sassString, {
+    url: new URL(`file:${filename}`),
+    syntax: filename.endsWith('scss') ? 'scss' : 'indented',
+    importers: [
+      {
+        findFileUrl(url) {
+          const normalizedPath = removeNodeModulesOrTildaFromPath(url);
+          return new URL(normalizedPath, `file:${modulesDir}/`);
         },
-      ],
-    });
-  } catch (e) {
-    sassDetails.stats = {
-      includedFiles,
-    };
-  }
+      },
+      missingDepImporter,
+    ],
+  });
 
-  const result = lodash(sassDetails.stats.includedFiles)
-    .filter((packagePath) => packagePath !== filename)
-    .map(unixSlashes)
+  const result = loadedUrls
+    .map((url) => url.pathname)
+    .filter((name) => Boolean(name) && name !== filename)
+    .filter(filterLocalFile)
     .map(removeNodeModulesOrTildaFromPath)
+    // Normalize package name by removing leading slash from URL.pathname
+    .map((name) => (name.startsWith('/') ? name.slice(1) : name))
     .map(requirePackageName)
-    .uniq()
-    .filter((x) => x)
-    .value();
+    .concat(usesSass ? ['sass'] : []);
 
-  return result;
+  return lodash.uniq(result);
 }

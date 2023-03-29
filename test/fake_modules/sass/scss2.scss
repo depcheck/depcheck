@@ -1,8 +1,8 @@
+@forward "@test-dep/aFile4";
 @use "@test-dep/aFile2";
 @use "mixin"; // should ignore...
 @use "sass:math"; // should show only sass...
 @import "@test-dep/aFile3";
-@forward "@test-dep/aFile4";
 
 %ignore-extend {
   margin: 0;
@@ -10,7 +10,7 @@
 
 div {
   @extend %ignore-extend;
-  font-size: $font-size;
+  font-size: 15px;
 }
 
 @keyframes ignore-keyframes {

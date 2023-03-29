@@ -224,6 +224,26 @@ export default [
     expectedErrorCode: -1,
   },
   {
+    name: 'support tsconfig extends and types fields',
+    module: 'tsconfig',
+    options: {},
+    expected: {
+      dependencies: [],
+      devDependencies: ['@types/unused'],
+      missing: {
+        '@types/jest': ['tsconfig.json'],
+        'tsconfig-base': ['tsconfig.build.json'],
+      },
+      using: {
+        '@mybrand/tsconfig': ['tsconfig.json'],
+        '@types/jest': ['tsconfig.json'],
+        '@types/node': ['tsconfig.json'],
+        'tsconfig-base': ['tsconfig.build.json'],
+      },
+    },
+    expectedErrorCode: -1,
+  },
+  {
     name: 'support SASS/SCSS syntax',
     module: 'sass',
     options: {},
@@ -904,5 +924,40 @@ export default [
       },
     },
     expectedErrorCode: -1,
+  },
+  {
+    name: 'detect dependencies in storybook configuration',
+    module: 'storybook',
+    options: {},
+    expected: {
+      dependencies: [],
+      devDependencies: ['@storybook/addon-unused'],
+      missing: {
+        '@storybook/addon-links': ['.storybook/main.js'],
+        '@storybook/builder-webpack5': ['.storybook/main.js'],
+        '@storybook/manager-webpack5': ['.storybook/main.js'],
+      },
+      using: {
+        '@storybook/addon-essentials': ['.storybook/main.js'],
+        '@storybook/addon-links': ['.storybook/main.js'],
+        '@storybook/builder-webpack5': ['.storybook/main.js'],
+        '@storybook/manager-webpack5': ['.storybook/main.js'],
+        '@storybook/react': ['.storybook/main.js'],
+        typescript: ['.storybook/main.js'],
+      },
+    },
+    expectedErrorCode: -1,
+  },
+  {
+    name: 'allows url imports',
+    module: 'url_import',
+    options: {},
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {},
+    },
+    expectedErrorCode: 0,
   },
 ];
