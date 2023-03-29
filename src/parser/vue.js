@@ -5,13 +5,22 @@ import { getContent } from '../utils/file';
 export default async function parseVue(filename) {
   const content = await getContent(filename);
   const parsed = vueParse(content);
-  const parsedContent =
-    parsed.descriptor.script?.content || parsed.descriptor.scriptSetup?.content;
-  if (!parsedContent) {
+
+  if (!parsed.descriptor.script && !parsed.descriptor.scriptSetup) {
     return [];
   }
 
-  return parse(parsedContent, {
+  let script = '';
+
+  if (parsed.descriptor.script) {
+    script += parsed.descriptor.script.content;
+  }
+
+  if (parsed.descriptor.scriptSetup) {
+    script += parsed.descriptor.scriptSetup.content;
+  }
+
+  return parse(script, {
     sourceType: 'module',
 
     // Enable all known compatible @babel/parser plugins at the time of writing.
