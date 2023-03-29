@@ -1,0 +1,9 @@
+{
+  "name": "tsconfig-test-package",
+  "dependencies": {},
+  "devDependencies": {
+    "@mybrand/tsconfig": "*",
+    "@types/node": "*",
+    "@types/unused": "*"
+  }
+}

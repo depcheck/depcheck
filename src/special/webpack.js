@@ -151,7 +151,7 @@ function parseWebpackConfig(webpackConfig, deps) {
   return [...webpack1Loaders, ...webpack2Loaders, ...webpackEntries];
 }
 
-function loadNextWebpackConfig(filepath) {
+async function loadNextWebpackConfig(filepath) {
   const fakeConfig = {
     plugins: [],
     module: { rules: [] },
@@ -163,7 +163,7 @@ function loadNextWebpackConfig(filepath) {
   const fakeContext = { webpack: fakeWebpack, defaultLoaders: {} };
 
   try {
-    const nextConfig = require(filepath); // eslint-disable-line global-require
+    const nextConfig = await import(filepath);
     if (nextConfig && nextConfig.webpack) {
       return nextConfig.webpack(fakeConfig, fakeContext);
     }
@@ -179,7 +179,7 @@ function loadNextWebpackConfig(filepath) {
   return null;
 }
 
-export default function parseWebpack(filename, deps) {
+export default async function parseWebpack(filename, deps) {
   const basename = path.basename(filename);
 
   if (webpackConfigRegex.test(basename)) {
@@ -197,7 +197,7 @@ export default function parseWebpack(filename, deps) {
   }
 
   if (basename === 'next.config.js') {
-    const webpackConfig = loadNextWebpackConfig(filename);
+    const webpackConfig = await loadNextWebpackConfig(filename);
     if (webpackConfig) {
       return parseWebpackConfig(webpackConfig, deps);
     }

@@ -4,7 +4,7 @@ import { getContent } from '../utils/file';
 
 const _ = lodash;
 
-const jestConfigRegex = /^jest.([^.]+\.)?conf(ig|).js(on|)$/;
+const jestConfigRegex = /^jest.([^.]+\.)?conf(ig|).(cjs|js(on|))$/;
 const supportedProperties = [
   'dependencyExtractor',
   'preset',
@@ -56,7 +56,13 @@ function removeNodeModuleRelativePaths(filepath) {
   if (Array.isArray(filepath)) {
     return removeNodeModuleRelativePaths(filepath[0]);
   }
-  return filepath.replace(/^.*node_modules\//, '').replace(/\/.*/, '');
+  return (
+    filepath
+      .replace(/^.*node_modules\//, '')
+      // Strip off subdirectories or exports from package name,
+      // e.g. @foo/bar/baz -> @foo/bar, bar/baz -> baz
+      .replace(/^((?:@[^/]+\/)?[^@/]+)(?:\/.*)?/, '$1')
+  );
 }
 
 function filter(deps, options) {
