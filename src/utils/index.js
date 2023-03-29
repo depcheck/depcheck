@@ -1,7 +1,8 @@
 import path from 'path';
 import vm from 'vm';
 
-import moduleRoot from './module-root'
+import moduleRoot from './module-root';
+
 export { default as getScripts } from './get-scripts';
 
 export function readJSON(filePath) {
@@ -22,7 +23,10 @@ export function evaluate(code) {
 
 export function loadModuleData(moduleName, rootDir) {
   try {
-    const file = path.join(moduleRoot(moduleName, { cwd: rootDir }), 'package.json');
+    const file = path.join(
+      moduleRoot(moduleName, { cwd: rootDir }),
+      'package.json',
+    );
     return {
       path: path.dirname(file),
       metadata: readJSON(file),
