@@ -49,7 +49,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "@babel/parser": "7.16.4",
+    "@babel/parser": "7.21.3",
     "@babel/traverse": "^7.12.5",
     "@vue/compiler-sfc": "^3.0.5",
     "callsite": "^1.0.0",
