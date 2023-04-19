@@ -30,7 +30,7 @@ function requireConfig(preset, rootDir) {
     : resolveConfigModule(preset, rootDir);
 
   try {
-    return [require(presetPath), includedDeps]; // eslint-disable-line global-require
+    return [require(presetPath), includedDeps]; // stylelint-disable-line global-require
   } catch (error) {
     return [{}, []]; // silently return nothing
   }
@@ -39,10 +39,9 @@ function requireConfig(preset, rootDir) {
 /**
  * Brings package name to correct format based on prefix
  * @param {string} name The name of the package.
- * @param {string} prefix Can be either "eslint-plugin", "eslint-config" or "eslint-formatter"
+ * @param {string} prefix Can be either "stylelint-plugin", "stylelint-config" or "stylelint-formatter"
  * @returns {string} Normalized name of the package
  * @private
- * @see {@link https://github.com/eslint/eslint/blob/faf3c4eda0d27323630d0bc103a99dd0ecffe842/lib/util/naming.js#L25 ESLint}
  */
 function normalizePackageName(name, prefix) {
   let normalizedName = name;
@@ -51,7 +50,6 @@ function normalizePackageName(name, prefix) {
   /**
    * On Windows, name can come in with Windows slashes instead of Unix slashes.
    * Normalize to Unix first to avoid errors later on.
-   * https://github.com/eslint/eslint/issues/5644
    */
   if (normalizedName.indexOf('\\') > -1) {
     normalizedName = convertPathToPosix(normalizedName);
@@ -75,7 +73,7 @@ function normalizePackageName(name, prefix) {
     } else if (!scopedPackageNameRegex.test(normalizedName.split('/')[1])) {
       /**
        * for scoped packages, insert the prefix after the first / unless
-       * the path is already @scope/eslint or @scope/eslint-xxx-yyy
+       * the path is already @scope/stylelint or @scope/stylelint-xxx-yyy
        */
       normalizedName = normalizedName.replace(
         /^@([^/]+)\/(.*)$/,
@@ -100,10 +98,10 @@ function resolvePresetPackage(preset, rootDir) {
 
   if (preset.startsWith('plugin:')) {
     const pluginName = preset.slice(7, preset.lastIndexOf('/'));
-    return normalizePackageName(pluginName, 'eslint-plugin');
+    return normalizePackageName(pluginName, 'stylelint-plugin');
   }
 
-  return normalizePackageName(preset, 'eslint-config');
+  return normalizePackageName(preset, 'stylelint-config');
 }
 
 function checkConfig(config, rootDir, includedDeps = []) {
@@ -117,7 +115,7 @@ function checkConfig(config, rootDir, includedDeps = []) {
   const plugins = lodash(configs)
     .map((value) => wrapToArray(value.plugins))
     .flatten()
-    .map((plugin) => normalizePackageName(plugin, 'eslint-plugin'))
+    .map((plugin) => normalizePackageName(plugin, 'stylelint-plugin'))
     .value();
 
   const parser = lodash(configs)
@@ -132,14 +130,8 @@ function checkConfig(config, rootDir, includedDeps = []) {
     .value();
 
   const presets = extendsArray
-    .filter((preset) => !['eslint:recommended', 'eslint:all'].includes(preset))
+    .filter((preset) => !['stylelint:recommended', 'stylelint:all'].includes(preset))
     .map((preset) => resolvePresetPackage(preset, rootDir));
-
-  // prettier/recommended extends eslint-config-prettier
-  // https://github.com/prettier/eslint-plugin-prettier#recommended-configuration
-  if (extendsArray.includes('plugin:prettier/recommended')) {
-    presets.push('eslint-config-prettier');
-  }
 
   const presetPackages = presets
     .filter((preset) => !path.isAbsolute(preset))
@@ -155,6 +147,7 @@ function checkConfig(config, rootDir, includedDeps = []) {
     .union(parser, plugins, presetPackages, presetDeps)
     .filter((dep) => !includedDeps.includes(dep));
 
+  // TODO: this require more investigation
   configs.forEach((value) => {
     if (value.settings) {
       Object.keys(value.settings).forEach((key) => {
@@ -162,7 +155,7 @@ function checkConfig(config, rootDir, includedDeps = []) {
           return;
         }
         Object.keys(value.settings[key]).forEach((resolverName) => {
-          // node and webpack resolvers are included in `eslint-plugin-import`
+          // node and webpack resolvers are included in `stylelint-plugin-import`
           if (!['node', 'webpack'].includes(resolverName)) {
             result.push(`eslint-import-resolver-${resolverName}`);
           }
@@ -174,7 +167,8 @@ function checkConfig(config, rootDir, includedDeps = []) {
   return result;
 }
 
-const configNameRegex = /^stylelint.config(\.(json|js|cjs|yml|yaml))?$/;
+// https://stylelint.io/user-guide/configure/
+const configNameRegex = /^stylelint.config(\.(js|cjs))$|^stylelintrc(\.(cjs|js|json|yaml|yml))?$/;
 
 export default async function parseStylelint(filename, deps, rootDir) {
 
@@ -193,8 +187,8 @@ export default async function parseStylelint(filename, deps, rootDir) {
   if (resolvedFilePath === packageJsonPath) {
     const content = await getContent(filename);
     const parsed = JSON.parse(content);
-    if (parsed.eslintConfig) {
-      return checkConfig(parsed.eslintConfig, rootDir);
+    if (parsed.stylelint ) {
+      return checkConfig(parsed.stylelint, rootDir);
     }
   }
 
