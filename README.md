@@ -23,7 +23,7 @@ Or simply using [npx](https://blog.npmjs.org/post/162869356040/introducing-npx-a
 $ npx depcheck
 ```
 
-_Notice:_ depcheck needs node.js >= 10.
+_Notice:_ depcheck needs node.js >= 14.
 
 ## Syntax Support
 
