@@ -20,7 +20,7 @@
     "depcheck": "node ./bin/depcheck.js --ignore-dirs=fake_modules",
     "depcheck-json": "node ./bin/depcheck.js --ignore-dirs=fake_modules --json | node -r @babel/register ./build/check-json",
     "prepublishOnly": "npm run compile && npm run component",
-    "prettier": "prettier \"**/*.@(js|json|md|yml)\"",
+    "prettier": "prettier . --ignore-unknown",
     "prettier-check": "npm run prettier -- --check",
     "lint": "eslint ./src ./build ./test",
     "test": "mocha ./test ./test/special --timeout 10000",

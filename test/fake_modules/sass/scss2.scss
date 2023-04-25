@@ -2,7 +2,7 @@
 @use "@test-dep/aFile2";
 @use "mixin"; // should ignore...
 @use "sass:math"; // should show only sass...
-@import "@test-dep/aFile3";
+@import '@test-dep/aFile3';
 
 %ignore-extend {
   margin: 0;
