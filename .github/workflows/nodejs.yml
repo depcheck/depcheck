@@ -4,42 +4,34 @@ on: [pull_request]
 
 jobs:
   build:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        node-version: [14.x, 16.x, 18.x]
-
-    runs-on: ${{ matrix.os }}
-
+        node-version: [14.x, 16.x, 18.x, 20.x]
+        include:
+          - node-version: 20.x
+            codecov: true
+    name: Node ${{ matrix.node-version }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - name: setup git
-        if: matrix.os == 'windows-latest'
-        run: |
-          git config core.symlinks true
-          git reset --hard
-
-      - name: ${{ matrix.os }} / Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: npm install, build, and test
-        run: |
-          npm ci
-          npm run compile
-          npm run component
-          npm run depcheck
-          npm run depcheck-json
-          npm run lint
-          npm run prettier-check
-          npm run test-coverage
-        env:
-          CI: true
+      - run: npm ci
+      - run: npm run compile
+      - run: npm run component
+      - run: npm run depcheck
+      - run: npm run depcheck-json
+      - run: npm run lint
+      - run: npm run prettier-check
+      - run: npm run test-coverage
 
-      - uses: codecov/codecov-action@v1
-        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '12.x'
+      - uses: codecov/codecov-action@v3
+        if: matrix.codecov
         with:
           file: ./coverage/coverage.lcov
           name: codecov-umbrella
