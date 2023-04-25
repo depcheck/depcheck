@@ -2,8 +2,7 @@
 var React = require('react');
 
 type Props = {
-  text: string
+  text: string,
 };
 
-export default ({ text }: Props) =>
-  (<div>{text}</div>);
+export default ({ text }: Props) => <div>{text}</div>;

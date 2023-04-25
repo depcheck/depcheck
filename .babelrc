@@ -1,20 +1,18 @@
 {
-  "plugins": [
-    "add-module-exports",
-    "@babel/transform-object-assign"
-  ],
+  "plugins": ["add-module-exports", "@babel/transform-object-assign"],
   "presets": [
-    ["@babel/env", {
-      "targets": {
-        "node": "10"
+    [
+      "@babel/env",
+      {
+        "targets": {
+          "node": "10"
+        }
       }
-    }]
+    ]
   ],
   "env": {
     "test": {
-      "plugins": [
-        "istanbul"
-      ]
+      "plugins": ["istanbul"]
     }
   }
 }

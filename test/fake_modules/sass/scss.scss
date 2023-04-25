@@ -2,7 +2,7 @@
 @use 'node_modules/scss-dep-2';
 @use 'scss-dep-3';
 @use "mixin";
-@import "~scss-dep/index";
+@import '~scss-dep/index';
 
 div {
   font-size: $font-size;
