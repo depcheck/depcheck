@@ -906,6 +906,21 @@ export default [
     expectedErrorCode: -1,
   },
   {
+    name: 'find unused dependencies in Svelte files with TypeScript',
+    module: 'svelte_with_typescript',
+    options: {},
+    expected: {
+      dependencies: ['dont-find-me'],
+      devDependencies: [],
+      missing: {},
+      using: {
+        'find-me': ['App.svelte'],
+        svelte: ['App.svelte'],
+      },
+    },
+    expectedErrorCode: -1,
+  },
+  {
     name: 'find dependencies in graphql files',
     module: 'graphql',
     options: {},
