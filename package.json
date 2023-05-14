@@ -54,7 +54,7 @@
     "@vue/compiler-sfc": "^3.0.5",
     "callsite": "^1.0.0",
     "camelcase": "^6.2.0",
-    "cosmiconfig": "^7.0.0",
+    "cosmiconfig": "^7.1.0",
     "debug": "^4.2.0",
     "deps-regex": "^0.1.4",
     "findup-sync": "^5.0.0",
