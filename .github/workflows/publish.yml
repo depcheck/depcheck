@@ -5,29 +5,21 @@ on:
     types: [created]
 
 jobs:
-  build:
+  test:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [18.x]
+        node-version: [10.x, 18.x]
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: setup git
-        if: matrix.os == 'windows-latest'
-        run: |
-          git config core.symlinks true
-          git reset --hard
-
       - name: ${{ matrix.os }} / Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: 'https://registry.npmjs.org'
-
       - name: npm install, build, and test
         run: |
           npm ci
@@ -39,8 +31,21 @@ jobs:
           npm run prettier-check
           npm run test-coverage
 
-      - name: bump version and publish
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: build, bump version and publish
         run: |
+          npm ci
+          npm run prepublishOnly
           npm version ${{ github.ref_name }} --no-git-tag-version
           npm publish
         env:
