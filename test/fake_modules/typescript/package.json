@@ -6,6 +6,7 @@
     "@types/node": "0.0.1",
     "@types/another-typeless-module": "0.0.1",
     "@types/typeless-module": "0.0.1",
+    "jsx-fail": "0.0.1",
     "react": "0.0.1",
     "ts-dep-1": "0.0.1",
     "ts-dep-2": "0.0.1",
