@@ -5,7 +5,6 @@ import { getContent } from '../utils/file';
 // Because we only parse them, not evaluate any code, it is safe to do so.
 // note that babel/parser 7+ does not support *, due to plugin incompatibilities
 const babelPlugins = [
-  'typescript',
   'asyncGenerators',
   'bigInt',
   'classProperties',
@@ -34,11 +33,17 @@ const babelPlugins = [
 
 export default async function parseTypescript(filename) {
   const content = await getContent(filename);
-  return parse(content, {
-    sourceType: 'module',
-    // Only if it's .tsx, we add the jsx plugin as it can cause issues with some regular .ts files
-    plugins: filename.endsWith('.tsx')
-      ? [...babelPlugins, 'jsx']
-      : babelPlugins,
-  });
+  try {
+    // We first try with the `jsx` plugin
+    return parse(content, {
+      sourceType: 'module',
+      plugins: ['typescript', 'jsx', ...babelPlugins],
+    });
+  } catch (error) {
+    // The exception could be related to the `jsx` plugin, so we try again without
+    return parse(content, {
+      sourceType: 'module',
+      plugins: ['typescript', ...babelPlugins],
+    });
+  }
 }
