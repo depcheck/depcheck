@@ -88,6 +88,34 @@ const testCases = [
     },
   },
   {
+    name: 'recognize the scoped preset with file path reference',
+    deps: ['@scope/mod'],
+    options: {
+      presets: ['@scope/mod/preset'],
+    },
+  },
+  {
+    name: 'recognize preset with file path reference',
+    deps: ['mod'],
+    options: {
+      presets: ['mod/preset'],
+    },
+  },
+  {
+    name: 'recognize the scoped plugin with file path reference',
+    deps: ['@scope/mod'],
+    options: {
+      plugins: ['@scope/mod/plugin'],
+    },
+  },
+  {
+    name: 'recognize plugin with file path reference',
+    deps: ['mod'],
+    options: {
+      plugins: ['mod/plugin'],
+    },
+  },
+  {
     name: 'recognize plugin specified with options',
     deps: ['babel-plugin-transform-async-to-module-method'],
     options: {

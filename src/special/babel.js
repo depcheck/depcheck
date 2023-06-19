@@ -24,7 +24,7 @@ function contain(array, dep, prefix, babelScope) {
 
   // extract name if wrapping with options
   const names = array.map((item) => (lodash.isString(item) ? item : item[0]));
-  if (names.indexOf(dep) !== -1) {
+  if (names.some((name) => name.startsWith(dep))) {
     return true;
   }
 
