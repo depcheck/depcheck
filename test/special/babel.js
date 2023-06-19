@@ -54,6 +54,13 @@ const testCases = [
   },
   {
     name: 'recognize the scoped short-name plugin',
+    deps: ['@scope/babel-plugin'],
+    options: {
+      plugins: ['@scope'],
+    },
+  },
+  {
+    name: 'recognize the scoped short-name plugin with custom suffix',
     deps: ['@scope/babel-plugin-syntax-jsx'],
     options: {
       plugins: ['@scope/syntax-jsx'],
@@ -75,6 +82,13 @@ const testCases = [
   },
   {
     name: 'recognize the scoped short-name preset',
+    deps: ['@scope/babel-preset'],
+    options: {
+      presets: ['@scope'],
+    },
+  },
+  {
+    name: 'recognize the scoped short-name preset with custom suffix',
     deps: ['@scope/babel-preset-es2015'],
     options: {
       presets: ['@scope/es2015'],

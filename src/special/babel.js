@@ -34,6 +34,15 @@ function contain(array, dep, prefix, babelScope) {
 
   const fullPrefix = scope ? `${scope}/${prefix}` : prefix;
 
+  // Support scoped plugin/preset with default name, e.g. preset with name '@scope' uses '@scope/babel-preset' dep
+  if (
+    fullPrefix &&
+    fullPrefix.endsWith('-') &&
+    dep === fullPrefix.slice(0, -1)
+  ) {
+    return true;
+  }
+
   if (prefix && dep.indexOf(fullPrefix) === 0) {
     const identifier = dep.substring(fullPrefix.length);
     return contain(array, scope ? `${scope}/${identifier}` : identifier, false);
