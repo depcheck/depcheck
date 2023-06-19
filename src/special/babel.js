@@ -17,7 +17,7 @@ function isPlugin(target, plugin) {
     : target[0] === plugin || target[0] === `babel-plugin-${plugin}`;
 }
 
-function contain(array, dep, prefix, scope) {
+function contain(array, dep, prefix, babelScope) {
   if (!array) {
     return false;
   }
@@ -27,6 +27,10 @@ function contain(array, dep, prefix, scope) {
   if (names.indexOf(dep) !== -1) {
     return true;
   }
+
+  // Parse a valid scope from dep if babelScope not defined
+  const scopeMatch = dep.match(/^@[\w-]+/);
+  const scope = babelScope ?? (scopeMatch && scopeMatch.at(0));
 
   const fullPrefix = scope ? `${scope}/${prefix}` : prefix;
 
