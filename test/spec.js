@@ -34,6 +34,20 @@ export default [
     expectedErrorCode: 0,
   },
   {
+    name: 'find module for dynamic import(`template-literal`) when present',
+    module: 'import_function_template_literal',
+    options: {},
+    expected: {
+      dependencies: [],
+      devDependencies: [],
+      missing: {},
+      using: {
+        optimist: ['index.js'],
+      },
+    },
+    expectedErrorCode: 0,
+  },
+  {
     name: 'find module for dynamic import() with magic Webpack comment',
     module: 'import_function_webpack',
     options: {},
