@@ -49,8 +49,8 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "@babel/parser": "7.21.3",
-    "@babel/traverse": "^7.12.5",
+    "@babel/parser": "7.22.5",
+    "@babel/traverse": "7.22.5",
     "@vue/compiler-sfc": "^3.0.5",
     "callsite": "^1.0.0",
     "camelcase": "^6.2.0",
