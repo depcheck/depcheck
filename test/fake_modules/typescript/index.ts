@@ -8,3 +8,8 @@ export interface Interface {
 export class MyClass extends DepClass {
   public dep = new DepType();
 }
+
+export function genDepTypeInterface(): Interface {
+  const res = { dep: new DepType() } satisfies Interface;
+  return res;
+}
