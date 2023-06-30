@@ -160,7 +160,11 @@ async function loadNextWebpackConfig(filepath) {
     watchOptions: { ignored: [] },
   };
 
-  const fakeContext = { webpack: fakeWebpack, defaultLoaders: {} };
+  const fakeContext = {
+    webpack: fakeWebpack,
+    defaultLoaders: {},
+    dir: 'fakePath',
+  };
 
   try {
     const nextConfig = await import(filepath);
