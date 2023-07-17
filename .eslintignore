@@ -7,4 +7,5 @@ test/fake_modules/node_modules/eslint-config-foo-bar/
 test/fake_modules/eslint_config_js/
 test/fake_modules/import_function/
 test/fake_modules/import_function_missing/
+test/fake_modules/import_function_template_literal/
 test/fake_modules/import_function_webpack/
