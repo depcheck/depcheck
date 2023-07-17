@@ -17,18 +17,31 @@ function isPlugin(target, plugin) {
     : target[0] === plugin || target[0] === `babel-plugin-${plugin}`;
 }
 
-function contain(array, dep, prefix, scope) {
+function contain(array, dep, prefix, babelScope) {
   if (!array) {
     return false;
   }
 
   // extract name if wrapping with options
   const names = array.map((item) => (lodash.isString(item) ? item : item[0]));
-  if (names.indexOf(dep) !== -1) {
+  if (names.some((name) => name.startsWith(dep))) {
     return true;
   }
 
+  // Parse a valid scope from dep if babelScope not defined
+  const scopeMatch = dep.match(/^@[\w-]+/);
+  const scope = babelScope ?? (scopeMatch && scopeMatch.at(0));
+
   const fullPrefix = scope ? `${scope}/${prefix}` : prefix;
+
+  // Support scoped plugin/preset with default name, e.g. preset with name '@scope' uses '@scope/babel-preset' dep
+  if (
+    fullPrefix &&
+    fullPrefix.endsWith('-') &&
+    dep === fullPrefix.slice(0, -1)
+  ) {
+    return true;
+  }
 
   if (prefix && dep.indexOf(fullPrefix) === 0) {
     const identifier = dep.substring(fullPrefix.length);

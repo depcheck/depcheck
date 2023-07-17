@@ -39,31 +39,94 @@ const testCases = [
     },
   },
   {
-    name: 'recognize the scoped short-name plugin',
+    name: 'recognize the @babel-scoped short-name plugin',
     deps: ['@babel/plugin-syntax-jsx'],
     options: {
       plugins: ['@babel/syntax-jsx'],
     },
   },
   {
-    name: 'recognize the scoped long-name plugin',
+    name: 'recognize the @babel-scoped long-name plugin',
     deps: ['@babel/plugin-syntax-jsx'],
     options: {
       plugins: ['@babel/plugin-syntax-jsx'],
     },
   },
   {
-    name: 'recognize the scoped short-name preset',
+    name: 'recognize the scoped short-name plugin',
+    deps: ['@scope/babel-plugin'],
+    options: {
+      plugins: ['@scope'],
+    },
+  },
+  {
+    name: 'recognize the scoped short-name plugin with custom suffix',
+    deps: ['@scope/babel-plugin-syntax-jsx'],
+    options: {
+      plugins: ['@scope/syntax-jsx'],
+    },
+  },
+  {
+    name: 'recognize the @babel-scoped short-name preset',
     deps: ['@babel/preset-es2015'],
     options: {
       presets: ['@babel/es2015'],
     },
   },
   {
-    name: 'recognize the scoped long-name preset',
+    name: 'recognize the @babel-scoped long-name preset',
     deps: ['@babel/preset-es2015'],
     options: {
       presets: ['@babel/preset-es2015'],
+    },
+  },
+  {
+    name: 'recognize the scoped short-name preset',
+    deps: ['@scope/babel-preset'],
+    options: {
+      presets: ['@scope'],
+    },
+  },
+  {
+    name: 'recognize the scoped short-name preset with custom suffix',
+    deps: ['@scope/babel-preset-es2015'],
+    options: {
+      presets: ['@scope/es2015'],
+    },
+  },
+  {
+    name: 'recognize the scoped long-name preset',
+    deps: ['@scope/babel-preset-es2015'],
+    options: {
+      presets: ['@scope/babel-preset-es2015'],
+    },
+  },
+  {
+    name: 'recognize the scoped preset with file path reference',
+    deps: ['@scope/mod'],
+    options: {
+      presets: ['@scope/mod/preset'],
+    },
+  },
+  {
+    name: 'recognize preset with file path reference',
+    deps: ['mod'],
+    options: {
+      presets: ['mod/preset'],
+    },
+  },
+  {
+    name: 'recognize the scoped plugin with file path reference',
+    deps: ['@scope/mod'],
+    options: {
+      plugins: ['@scope/mod/plugin'],
+    },
+  },
+  {
+    name: 'recognize plugin with file path reference',
+    deps: ['mod'],
+    options: {
+      plugins: ['mod/plugin'],
     },
   },
   {
