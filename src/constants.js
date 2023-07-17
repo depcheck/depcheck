@@ -57,6 +57,8 @@ export const defaultOptions = {
     '**/*.graphql': availableParsers.graphql,
     '**/.storybook/main.js': availableParsers.storybook,
     '**/tsconfig*.json': availableParsers.tsconfig,
+    '**/*.cts': availableParsers.typescript,
+    '**/*.mts': availableParsers.typescript,
     '**/*.ts': availableParsers.typescript,
     '**/*.tsx': availableParsers.typescript,
     '**/*.sass': availableParsers.sass,
