@@ -4,16 +4,20 @@ import util from 'util';
 // TODO: this can later be refactored once support for node 10 is dropped
 const readFileAsync = util.promisify(fs.readFile);
 
-const promises = {};
+const promises = new Map();
 
 // eslint-disable-next-line import/prefer-default-export
 export function getContent(filename) {
-  if (!promises[filename]) {
-    promises[filename] = readFileAsync(filename, 'utf8');
+  if (!promises.has(filename)) {
+    promises.set(filename, readFileAsync(filename, 'utf8'));
   }
-  return promises[filename];
+  return promises.get(filename);
 }
 
 export function setContent(filename, content) {
-  promises[filename] = Promise.resolve(content);
+  promises.set(filename, Promise.resolve(content));
+}
+
+export function clearContent() {
+  promises.clear();
 }

@@ -6,6 +6,7 @@ import ignore from 'ignore';
 import debug from 'debug';
 import check from './check';
 import { loadModuleData, readJSON, tryRequire } from './utils';
+import { clearContent } from './utils/file';
 
 import {
   defaultOptions,
@@ -163,7 +164,8 @@ export default function depcheck(rootDir, options, callback) {
         ),
       }),
     )
-    .then(callback);
+    .then(callback)
+    .finally(clearContent);
 }
 
 depcheck.parser = availableParsers;
