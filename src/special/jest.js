@@ -4,7 +4,7 @@ import { getContent } from '../utils/file';
 
 const _ = lodash;
 
-const jestConfigRegex = /^jest.([^.]+\.)?conf(ig|).(cjs|js(on|))$/;
+const jestConfigRegex = /^jest.([^.]+\.)?conf(ig|)\.(cjs|mjs|js|json)$/;
 const supportedProperties = [
   'dependencyExtractor',
   'preset',

@@ -8,13 +8,16 @@ const testParser = getTestParserWithTempFile(parser);
 
 const configFileNames = [
   'jest.config.js',
-  'jest.config.cjs',
-  'jest.conf.js',
-  'jest.conf.cjs',
   'jest.config.json',
+  'jest.config.cjs',
+  'jest.config.mjs',
+  'jest.conf.js',
   'jest.conf.json',
+  'jest.conf.cjs',
+  'jest.conf.mjs',
   'jest.it.config.js',
   'jest.it.config.cjs',
+  'jest.it.config.mjs',
 ];
 
 const testCases = [
@@ -207,9 +210,14 @@ describe('jest special parser', () => {
     testCases.forEach((testCase) =>
       it(`should ${testCase.name} in config file ${fileName}`, async () => {
         const config = JSON.stringify(testCase.content);
+        const extension = fileName.split('.').pop();
         let content = config;
-        if (['js', 'cjs'].includes(fileName.split('.').pop())) {
+
+        if (['js', 'cjs'].includes(extension)) {
           content = `module.exports = ${config}`;
+        }
+        if (extension === 'mjs') {
+          content = `export default ${config}`;
         }
         return testJest(content, testCase.deps, testCase.deps, fileName);
       }),
