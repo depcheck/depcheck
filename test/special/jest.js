@@ -11,6 +11,7 @@ const configFileNames = [
   'jest.config.json',
   'jest.config.cjs',
   'jest.config.mjs',
+  'jest.config.ts',
   'jest.conf.js',
   'jest.conf.json',
   'jest.conf.cjs',
@@ -216,7 +217,7 @@ describe('jest special parser', () => {
         if (['js', 'cjs'].includes(extension)) {
           content = `module.exports = ${config}`;
         }
-        if (extension === 'mjs') {
+        if (['mjs', 'ts'].includes(extension)) {
           content = `export default ${config}`;
         }
         return testJest(content, testCase.deps, testCase.deps, fileName);
