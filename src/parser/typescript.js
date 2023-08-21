@@ -33,6 +33,7 @@ export default async function parseTypescript(filename) {
       'optionalChaining',
       ['pipelineOperator', { proposal: 'minimal' }],
       'throwExpressions',
+      'importAssertions',
     ],
   });
 }
