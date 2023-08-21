@@ -1,0 +1,52 @@
+name: publish
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [10.x, 18.x]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: ${{ matrix.os }} / Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: 'https://registry.npmjs.org'
+      - name: npm install, build, and test
+        run: |
+          npm ci
+          npm run compile
+          npm run component
+          npm run depcheck
+          npm run depcheck-json
+          npm run lint
+          npm run prettier-check
+          npm run test-coverage
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: build, bump version and publish
+        run: |
+          npm ci
+          npm run prepublishOnly
+          npm version ${{ github.ref_name }} --no-git-tag-version
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_SECRET }}
