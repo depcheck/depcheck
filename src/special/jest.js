@@ -4,7 +4,7 @@ import { getContent } from '../utils/file';
 
 const _ = lodash;
 
-const jestConfigRegex = /^jest.([^.]+\.)?conf(ig|).(cjs|js(on|))$/;
+const jestConfigRegex = /^jest.([^.]+\.)?conf(ig|)\.(cjs|mjs|js|json|ts)$/;
 const supportedProperties = [
   'dependencyExtractor',
   'preset',
@@ -102,7 +102,10 @@ export default async function parseJest(filename, deps, rootDir) {
   if (jestConfigRegex.test(basename)) {
     try {
       // eslint-disable-next-line global-require
-      const options = require(filename) || {};
+      const config = require(filename) ?? {};
+      const options =
+        path.extname(filename) === '.ts' ? config.default : config;
+
       return checkOptions(deps, options);
     } catch (error) {
       return [];
