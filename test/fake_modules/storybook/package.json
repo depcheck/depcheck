@@ -1,6 +1,7 @@
 {
   "name": "storybook",
   "devDependencies": {
+    "@nx/react": "*",
     "@storybook/react": "*",
     "@storybook/addon-essentials": "*",
     "@storybook/addon-unused": "*",

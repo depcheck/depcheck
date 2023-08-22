@@ -4,13 +4,13 @@ const { tryRequire } = require('../utils');
 export default function storybookParser(filePath) {
   const foundDeps = [];
   const config = tryRequire(filePath);
-  const { addons, core, framework, typescript } = config;
+  const { addons = [], core, framework, typescript } = config;
   if (typeof framework === 'string') {
     foundDeps.push(framework);
   }
-  if (Array.isArray(addons)) {
-    foundDeps.push(...addons);
-  }
+
+  foundDeps.push(...addons.map(requirePackageName));
+
   if (core) {
     const { builder } = core;
     if (builder === 'webpack5') {
