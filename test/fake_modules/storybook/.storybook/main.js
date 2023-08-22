@@ -5,7 +5,11 @@ module.exports = {
     '../packages/**/src/**/*.stories.@(js|ts|jsx|tsx|mdx)',
   ],
   features: {},
-  addons: ['@storybook/addon-essentials', '@storybook/addon-links'],
+  addons: [
+    '@storybook/addon-essentials',
+    '@storybook/addon-links',
+    '@nx/react/plugins/storybook',
+  ],
   typescript: {
     check: false,
     checkOptions: {},

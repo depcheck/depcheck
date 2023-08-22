@@ -952,6 +952,7 @@ export default [
         '@storybook/manager-webpack5': ['.storybook/main.js'],
       },
       using: {
+        '@nx/react': ['.storybook/main.js'],
         '@storybook/addon-essentials': ['.storybook/main.js'],
         '@storybook/addon-links': ['.storybook/main.js'],
         '@storybook/builder-webpack5': ['.storybook/main.js'],
