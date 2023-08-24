@@ -48,6 +48,7 @@ export function getCliArgs(args, version) {
       'Comma separated patterns describing files to ignore.',
     )
     .describe('parsers', 'Comma separated glob:parser pair list')
+    .describe('quiet', 'Suppress the "No depcheck issue" message')
     .describe('detectors', 'Comma separated detector list')
     .describe('specials', 'Comma separated special parser list')
     .version('version', 'Show version number', version)
