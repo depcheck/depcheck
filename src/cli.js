@@ -86,7 +86,7 @@ function print(result, log, opt, rootDir) {
         lodash.isError(value) ? value.stack : value,
       ),
     );
-  } else if (noIssue(result)) {
+  } else if (noIssue(result) && !opt.quiet) {
     log('No depcheck issue');
   } else {
     const deps = prettify(

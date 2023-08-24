@@ -16,6 +16,10 @@ function makeArgv(module, options) {
     argv.push('--json');
   }
 
+  if (options.quiet) {
+    argv.push('--quiet');
+  }
+
   if (typeof options.ignoreBinPackage !== 'undefined') {
     argv.push(`--ignore-bin-package=${options.ignoreBinPackage}`);
   }
@@ -157,6 +161,15 @@ describe('depcheck command line', () => {
     testCli([path.resolve(__dirname, './fake_modules/good')]).then(
       ({ log, error, exitCode }) => {
         log.should.equal('No depcheck issue');
+        error.should.be.empty();
+        exitCode.should.equal(0);
+      },
+    ));
+
+  it('should output no depcheck issue when happen', () =>
+    testCli(makeArgv('good', { quiet: true })).then(
+      ({ log, error, exitCode }) => {
+        log.should.equal('');
         error.should.be.empty();
         exitCode.should.equal(0);
       },

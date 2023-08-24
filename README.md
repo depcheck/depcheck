@@ -92,6 +92,8 @@ All of the arguments are optional:
 
 `--ignore-patterns`: Comma separated patterns describing files to ignore. Patterns must match the .gitignore [spec](http://git-scm.com/docs/gitignore). Example, `--ignore-patterns=build/Release,dist,coverage,*.log`.
 
+`--quiet`: Suppress the "No depcheck issue" log. Useful in a monorepo with multiple packages to focus only on packages with issues.
+
 `--help`: Show the help message.
 
 `--parsers`, `--detectors` and `--specials`: These arguments are for advanced usage. They provide an easy way to customize the file parser and dependency detection. Check [the pluggable design document](https://github.com/depcheck/depcheck/blob/master/doc/pluggable-design.md) for more information.
