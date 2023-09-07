@@ -34,6 +34,7 @@ export default async function parseTypescript(filename) {
       ['pipelineOperator', { proposal: 'minimal' }],
       'throwExpressions',
       'importAssertions',
+      'explicitResourceManagement',
     ],
   });
 }
