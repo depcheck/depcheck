@@ -2,69 +2,52 @@ import fs from 'fs';
 import lodash from 'lodash';
 import path from 'path';
 import requirePackageName from 'require-package-name';
-import sass from 'sass';
 
-const sassModuleRegex = /^\s*@use\s+['"]sass:[a-z]+['"]/gm;
-
-function removeNodeModulesOrTildaFromPath(packagePath) {
-  let suspectedFileName = packagePath;
-
-  // remove ':'
-  const pathBeforeColon = packagePath.split(':')[0];
-  suspectedFileName = pathBeforeColon ?? suspectedFileName;
-
-  // remove 'node_modules/'
-  const pathInNodeModules = suspectedFileName.split('node_modules/')[1];
-  if (pathInNodeModules) {
-    return pathInNodeModules;
-  }
-
-  // remove '~'
-  if (suspectedFileName.startsWith(`~`)) {
-    return suspectedFileName.slice(1);
-  }
-  return suspectedFileName;
-}
+const importModuleRegex = /@(?:use|import|forward)\s+['"]([^'"]+)['"]/gm;
+// Paths prefixed with "~" or "node_modules/" are both considered paths to external deps in node_modules
+const nodeModulePrefixRegex = /^~|^(?:\.[\\/])?node_modules[\\/]/;
 
 /**
- * Prevents sass compilation from crashing when importing missing dep
- * @type {import('sass').Importer}
+ * Sass allows omitting different parts of file path when importing files from relative paths:
+ * - relative path prefix can be omitted "./" (Sass tries to import from current file directory first)
+ * - underscore "_" prefix of partials can be omitted (https://sass-lang.com/guide/#partials)
+ * - sass/scss file extension can be omitted
+ * Reference: https://sass-lang.com/documentation/at-rules/import/#finding-the-file
+ * This filter checks for existence of a file on every possible relative path and then filters those out.
  */
-const missingDepImporter = {
-  canonicalize: (importPath) => new URL(`file:${importPath}`),
-  load: () => ({ contents: '', syntax: 'css' }),
-};
+function isModuleOnRelativePath(filename, importPath) {
+  if (importPath.startsWith('./') || importPath.startsWith('../')) {
+    return true;
+  }
 
-export default async function parseSASS(filename, _deps, rootDir) {
-  const modulesDir = path.resolve(rootDir, 'node_modules');
-  const filterLocalFile = (filepath) =>
-    !(filepath.startsWith(rootDir) && !filepath.startsWith(modulesDir));
+  const basePath = path.dirname(filename);
+  const extension = path.extname(filename);
+  const pathWithExtension =
+    path.extname(importPath) !== '' ? importPath : importPath + extension;
+  const pathWithUnderscorePrefix = path.join(
+    path.dirname(pathWithExtension),
+    `_${path.basename(pathWithExtension)}`,
+  );
+  const possiblePaths = [
+    path.join(basePath, pathWithExtension),
+    path.join(basePath, pathWithUnderscorePrefix),
+  ];
+  return possiblePaths.some((modulePath) => fs.existsSync(modulePath));
+}
 
+export default async function parseSASS(filename) {
   const sassString = fs.readFileSync(filename).toString();
-  const usesSass = sassString.match(sassModuleRegex);
-  const { loadedUrls } = sass.compileString(sassString, {
-    url: new URL(`file:${filename}`),
-    syntax: filename.endsWith('scss') ? 'scss' : 'indented',
-    importers: [
-      {
-        findFileUrl(url) {
-          const normalizedPath = removeNodeModulesOrTildaFromPath(url);
-          return new URL(normalizedPath, `file:${modulesDir}/`);
-        },
-      },
-      missingDepImporter,
-    ],
-  });
 
-  const result = loadedUrls
-    .map((url) => url.pathname)
-    .filter((name) => Boolean(name) && name !== filename)
-    .filter(filterLocalFile)
-    .map(removeNodeModulesOrTildaFromPath)
-    // Normalize package name by removing leading slash from URL.pathname
-    .map((name) => (name.startsWith('/') ? name.slice(1) : name))
-    .map(requirePackageName)
-    .concat(usesSass ? ['sass'] : []);
+  // https://sass-lang.com/documentation/at-rules/import/#load-paths
+  const deps = Array.from(sassString.matchAll(importModuleRegex))
+    // Pick the matched group
+    .map(([, match]) =>
+      match.startsWith('sass:')
+        ? 'sass' // Add 'sass' dependency for built-in modules
+        : match.replace(nodeModulePrefixRegex, ''),
+    )
+    .filter((importPath) => !isModuleOnRelativePath(filename, importPath))
+    .map(requirePackageName);
 
-  return lodash.uniq(result);
+  return lodash.uniq(deps);
 }

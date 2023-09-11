@@ -277,7 +277,7 @@ export default [
         '@scss-deps/fonts': ['scss.scss'],
         'scss-dep-2': ['scss.scss'],
         'scss-dep-3': ['scss.scss'],
-        'scss-dep': ['scss.scss'],
+        'scss-dep': ['_variables.scss', 'scss.scss'],
         '@test-dep/aFile': ['sass2.sass'],
         '@test-dep/aFile2': ['scss2.scss'],
         '@test-dep/aFile3': ['scss2.scss'],
