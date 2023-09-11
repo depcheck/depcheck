@@ -17,7 +17,9 @@ function getBinaries(dep, dir) {
   const binMetadata = getCacheOrLoad(dep, dir);
 
   if (typeof binMetadata === 'string') {
-    return [[dep, binMetadata]];
+    // Use path.basename to discard any scope
+    // e.g. a package named "@foo/bar" creates a command named "bar"
+    return [[path.basename(dep), binMetadata]];
   }
 
   return lodash.toPairs(binMetadata);
