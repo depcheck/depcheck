@@ -1,5 +1,85 @@
 # Changelog
 
+## [v1.4.6](https://github.com/depcheck/depcheck/tree/v1.4.6) (2023-09-11)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/v1.4.5...v1.4.6)
+
+**Closed issues:**
+
+- Add explicitResourceManagement to default TS babel config [\#833](https://github.com/depcheck/depcheck/issues/833)
+-  Flag to make logs readable and less verbose [\#759](https://github.com/depcheck/depcheck/issues/759)
+
+**Merged pull requests:**
+
+- Add explicitResourceManagement to TypeScript babel settings [\#834](https://github.com/depcheck/depcheck/pull/834) ([jtbandes](https://github.com/jtbandes))
+- Support projects field in jest configuration [\#831](https://github.com/depcheck/depcheck/pull/831) ([dobesv](https://github.com/dobesv))
+- Handle scoped package bin with default name [\#830](https://github.com/depcheck/depcheck/pull/830) ([dobesv](https://github.com/dobesv))
+- feat: add --quiet flag to suppress No depcheck issue messages [\#829](https://github.com/depcheck/depcheck/pull/829) ([openam](https://github.com/openam))
+- fix\(sass\): don't detect transitive dependencies [\#827](https://github.com/depcheck/depcheck/pull/827) ([miluoshi](https://github.com/miluoshi))
+- feat\(tsconfig\): support tsconfig.json files with comments [\#826](https://github.com/depcheck/depcheck/pull/826) ([miluoshi](https://github.com/miluoshi))
+- fix\(storybook\): parse package names out of addons array [\#825](https://github.com/depcheck/depcheck/pull/825) ([miluoshi](https://github.com/miluoshi))
+
+## [v1.4.5](https://github.com/depcheck/depcheck/tree/v1.4.5) (2023-08-21)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/v1.4.4...v1.4.5)
+
+## [v1.4.4](https://github.com/depcheck/depcheck/tree/v1.4.4) (2023-08-21)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/1.4.3...v1.4.4)
+
+**Fixed bugs:**
+
+- Next.js webpack configuration detection failed [\#805](https://github.com/depcheck/depcheck/issues/805)
+- Missing = Using [\#794](https://github.com/depcheck/depcheck/issues/794)
+- Breaks when using `satisfies` operator in TypeScript [\#768](https://github.com/depcheck/depcheck/issues/768)
+- Unable to analyze `next.config.js` in a ESM package [\#762](https://github.com/depcheck/depcheck/issues/762)
+- Suddenly stopped working [\#750](https://github.com/depcheck/depcheck/issues/750)
+- mjs and cjs extensions not detected by default [\#733](https://github.com/depcheck/depcheck/issues/733)
+- Unexpected token '.' [\#715](https://github.com/depcheck/depcheck/issues/715)
+- Depcheck started returning incorrect unused dependencies without any changes [\#687](https://github.com/depcheck/depcheck/issues/687)
+- \[false positives\] SCSS variables are tracked as packages, while they are not [\#633](https://github.com/depcheck/depcheck/issues/633)
+
+**Closed issues:**
+
+- Upcoming releases [\#799](https://github.com/depcheck/depcheck/issues/799)
+- Add an option to clear the cache [\#755](https://github.com/depcheck/depcheck/issues/755)
+- Support babel config that exports a function [\#723](https://github.com/depcheck/depcheck/issues/723)
+- Support graphql imports [\#722](https://github.com/depcheck/depcheck/issues/722)
+- Support typescript "extends" and "types" fields [\#720](https://github.com/depcheck/depcheck/issues/720)
+- Support babel preset scope shorthand [\#719](https://github.com/depcheck/depcheck/issues/719)
+- Allow marking a directory to pass the `isModule` check   [\#711](https://github.com/depcheck/depcheck/issues/711)
+- Support React 17 [\#697](https://github.com/depcheck/depcheck/issues/697)
+
+**Merged pull requests:**
+
+- fix: typescript parser add importAssertions [\#823](https://github.com/depcheck/depcheck/pull/823) ([simllll](https://github.com/simllll))
+- feat\(jest\): add support for jest.config.mjs and jest.config.ts [\#820](https://github.com/depcheck/depcheck/pull/820) ([miluoshi](https://github.com/miluoshi))
+- Fix badges [\#819](https://github.com/depcheck/depcheck/pull/819) ([dnicolson](https://github.com/dnicolson))
+- Add support for `.cts`, `.mts` file extensions [\#817](https://github.com/depcheck/depcheck/pull/817) ([derekcicerone](https://github.com/derekcicerone))
+- Webpack special: add a fakePath as dir in fakeContext for next.js [\#816](https://github.com/depcheck/depcheck/pull/816) ([znarf](https://github.com/znarf))
+- Fix dynamic import with a template literal \#779 [\#810](https://github.com/depcheck/depcheck/pull/810) ([ArtskydJ](https://github.com/ArtskydJ))
+- feat: Clear content at end. [\#809](https://github.com/depcheck/depcheck/pull/809) ([regseb](https://github.com/regseb))
+- Support Babel presets/plugins from scoped packages [\#808](https://github.com/depcheck/depcheck/pull/808) ([miluoshi](https://github.com/miluoshi))
+- add node 20 to test matrix [\#804](https://github.com/depcheck/depcheck/pull/804) ([a-rothwell](https://github.com/a-rothwell))
+- Convert travis to github actions [\#803](https://github.com/depcheck/depcheck/pull/803) ([a-rothwell](https://github.com/a-rothwell))
+- Upgrade Babel parser to support Typescript 5.0 [\#788](https://github.com/depcheck/depcheck/pull/788) ([Karfroth](https://github.com/Karfroth))
+- Load next config with `import` instead of `require` [\#786](https://github.com/depcheck/depcheck/pull/786) ([cprussin](https://github.com/cprussin))
+- Fix parsing of scoped package names in jest dependencies [\#785](https://github.com/depcheck/depcheck/pull/785) ([jtbandes](https://github.com/jtbandes))
+- Fix parsing Vue 3 files with Composition API and TypeScript [\#778](https://github.com/depcheck/depcheck/pull/778) ([vlad-psh](https://github.com/vlad-psh))
+- Add parsers for mjs and cjs extensions [\#773](https://github.com/depcheck/depcheck/pull/773) ([augustobmoura](https://github.com/augustobmoura))
+- add esm support for bin packages [\#760](https://github.com/depcheck/depcheck/pull/760) ([dword-design](https://github.com/dword-design))
+- feat: ignore url imports [\#756](https://github.com/depcheck/depcheck/pull/756) ([rexxars](https://github.com/rexxars))
+- Adds Vue3 setup support [\#749](https://github.com/depcheck/depcheck/pull/749) ([devan1011](https://github.com/devan1011))
+- convert object to array for babel support [\#745](https://github.com/depcheck/depcheck/pull/745) ([Robbilie](https://github.com/Robbilie))
+- Fix typos [\#741](https://github.com/depcheck/depcheck/pull/741) ([friederbluemle](https://github.com/friederbluemle))
+- Parse storybook configuration for dependencies [\#727](https://github.com/depcheck/depcheck/pull/727) ([dobesv](https://github.com/dobesv))
+- Add support for graphql imports [\#726](https://github.com/depcheck/depcheck/pull/726) ([dobesv](https://github.com/dobesv))
+- Add support for some tsconfig.json fields [\#725](https://github.com/depcheck/depcheck/pull/725) ([dobesv](https://github.com/dobesv))
+- If babel config is a function, call it to get config [\#724](https://github.com/depcheck/depcheck/pull/724) ([dobesv](https://github.com/dobesv))
+- Tweak Parser typescript definition [\#718](https://github.com/depcheck/depcheck/pull/718) ([dobesv](https://github.com/dobesv))
+- feat: use current sass package to parse scss files [\#710](https://github.com/depcheck/depcheck/pull/710) ([miluoshi](https://github.com/miluoshi))
+- feat\(jest\): add support for jest.config.cjs [\#682](https://github.com/depcheck/depcheck/pull/682) ([shian15810](https://github.com/shian15810))
+
 ## [1.4.3](https://github.com/depcheck/depcheck/tree/1.4.3) (2022-01-09)
 
 [Full Changelog](https://github.com/depcheck/depcheck/compare/1.4.2...1.4.3)
@@ -19,7 +99,7 @@
 
 - feat\(eslint\): add support for .eslintrc.cjs [\#681](https://github.com/depcheck/depcheck/pull/681) ([shian15810](https://github.com/shian15810))
 - feat\(types\): improve typings [\#680](https://github.com/depcheck/depcheck/pull/680) ([shian15810](https://github.com/shian15810))
-- cli: --oneline option [\#679](https://github.com/depcheck/depcheck/pull/679) ([webdevium](https://github.com/webdevium))
+- cli: --oneline option [\#679](https://github.com/depcheck/depcheck/pull/679) ([vanodevium](https://github.com/vanodevium))
 - fix: allow using @types-module for typescript type-only imports [\#670](https://github.com/depcheck/depcheck/pull/670) ([rexxars](https://github.com/rexxars))
 - Support next.config.js with next-transpile-modules [\#660](https://github.com/depcheck/depcheck/pull/660) ([crossjs](https://github.com/crossjs))
 - Fix scss parsing for non-import '@' keywords [\#658](https://github.com/depcheck/depcheck/pull/658) ([Dylanlan](https://github.com/Dylanlan))
@@ -188,6 +268,7 @@
 - eslint: dependency wrongly mark as unused [\#500](https://github.com/depcheck/depcheck/issues/500)
 - special/eslint: bad calculation of preset dependencies [\#476](https://github.com/depcheck/depcheck/issues/476)
 - Load ignore rules from a lines separated file [\#409](https://github.com/depcheck/depcheck/issues/409)
+- Improvements for CI use [\#162](https://github.com/depcheck/depcheck/issues/162)
 
 **Merged pull requests:**
 
@@ -304,6 +385,7 @@
 - show react jsx file by  [\#405](https://github.com/depcheck/depcheck/issues/405)
 - Typescript @types false positive [\#402](https://github.com/depcheck/depcheck/issues/402)
 - false report on dependency [\#401](https://github.com/depcheck/depcheck/issues/401)
+- Add support for @types declaration packages [\#163](https://github.com/depcheck/depcheck/issues/163)
 
 **Merged pull requests:**
 
@@ -455,6 +537,7 @@
 - depcheck error for workbox-build [\#290](https://github.com/depcheck/depcheck/issues/290)
 - Implement a test using only production dependencies [\#281](https://github.com/depcheck/depcheck/issues/281)
 - TypeError: Cannot read property 'ModuleKind' of null [\#280](https://github.com/depcheck/depcheck/issues/280)
+- Dependencies out of date [\#273](https://github.com/depcheck/depcheck/issues/273)
 - False "unused dependencies" for `export ... from ...` [\#262](https://github.com/depcheck/depcheck/issues/262)
 - False positive when using vuegister with mocha  [\#241](https://github.com/depcheck/depcheck/issues/241)
 - Doesn't appear to work 0.6.7 [\#220](https://github.com/depcheck/depcheck/issues/220)
@@ -473,10 +556,12 @@
 - Remove dpcheck-web to mitigate security vulnerability. [\#300](https://github.com/depcheck/depcheck/pull/300) ([lijunle](https://github.com/lijunle))
 - Fixes vulnerability on lodash version [\#293](https://github.com/depcheck/depcheck/pull/293) ([Streppel](https://github.com/Streppel))
 - Upgrade NPM in CI to a version that uses package-lock.json [\#286](https://github.com/depcheck/depcheck/pull/286) ([mnkhouri](https://github.com/mnkhouri))
-- Improve regex in `parseLinter\(\)` [\#284](https://github.com/depcheck/depcheck/pull/284) ([hassankhan](https://github.com/hassankhan))
+- Improve regex in `parseLinter()` [\#284](https://github.com/depcheck/depcheck/pull/284) ([hassankhan](https://github.com/hassankhan))
 - Add tests for esnext syntax in Typescript [\#283](https://github.com/depcheck/depcheck/pull/283) ([mnkhouri](https://github.com/mnkhouri))
 - Update NPM tokens with correct permissions [\#279](https://github.com/depcheck/depcheck/pull/279) ([mnkhouri](https://github.com/mnkhouri))
 - Upgrade all dependencies [\#276](https://github.com/depcheck/depcheck/pull/276) ([nkbt](https://github.com/nkbt))
+- Add export detection \(`export x from y`\) [\#272](https://github.com/depcheck/depcheck/pull/272) ([mnkhouri](https://github.com/mnkhouri))
+- Bump nyc to 13.x [\#267](https://github.com/depcheck/depcheck/pull/267) ([LinusU](https://github.com/LinusU))
 - Friendly error messages for node \< 4 [\#219](https://github.com/depcheck/depcheck/pull/219) ([sudo-suhas](https://github.com/sudo-suhas))
 
 ## [0.6.11](https://github.com/depcheck/depcheck/tree/0.6.11) (2018-08-23)
@@ -516,6 +601,7 @@
 **Merged pull requests:**
 
 - Fix error when Typescript is not installed [\#282](https://github.com/depcheck/depcheck/pull/282) ([mnkhouri](https://github.com/mnkhouri))
+- Enable the plugins for Typescript parser, too [\#258](https://github.com/depcheck/depcheck/pull/258) ([cdagli](https://github.com/cdagli))
 
 ## [0.6.10-beta.1](https://github.com/depcheck/depcheck/tree/0.6.10-beta.1) (2018-08-20)
 
@@ -703,6 +789,7 @@
 **Fixed bugs:**
 
 - Missing dependencies result is not handled peer and optional dependencies [\#115](https://github.com/depcheck/depcheck/issues/115)
+- Pin ESLint to 2.2.0. [\#109](https://github.com/depcheck/depcheck/pull/109) ([lijunle](https://github.com/lijunle))
 - Fix the logic about calculate missing dependencies [\#118](https://github.com/depcheck/depcheck/pull/118) ([lijunle](https://github.com/lijunle))
 
 **Closed issues:**
@@ -725,17 +812,9 @@
 
 [Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.0...0.7.0-beta.1)
 
-**Fixed bugs:**
-
-- Pin ESLint to 2.2.0. [\#109](https://github.com/depcheck/depcheck/pull/109) ([lijunle](https://github.com/lijunle))
-
 **Closed issues:**
 
 - Allow to define patterns against absolute file path [\#107](https://github.com/depcheck/depcheck/issues/107)
-
-**Merged pull requests:**
-
-- Support parser patterns based on file paths [\#108](https://github.com/depcheck/depcheck/pull/108) ([tamasmagedli](https://github.com/tamasmagedli))
 
 ## [0.6.0](https://github.com/depcheck/depcheck/tree/0.6.0) (2016-02-24)
 
