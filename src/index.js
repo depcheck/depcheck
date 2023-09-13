@@ -137,12 +137,14 @@ export default function depcheck(rootDir, options, callback) {
     ignoreMatches,
     devDependencies,
   );
+  const importsMap = metadata.imports || {};
 
   const ignorer = getIgnorer({ rootDir, ignorePath, ignorePatterns });
 
   return check({
     rootDir,
     ignorer,
+    importsMap,
     skipMissing,
     deps,
     devDeps,

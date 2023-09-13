@@ -40,6 +40,75 @@ function detect(detectors, node, deps) {
     .value();
 }
 
+// Apply imports map from package.json to a discovered dependency.  If the
+// dependency starts with '#' and we have a matching entry in "imports" in
+// the package.json we'll substitute the possible mapped imports in place of
+// that dependency.
+//
+// Conditions can be well-known ones implemented by node, TypeScript, or webpack like
+// "import", "browser", "types", or "require".  They can also be custom ones as configurable
+// in webpack configuration or using the enhanced-resolve package.
+//
+// See also:
+//   - https://nodejs.org/api/packages.html#subpath-imports
+//   - https://www.typescriptlang.org/docs/handbook/esm-node.html
+//   - https://webpack.js.org/configuration/resolve/#resolveconditionnames
+function applyImportsMap(importsMap, dep) {
+  const resolvedDeps = [];
+
+  function accumulateDeps(v, wildcardMatch) {
+    if (v) {
+      if (typeof v === 'string') {
+        resolvedDeps.push(
+          wildcardMatch && v.includes('*')
+            ? v.replaceAll('*', wildcardMatch)
+            : v,
+        );
+      } else if (typeof v === 'object') {
+        Object.values(v).forEach((vv) => accumulateDeps(vv, wildcardMatch));
+      }
+    }
+  }
+
+  // Match input against the path pattern; if it matches, and there was a wildcard in the patten,
+  // return the part of the input that matched the wildcard.  If there was no wildcard, return
+  // an empty string.
+  function matchPathPattern(pattern, input) {
+    if (pattern.includes('*')) {
+      const escapedPattern = pattern.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+      const regexPattern = escapedPattern.replace(/\\\*/g, '.*');
+      debug('depcheck:applyImportsMap:matchPathPattern:regexPattern')(
+        pattern,
+        input,
+        regexPattern,
+      );
+      const regex = new RegExp(`^${regexPattern}$`);
+      const match = input.match(regex);
+      if (match) {
+        return match[0];
+      }
+    } else if (pattern === input) {
+      return '';
+    }
+    return null;
+  }
+
+  if (dep.startsWith('#')) {
+    Object.entries(importsMap).forEach((m) => {
+      const match = matchPathPattern(m[0], dep);
+      if (match !== null) {
+        accumulateDeps(m[1], match);
+      }
+    });
+    if (resolvedDeps.length) {
+      debug('depcheck:applyImportsMap:resolved')(dep, resolvedDeps);
+      return resolvedDeps;
+    }
+    debug('depcheck:applyImportsMap:unresolved')(dep);
+  }
+  return [dep];
+}
+
 function discoverPropertyDep(rootDir, deps, property, depName) {
   const { metadata } = loadModuleData(depName, rootDir);
   if (!metadata) return [];
@@ -47,7 +116,14 @@ function discoverPropertyDep(rootDir, deps, property, depName) {
   return lodash.intersection(deps, propertyDeps);
 }
 
-async function getDependencies(dir, filename, deps, parser, detectors) {
+async function getDependencies({
+  deps,
+  dir,
+  filename,
+  detectors,
+  importsMap,
+  parser,
+}) {
   const result = await parser(filename, deps, dir);
 
   // when parser returns string array, skip detector step and treat them as dependencies.
@@ -58,6 +134,7 @@ async function getDependencies(dir, filename, deps, parser, detectors) {
           .map((node) => detect(detectors, node, deps))
           .flatten()
           .uniq()
+          .flatMap(lodash.partial(applyImportsMap, importsMap))
           .map(requirePackageName)
           .thru((_dependencies) =>
             parser === availableParsers.typescript
@@ -94,7 +171,7 @@ async function getDependencies(dir, filename, deps, parser, detectors) {
     .value();
 }
 
-function checkFile(dir, filename, deps, parsers, detectors) {
+function checkFile({ deps, detectors, dir, filename, importsMap, parsers }) {
   debug('depcheck:checkFile')(filename);
 
   const targets = lodash(parsers)
@@ -105,7 +182,14 @@ function checkFile(dir, filename, deps, parsers, detectors) {
     .value();
 
   return targets.map((parser) =>
-    getDependencies(dir, filename, deps, parser, detectors).then(
+    getDependencies({
+      deps,
+      detectors,
+      dir,
+      filename,
+      importsMap,
+      parser,
+    }).then(
       (using) => {
         if (using.length) {
           debug('depcheck:checkFile:using')(filename, parser, using);
@@ -128,7 +212,15 @@ function checkFile(dir, filename, deps, parsers, detectors) {
   );
 }
 
-function checkDirectory(dir, rootDir, ignorer, deps, parsers, detectors) {
+function checkDirectory({
+  dir,
+  rootDir,
+  ignorer,
+  importsMap,
+  deps,
+  parsers,
+  detectors,
+}) {
   debug('depcheck:checkDirectory')(dir);
 
   return new Promise((resolve) => {
@@ -142,7 +234,14 @@ function checkDirectory(dir, rootDir, ignorer, deps, parsers, detectors) {
 
     finder.on('data', (entry) => {
       promises.push(
-        ...checkFile(rootDir, entry.fullPath, deps, parsers, detectors),
+        ...checkFile({
+          deps,
+          detectors,
+          dir: rootDir,
+          filename: entry.fullPath,
+          importsMap,
+          parsers,
+        }),
       );
     });
 
@@ -182,14 +281,14 @@ function checkDirectory(dir, rootDir, ignorer, deps, parsers, detectors) {
   });
 }
 
-function buildResult(
+function buildResult({
   result,
   deps,
   devDeps,
   peerDeps,
   optionalDeps,
   skipMissing,
-) {
+}) {
   const usingDepsLookup = lodash(result.using)
     // { f1:[d1,d2,d3], f2:[d2,d3,d4] }
     .toPairs()
@@ -233,9 +332,10 @@ function buildResult(
   };
 }
 
-export default function check({
+export default ({
   rootDir,
   ignorer,
+  importsMap,
   skipMissing,
   deps,
   devDeps,
@@ -243,16 +343,17 @@ export default function check({
   optionalDeps,
   parsers,
   detectors,
-}) {
+}) => {
   const allDeps = lodash.union(deps, devDeps);
-  return checkDirectory(
-    rootDir,
+  return checkDirectory({
+    dir: rootDir,
     rootDir,
     ignorer,
-    allDeps,
+    importsMap,
+    deps: allDeps,
     parsers,
     detectors,
-  ).then((result) =>
-    buildResult(result, deps, devDeps, peerDeps, optionalDeps, skipMissing),
+  }).then((result) =>
+    buildResult({ result, deps, devDeps, peerDeps, optionalDeps, skipMissing }),
   );
-}
+};
