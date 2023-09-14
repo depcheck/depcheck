@@ -1,0 +1,33 @@
+{
+  "imports": {
+    "#simple": "simple-resolved",
+    "#subpath": "subpath-resolved/subpath",
+    "#wildcard/*": "wildcard-resolved/*",
+    "#conditional": {
+      "node": "conditional-node",
+      "types": "@types/conditional"
+    },
+    "#multi-conditional": {
+      "node": {
+        "test": "conditional-node-test"
+      }
+    },
+    "#simple-unused": "unused",
+    "#subpath-unused": "subpath-resolved-unused/subpath",
+    "#conditional-unused": {
+      "node": "conditional-node-unused"
+    },
+    "#missing": "missing-dep"
+  },
+  "dependencies": {
+    "simple-resolved": "0.0.1",
+    "subpath-resolved": "0.0.1",
+    "conditional-node": "0.0.1",
+    "@types/conditional": "0.0.1",
+    "conditional-node-test": "0.0.1",
+    "unused": "*",
+    "conditional-node-unused": "*",
+    "subpath-resolved-unused": "*",
+    "wildcard-resolved": "*"
+  }
+}

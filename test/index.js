@@ -261,4 +261,26 @@ describe('depcheck', () => {
       unused.missing.should.deepEqual({});
       Object.keys(unused.using).should.deepEqual(['find-me', 'find-me2']);
     }));
+
+  it('should resolve mapped imports from package.json imports', () =>
+    check('package_import_map', {}).then((unused) => {
+      unused.dependencies.should.deepEqual([
+        'unused',
+        'conditional-node-unused',
+        'subpath-resolved-unused',
+      ]);
+      unused.devDependencies.should.deepEqual([]);
+      unused.missing.should.deepEqual(
+        resolveShortPath({ 'missing-dep': ['index.js'] }, 'package_import_map'),
+      );
+      Object.keys(unused.using).should.deepEqual([
+        'simple-resolved',
+        'subpath-resolved',
+        'conditional-node',
+        '@types/conditional',
+        'conditional-node-test',
+        'missing-dep',
+        'wildcard-resolved',
+      ]);
+    }));
 });
