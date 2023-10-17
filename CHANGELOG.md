@@ -1,5 +1,29 @@
 # Changelog
 
+## [Unreleased](https://github.com/depcheck/depcheck/tree/HEAD)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/v1.4.7...HEAD)
+
+**Fixed bugs:**
+
+- Security Vulnerability Issue: @babel/traverse@7.22.5 CVE-2023-45133 [\#841](https://github.com/depcheck/depcheck/issues/841)
+
+## [v1.4.7](https://github.com/depcheck/depcheck/tree/v1.4.7) (2023-10-17)
+
+[Full Changelog](https://github.com/depcheck/depcheck/compare/v1.4.6...v1.4.7)
+
+**Fixed bugs:**
+
+- False positive missing dependency with SCSS files on Windows [\#838](https://github.com/depcheck/depcheck/issues/838)
+- A dynamic import with template string literal is not found by depcheck [\#779](https://github.com/depcheck/depcheck/issues/779)
+
+**Merged pull requests:**
+
+- Update babel packages to latest [\#843](https://github.com/depcheck/depcheck/pull/843) ([legobeat](https://github.com/legobeat))
+- Support package.json subpath imports [\#836](https://github.com/depcheck/depcheck/pull/836) ([dobesv](https://github.com/dobesv))
+- --quiet: don't print an empty line if nothing to report [\#835](https://github.com/depcheck/depcheck/pull/835) ([seansfkelley](https://github.com/seansfkelley))
+- chore: bump dependencies [\#801](https://github.com/depcheck/depcheck/pull/801) ([legobeat](https://github.com/legobeat))
+
 ## [v1.4.6](https://github.com/depcheck/depcheck/tree/v1.4.6) (2023-09-11)
 
 [Full Changelog](https://github.com/depcheck/depcheck/compare/v1.4.5...v1.4.6)
@@ -519,7 +543,7 @@
 
 ## [0.7.0](https://github.com/depcheck/depcheck/tree/0.7.0) (2019-01-26)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.11...0.7.0)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.2...0.7.0)
 
 **Fixed bugs:**
 
@@ -564,13 +588,13 @@
 - Bump nyc to 13.x [\#267](https://github.com/depcheck/depcheck/pull/267) ([LinusU](https://github.com/LinusU))
 - Friendly error messages for node \< 4 [\#219](https://github.com/depcheck/depcheck/pull/219) ([sudo-suhas](https://github.com/sudo-suhas))
 
-## [0.6.11](https://github.com/depcheck/depcheck/tree/0.6.11) (2018-08-23)
+## [0.6.10-beta.2](https://github.com/depcheck/depcheck/tree/0.6.10-beta.2) (2018-08-23)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10...0.6.11)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10...0.6.10-beta.2)
 
 ## [0.6.10](https://github.com/depcheck/depcheck/tree/0.6.10) (2018-08-23)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.2...0.6.10)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.11...0.6.10)
 
 **Closed issues:**
 
@@ -588,9 +612,9 @@
 - Fixed support of jsx syntax [\#230](https://github.com/depcheck/depcheck/pull/230) ([yurii-sorokin](https://github.com/yurii-sorokin))
 - Add support for import\(\) expressions [\#205](https://github.com/depcheck/depcheck/pull/205) ([haggholm](https://github.com/haggholm))
 
-## [0.6.10-beta.2](https://github.com/depcheck/depcheck/tree/0.6.10-beta.2) (2018-08-23)
+## [0.6.11](https://github.com/depcheck/depcheck/tree/0.6.11) (2018-08-23)
 
-[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.1...0.6.10-beta.2)
+[Full Changelog](https://github.com/depcheck/depcheck/compare/0.6.10-beta.1...0.6.11)
 
 **Closed issues:**
 
