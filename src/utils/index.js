@@ -21,7 +21,30 @@ export function evaluate(code) {
   return sandbox.module.exports;
 }
 
-export function loadModuleData(moduleName, rootDir) {
+function memoize(func, n) {
+  const cache = new Map();
+
+  return function (...args) {
+    const key = JSON.stringify(args);
+
+    if (cache.has(key)) {
+      return cache.get(key);
+    }
+
+    const result = func(...args);
+
+    cache.set(key, result);
+
+    if (cache.size > n) {
+      const oldestKey = cache.keys().next().value;
+      cache.delete(oldestKey);
+    }
+
+    return result;
+  };
+}
+
+function loadModuleDataRaw(moduleName, rootDir) {
   try {
     const file = path.join(
       moduleRoot(moduleName, { cwd: rootDir }),
@@ -38,6 +61,10 @@ export function loadModuleData(moduleName, rootDir) {
     };
   }
 }
+
+const loadModuleData = memoize(loadModuleDataRaw, 500);
+
+export { loadModuleData };
 
 export function tryRequire(module, paths = []) {
   try {

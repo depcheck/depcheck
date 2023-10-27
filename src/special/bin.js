@@ -2,19 +2,13 @@ import path from 'path';
 import lodash from 'lodash';
 import { loadModuleData, getScripts } from '../utils';
 
-const binaryCache = {};
-
-function getCacheOrLoad(dep, dir) {
-  const index = `${dir}/${dep}`;
-  if (!binaryCache[index]) {
-    const metadata = loadModuleData(dep, dir).metadata || {};
-    binaryCache[index] = metadata.bin || {};
-  }
-  return binaryCache[index];
+function getBinMetadata(dep, dir) {
+  const metadata = loadModuleData(dep, dir).metadata || {};
+  return metadata.bin || {};
 }
 
 function getBinaries(dep, dir) {
-  const binMetadata = getCacheOrLoad(dep, dir);
+  const binMetadata = getBinMetadata(dep, dir);
 
   if (typeof binMetadata === 'string') {
     // Use path.basename to discard any scope
