@@ -1,5 +1,7 @@
 import type { Foo } from 'typeless-module';
+import type { Bar } from 'another-typeless-module/nested-declaration-file';
 
-const bar: Foo = { prop: 'here' };
+const foo: Foo = { prop: 'here' };
+const bar: Bar = { prop: 'there' };
 
-export default bar;
+export default { foo, bar };

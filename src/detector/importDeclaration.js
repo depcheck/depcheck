@@ -5,13 +5,14 @@ export default function detectImportDeclaration(node, deps) {
     return [];
   }
 
-  // TypeScript "import type X from 'foo'" - doesn't need to depend on the
+  // TypeScript "import type X from 'foo'" and "import type X from 'foo/bar'"- doesn't need to depend on the
   // actual module, instead it can rely on `@types/<module>` instead.
-  if (
-    node.importKind === 'type' &&
-    deps.includes(`@types/${node.source.value}`)
-  ) {
-    return [`@types/${node.source.value}`];
+
+  const packageName = node.source.value.split('/')[0];
+  const typesPackageName = `@types/${packageName}`;
+
+  if (node.importKind === 'type' && deps.includes(typesPackageName)) {
+    return [typesPackageName];
   }
 
   return extractInlineWebpack(node.source.value);

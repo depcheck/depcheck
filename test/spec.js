@@ -227,6 +227,7 @@ export default [
         '@types/react': ['component.tsx'],
         '@types/node': ['esnext.ts'],
         '@types/org__org-pkg': ['esnext.ts'],
+        '@types/another-typeless-module': ['typeOnly.ts'],
         '@types/typeless-module': ['typeOnly.ts'],
         '@org/org-pkg': ['esnext.ts'],
         'ts-dep-1': ['index.ts'],
