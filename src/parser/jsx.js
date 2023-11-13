@@ -35,6 +35,7 @@ export default async function parseJSX(filename) {
       'optionalChaining',
       ['pipelineOperator', { proposal: 'minimal' }],
       'throwExpressions',
+      'importAssertions',
       // and finally, jsx
       'jsx',
     ],
