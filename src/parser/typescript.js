@@ -3,14 +3,9 @@ import { getContent } from '../utils/file';
 
 export default async function parseTypescript(filename) {
   const content = await getContent(filename);
-  // Enable all known compatible @babel/parser plugins at the time of writing.
-  // Because we only parse them, not evaluate any code, it is safe to do so.
-  // note that babel/parser 7+ does not support *, due to plugin incompatibilities
-  return parse(content, {
-    sourceType: 'module',
-    plugins: [
+  const plugins = [
       'typescript',
-      // 'jsx', // do not use jsx plugin when using typescript
+      'jsx',
       'asyncGenerators',
       'bigInt',
       'classProperties',
@@ -35,6 +30,24 @@ export default async function parseTypescript(filename) {
       'throwExpressions',
       'importAssertions',
       'explicitResourceManagement',
-    ],
-  });
+    ];
+  
+  // Enable all known compatible @babel/parser plugins at the time of writing.
+  // Because we only parse them, not evaluate any code, it is safe to do so.
+  // note that babel/parser 7+ does not support *, due to plugin incompatibilities
+  try {
+    return await parse(content, {
+      sourceType: 'module',
+      plugins,
+    });
+  } catch (err) {
+    if (err.code === 'BABEL_PARSER_SYNTAX_ERROR') {
+      // re-run it without jsx, as this causes sometimes parsing errors
+     return parse(content, {
+          sourceType: 'module',
+          plugins: plugins.filter(plugin => plugin !== 'jsx'),
+     });
+    }
+    throw err;
+  }
 }
