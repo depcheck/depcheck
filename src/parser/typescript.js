@@ -10,7 +10,7 @@ export default async function parseTypescript(filename) {
     sourceType: 'module',
     plugins: [
       'typescript',
-      'jsx',
+      // 'jsx', // do not use jsx plugin when using typescript
       'asyncGenerators',
       'bigInt',
       'classProperties',
