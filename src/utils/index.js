@@ -24,7 +24,7 @@ export function evaluate(code) {
 function memoize(func, n) {
   const cache = new Map();
 
-  return function (...args) {
+  return (...args) => {
     const key = JSON.stringify(args);
 
     if (cache.has(key)) {
