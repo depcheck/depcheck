@@ -7,6 +7,7 @@ export default function tsconfigParser(filePath, deps) {
   const foundDeps = [];
   // Typescript uses 'jsonc-parser' to parse tsconfig.json, but json5 is a superset of jsonc syntax (JSON + js comments)
   const tsconfigJson = JSON5.parse(content);
+
   const types = tsconfigJson.compilerOptions?.types;
   if (types) {
     types.forEach((pkg) => {
@@ -21,8 +22,17 @@ export default function tsconfigParser(filePath, deps) {
       }
     });
   }
+
   if (tsconfigJson.extends) {
     foundDeps.push(tsconfigJson.extends);
   }
+
+  const plugins = tsconfigJson.compilerOptions?.plugins;
+  if (plugins) {
+    plugins.forEach((plugin) => {
+      foundDeps.push(plugin.name);
+    });
+  }
+
   return foundDeps.map((p) => requirePackageName(p)).filter(Boolean);
 }

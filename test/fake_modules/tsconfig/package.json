@@ -4,6 +4,7 @@
   "devDependencies": {
     "@mybrand/tsconfig": "*",
     "@types/node": "*",
-    "@types/unused": "*"
+    "@types/unused": "*",
+    "typescript-eslint-language-service": "*"
   }
 }

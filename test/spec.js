@@ -238,7 +238,7 @@ export default [
     expectedErrorCode: -1,
   },
   {
-    name: 'support tsconfig extends and types fields',
+    name: 'support tsconfig extends, types and plugins fields',
     module: 'tsconfig',
     options: {},
     expected: {
@@ -246,13 +246,16 @@ export default [
       devDependencies: ['@types/unused'],
       missing: {
         '@types/jest': ['tsconfig.json'],
+        'ts-graphql-plugin': ['tsconfig.json'],
         'tsconfig-base': ['tsconfig.build.json'],
       },
       using: {
         '@mybrand/tsconfig': ['tsconfig.json'],
         '@types/jest': ['tsconfig.json'],
         '@types/node': ['tsconfig.json'],
+        'ts-graphql-plugin': ['tsconfig.json'],
         'tsconfig-base': ['tsconfig.build.json'],
+        'typescript-eslint-language-service': ['tsconfig.json'],
       },
     },
     expectedErrorCode: -1,
