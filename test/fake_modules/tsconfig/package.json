@@ -3,6 +3,7 @@
   "dependencies": {},
   "devDependencies": {
     "@mybrand/tsconfig": "*",
+    "@tsconfig/recommended": "*",
     "@types/node": "*",
     "@types/unused": "*",
     "typescript-eslint-language-service": "*"

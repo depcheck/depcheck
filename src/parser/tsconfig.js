@@ -24,7 +24,11 @@ export default function tsconfigParser(filePath, deps) {
   }
 
   if (tsconfigJson.extends) {
-    foundDeps.push(tsconfigJson.extends);
+    if (Array.isArray(tsconfigJson.extends)) {
+      foundDeps.push(...tsconfigJson.extends);
+    } else {
+      foundDeps.push(tsconfigJson.extends);
+    }
   }
 
   const plugins = tsconfigJson.compilerOptions?.plugins;

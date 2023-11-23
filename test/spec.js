@@ -248,14 +248,15 @@ export default [
       missing: {
         '@types/jest': ['tsconfig.json'],
         'ts-graphql-plugin': ['tsconfig.json'],
-        'tsconfig-base': ['tsconfig.build.json'],
+        'tsconfig-base': ['tsconfig.array-extends.json', 'tsconfig.build.json'],
       },
       using: {
         '@mybrand/tsconfig': ['tsconfig.json'],
+        '@tsconfig/recommended': ['tsconfig.array-extends.json'],
         '@types/jest': ['tsconfig.json'],
         '@types/node': ['tsconfig.json'],
         'ts-graphql-plugin': ['tsconfig.json'],
-        'tsconfig-base': ['tsconfig.build.json'],
+        'tsconfig-base': ['tsconfig.array-extends.json', 'tsconfig.build.json'],
         'typescript-eslint-language-service': ['tsconfig.json'],
       },
     },
