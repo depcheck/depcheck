@@ -26,6 +26,7 @@ export const defaultOptions = {
     '.svn',
     '.hg',
     '.idea',
+    '.yarn',
     'node_modules',
     'bower_components',
     // Images
