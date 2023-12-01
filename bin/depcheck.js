@@ -8,7 +8,10 @@ let cli;
 try {
   cli = require('../dist/cli');
 } catch (e) {
-  require('@babel/register');
+  require('@babel/register')({
+    extends: require('path').resolve(__dirname, '../.babelrc'),
+    ignore: [],
+  });
   cli = require('../src/cli');
 }
 
