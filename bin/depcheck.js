@@ -9,6 +9,7 @@ try {
   cli = require('../dist/cli');
 } catch (e) {
   require('@babel/register')({
+    // https://github.com/babel/babel/issues/8321#issuecomment-466912945
     extends: require('path').resolve(__dirname, '../.babelrc'),
     ignore: [],
   });
