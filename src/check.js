@@ -202,6 +202,9 @@ function checkFile({ deps, detectors, dir, filename, importsMap, parsers }) {
       },
       (error) => {
         debug('depcheck:checkFile:error')(filename, parser, error);
+        console.warn(
+          `Error with ${parser.name} in ${filename}: ${error.message}`,
+        );
         return {
           invalidFiles: {
             [filename]: error,
