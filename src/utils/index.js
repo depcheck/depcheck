@@ -1,12 +1,15 @@
+import { createRequire } from 'module';
 import path from 'path';
 import vm from 'vm';
 
 import moduleRoot from './module-root';
 
+const require = createRequire(import.meta.url);
+
 export { default as getScripts } from './get-scripts';
 
 export function readJSON(filePath) {
-  return require(filePath); // eslint-disable-line global-require
+  return require(filePath);
 }
 
 export function evaluate(code) {
