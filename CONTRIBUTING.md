@@ -34,7 +34,7 @@ npm run test
 
 All modification should have test to support it and avoid regression if possible.
 
-Depcheck API and CLI test cases are defined in [spec.json](https://github.com/depcheck/depcheck/blob/master/test/spec.json). Special parsers test cases are defined in [their own test files](https://github.com/depcheck/depcheck/tree/master/test/special).
+Depcheck API and CLI test cases are defined in [spec.js](https://github.com/depcheck/depcheck/blob/master/test/spec.js). Special parsers test cases are defined in [their own test files](https://github.com/depcheck/depcheck/tree/master/test/special).
 
 ## Code style
 
