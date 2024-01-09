@@ -10,7 +10,7 @@ export default (...args) => {
   try {
     if (name) {
       const fullpath = resolveFrom(options.cwd, name);
-      const index = fullpath.indexOf(name.replace(/\//g, path.sep))
+      const index = fullpath.lastIndexOf(name.replace(/\//g, path.sep))
       return fullpath.substring(0, index + name.length)
     } else {
       return path.dirname(findup('package.json', { cwd: path.dirname(callsite()[1].getFileName()) }))
