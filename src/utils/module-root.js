@@ -1,5 +1,5 @@
 import path from 'path';
-import callsite from 'callsite';
+import callsites from 'callsites';
 import findup from 'findup-sync';
 import resolveFrom from 'resolve-from';
 
@@ -13,7 +13,7 @@ export default (...args) => {
       const index = fullpath.lastIndexOf(name.replace(/\//g, path.sep))
       return fullpath.substring(0, index + name.length)
     } else {
-      return path.dirname(findup('package.json', { cwd: path.dirname(callsite()[1].getFileName()) }))
+      return path.dirname(findup('package.json', { cwd: path.dirname(callsites()[1].getFileName()) }))
     }
   } catch {
     const pkg = resolveFrom(options.cwd, `${name}/package.json`);
