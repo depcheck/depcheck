@@ -1,7 +1,7 @@
 import should from 'should';
 import findLineInFile from '../src/utils/find-line-in-file';
 
-describe.only('find line in file', () => {
+describe('find line in file', () => {
   const testCases = [
     {
       name: 'Simplest JSON file',
