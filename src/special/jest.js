@@ -74,6 +74,10 @@ function filter(deps, options) {
     contain(options.watchPlugins, dep, 'jest-watch-'),
   );
 
+  const testEnvironment = deps.filter((dep) =>
+    contain(options.testEnvironment, dep, 'jest-environment-'),
+  );
+
   const otherProps = lodash(options)
     .entries()
     .map(([prop, value]) => {
@@ -89,7 +93,9 @@ function filter(deps, options) {
     .intersection(deps)
     .value();
 
-  return _.uniq(runner.concat(watchPlugins).concat(otherProps));
+  return _.uniq(
+    runner.concat(watchPlugins).concat(testEnvironment).concat(otherProps),
+  );
 }
 
 function checkOptions(deps, options = {}) {

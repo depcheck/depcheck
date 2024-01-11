@@ -53,6 +53,16 @@ const testCases = [
     content: { watchPlugins: ['master', 'select-projects'] },
   },
   {
+    name: 'recognize single short-name test environment',
+    deps: ['jest-environment-jsdom'],
+    content: { testEnvironment: 'jsdom' },
+  },
+  {
+    name: 'recognize single long-name test environment',
+    deps: ['jest-environment-jsdom'],
+    content: { testEnvironment: 'jest-environment-jsdom' },
+  },
+  {
     name: 'recognize module with options',
     deps: ['jest-watch-master'],
     content: {
