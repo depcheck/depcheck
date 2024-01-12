@@ -166,7 +166,6 @@ async function getDependencies({
     .concat(peerDeps)
     .concat(optionalDeps)
     .filter((dep) => dep && dep !== '.' && dep !== '..') // TODO why need check?
-    .filter((dep) => !isCore(dep))
     .uniq()
     .value();
 }
@@ -315,7 +314,10 @@ function buildResult({
           .concat(peerDeps)
           .concat(optionalDeps);
 
-        const missingDeps = lodash.difference(usingDeps, allDeps);
+        const missingDeps = lodash
+          .difference(usingDeps, allDeps)
+          // Don't report core node dependencies as missing
+          .filter((dep) => !isCore(dep));
         return lodash(missingDeps)
           .map((missingDep) => [missingDep, usingDepsLookup[missingDep]])
           .fromPairs()
