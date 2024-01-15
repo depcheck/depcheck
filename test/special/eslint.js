@@ -277,7 +277,7 @@ describe('eslint special parser', () => {
   });
 
   it('should handle parse error', () =>
-    testEslint([], '{ this is an invalid JSON string', [], __dirname));
+    testEslint([], '{ this is an invalid JSON string'));
 
   it('should handle non-standard JSON content', () =>
     testEslint(

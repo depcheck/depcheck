@@ -6,7 +6,7 @@ const testParser = getTestParserWithContentPromise(parser);
 
 describe('serverless special parser', () => {
   it('should ignore when filename is not supported', async () => {
-    const result = await parser('not-supported.txt', [], '/root/dir');
+    const result = await parser('not-supported.txt');
     result.should.deepEqual([]);
   });
 

@@ -11,7 +11,7 @@ describe('istanbul (nyc) special parser', () => {
   });
 
   it('should ignore when filename is not supported', async () => {
-    const result = await parser('not-supported.txt', ['unused'], __dirname);
+    const result = await parser('not-supported.txt', ['unused']);
     result.should.deepEqual([]);
   });
 
@@ -26,19 +26,14 @@ describe('istanbul (nyc) special parser', () => {
       const content =
         '{"extends": ["simple", "@namespace/module", "sub/module", "@sub/ns/module"], "all": true}';
       const optPath = filename;
-      const result = await testParser(
-        content,
-        optPath,
-        [
-          'simple',
-          '@namespace/module',
-          'sub',
-          '@sub/ns',
-          'sub/module',
-          'unused',
-        ],
-        __dirname,
-      );
+      const result = await testParser(content, optPath, [
+        'simple',
+        '@namespace/module',
+        'sub',
+        '@sub/ns',
+        'sub/module',
+        'unused',
+      ]);
       result.should.deepEqual([
         'simple',
         '@namespace/module',
@@ -51,12 +46,7 @@ describe('istanbul (nyc) special parser', () => {
   it('should recognize dependencies specified in package.json configuration', async () => {
     const content = '{"nyc": {"extends": "simple", "skip-full": true}}';
     const optPath = 'package.json';
-    const result = await testParser(
-      content,
-      optPath,
-      ['simple', 'unused'],
-      __dirname,
-    );
+    const result = await testParser(content, optPath, ['simple', 'unused']);
     result.should.deepEqual(['simple']);
   });
 });

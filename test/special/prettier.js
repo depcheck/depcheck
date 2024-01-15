@@ -4,8 +4,7 @@ import parser from '../../src/special/prettier';
 
 async function testPrettier(moduleName, fileName, expectedDeps) {
   const rootDir = path.resolve(__dirname, '../fake_modules', moduleName);
-  const deps = ['dummy', '@company/prettier-config'];
-  const result = await parser(path.resolve(rootDir, fileName), deps, rootDir);
+  const result = await parser(path.resolve(rootDir, fileName));
   Array.from(result).should.deepEqual(expectedDeps);
 }
 
