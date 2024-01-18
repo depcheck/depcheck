@@ -1,20 +1,13 @@
 import path from 'path';
 import callsites from 'callsites';
 import findup from 'findup-sync';
-import resolveFrom from 'resolve-from';
 
 export default (...args) => {
-  const name = args.find((arg) => typeof arg === 'string');
-  const options = args.find((arg) => typeof arg === 'object') || {};
+  const name = args.find(arg => typeof arg === 'string');
+  const options = args.find(arg => typeof arg === 'object') || {};
   options.cwd = options.cwd || process.cwd();
-  let pkg;
-  try {
-    const fullpath = name
-      ? resolveFrom(options.cwd, name)
-      : callsites()[1].getFileName();
-    pkg = findup('package.json', { cwd: path.dirname(fullpath) });
-  } catch {
-    pkg = resolveFrom(options.cwd, `${args[0]}/package.json`);
+  if (name) {
+    return findup(path.join('node_modules', ...name.split('/')), { cwd: options.cwd });
   }
-  return path.resolve(path.dirname(pkg));
+  return path.dirname(findup('package.json', { cwd: path.dirname(callsites()[1].getFileName()) }));
 };

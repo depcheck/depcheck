@@ -126,6 +126,12 @@ const testCases = [
     expected: ['@scoped/scoped-binary-package'],
   },
   {
+    name: 'esm package.json in subpath',
+    script: 'esm-packagejson-subpath',
+    dependencies: ['esm-packagejson-subpath'],
+    expected: ['esm-packagejson-subpath'],
+  },
+  {
     name: 'esm',
     script: 'esm',
     dependencies: ['esm'],
