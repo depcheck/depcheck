@@ -9,7 +9,13 @@ export default function storybookParser(filePath) {
     foundDeps.push(framework);
   }
 
-  foundDeps.push(...addons.map(requirePackageName));
+  foundDeps.push(
+    ...addons.map((addon) => {
+      if (addon.name) return requirePackageName(addon.name);
+
+      return requirePackageName(addon);
+    }),
+  );
 
   if (core) {
     const { builder } = core;
