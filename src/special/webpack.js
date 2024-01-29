@@ -164,6 +164,7 @@ async function loadNextWebpackConfig(filepath) {
     webpack: fakeWebpack,
     defaultLoaders: {},
     dir: 'fakePath',
+    config: {},
   };
 
   try {
