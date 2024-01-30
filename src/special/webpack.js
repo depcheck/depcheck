@@ -153,6 +153,7 @@ function parseWebpackConfig(webpackConfig, deps) {
 
 async function loadNextWebpackConfig(filepath) {
   const fakeConfig = {
+    context: process.cwd(),
     plugins: [],
     module: { rules: [] },
     optimization: { splitChunks: { cacheGroups: {} } },
