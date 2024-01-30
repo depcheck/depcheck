@@ -161,7 +161,10 @@ async function loadNextWebpackConfig(filepath) {
   };
 
   const fakeContext = {
-    webpack: fakeWebpack,
+    webpack: {
+      context: process.cwd(),
+      ...fakeWebpack,
+    },
     defaultLoaders: {},
     dir: 'fakePath',
   };

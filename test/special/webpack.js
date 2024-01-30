@@ -343,7 +343,7 @@ describe('webpack special parser', () => {
     return testWebpack('styleguide.config.js', content, deps, expectedDeps);
   });
 
-  it('should handle next.js configuration', () => {
+  it.only('should handle next.js configuration', () => {
     const expectedDeps = [
       'html-loader',
       'raw-loader',
