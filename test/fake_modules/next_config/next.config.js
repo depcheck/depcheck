@@ -3,10 +3,11 @@ const path = require('path');
 const nextConfig = {
   webpack: (config, { webpack }) => {
     const iconPath = path.resolve(webpack.context, './icons');
-    config.resolve.alias['@icons'] = iconPath;
-
     const fontPath = path.resolve(config.context, './fonts');
-    config.resolve.alias['@fonts'] = iconPath;
+    Object.assign(config.resolve.alias, {
+      '@icons': iconPath,
+      '@fonts': fontPath,
+    });
 
     config.plugins.push(
       new webpack.IgnorePlugin(/[\\/]__tests__[\\/]/),
