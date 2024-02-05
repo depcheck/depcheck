@@ -56,6 +56,7 @@ export const defaultOptions = {
     '**/*.coffee.md': availableParsers.coffee,
     '**/*.graphql': availableParsers.graphql,
     '**/.storybook/main.js': availableParsers.storybook,
+    '**/.storybook/main.ts': availableParsers.storybook,
     '**/tsconfig*.json': availableParsers.tsconfig,
     '**/*.cts': availableParsers.typescript,
     '**/*.mts': availableParsers.typescript,
