@@ -232,6 +232,7 @@ export default [
         '@org/org-pkg': ['esnext.ts'],
         'ts-dep-1': ['index.ts'],
         'ts-dep-2': ['index.ts'],
+        'ts-dep-3': ['index.ts'],
         'ts-dep-esnext': ['esnext.ts'],
         'ts-dep-typedef': ['typedef.d.ts'],
       },
