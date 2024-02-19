@@ -1,6 +1,7 @@
 import path from 'path';
 import lodash from 'lodash';
 import component from './component.json';
+import fastParser from './parser/fast';
 
 function constructComponent(source, name) {
   return lodash(source[name])
@@ -47,7 +48,7 @@ export const defaultOptions = {
   ],
   skipMissing: false,
   parsers: {
-    '**/*.js': availableParsers.jsx,
+    '**/*.js': fastParser || availableParsers.jsx,
     '**/*.mjs': availableParsers.jsx,
     '**/*.cjs': availableParsers.jsx,
     '**/*.jsx': availableParsers.jsx,

@@ -1,7 +1,10 @@
 import { parse } from '@babel/parser';
 import { getContent } from '../utils/file';
+import fastParser from './fast';
 
 export default async function parseTypescript(filename) {
+  // return fastParser(filename);
+
   const content = await getContent(filename);
   // Enable all known compatible @babel/parser plugins at the time of writing.
   // Because we only parse them, not evaluate any code, it is safe to do so.

@@ -1,8 +1,11 @@
 import { parse } from '@babel/parser';
 import { parse as vueParse } from '@vue/compiler-sfc';
 import { getContent } from '../utils/file';
+import fastParser from './fast';
 
 export default async function parseVue(filename) {
+  // return fastParser(filename);
+
   const content = await getContent(filename);
   const parsed = vueParse(content);
 
