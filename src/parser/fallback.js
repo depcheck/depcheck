@@ -6,23 +6,23 @@ import isCore from 'is-core-module';
 import { resolve as resolveImports } from 'resolve.imports';
 import { getContent } from '../utils/file';
 
-const extractPkgName = (value) => {
-  const [o, n] = value.split('/');
-  return o[0] === '@' ? `${o}/${n}` : o;
-};
-
-const memo = new Map();
-const getClosesPkgJson = async (filename) => {
+const pkgJsons = new Map();
+async function getClosesPkgJson(filename) {
   const cwd = path.dirname(filename);
-  if (memo.has(cwd)) return memo.get(cwd);
+  if (pkgJsons.has(cwd)) return pkgJsons.get(cwd);
 
   const pkgJson = Promise.resolve(
     getContent(findup('package.json', { cwd })).then(JSON.parse),
   );
-  memo.set(cwd, pkgJson);
+  pkgJsons.set(cwd, pkgJson);
 
   return pkgJson;
-};
+}
+
+function extractPkgName(value) {
+  const [o, n] = value.split('/');
+  return o[0] === '@' ? `${o}/${n}` : o;
+}
 
 export async function fallbackParser(filename) {
   const ext = path.extname(filename);
