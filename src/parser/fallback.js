@@ -39,14 +39,36 @@ export async function fallbackParser(filename) {
     runtime: [],
     types: [],
   };
-  let re = fullRe;
 
-  if (ext === '.coffee' || ext === '.litcoffee' || ext === '.coffee.md') {
-    re = /((\.{3}|\s|[!%&(*+,/:;<=>?[^{|}~-]|^)require\s?\(?\s?)\s?$/;
+  /* Finds grunt plugin setup */
+  if (content.startsWith('/* global grunt */')) {
+    const gruntDeps = (
+      await depseek(content, {
+        re: /((\.{3}|\s|[!%&(*+,/:;<=>?[^{|}~-]|^)(grunt\s?(\.\s?tasks\s?)?\.loadNpmTasks\s?\(\s?))\s?$/,
+        offset: 25,
+      })
+    ).map(({ value }) => value);
+    deps.runtime.push(...gruntDeps);
   }
+
+  /* Express.js view engine declaration */
+  const viewEngine = (/\.\s*set\s*\(\s*['"]view engine['"]\s*,\s*['`"]([^'`"]+)['`"]\s*\)/.exec(
+    content,
+  ) || [])[1];
+  if (viewEngine) {
+    deps.runtime.push(viewEngine);
+  }
+
+  /* If met svelte template, add svelte to deps */
   if (ext === '.svelte') {
     deps.runtime.push('svelte');
   }
+
+  /* Coffeescript supports `require` w/o brackets */
+  const re =
+    ext === '.coffee' || ext === '.litcoffee' || ext === '.coffee.md'
+      ? /((\.{3}|\s|[!%&(*+,/:;<=>?[^{|}~-]|^)require\s?\(?\s?)\s?$/
+      : fullRe;
 
   let prev = 0;
   (
@@ -61,15 +83,18 @@ export async function fallbackParser(filename) {
         : deps.runtime;
 
       if (/^(https?|file):/i.test(v)) {
-        /* noop */
+        /* Do nothing with urls */
       } else if (v.includes('!')) {
+        /* Extracts custom resolvers: 'resolver!argument' */
         bucket.push(...v.split('!').filter(Boolean).map(extractPkgName));
       } else if (v[0] === '#') {
-        const typeref = resolveImports(importsManifest, v, {
-          conditions: ['types'],
-        });
+        /* shebang stands for pkg aliases aka pkg #imports */
         const ref = resolveImports(importsManifest, v, {
           conditions: ['node', 'require', 'import', 'default', 'test'],
+        });
+        /* type condition to pull only types declarations */
+        const typeref = resolveImports(importsManifest, v, {
+          conditions: ['types'],
         });
 
         if (typeref) deps.types.push(extractPkgName(typeref));
@@ -82,6 +107,7 @@ export async function fallbackParser(filename) {
     }
   });
 
+  /* Processes TypeScript external libdefs */
   const maybeTypesDeps = Object.values(deps)
     .flat()
     .map((dep) => {
@@ -94,15 +120,16 @@ export async function fallbackParser(filename) {
         : `@types/${chunks[0]}`;
     });
 
-  const typesDeps = maybeTypesDeps.filter(
-    (dep) => dependencies[dep] || devDependencies[dep],
+  deps.runtime.push(
+    ...maybeTypesDeps.filter(
+      (dep) => dependencies[dep] || devDependencies[dep],
+    ),
   );
-
-  deps.runtime.push(...typesDeps);
 
   return [...new Set(deps.runtime)];
 }
 
+/* Hook to give an alternative parser a try if the main one fails */
 export function withFallback(fn) {
   return async (filename) => {
     const { toggle = 'off' } = withFallback;
