@@ -24,6 +24,7 @@
     "prettier-check": "npm run prettier -- --check",
     "lint": "eslint ./src ./build ./test",
     "test": "mocha ./test ./test/special --timeout 10000",
+    "test:fallback": "cross-env DEPCHECK_FALLBACK=override npm run test",
     "test-coverage": "cross-env NODE_ENV=test nyc mocha ./test ./test/special --timeout 20000 && nyc report --reporter=text-lcov > ./coverage/coverage.lcov"
   },
   "author": {
@@ -57,6 +58,7 @@
     "cosmiconfig": "^7.1.0",
     "debug": "^4.3.4",
     "deps-regex": "^0.2.0",
+    "depseek": "^0.4.0",
     "findup-sync": "^5.0.0",
     "ignore": "^5.2.4",
     "is-core-module": "^2.12.0",
@@ -70,6 +72,7 @@
     "require-package-name": "^2.0.1",
     "resolve": "^1.22.3",
     "resolve-from": "^5.0.0",
+    "resolve.imports": "^2.0.3",
     "semver": "^7.5.4",
     "yargs": "^16.2.0"
   },

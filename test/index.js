@@ -273,14 +273,18 @@ describe('depcheck', () => {
       unused.missing.should.deepEqual(
         resolveShortPath({ 'missing-dep': ['index.js'] }, 'package_import_map'),
       );
-      Object.keys(unused.using).should.deepEqual([
-        'simple-resolved',
-        'subpath-resolved',
-        'conditional-node',
-        '@types/conditional',
-        'conditional-node-test',
-        'missing-dep',
-        'wildcard-resolved',
-      ]);
+      Object.keys(unused.using)
+        .sort()
+        .should.deepEqual(
+          [
+            'simple-resolved',
+            'subpath-resolved',
+            'conditional-node',
+            '@types/conditional',
+            'conditional-node-test',
+            'missing-dep',
+            'wildcard-resolved',
+          ].sort(),
+        );
     }));
 });

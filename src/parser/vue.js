@@ -1,8 +1,9 @@
-import { parse } from '@babel/parser';
-import { parse as vueParse } from '@vue/compiler-sfc';
+import { withFallback } from './fallback';
 import { getContent } from '../utils/file';
 
-export default async function parseVue(filename) {
+export default withFallback(async function parseVue(filename) {
+  const { parse } = await import('@babel/parser');
+  const { parse: vueParse } = await import('@vue/compiler-sfc');
   const content = await getContent(filename);
   const parsed = vueParse(content);
 
@@ -55,4 +56,4 @@ export default async function parseVue(filename) {
       'jsx',
     ],
   });
-}
+});

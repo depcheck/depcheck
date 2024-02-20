@@ -21,7 +21,7 @@ export function evaluate(code) {
   return sandbox.module.exports;
 }
 
-function memoize(func, n) {
+export function memoize(func, n) {
   const cache = new Map();
 
   return (...args) => {

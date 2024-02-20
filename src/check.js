@@ -125,7 +125,6 @@ async function getDependencies({
   parser,
 }) {
   const result = await parser(filename, deps, dir);
-
   // when parser returns string array, skip detector step and treat them as dependencies.
   const dependencies =
     lodash.isArray(result) && result.every(lodash.isString)

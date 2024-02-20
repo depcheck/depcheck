@@ -1,8 +1,10 @@
-import { parse } from '@babel/parser';
+import { withFallback } from './fallback';
 import { getContent } from '../utils/file';
 
-export default async function parseJSX(filename) {
+export default withFallback(async function parseJSX(filename) {
+  const { parse } = await import('@babel/parser');
   const content = await getContent(filename);
+
   return parse(content, {
     sourceType: 'module',
 
@@ -39,4 +41,4 @@ export default async function parseJSX(filename) {
       'jsx',
     ],
   });
-}
+});
