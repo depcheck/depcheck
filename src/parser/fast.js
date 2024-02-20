@@ -1,5 +1,5 @@
 import path from 'path';
-import { depseek } from 'depseek';
+import { depseek, fullRe } from 'depseek';
 import findup from 'findup-sync';
 import isCore from 'is-core-module';
 import { resolve as resolveImports } from 'resolve.imports';
@@ -10,55 +10,77 @@ const extractPkgName = (value) => {
   return o[0] === '@' ? `${o}/${n}` : o;
 };
 
-export default async function fastParser(filename) {
-  const content = await getContent(filename);
-  const { dependencies = {}, devDependencies = {}, imports } = JSON.parse(
-    await getContent(findup('package.json', { cwd: path.dirname(filename) })),
+const memo = new Map();
+const getClosesPkgJson = async (filename) => {
+  const cwd = path.dirname(filename);
+  if (memo.has(cwd)) return memo.get(cwd);
+
+  const pkgJson = Promise.resolve(
+    getContent(findup('package.json', { cwd })).then(JSON.parse),
   );
+  memo.set(cwd, pkgJson);
+
+  return pkgJson;
+};
+
+export default async function fastParser(filename) {
+  const ext = path.extname(filename);
+  const [
+    content,
+    { dependencies = {}, devDependencies = {}, imports = {} } = {},
+  ] = await Promise.all([getContent(filename), getClosesPkgJson(filename)]);
   const importsManifest = {
     content: {
       imports,
     },
   };
+  const deps = {
+    runtime: [],
+    types: [],
+  };
+  let re = fullRe;
+
+  if (ext === '.coffee' || ext === '.litcoffee' || ext === '.coffee.md') {
+    re = /((\.{3}|\s|[!%&(*+,/:;<=>?[^{|}~-]|^)require\s?\(?\s?)\s?$/;
+  }
+  if (ext === '.svelte') {
+    deps.runtime.push('svelte');
+  }
 
   let prev = 0;
-  const deps = (await depseek(content)).reduce(
-    (m, { type, value, index }) => {
-      if (type === 'dep' && value[0] !== '.' && value[0] !== '/') {
-        const [v] = value.split('?');
-        const bucket = content.slice(prev, index).includes('import type')
-          ? m.types
-          : m.runtime;
+  (
+    await depseek(content, {
+      re,
+    })
+  ).forEach(({ type, value, index }) => {
+    if (type === 'dep' && value[0] !== '.' && value[0] !== '/') {
+      const [v] = value.split('?');
+      const bucket = content.slice(prev, index).includes('import type')
+        ? deps.types
+        : deps.runtime;
 
-        if (/^(https?|file):/i.test(v)) {
-          /* noop */
-        } else if (v.includes('!')) {
-          bucket.push(...v.split('!').filter(Boolean).map(extractPkgName));
-        } else if (v[0] === '#') {
-          const typeref = resolveImports(importsManifest, v, {
-            conditions: ['types'],
-          });
-          const ref = resolveImports(importsManifest, v, {
-            conditions: ['node', 'require', 'import', 'default', 'test'],
-          });
+      if (/^(https?|file):/i.test(v)) {
+        /* noop */
+      } else if (v.includes('!')) {
+        bucket.push(...v.split('!').filter(Boolean).map(extractPkgName));
+      } else if (v[0] === '#') {
+        const typeref = resolveImports(importsManifest, v, {
+          conditions: ['types'],
+        });
+        const ref = resolveImports(importsManifest, v, {
+          conditions: ['node', 'require', 'import', 'default', 'test'],
+        });
 
-          if (typeref) m.types.push(extractPkgName(typeref));
-          if (ref) bucket.push(extractPkgName(ref));
-        } else {
-          bucket.push(extractPkgName(v));
-        }
-
-        prev = index;
+        if (typeref) deps.types.push(extractPkgName(typeref));
+        if (ref) bucket.push(extractPkgName(ref));
+      } else {
+        bucket.push(extractPkgName(v));
       }
-      return m;
-    },
-    {
-      runtime: [],
-      types: [],
-    },
-  );
 
-  console.log('!!!!', deps)
+      prev = index;
+    }
+  });
+
   const maybeTypeDeps = Object.values(deps)
     .flat()
     .map((dep) => {

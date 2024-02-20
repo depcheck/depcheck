@@ -48,7 +48,7 @@ export const defaultOptions = {
   ],
   skipMissing: false,
   parsers: {
-    '**/*.js': fastParser || availableParsers.jsx,
+    '**/*.js': availableParsers.jsx,
     '**/*.mjs': availableParsers.jsx,
     '**/*.cjs': availableParsers.jsx,
     '**/*.jsx': availableParsers.jsx,
