@@ -2,21 +2,16 @@ import path from 'path';
 import process from 'process';
 import { depseek, fullRe } from 'depseek';
 import findup from 'findup-sync';
-import isCore from 'is-core-module';
 import { resolve as resolveImports } from 'resolve.imports';
+import { memoize } from '../utils/index';
 import { getContent } from '../utils/file';
+import { getAtTypesName } from '../utils/typescript';
 
-const pkgJsons = new Map();
+const findUpMemoized = memoize(findup, 500);
 async function getClosesPkgJson(filename) {
-  const cwd = path.dirname(filename);
-  if (pkgJsons.has(cwd)) return pkgJsons.get(cwd);
-
-  const pkgJson = Promise.resolve(
-    getContent(findup('package.json', { cwd })).then(JSON.parse),
-  );
-  pkgJsons.set(cwd, pkgJson);
-
-  return pkgJson;
+  return getContent(
+    findUpMemoized('package.json', { cwd: path.dirname(filename) }),
+  ).then(JSON.parse);
 }
 
 function extractPkgName(value) {
@@ -111,13 +106,7 @@ export async function fallbackParser(filename) {
   const maybeTypesDeps = Object.values(deps)
     .flat()
     .map((dep) => {
-      if (isCore(dep)) return '@types/node';
-      if (dep.startsWith('@types/')) return dep;
-
-      const chunks = dep.split('/');
-      return dep[0] === '@'
-        ? `@types/${chunks[0].slice(1)}__${chunks[1]}`
-        : `@types/${chunks[0]}`;
+      return dep.startsWith('@types/') ? dep : getAtTypesName(dep);
     });
 
   deps.runtime.push(
