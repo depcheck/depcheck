@@ -1,14 +1,13 @@
-import { parse } from '@babel/parser';
+import { withFallback } from './fallback';
 import { getContent } from '../utils/file';
-import fastParser from './fast';
 
-export default async function parseSvelte(filename) {
-  // return ['svelte', ...(await fastParser(filename))];
-
+export default withFallback(async function parseSvelte(filename) {
+  const { parse } = await import('@babel/parser');
   const { compile } = await import('svelte/compiler');
+
   const content = await getContent(filename);
   const { js } = compile(content);
   return parse(js.code, {
     sourceType: 'module',
   });
-}
+});

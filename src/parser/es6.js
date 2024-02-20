@@ -1,12 +1,11 @@
-import { parse } from '@babel/parser';
 import { getContent } from '../utils/file';
-import fastParser from './fast';
+import { withFallback } from './fallback';
 
-export default async function parseES6(filename) {
-  // return fastParser(filename);
-
+export default withFallback(async function parseES6(filename) {
+  const { parse } = await import('@babel/parser');
   const content = await getContent(filename);
+
   return parse(content, {
     sourceType: 'module',
   });
-}
+});

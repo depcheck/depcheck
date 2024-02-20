@@ -9,7 +9,6 @@ import { loadModuleData, readJSON } from './utils';
 import getNodes from './utils/parser';
 import { getAtTypesName } from './utils/typescript';
 import { availableParsers } from './constants';
-import fastParser from './parser/fast';
 
 function isModule(dir) {
   try {

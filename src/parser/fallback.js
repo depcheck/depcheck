@@ -1,4 +1,5 @@
 import path from 'path';
+import process from 'process';
 import { depseek, fullRe } from 'depseek';
 import findup from 'findup-sync';
 import isCore from 'is-core-module';
@@ -23,7 +24,7 @@ const getClosesPkgJson = async (filename) => {
   return pkgJson;
 };
 
-export default async function fastParser(filename) {
+export async function fallbackParser(filename) {
   const ext = path.extname(filename);
   const [
     content,
@@ -81,7 +82,7 @@ export default async function fastParser(filename) {
     }
   });
 
-  const maybeTypeDeps = Object.values(deps)
+  const maybeTypesDeps = Object.values(deps)
     .flat()
     .map((dep) => {
       if (isCore(dep)) return '@types/node';
@@ -93,8 +94,32 @@ export default async function fastParser(filename) {
         : `@types/${chunks[0]}`;
     });
 
-  const typeDeps = maybeTypeDeps.filter(
+  const typesDeps = maybeTypesDeps.filter(
     (dep) => dependencies[dep] || devDependencies[dep],
   );
-  return [...new Set([...deps.runtime, ...typeDeps])];
+
+  deps.runtime.push(...typesDeps);
+
+  return [...new Set(deps.runtime)];
 }
+
+export function withFallback(fn) {
+  return async (filename) => {
+    const { toggle = 'off' } = withFallback;
+
+    if (toggle === 'override') {
+      return fallbackParser(filename);
+    }
+
+    try {
+      return await fn(filename);
+    } catch (e) {
+      if (toggle === 'on') {
+        return fallbackParser(filename);
+      }
+      throw e;
+    }
+  };
+}
+
+withFallback.toggle = process.env.DEPCHECK_FALLBACK || 'off';

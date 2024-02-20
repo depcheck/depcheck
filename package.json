@@ -24,6 +24,7 @@
     "prettier-check": "npm run prettier -- --check",
     "lint": "eslint ./src ./build ./test",
     "test": "mocha ./test ./test/special --timeout 10000",
+    "test:fallback": "cross-env DEPCHECK_FALLBACK=override mocha ./test ./test/special --timeout 10000",
     "test-coverage": "cross-env NODE_ENV=test nyc mocha ./test ./test/special --timeout 20000 && nyc report --reporter=text-lcov > ./coverage/coverage.lcov"
   },
   "author": {
