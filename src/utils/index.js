@@ -1,12 +1,14 @@
 import path from 'path';
 import vm from 'vm';
+import fs from 'fs';
+import { parse } from 'jsonc-parser';
 
 import moduleRoot from './module-root';
 
 export { default as getScripts } from './get-scripts';
 
 export function readJSON(filePath) {
-  return require(filePath); // eslint-disable-line global-require
+  return parse(fs.readFileSync(filePath).toString());
 }
 
 export function evaluate(code) {
