@@ -1,6 +1,6 @@
 import path from 'path';
 import debug from 'debug';
-import isCore from 'is-core-module';
+import isCore from '@nolyfill/is-core-module';
 import lodash from 'lodash';
 import readdirp from 'readdirp';
 import minimatch from 'minimatch';

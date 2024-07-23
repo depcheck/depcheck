@@ -1,4 +1,4 @@
-import isCore from 'is-core-module';
+import isCore from '@nolyfill/is-core-module';
 
 /* eslint-disable import/prefer-default-export */
 const orgDepRegex = /@(.*?)\/(.*)/;
