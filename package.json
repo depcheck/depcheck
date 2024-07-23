@@ -51,6 +51,7 @@
   "dependencies": {
     "@babel/parser": "^7.23.0",
     "@babel/traverse": "^7.23.2",
+    "@nolyfill/is-core-module": "^1.0.39",
     "@vue/compiler-sfc": "^3.3.4",
     "callsites": "^3.1.0",
     "camelcase": "^6.3.0",
@@ -59,7 +60,6 @@
     "deps-regex": "^0.2.0",
     "findup-sync": "^5.0.0",
     "ignore": "^5.2.4",
-    "is-core-module": "^2.12.0",
     "js-yaml": "^3.14.1",
     "json5": "^2.2.3",
     "lodash": "^4.17.21",
