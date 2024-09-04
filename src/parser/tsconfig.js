@@ -38,5 +38,9 @@ export default function tsconfigParser(filePath, deps) {
     });
   }
 
+  if (tsconfigJson.compilerOptions?.importHelpers) {
+    foundDeps.push('tslib');
+  }
+
   return foundDeps.map((p) => requirePackageName(p)).filter(Boolean);
 }
