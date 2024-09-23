@@ -8,6 +8,7 @@ export default async function parseTypescript(filename) {
   // note that babel/parser 7+ does not support *, due to plugin incompatibilities
   return parse(content, {
     sourceType: 'module',
+    sourceFilename: filename,
     plugins: [
       'typescript',
       'jsx',
