@@ -1,4 +1,4 @@
-import isCore from 'is-core-module';
+import { builtinModules } from 'node:module';
 
 /* eslint-disable import/prefer-default-export */
 const orgDepRegex = /@(.*?)\/(.*)/;
@@ -6,7 +6,8 @@ const orgDepRegex = /@(.*?)\/(.*)/;
 // The name of the DefinitelyTyped package for a given package
 export function getAtTypesName(dep) {
   let pkgName;
-  if (isCore(dep)) {
+  const isBuiltin = builtinModules.includes(dep.replace('node:', ''));
+  if (isBuiltin) {
     pkgName = 'node';
   } else {
     const match = orgDepRegex.exec(dep);
