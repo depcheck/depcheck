@@ -41,6 +41,6 @@ jobs:
       - uses: codecov/codecov-action@v1
         if: matrix.os == 'ubuntu-latest' && matrix.node-version == '12.x'
         with:
-          file: ./coverage/coverage.lcov
+          file: ./coverage/lcov.info
           name: codecov-umbrella
           fail_ci_if_error: false
