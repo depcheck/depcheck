@@ -1,6 +1,5 @@
 // Based on https://github.com/webpack/webpack/blob/master/lib/index.js
 
-// eslint-disable-next-line import/prefer-default-export
 export const fakeWebpack = {
   AutomaticPrefetchPlugin: Object,
   BannerPlugin: Object,

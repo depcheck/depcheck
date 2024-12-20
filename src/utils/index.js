@@ -6,7 +6,7 @@ import moduleRoot from './module-root';
 export { default as getScripts } from './get-scripts';
 
 export function readJSON(filePath) {
-  return require(filePath); // eslint-disable-line global-require
+  return require(filePath);
 }
 
 export function evaluate(code) {
@@ -54,7 +54,7 @@ function loadModuleDataRaw(moduleName, rootDir) {
       path: path.dirname(file),
       metadata: readJSON(file),
     };
-  } catch (error) {
+  } catch (_error) {
     return {
       path: null,
       metadata: null,
@@ -70,8 +70,8 @@ export function tryRequire(module, paths = []) {
   try {
     let moduleName = module;
     if (paths.length > 0) moduleName = require.resolve(moduleName, { paths });
-    return require(moduleName); // eslint-disable-line global-require
-  } catch (e) {
+    return require(moduleName);
+  } catch (_e) {
     return null;
   }
 }

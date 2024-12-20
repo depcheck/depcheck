@@ -261,13 +261,13 @@ function registerTs(rootDir) {
         content.charCodeAt(0) === 0xfeff ? content.slice(1) : content,
         options,
       );
-      // eslint-disable-next-line no-underscore-dangle
       module._compile(transpiled.outputText, filename);
     };
   }
 }
 
 describe('webpack special parser', () => {
+  // eslint-disable-next-line mocha/no-setup-in-describe
   registerTs('.');
 
   it('should ignore when filename is not supported', async () => {
@@ -293,8 +293,8 @@ describe('webpack special parser', () => {
     );
   });
 
-  configFileNames.forEach((fileName) =>
-    testCases.forEach((testCase) =>
+  for (const fileName of configFileNames) {
+    for (const testCase of testCases) {
       it(`should ${testCase.name} in configuration file ${fileName}`, () => {
         const config = JSON.stringify({
           entry: testCase.entry,
@@ -305,9 +305,9 @@ describe('webpack special parser', () => {
           : `module.exports = ${config}`;
 
         return testWebpack(fileName, content, testCase.deps, testCase.deps);
-      }),
-    ),
-  );
+      });
+    }
+  }
 
   it('should handle multiple webpack configurations in one file', () => {
     const config = JSON.stringify([

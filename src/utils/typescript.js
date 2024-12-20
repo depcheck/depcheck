@@ -1,6 +1,5 @@
 import isCore from 'is-core-module';
 
-/* eslint-disable import/prefer-default-export */
 const orgDepRegex = /@(.*?)\/(.*)/;
 
 // The name of the DefinitelyTyped package for a given package

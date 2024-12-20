@@ -15,31 +15,32 @@ const optionKeysForConfig = {
 export function parse(content) {
   try {
     return JSON.parse(content);
-  } catch (error) {
+  } catch (_error) {
     // not JSON format
   }
 
   try {
+    // eslint-disable-next-line import-x/namespace
     return JSON5.parse(content);
-  } catch (error) {
+  } catch (_error) {
     // not JSON5 format
   }
 
   try {
     return yaml.safeLoad(content);
-  } catch (error) {
+  } catch (_error) {
     // not YAML format
   }
 
   try {
     return evaluate(`module.exports = ${content}`);
-  } catch (error) {
+  } catch (_error) {
     // not valid JavaScript code
   }
 
   try {
     return evaluate(content);
-  } catch (error) {
+  } catch (_error) {
     // not valid JavaScript code
   }
 

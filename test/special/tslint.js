@@ -130,15 +130,17 @@ describe('tslint special parser', () => {
     });
   });
 
-  describe('with JSON format', () =>
-    testCases.forEach((testCase) =>
+  describe('with JSON format', () => {
+    for (const testCase of testCases) {
       it(`should ${testCase.name}`, () =>
-        testTslint(testCase.expected, JSON.stringify(testCase.content))),
-    ));
+        testTslint(testCase.expected, JSON.stringify(testCase.content)));
+    }
+  });
 
-  describe('with YAML format', () =>
-    testCases.forEach((testCase) =>
+  describe('with YAML format', () => {
+    for (const testCase of testCases) {
       it(`should ${testCase.name}`, () =>
-        testTslint(testCase.expected, yaml.safeDump(testCase.content))),
-    ));
+        testTslint(testCase.expected, yaml.safeDump(testCase.content)));
+    }
+  });
 });

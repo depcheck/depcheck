@@ -3,6 +3,45 @@ import parser from '../../src/special/gulp-load-plugins';
 import { getTestParserWithContentPromise } from '../utils';
 
 const testParser = getTestParserWithContentPromise(parser);
+const testCases = {
+  'dependency with pattern `gulp-*`': {
+    dependency: 'gulp-jshint',
+    code: `
+      const gulpLoadPlugins = require('gulp-load-plugins');
+      const $ = gulpLoadPlugins();
+      $.jshint();
+    `,
+  },
+  'dependency with pattern `gulp.*`': {
+    dependency: 'gulp.concat',
+    code: `
+      const $ = require('gulp-load-plugins')();
+      $.concat();
+    `,
+  },
+  'dependency with name containing multiple dash signs': {
+    dependency: 'gulp-this-plugin',
+    code: `
+      require('gulp-load-plugins')().thisPlugin();
+    `,
+  },
+  'scoped dependency': {
+    dependency: '@scope/gulp-plugin',
+    code: `
+      import gulpLoadPlugins from 'gulp-load-plugins';
+      const $ = gulpLoadPlugins();
+      $.scope.plugin();
+    `,
+  },
+  'dependency used in direct call': {
+    dependency: 'gulp-sourcemaps',
+    code: `
+      const $ = require('gulp-load-plugins')();
+      $.sourcemaps.init();
+    `,
+  },
+};
+const testCaseKeys = Object.keys(testCases);
 
 describe('gulp-load-plugins special parser', () => {
   it('should ignore when file is not `gulpfile.js`', async () => {
@@ -10,47 +49,8 @@ describe('gulp-load-plugins special parser', () => {
     result.should.deepEqual([]);
   });
 
-  const testCases = {
-    'dependency with pattern `gulp-*`': {
-      dependency: 'gulp-jshint',
-      code: `
-        const gulpLoadPlugins = require('gulp-load-plugins');
-        const $ = gulpLoadPlugins();
-        $.jshint();
-      `,
-    },
-    'dependency with pattern `gulp.*`': {
-      dependency: 'gulp.concat',
-      code: `
-        const $ = require('gulp-load-plugins')();
-        $.concat();
-      `,
-    },
-    'dependency with name containing multiple dash signs': {
-      dependency: 'gulp-this-plugin',
-      code: `
-        require('gulp-load-plugins')().thisPlugin();
-      `,
-    },
-    'scoped dependency': {
-      dependency: '@scope/gulp-plugin',
-      code: `
-        import gulpLoadPlugins from 'gulp-load-plugins';
-        const $ = gulpLoadPlugins();
-        $.scope.plugin();
-      `,
-    },
-    'dependency used in direct call': {
-      dependency: 'gulp-sourcemaps',
-      code: `
-        const $ = require('gulp-load-plugins')();
-        $.sourcemaps.init();
-      `,
-    },
-  };
-
-  ['gulpfile.js', 'gulpfile.babel.js'].forEach((gulpFileName) =>
-    Object.keys(testCases).forEach((name) =>
+  for (const gulpFileName of ['gulpfile.js', 'gulpfile.babel.js']) {
+    for (const name of testCaseKeys) {
       it(`should recognize ${name}`, async () => {
         const testCase = testCases[name];
         const result = await testParser(
@@ -61,7 +61,7 @@ describe('gulp-load-plugins special parser', () => {
         );
 
         result.should.deepEqual([testCase.dependency]);
-      }),
-    ),
-  );
+      });
+    }
+  }
 });

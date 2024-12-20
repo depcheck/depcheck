@@ -4,7 +4,7 @@ import lodash from 'lodash';
 function hasVisited(ast, visited) {
   try {
     return visited.has(ast);
-  } catch (e) {
+  } catch (_e) {
     return false;
   }
 }

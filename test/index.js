@@ -25,8 +25,10 @@ function check(module, options) {
 }
 
 describe('depcheck', () => {
-  testCases.forEach((testCase) => {
+  for (const testCase of testCases) {
+    // eslint-disable-next-line mocha/no-setup-in-describe
     const run = testCase.only === 'index' ? it.only : it;
+    // eslint-disable-next-line mocha/no-setup-in-describe
     run(`should ${testCase.name}`, () =>
       check(testCase.module, testCase.options).then((result) => {
         const { expected } = testCase;
@@ -41,7 +43,7 @@ describe('depcheck', () => {
         );
       }),
     );
-  });
+  }
 
   it('should ignore bad javascript', () =>
     check('bad_js', {}).then((unused) => {
@@ -86,7 +88,9 @@ describe('depcheck', () => {
       unreadable,
     );
 
-    before((done) => fs.mkdir(unreadablePath, '0000', done));
+    before((done) => {
+      fs.mkdir(unreadablePath, '0000', done);
+    });
 
     it('should capture error', () =>
       check(module, {}).then((unused) => {
@@ -101,14 +105,15 @@ describe('depcheck', () => {
         error.toString().should.containEql('EACCES');
       }));
 
-    after((done) =>
+    after((done) => {
       fs.chmod(unreadablePath, '0700', (error) =>
         error ? done(error) : fs.rmdir(unreadablePath, done),
-      ),
-    );
+      );
+    });
   }
 
   describe('access unreadable directory', () =>
+    // eslint-disable-next-line mocha/no-setup-in-describe
     testAccessUnreadableDirectory(
       'unreadable',
       'unreadable',
@@ -117,6 +122,7 @@ describe('depcheck', () => {
     ));
 
   describe('access deep unreadable directory', () =>
+    // eslint-disable-next-line mocha/no-setup-in-describe
     testAccessUnreadableDirectory(
       'unreadable_deep',
       'deep/nested/unreadable',
@@ -141,8 +147,12 @@ describe('depcheck', () => {
       unreadable,
     );
 
-    before((done) => fs.writeFile(unreadablePath, '', { mode: 0 }, done));
+    // eslint-disable-next-line mocha/no-sibling-hooks
+    before((done) => {
+      fs.writeFile(unreadablePath, '', { mode: 0 }, done);
+    });
 
+    // eslint-disable-next-line mocha/no-identical-title
     it('should capture error', () =>
       check(module, {}).then((unused) => {
         unused.dependencies.should.deepEqual(unusedDeps);
@@ -156,14 +166,16 @@ describe('depcheck', () => {
         error.toString().should.containEql('EACCES');
       }));
 
-    after((done) =>
+    // eslint-disable-next-line mocha/no-sibling-hooks
+    after((done) => {
       fs.chmod(unreadablePath, '0700', (error) =>
         error ? done(error) : fs.unlink(unreadablePath, done),
-      ),
-    );
+      );
+    });
   }
 
   describe('access unreadable file', () =>
+    // eslint-disable-next-line mocha/no-setup-in-describe
     testAccessUnreadableFile(
       'unreadable',
       'unreadable.js',

@@ -6,7 +6,7 @@ import { getContent } from '../utils/file';
 function parse(content) {
   try {
     return JSON.parse(content);
-  } catch (error) {
+  } catch (_error) {
     return {}; // ignore parse error silently
   }
 }

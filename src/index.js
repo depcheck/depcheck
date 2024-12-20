@@ -27,7 +27,6 @@ function registerTs(rootDir) {
           content.charCodeAt(0) === 0xfeff ? content.slice(1) : content,
           options,
         );
-        // eslint-disable-next-line no-underscore-dangle
         module._compile(transpiled.outputText, filename);
       };
     }

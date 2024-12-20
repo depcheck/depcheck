@@ -237,8 +237,8 @@ describe('jest special parser', () => {
     return testJest(content, [], []);
   });
 
-  configFileNames.forEach((fileName) =>
-    testCases.forEach((testCase) =>
+  for (const fileName of configFileNames) {
+    for (const testCase of testCases) {
       it(`should ${testCase.name} in config file ${fileName}`, async () => {
         const config = JSON.stringify(testCase.content);
         const extension = fileName.split('.').pop();
@@ -251,7 +251,7 @@ describe('jest special parser', () => {
           content = `export default ${config}`;
         }
         return testJest(content, testCase.deps, testCase.deps, fileName);
-      }),
-    ),
-  );
+      });
+    }
+  }
 });

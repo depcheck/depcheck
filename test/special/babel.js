@@ -258,30 +258,30 @@ describe('babel special parser', () => {
     result.should.deepEqual(['babel-preset-es2015']);
   });
 
-  testCases.forEach((testCase) =>
+  for (const testCase of testCases) {
     it(`should ${testCase.name} in .babelrc file`, () =>
-      testBabel('.babelrc', testCase.deps, testCase.options)),
-  );
+      testBabel('.babelrc', testCase.deps, testCase.options));
+  }
 
-  testCases.forEach((testCase) =>
+  for (const testCase of testCases) {
     it(`should ${testCase.name} inside .babelrc file env section`, () =>
       testBabel('.babelrc', testCase.deps, {
         env: {
           production: testCase.options,
         },
-      })),
-  );
+      }));
+  }
 
-  testCases.forEach((testCase) =>
+  for (const testCase of testCases) {
     it(`should ${testCase.name} in package.json file`, () =>
       testBabel('package.json', testCase.deps, {
         name: 'my-package',
         version: '1.0.0',
         babel: testCase.options,
-      })),
-  );
+      }));
+  }
 
-  testCases.forEach((testCase) =>
+  for (const testCase of testCases) {
     it(`should ${testCase.name} inside package.json file env section`, () =>
       testBabel('package.json', testCase.deps, {
         name: 'my-package',
@@ -291,6 +291,6 @@ describe('babel special parser', () => {
             development: testCase.options,
           },
         },
-      })),
-  );
+      }));
+  }
 });
