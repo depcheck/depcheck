@@ -166,6 +166,18 @@ const testCases = [
       ],
     },
   },
+  {
+    name: 'recognize moduleNameMapper paths',
+    deps: ['hypothetical-png-mock', '@scoped/hypothetical-css-mock'],
+    content: {
+      moduleNameMapper: {
+        '@foobar/(.*)': '<rootDir>/packages/foobar/src/$1',
+        '\\.md$': '<rootDir>/mockMd.ts',
+        '\\.png$': 'hypothetical-png-mock',
+        '\\.css$': '@scoped/hypothetical-css-mock',
+      },
+    },
+  },
 ];
 
 async function testJest(content, deps, expectedDeps, _filename) {

@@ -7,6 +7,7 @@ const _ = lodash;
 const jestConfigRegex = /^jest.([^.]+\.)?conf(ig|)\.(cjs|mjs|js|json|ts)$/;
 const supportedProperties = [
   'dependencyExtractor',
+  'moduleNameMapper',
   'preset',
   'prettierPath',
   'reporters',
@@ -81,7 +82,7 @@ function filter(deps, options) {
   const otherProps = lodash(options)
     .entries()
     .map(([prop, value]) => {
-      if (prop === 'transform') {
+      if (prop === 'transform' || prop === 'moduleNameMapper') {
         return _.values(value).map(removeNodeModuleRelativePaths);
       }
       if (Array.isArray(value)) {
