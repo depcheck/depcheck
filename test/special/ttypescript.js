@@ -43,8 +43,8 @@ describe('ttypescript special parser', () => {
     return testTTypeScript('not-supported.txt', content, []);
   });
 
-  configFileNames.forEach((fileName) =>
-    testCases.forEach((testCase) =>
+  for (const fileName of configFileNames) {
+    for (const testCase of testCases) {
       it(`should ${testCase.name} in configuration file ${fileName}`, () => {
         const content = JSON.stringify({
           compilerOptions: {
@@ -52,7 +52,7 @@ describe('ttypescript special parser', () => {
           },
         });
         return testTTypeScript(fileName, content, testCase.transforms);
-      }),
-    ),
-  );
+      });
+    }
+  }
 });

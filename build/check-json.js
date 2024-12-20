@@ -43,10 +43,10 @@ async function main() {
   const stdin = await readStdin();
   const result = JSON.parse(stdin);
 
-  console.log(result); // eslint-disable-line no-console
+  console.log(result);
 
   check(result).catch((error) => {
-    console.error(error.stack); // eslint-disable-line no-console
+    console.error(error.stack);
     process.exit(-1);
   });
 }

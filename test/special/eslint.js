@@ -324,14 +324,15 @@ describe('eslint special parser', () => {
     });
   });
 
-  describe('with JSON format', () =>
-    testCases.forEach((testCase) =>
+  describe('with JSON format', () => {
+    for (const testCase of testCases) {
       it(`should ${testCase.name}`, () =>
-        testEslint(testCase.expected, JSON.stringify(testCase.content))),
-    ));
+        testEslint(testCase.expected, JSON.stringify(testCase.content)));
+    }
+  });
 
-  describe('with package.json config', () =>
-    testCases.forEach((testCase) => {
+  describe('with package.json config', () => {
+    for (const testCase of testCases) {
       it(`should ${testCase.name}`, async () => {
         const packageResult = await testParser(
           JSON.stringify({ eslintConfig: testCase.content }),
@@ -342,11 +343,13 @@ describe('eslint special parser', () => {
 
         packageResult.should.deepEqual(testCase.expected);
       });
-    }));
+    }
+  });
 
-  describe('with YAML format', () =>
-    testCases.forEach((testCase) =>
+  describe('with YAML format', () => {
+    for (const testCase of testCases) {
       it(`should ${testCase.name}`, () =>
-        testEslint(testCase.expected, yaml.safeDump(testCase.content))),
-    ));
+        testEslint(testCase.expected, yaml.safeDump(testCase.content)));
+    }
+  });
 });

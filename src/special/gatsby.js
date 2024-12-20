@@ -34,24 +34,21 @@ function findResolvePlugins(pluginElementsArray) {
 }
 
 function findNestedPlugins(pluginElementsArray) {
-  return (
-    pluginElementsArray
-      .filter((e) => e.type === 'ObjectExpression')
-      .map((e) => e.properties)
-      .reduce((acc, props) => acc.concat(props), [])
-      .filter(
-        (optionsPropCandidate) =>
-          optionsPropCandidate &&
-          optionsPropCandidate.key &&
-          (optionsPropCandidate.key.name === 'options' ||
-            optionsPropCandidate.key.value === 'options') &&
-          optionsPropCandidate.value &&
-          optionsPropCandidate.value.type === 'ObjectExpression',
-      )
-      // eslint-disable-next-line no-use-before-define
-      .map((optionsNode) => findPluginsInObjectExpression(optionsNode.value))
-      .reduce((deps, dep) => deps.concat(dep), [])
-  );
+  return pluginElementsArray
+    .filter((e) => e.type === 'ObjectExpression')
+    .map((e) => e.properties)
+    .reduce((acc, props) => acc.concat(props), [])
+    .filter(
+      (optionsPropCandidate) =>
+        optionsPropCandidate &&
+        optionsPropCandidate.key &&
+        (optionsPropCandidate.key.name === 'options' ||
+          optionsPropCandidate.key.value === 'options') &&
+        optionsPropCandidate.value &&
+        optionsPropCandidate.value.type === 'ObjectExpression',
+    )
+    .map((optionsNode) => findPluginsInObjectExpression(optionsNode.value))
+    .reduce((deps, dep) => deps.concat(dep), []);
 }
 
 function findPluginsInObjectExpression(node) {

@@ -14,7 +14,7 @@ function isModule(dir) {
   try {
     readJSON(path.resolve(dir, 'package.json'));
     return true;
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 }
@@ -32,7 +32,7 @@ function detect(detectors, node, deps) {
     .map((detector) => {
       try {
         return detector(node, deps);
-      } catch (error) {
+      } catch (_error) {
         return [];
       }
     })

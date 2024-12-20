@@ -25,7 +25,7 @@ const supportedProperties = [
 function parse(content) {
   try {
     return JSON.parse(content);
-  } catch (error) {
+  } catch (_error) {
     return {}; // ignore parse error silently
   }
 }
@@ -114,13 +114,12 @@ export default async function parseJest(filename, deps, rootDir) {
   const basename = path.basename(filename);
   if (jestConfigRegex.test(basename)) {
     try {
-      // eslint-disable-next-line global-require
       const config = require(filename) ?? {};
       const options =
         path.extname(filename) === '.ts' ? config.default : config;
 
       return checkOptions(deps, options);
-    } catch (error) {
+    } catch (_error) {
       return [];
     }
   }

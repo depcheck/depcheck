@@ -1,3 +1,4 @@
+/* eslint-disable mocha/no-setup-in-describe */
 import 'should';
 import path from 'path';
 import cli from '../src/cli';
@@ -73,7 +74,7 @@ function testCli(argv) {
 }
 
 describe('depcheck command line', () => {
-  testCases.forEach((testCase) => {
+  for (const testCase of testCases) {
     const run = testCase.only === 'cli' ? it.only : it;
     const options = { json: true, ...testCase.options };
     run(`should ${testCase.name}`, () =>
@@ -96,7 +97,7 @@ describe('depcheck command line', () => {
         },
       ),
     );
-  });
+  }
 
   it('should load config from cli argument', () =>
     testCli(
@@ -157,7 +158,7 @@ describe('depcheck command line', () => {
       },
     ));
 
-  it('should output no depcheck issue when happen', () =>
+  it('should output no depcheck issue when none exist', () =>
     testCli([path.resolve(__dirname, './fake_modules/good')]).then(
       ({ log, error, exitCode }) => {
         log.should.equal('No depcheck issue');
@@ -166,7 +167,7 @@ describe('depcheck command line', () => {
       },
     ));
 
-  it('should output no depcheck issue when happen', () =>
+  it('should output nothing when no issue and quiet=true', () =>
     testCli(makeArgv('good', { quiet: true })).then(
       ({ log, error, exitCode }) => {
         log.should.equal('');
@@ -246,7 +247,7 @@ describe('depcheck command line', () => {
       exitCode.should.equal(-1);
     }));
 
-  it('should find dependencies with special parser', () =>
+  it('should find dependencies with special parser (eslint)', () =>
     testCli(
       makeArgv('eslint_config', {
         argv: ['--specials=eslint'],
@@ -260,7 +261,7 @@ describe('depcheck command line', () => {
       exitCode.should.equal(-1);
     }));
 
-  it('should find dependencies with special parser', () =>
+  it('should find dependencies with special parser (gatsby)', () =>
     testCli(
       makeArgv('gatsby', {
         argv: ['--specials=gatsby'],

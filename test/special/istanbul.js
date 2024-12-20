@@ -15,13 +15,13 @@ describe('istanbul (nyc) special parser', () => {
     result.should.deepEqual([]);
   });
 
-  [
+  for (const filename of [
     '.nycrc',
     '.nycrc.json',
     '.nycrc.yml',
     '.nycrc.yaml',
     'nyc.config.js',
-  ].forEach((filename) => {
+  ]) {
     it(`should recognize dependencies specified in configuration file ${filename}`, async () => {
       const content =
         '{"extends": ["simple", "@namespace/module", "sub/module", "@sub/ns/module"], "all": true}';
@@ -46,7 +46,7 @@ describe('istanbul (nyc) special parser', () => {
         '@sub/ns',
       ]);
     });
-  });
+  }
 
   it('should recognize dependencies specified in package.json configuration', async () => {
     const content = '{"nyc": {"extends": "simple", "skip-full": true}}';

@@ -90,7 +90,6 @@ describe('configuration-reader', () => {
     });
 
     it('should throw a ConfigurationParsing exception if the config file cannot be parsed', async () => {
-      // eslint-disable-next-line prefer-promise-reject-errors
       cosmiconfigResult = Promise.reject({
         mark: {
           name: 'test',
@@ -103,7 +102,6 @@ describe('configuration-reader', () => {
       } catch (err) {
         thrownException = err;
       }
-      // eslint-disable-next-line no-unused-expressions
       thrownException.should.not.be.null;
       thrownException.should.be.instanceof(ConfigurationParsingException);
     });

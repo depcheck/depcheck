@@ -30,8 +30,8 @@ function requireConfig(preset, rootDir) {
     : resolveConfigModule(preset, rootDir);
 
   try {
-    return [require(presetPath), includedDeps]; // eslint-disable-line global-require
-  } catch (error) {
+    return [require(presetPath), includedDeps];
+  } catch (_error) {
     return [{}, []]; // silently return nothing
   }
 }
@@ -173,7 +173,7 @@ function checkConfig(config, rootDir, includedDeps = []) {
 
 const configNameRegex = /^\.eslintrc(\.(json|js|cjs|yml|yaml))?$/;
 
-export default async function parseESLint(filename, deps, rootDir) {
+export default async function parseESLint(filename, _deps, rootDir) {
   const config = await loadConfig('eslint', configNameRegex, filename, rootDir);
 
   if (config) {

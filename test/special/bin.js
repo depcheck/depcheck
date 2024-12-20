@@ -149,8 +149,8 @@ describe('bin special parser', () => {
     result.should.deepEqual([]);
   });
 
-  describe('on `package.json`', () =>
-    testCases.forEach((testCase) =>
+  describe('on `package.json`', () => {
+    for (const testCase of testCases) {
       it(`should ${testCase.name}`, () => {
         const content = testCase.script
           ? JSON.stringify({ scripts: { t: testCase.script } })
@@ -161,11 +161,12 @@ describe('bin special parser', () => {
           content,
           `/path/to/${testCase.name}/package.json`,
         );
-      }),
-    ));
+      });
+    }
+  });
 
-  describe('on `.travis.yml`', () =>
-    testCases.forEach((testCase) =>
+  describe('on `.travis.yml`', () => {
+    for (const testCase of testCases) {
       it(`should ${testCase.name}`, () => {
         const content = testCase.script
           ? `script:\n  - ${testCase.script}`
@@ -176,8 +177,9 @@ describe('bin special parser', () => {
           content,
           `/path/to/${testCase.name}/.travis.yml`,
         );
-      }),
-    ));
+      });
+    }
+  });
 
   it('should check lifecycle commands in `.travis.yml` file', () => {
     const content = `before_deploy:\n  - ${testCases[0].script}`;

@@ -6,7 +6,6 @@ const readFileAsync = util.promisify(fs.readFile);
 
 const promises = new Map();
 
-// eslint-disable-next-line import/prefer-default-export
 export function getContent(filename) {
   if (!promises.has(filename)) {
     promises.set(filename, readFileAsync(filename, 'utf8'));

@@ -82,10 +82,9 @@ const parser = proxyquireStrict('../../src/special/karma', {
 });
 
 const testParser = getTestParserWithContentPromise(parser);
+const configPath = path.resolve('/a', '/a/karma.conf.js');
 
 describe('karma special parser', () => {
-  const configPath = path.resolve('/a', '/a/karma.conf.js');
-
   it('should ignore when filename is not a karma config file', async () => {
     const filename = path.resolve('/a', '/a/file');
     const result = await parser(filename, ['somePlugin'], '/a');

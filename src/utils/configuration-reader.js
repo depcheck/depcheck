@@ -10,7 +10,7 @@ function parseCsvArray(value) {
 
 function convertObjectToCamelCase(obj) {
   return Object.entries(obj).reduce((newObj, [key, value]) => {
-    newObj[camelcase(key)] = value; // eslint-disable-line no-param-reassign
+    newObj[camelcase(key)] = value;
     return newObj;
   }, {});
 }

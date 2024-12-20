@@ -59,13 +59,13 @@ describe('mocha special parser', () => {
     result.should.deepEqual(['chai']);
   });
 
-  [
+  for (const filename of [
     '.mocharc.json',
     '.mocharc.jsonc',
     '.mocharc.js',
     '.mocharc.yml',
     '.mocharc.yaml',
-  ].forEach((filename) => {
+  ]) {
     it(`should recognize dependencies specified in configuration file ${filename}`, async () => {
       const content =
         '{"require": "chai","reporter": ["list", "custom-reporter"]}';
@@ -78,7 +78,7 @@ describe('mocha special parser', () => {
       );
       result.should.deepEqual(['chai', 'custom-reporter']);
     });
-  });
+  }
 
   it('should recognize dependencies specified in package.json configuration', async () => {
     const content =
@@ -197,7 +197,7 @@ describe('mocha special parser', () => {
     result.should.deepEqual([]);
   });
 
-  [
+  for (const reporter of [
     'dot',
     'doc',
     'tap',
@@ -212,7 +212,7 @@ describe('mocha special parser', () => {
     'progress',
     'landing',
     'json-stream',
-  ].forEach((reporter) => {
+  ]) {
     it(`should ignore built-in reporters (${reporter})`, async () => {
       const optPath = path.resolve(__dirname, 'test/mocha.opts');
 
@@ -224,5 +224,5 @@ describe('mocha special parser', () => {
       );
       result.should.deepEqual([]);
     });
-  });
+  }
 });
