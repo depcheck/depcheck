@@ -1,9 +1,15 @@
 import lodash from 'lodash';
 import path from 'path';
-import { readJSON } from '../utils';
+import JSON5 from 'json5';
+import { readFileSync } from 'fs';
 
 // Search in all files looking like a TypeScript configuration file.
 const tsconfigPattern = /tsconfig(?:\.[^.]+)*\.json/;
+
+function readJSON(filename) {
+  const content = readFileSync(filename, { encoding: 'utf8' });
+  return JSON5.parse(content);
+}
 
 export default function parseTTypeScript(filename, deps) {
   const basename = path.basename(filename);
