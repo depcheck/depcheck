@@ -1,6 +1,6 @@
 import path from 'path';
 import debug from 'debug';
-import isCore from 'is-core-module';
+import { builtinModules } from 'node:module';
 import lodash from 'lodash';
 import readdirp from 'readdirp';
 import minimatch from 'minimatch';
@@ -166,7 +166,7 @@ async function getDependencies({
     .concat(peerDeps)
     .concat(optionalDeps)
     .filter((dep) => dep && dep !== '.' && dep !== '..') // TODO why need check?
-    .filter((dep) => !isCore(dep))
+    .filter((dep) => !builtinModules.includes(dep.replace('node:', '')))
     .uniq()
     .value();
 }
