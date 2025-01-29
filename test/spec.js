@@ -233,6 +233,7 @@ export default [
         'ts-dep-2': ['index.ts'],
         'ts-dep-esnext': ['esnext.ts'],
         'ts-dep-typedef': ['typedef.d.ts'],
+        'jsx-fail': ['jsxFail.ts'],
       },
     },
     expectedErrorCode: -1,
