@@ -1,5 +1,12 @@
 # depcheck
 
+> [!NOTE]  
+> Depcheck is no longer actively maintained
+
+While it has been widely used to identify unused dependencies in JavaScript and TypeScript projects, its lack of updates means it may not work well with modern tooling and frameworks.
+We strongly recommend switching to knip, a more actively maintained and feature-rich alternative. Knip provides better support for TypeScript, monorepos, and modern build tools, making it a more reliable choice for keeping your project dependencies clean.
+Check out [knip.dev](https://knip.dev)
+
 Depcheck is a tool for analyzing the dependencies in a project to see: how each dependency is used, which dependencies are useless, and which dependencies are missing from `package.json`.
 
 ## Status
